@@ -28,7 +28,7 @@ public class Spending {
     private int spendingCost;
 
     @Column(name="spending_date" ,nullable=false)
-    private Date spendingDate;
+    private String spendingDate;
 
     @Column(name="spending_memo")
     private String spendingMemo;
