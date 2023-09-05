@@ -14,7 +14,7 @@ public class Record {
     private String recordContent;
 
     @Column(name = "record_write_time", nullable = false)
-    private Timestamp recordWriteTime;
+    private String recordWriteTime;
 
     @Column(name="record_number" ,nullable=false)
     private int recordNumber;
@@ -30,6 +30,5 @@ public class Record {
     @JoinColumn(name="group_id",referencedColumnName = "group_id",nullable = false),
     @JoinColumn(name="user_email", referencedColumnName = "user_email",nullable = false)})
     private UserGroup userGroup;
-
 
 }

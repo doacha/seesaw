@@ -14,7 +14,7 @@ public class Comment {
     private String commentContent;
 
     @Column(name="comment_write_time",nullable = false)
-    private Timestamp commentWriteTime;
+    private String commentWriteTime;
 
     @ManyToOne
     @JoinColumn(name="record_id",nullable = false)
