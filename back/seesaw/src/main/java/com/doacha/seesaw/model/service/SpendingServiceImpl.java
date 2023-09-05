@@ -7,9 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class SpendingServiceImpl implements SpendingService{
@@ -18,7 +15,6 @@ public class SpendingServiceImpl implements SpendingService{
     // 등록 save
     // 수정 update
     // 삭제 delete
-    //
     @Override
     public void save(SpendingDto spendingDto){
 
@@ -39,10 +35,6 @@ public class SpendingServiceImpl implements SpendingService{
         return null;
     }
 
-    @Override
-    public Spending findBySpendingId(int SpendingId) {
-        return null;
-    }
 
     @Override
     public Spending read(int SpendingId) {

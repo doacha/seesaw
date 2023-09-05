@@ -33,5 +33,12 @@ public class SpendingController {
         return new ResponseEntity<Spending>(spending,HttpStatus.OK);
     }
 
+    @PutMapping()
+    @Operation(summary="지출 수정")
+    public ResponseEntity<?> updateSpending(SpendingDto spendingDto){
+        spendingService.update(spendingDto);
+        return new ResponseEntity<>(spendingDto,HttpStatus.OK);
+    }
+
 
 }
