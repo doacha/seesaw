@@ -1,14 +1,21 @@
 package com.doacha.seesaw.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
-
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Comment {
     @Id
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int commentId;
+    private Long commentId;
 
     @Column(name="comment_content",nullable=false)
     private String commentContent;
