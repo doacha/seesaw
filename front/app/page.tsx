@@ -1,21 +1,26 @@
-import Image from 'next/image'
 import Link from 'next/link'
 
 const Entrance = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <Image
-          src="/seesaw_logo.svg"
-          alt="Seesaw Logo"
-          width={100}
-          height={24}
-          priority
-        />
-        <Link href={'/home'}>홈</Link>
-        <Link href={'/user'}>마이페이지</Link>
-      </div>
-    </main>
+    <div>
+      <h1>Hello, Next.js 13 App Directory!</h1>
+      <p>
+        <Link href="/hydration-stream-suspense">
+          (recommended method): React Query With Streamed Hydration --- Bad for
+          SEO
+        </Link>
+      </p>
+      <p>
+        <Link href="/initial-data">
+          Prefetching Using initial data --- Good for SEO
+        </Link>
+      </p>
+      <p>
+        <Link href="/hydration">
+          Prefetching Using Hydration --- Good for SEO
+        </Link>
+      </p>
+    </div>
   )
 }
 
