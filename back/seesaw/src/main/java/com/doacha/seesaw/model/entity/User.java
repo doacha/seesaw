@@ -34,15 +34,22 @@ public class User {
     private String userPhoneNumber;
 
     @Column(name="user_is_social" ,nullable = false)
-    private boolean userIsSocial;
+    private boolean userIsSocial; // 소셜로그인 여부
 
     @Column(name="user_state",nullable = false )
-    private int userState;
+    private int userState; //
 
     @Column(name="userImgUrl" )
     private String userImgUrl;
 
-
-
-
+    public User(String userEmail, String userPassword, String userName, String userNickname, String userBirth, boolean userGender, boolean userIsSocial, int userState) {
+        this.userEmail = userEmail;
+        this.userPassword = userPassword;
+        this.userName = userName;
+        this.userNickname = userNickname;
+        this.userBirth = userBirth;
+        this.userGender = userGender;
+        this.userIsSocial = userIsSocial;
+        this.userState = userState;
+    }
 }
