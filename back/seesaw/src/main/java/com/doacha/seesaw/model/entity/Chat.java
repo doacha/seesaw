@@ -20,7 +20,7 @@ public class Chat {
     @Column(name = "chat_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Schema(description = "채팅 아이디", example = "0", required = true)
-    private int chatId;
+    private Long chatId;
 
     @Column(name = "chat_comment", nullable = false)
     @Schema(description = "채팅 내용", example = "안녕하세요", required = true)
@@ -32,9 +32,9 @@ public class Chat {
 
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name="group_id",referencedColumnName = "group_id",nullable = false),
+            @JoinColumn(name="mission_id",referencedColumnName = "mission_id",nullable = false),
             @JoinColumn(name="user_email", referencedColumnName = "user_email",nullable = false)})
     @Schema(description = "그룹 아이디, 사용자 이메일", required = true)
-    private UserGroup userGroup;
+    private UserMission usermission;
 
 }

@@ -22,7 +22,7 @@ public class Category {
     @Id
     @Column(name = "category_id", nullable = false)
     @Schema(description = "카테고리 아이디", example = "0", required = true)
-    private String categoryId;
+    private Long categoryId;
 
     @Column(name = "category_name", nullable = false)
     @Schema(description = "카테고리 이름", example = "전체", required = true)
