@@ -1,11 +1,11 @@
-import Home from "./page";
+import Home from './page'
 
 const BigHome = () => {
   return (
     <div>
       <Home />
     </div>
-  );
-};
+  )
+}
 
-export default BigHome;
+export default BigHome
