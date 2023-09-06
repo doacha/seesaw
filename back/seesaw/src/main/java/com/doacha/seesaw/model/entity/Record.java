@@ -1,9 +1,18 @@
 package com.doacha.seesaw.model.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Record {
     @Id
     @Column(name = "record_id")
@@ -27,9 +36,9 @@ public class Record {
 
     @ManyToOne
     @JoinColumns({
-    @JoinColumn(name="group_id",referencedColumnName = "group_id",nullable = false),
+    @JoinColumn(name="mission_id",referencedColumnName = "mission_id",nullable = false),
     @JoinColumn(name="user_email", referencedColumnName = "user_email",nullable = false)})
-    private UserGroup userGroup;
+    private UserMission userMission;
 
 
 }
