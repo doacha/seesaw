@@ -34,7 +34,7 @@ public class Spending {
     private String spendingMemo;
 
     @ManyToOne
-    @JoinColumn(name="category_id",nullable = false)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @ManyToOne(fetch = LAZY)
