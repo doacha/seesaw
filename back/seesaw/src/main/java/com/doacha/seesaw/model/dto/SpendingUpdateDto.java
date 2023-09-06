@@ -6,12 +6,12 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Builder
-public class SpendingDto {
+public class SpendingUpdateDto {
+    private Long spendingId;
     private String spendingTitle;
     private int spendingCost;
     private String spendingDate;
     private String spendingMemo;
     private Long categoryId;
     private String userEmail;
-    private Long recordId;
 }

@@ -1,12 +1,7 @@
 package com.doacha.seesaw.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Date;
+import lombok.*;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -19,7 +14,7 @@ public class Spending {
     @Id
     @Column(name="spending_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int spendingId;
+    private Long spendingId;
 
     @Column(name="spending_title" ,nullable=false)
     private String spendingTitle;
@@ -33,7 +28,8 @@ public class Spending {
     @Column(name="spending_memo")
     private String spendingMemo;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name="category_id",nullable=false)
     private Category category;
 
     @ManyToOne(fetch = LAZY)
