@@ -33,7 +33,8 @@ public class Spending {
     @Column(name="spending_memo")
     private String spendingMemo;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @ManyToOne(fetch = LAZY)
