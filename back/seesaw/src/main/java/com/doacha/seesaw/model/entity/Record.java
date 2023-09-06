@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -35,9 +36,9 @@ public class Record {
 
     @ManyToOne
     @JoinColumns({
-    @JoinColumn(name="group_id",referencedColumnName = "group_id",nullable = false),
+    @JoinColumn(name="mission_id",referencedColumnName = "mission_id",nullable = false),
     @JoinColumn(name="user_email", referencedColumnName = "user_email",nullable = false)})
-    private UserGroup userGroup;
+    private UserMission userMission;
 
 
 }
