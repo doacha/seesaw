@@ -9,6 +9,7 @@ import org.hibernate.annotations.Comment;
 
 import java.sql.Timestamp;
 
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -18,13 +19,13 @@ public class Record {
     @Id
     @Column(name = "record_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int recordId;
+    private Long recordId;
 
     @Column(name = "record_content")
     private String recordContent;
 
     @Column(name = "record_write_time", nullable = false)
-    private Timestamp recordWriteTime;
+    private String recordWriteTime;
 
     @Column(name="record_number" ,nullable=false)
     private int recordNumber;
@@ -41,6 +42,5 @@ public class Record {
     @JoinColumn(name="mission_id",referencedColumnName = "mission_id",nullable = false),
     @JoinColumn(name="member_email", referencedColumnName = "member_email",nullable = false)})
     private MemberMission memberMission;
-
 
 }
