@@ -1,10 +1,32 @@
 import Providers from '@/utils/provider'
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import Image from 'next/image'
+import localFont from 'next/font/local';
 
-const inter = Inter({ subsets: ['latin'] })
+const environmentR = localFont({
+  src: '../public/font/환경R.ttf',
+  variable: "--font-environmentR",
+});
+
+const SCDream_Light = localFont({
+  src: '../public/font/SCDream3.otf',
+  variable: "--font-SCDream-Light",
+});
+
+const SCDream_Regular = localFont({
+  src: '../public/font/SCDream4.otf',
+  variable: "--font-SCDream-Regular",
+});
+
+const SCDream_Medium = localFont({
+  src: '../public/font/SCDream5.otf',
+  variable: "--font-SCDream-Medium",
+});
+
+const SCDream_ExBold = localFont({
+  src: '../public/font/SCDream7.otf',
+  variable: "--font-SCDream-ExBold",
+});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -17,8 +39,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className={`${environmentR.variable} ${SCDream_Light.variable}
+    ${SCDream_Regular.variable} ${SCDream_Medium.variable} ${SCDream_ExBold.variable}`}>
+      <body>
+        <h1>내 월급에 스타벅스?</h1>
         <Providers>{children}</Providers>
       </body>
     </html>

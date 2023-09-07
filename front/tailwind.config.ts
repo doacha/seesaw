@@ -13,6 +13,14 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      fontFamily: {
+        // 👇 Add CSS variables
+         envR: ["var(--font-environmentR)"],
+         scDreamLight: ["var(--font-SCDream-Light)"],
+         scDreamRegular: ["var(--font-SCDream-Regular)"],
+         scDreamMedium: ["var(--font-SCDream-Medium)"],
+         scDreamExBold: ["var(--font-SCDream-ExBold)"],
+      },
     },
   },
   plugins: [require('daisyui')],
