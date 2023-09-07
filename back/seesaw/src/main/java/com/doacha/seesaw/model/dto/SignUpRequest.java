@@ -6,15 +6,15 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class SignUpRequest {
-    private final String userEmail;
+    private final String memberEmail;
 
-    private final String userPassword;
+    private final String memberPassword;
 
-    private final String userName;
+    private final String memberName;
 
-    private final String userNickname;
+    private final String memberNickname;
 
-    private final String userBirth;
+    private final String memberBirth;
 
-    private final boolean userGender;
+    private final boolean memberGender;
 }

@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "UserMission")
-@Schema(description = "user-mission 연결 테이블용 entity")
-public class UserMission {
+@Table(name = "MemberMission")
+@Schema(description = "member-mission 연결 테이블용 entity")
+public class MemberMission {
 
     @Id
     @ManyToOne
@@ -24,20 +24,20 @@ public class UserMission {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "user_email")
+    @JoinColumn(name = "member_email")
     @Schema(description = "사용자 이메일", example = "doacha@seesaw.com", required = true)
-    private User user;
+    private Member member;
 
-    @Column(name = "user_mission_deposit")
+    @Column(name = "member_mission_deposit")
     @Schema(description = "예치금", example = "40000", required = true)
-    private int userMissionDeposit;
+    private int memberMissionDeposit;
 
-    @Column(name = "user_mission_state")
+    @Column(name = "member_mission_state")
     @Schema(description = "그룹 상태 - 0:시작전, 1: 성공, 2:실패", example = "0", required = true)
-    private int userMissionState;
+    private int memberMissionState;
 
-    @Column(name = "user_mission_tnum")
+    @Column(name = "member_mission_tnum")
     @Schema(description = "결제 번호", required = true)
-    private int userMissionTnum;
+    private int memberMissionTnum;
 
 }

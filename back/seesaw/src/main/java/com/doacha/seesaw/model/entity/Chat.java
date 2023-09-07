@@ -33,8 +33,8 @@ public class Chat {
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name="mission_id",referencedColumnName = "mission_id",nullable = false),
-            @JoinColumn(name="user_email", referencedColumnName = "user_email",nullable = false)})
+            @JoinColumn(name="member_email", referencedColumnName = "member_email",nullable = false)})
     @Schema(description = "그룹 아이디, 사용자 이메일", required = true)
-    private UserMission usermission;
+    private MemberMission memberMission;
 
 }
