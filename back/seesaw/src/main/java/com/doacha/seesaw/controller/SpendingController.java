@@ -2,6 +2,7 @@ package com.doacha.seesaw.controller;
 
 import com.doacha.seesaw.model.dto.MonthSpendingRequest;
 import com.doacha.seesaw.model.dto.MonthSpendingResponse;
+import com.doacha.seesaw.model.dto.SpendingDto;
 import com.doacha.seesaw.model.dto.SpendingUpdateRequest;
 import com.doacha.seesaw.model.entity.Spending;
 import com.doacha.seesaw.model.service.SpendingService;
@@ -30,9 +31,9 @@ public class SpendingController {
 
     @PostMapping()
     @Operation(summary="지출 등록")
-    public ResponseEntity<?> postSpending(@RequestBody Spending spending){
-        try{spendingService.save(spending);
-        return new ResponseEntity<>(spending, HttpStatus.OK);
+    public ResponseEntity<?> postSpending(@RequestBody SpendingDto spendingdto){
+        try{spendingService.save(spendingdto);
+        return new ResponseEntity<>(spendingdto, HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<String>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
@@ -49,9 +50,9 @@ public class SpendingController {
         }
     }
 
-    @PutMapping()
+    @PutMapping("/update")
     @Operation(summary="지출 수정")
-    public ResponseEntity<?> updateSpending(SpendingUpdateRequest spendingUpdateRequest){
+    public ResponseEntity<?> updateSpending(@RequestBody SpendingUpdateRequest spendingUpdateRequest){
         try{
             spendingService.update(spendingUpdateRequest);
             return new ResponseEntity<>(spendingUpdateRequest,HttpStatus.OK);}
@@ -59,7 +60,7 @@ public class SpendingController {
             return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @DeleteMapping()
+    @DeleteMapping("/delete/{spendingId}")
     @Operation(summary="지출 삭제")
     public ResponseEntity<?> deleteSpending(@PathVariable Long spendingId){
         try{

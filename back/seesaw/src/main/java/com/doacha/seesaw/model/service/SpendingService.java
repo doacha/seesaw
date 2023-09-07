@@ -1,6 +1,7 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.model.dto.MonthSpendingResponse;
+import com.doacha.seesaw.model.dto.SpendingDto;
 import com.doacha.seesaw.model.dto.SpendingUpdateRequest;
 import com.doacha.seesaw.model.entity.Spending;
 import org.springframework.data.domain.Page;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 public interface SpendingService {
     // Spending 저장
-    void save(Spending spending);
+    void save(SpendingDto spendingdto);
     // Spending 수정
     void update(SpendingUpdateRequest spendingUpdateRequest);
     // Spending 삭제
