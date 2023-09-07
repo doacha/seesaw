@@ -74,6 +74,7 @@ public class JwtProvider {
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
     }
+    // jwt의 payload에 있는 유저 정보를 Subject로 꺼낸다.
     public Subject getSubject(String atk) throws JsonProcessingException {
         String subjectStr = Jwts.parser().setSigningKey(key).parseClaimsJws(atk).getBody().getSubject();
         return objectMapper.readValue(subjectStr, Subject.class);
