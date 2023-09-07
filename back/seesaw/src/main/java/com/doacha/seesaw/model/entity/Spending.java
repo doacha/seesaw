@@ -38,8 +38,8 @@ public class Spending {
     private Category category;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name="user_email",nullable = false)
-    private User user;
+    @JoinColumn(name="member_email",nullable = false)
+    private Member member;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name="record_id",nullable = false)

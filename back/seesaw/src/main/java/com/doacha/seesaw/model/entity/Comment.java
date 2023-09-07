@@ -23,7 +23,7 @@ public class Comment {
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name="mission_id",referencedColumnName = "mission_id",nullable = false),
-            @JoinColumn(name="user_email", referencedColumnName = "user_email",nullable=false)})
-    private UserMission userMission;
+            @JoinColumn(name="member_email", referencedColumnName = "member_email",nullable=false)})
+    private MemberMission memberMission;
 
 }

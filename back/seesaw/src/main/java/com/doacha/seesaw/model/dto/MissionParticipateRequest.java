@@ -14,8 +14,8 @@ public class MissionParticipateRequest {
     private String missionId;
 
     @Schema(description = "사용자 이메일", example = "doacha@seesaw.com", required = true)
-    private String userEmail;
+    private String memberEmail;
 
     @Schema(description = "예치금", example = "40000", required = true)
-    private int userMissionDeposit;
+    private int memberMissionDeposit;
 }

@@ -74,7 +74,7 @@ public class MissionController {
         try {
             Mission newMission = missionService.createMission(mission);
             log.info("그룹 생성 성공");
-            //UserMissionService 호출해서 UserMission에 추가하는 부분 추가해야함!
+            //MemberMissionService 호출해서 MemberMission에 추가하는 부분 추가해야함!
             return new ResponseEntity<>(newMission, HttpStatus.OK);
         } catch (Exception e) {
             log.info("그룹 생성 실패 - 서버 오류");

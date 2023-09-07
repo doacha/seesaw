@@ -4,8 +4,8 @@ import com.doacha.seesaw.jwt.JwtProvider;
 import com.doacha.seesaw.jwt.TokenResponse;
 import com.doacha.seesaw.model.dto.LoginRequest;
 import com.doacha.seesaw.model.dto.SignUpRequest;
-import com.doacha.seesaw.model.dto.UserResponse;
-import com.doacha.seesaw.model.service.UserService;
+import com.doacha.seesaw.model.dto.MemeberResponse;
+import com.doacha.seesaw.model.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,24 +14,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/member")
 @RequiredArgsConstructor
-public class UserController {
-    private final UserService userService;
+public class MemberController {
+    private final MemberService memberService;
     private final JwtProvider jwtProvider;
 
     @PostMapping("/signup")
-    public UserResponse signUp(
+    public MemeberResponse signUp(
             @RequestBody SignUpRequest signUpRequest
     ) {
-        return userService.signUp(signUpRequest);
+        return memberService.signUp(signUpRequest);
     }
 
     @PostMapping("/login")
     public TokenResponse login(
             @RequestBody LoginRequest loginRequest
     ) throws JsonProcessingException {
-        UserResponse userResponse = userService.login(loginRequest);
-        return jwtProvider.createTokensByLogin(userResponse);
+        MemeberResponse memeberResponse = memberService.login(loginRequest);
+        return jwtProvider.createTokensByLogin(memeberResponse);
     }
 }

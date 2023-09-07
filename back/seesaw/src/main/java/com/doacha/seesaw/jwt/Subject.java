@@ -4,23 +4,23 @@ import lombok.Getter;
 
 @Getter
 public class Subject {
-    private final String userEmail;
+    private final String memberEmail;
 
-    private final String userNickname;
+    private final String memberNickname;
 
     private final String tokenType;
 
-    private Subject(String userEmail, String userNickname, String tokenType) {
-        this.userEmail = userEmail;
-        this.userNickname = userNickname;
+    private Subject(String memberEmail, String memberNickname, String tokenType) {
+        this.memberEmail = memberEmail;
+        this.memberNickname = memberNickname;
         this.tokenType = tokenType;
     }
 
-    public static Subject atk(String userEmail, String userNickname) {
-        return new Subject(userEmail, userNickname, "ATK");
+    public static Subject atk(String memberEmail, String memberNickname) {
+        return new Subject(memberEmail, memberNickname, "ATK");
     }
 
-    public static Subject rtk(String userEmail, String userNickname) {
-        return new Subject(userEmail, userNickname, "RTK");
+    public static Subject rtk(String memberEmail, String memberNickname) {
+        return new Subject(memberEmail, memberNickname, "RTK");
     }
 }
