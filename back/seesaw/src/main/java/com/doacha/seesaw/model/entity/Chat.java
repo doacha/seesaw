@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -28,13 +30,13 @@ public class Chat {
 
     @Column(name = "chat_write_time", nullable = false)
     @Schema(description = "채팅 작성 시간", example = "2023-09-05 13:50:14", required = true)
-    private String chat_write_time;
+    private Timestamp chat_write_time;
 
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name="mission_id",referencedColumnName = "mission_id",nullable = false),
             @JoinColumn(name="member_email", referencedColumnName = "member_email",nullable = false)})
-    @Schema(description = "그룹 아이디, 사용자 이메일", required = true)
+    @Schema(description = "미션 아이디, 사용자 이메일", required = true)
     private MemberMission memberMission;
 
 }

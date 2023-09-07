@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 import java.sql.Timestamp;
 
@@ -32,6 +33,7 @@ public class Record {
     private int recordTotalCost;
 
     @Column(name="record_status" ,nullable=false)
+    @Comment("0: 진행중 , 1: 성공, 2: 실패")
     private int recordStatus;
 
     @ManyToOne

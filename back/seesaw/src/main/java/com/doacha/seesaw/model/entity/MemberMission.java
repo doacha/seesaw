@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Data
@@ -19,7 +21,7 @@ public class MemberMission {
     @Id
     @ManyToOne
     @JoinColumn(name = "mission_id")
-    @Schema(description = "그룹 아이디", example = "abcd1234", required = true)
+    @Schema(description = "미션 아이디", example = "abcd1234", required = true)
     private Mission mission;
 
     @Id
@@ -33,7 +35,9 @@ public class MemberMission {
     private int memberMissionDeposit;
 
     @Column(name = "member_mission_state")
-    @Schema(description = "그룹 상태 - 0:시작전, 1: 성공, 2:실패", example = "0", required = true)
+    @ColumnDefault("0")
+    @Comment("0: 시작 전, 1: 성공, 2: 실패")
+    @Schema(description = "미션 상태 - 0:시작전, 1: 성공, 2:실패", example = "0", required = true)
     private int memberMissionState;
 
     @Column(name = "member_mission_tnum")
