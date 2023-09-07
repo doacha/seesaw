@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Data
@@ -12,10 +13,10 @@ import lombok.*;
 @Builder
 public class Member {
     @Id
-    @Column(name="member_email")
+    @Column(name="member_email",nullable = false)
     private String memberEmail;
 
-    @Column(name="member_password")
+    @Column(name="member_password",nullable = false)
     private String memberPassword;
 
     @Column(name="member_name",nullable = false)
@@ -28,18 +29,21 @@ public class Member {
     private String memberBirth;
 
     @Column(name="member_gender")
+    @Comment("0: 남, 1: 여")
     private boolean memberGender;
 
     @Column(name="member_phone_number")
     private String memberPhoneNumber;
 
     @Column(name="member_is_social" ,nullable = false)
+    @Comment("0: 로컬 로그인, 1: 소셜 로그인")
     private boolean memberIsSocial; // 소셜로그인 여부
 
-    @Column(name="member_state",nullable = false )
-    private int memberState; //
+    @Column(name="member_state",nullable = false)
+    @Comment("0: 가입, 1: 탈퇴")
+    private boolean memberIsWithdrawal;
 
-    @Column(name="member_imgUrl" )
+    @Column(name="member_imgUrl")
     private String memberImgUrl;
 
     public Member(String memberEmail, String memberPassword, String memberName, String memberNickname, String memberBirth, boolean memberGender, boolean memberIsSocial, int memberState) {
@@ -50,6 +54,6 @@ public class Member {
         this.memberBirth = memberBirth;
         this.memberGender = memberGender;
         this.memberIsSocial = memberIsSocial;
-        this.memberState = memberState;
+        this.memberIsWithdrawal = memberIsWithdrawal;
     }
 }

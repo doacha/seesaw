@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -28,7 +29,7 @@ public class Spending {
     private int spendingCost;
 
     @Column(name="spending_date" ,nullable=false)
-    private Date spendingDate;
+    private Timestamp spendingDate;
 
     @Column(name="spending_memo")
     private String spendingMemo;
@@ -42,7 +43,7 @@ public class Spending {
     private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name="record_id",nullable = false)
+    @JoinColumn(name="record_id")
     private Record record;
 
 

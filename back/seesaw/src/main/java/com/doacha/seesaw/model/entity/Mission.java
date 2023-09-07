@@ -6,6 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Comment;
+
+import java.sql.Date;
+import java.sql.Timestamp;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -30,6 +35,7 @@ public class Mission {
 
     @Column(name = "mission_member_count", nullable = false)
     @Schema(description = "현재 인원수", example = "2", required = true)
+    @ColumnDefault("1")
     private int missionMemberCount;
 
     @Column(name = "mission_max_count", nullable = false)
@@ -37,7 +43,7 @@ public class Mission {
     private int missionMaxCount;
 
     @Column(name = "mission_img_url")
-//    @Schema(description = "미션 이미지 Url", required = false)
+    @Schema(description = "미션 이미지 Url", required = false)
     private String missionImgUrl;
 
     @Column(name = "mission_purpose", nullable = false)
@@ -49,6 +55,7 @@ public class Mission {
     private int missionMinDeposit;
 
     @Column(name = "mission_is_public", nullable = false)
+    @Comment("0: 비공개, 1: 공개")
     @Schema(description = "미션 공개 여부", example = "true", required = true)
     private boolean missionIsPublic;
 
@@ -66,11 +73,11 @@ public class Mission {
 
     @Column(name = "mission_start_date", nullable = false)
     @Schema(description = "미션 시작일", example = "2023-09-11", required = true)
-    private String missionStartDate;
+    private Date missionStartDate;
 
     @Column(name = "mission_creation_time", nullable = false)
-    @Schema(description = "미션 생성일", example = "2023-09-05", required = false)
-    private String missionCreationTime;
+    @Schema(description = "미션 생성일시", example = "2023-09-05 09:11:14", required = false)
+    private Timestamp missionCreationTime;
 
     @Column(name = "mission_host_email", nullable = false)
     @Schema(description = "미션 그룹장 이메일", example = "doacha@seesaw.com", required = true)
