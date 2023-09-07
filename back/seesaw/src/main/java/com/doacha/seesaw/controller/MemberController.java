@@ -21,17 +21,18 @@ public class MemberController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/signup")
-    public MemeberResponse signUp(
-            @RequestBody SignUpRequest signUpRequest
-    ) {
+    public MemeberResponse signUp(@RequestBody SignUpRequest signUpRequest) {
         return memberService.signUp(signUpRequest);
     }
 
     @PostMapping("/login")
-    public TokenResponse login(
-            @RequestBody LoginRequest loginRequest
-    ) throws JsonProcessingException {
+    public TokenResponse login(@RequestBody LoginRequest loginRequest) throws JsonProcessingException {
         MemeberResponse memeberResponse = memberService.login(loginRequest);
         return jwtProvider.createTokensByLogin(memeberResponse);
+    }
+
+    @PostMapping("/confirm")
+    public boolean confirmPassword(@RequestBody LoginRequest loginRequest) {
+        return memberService.confirmPassword(loginRequest);
     }
 }
