@@ -18,6 +18,7 @@ public class MemberService {
     // TODO: 나중에 PasswordEncoder 다시 설정 해주기
 //    private final PasswordEncoder passwordEncoder;
 
+    // 회원가입
     @Transactional
     public MemeberResponse signUp(SignUpRequest signUpRequest) {
         boolean isExist = memberRepository
@@ -41,6 +42,7 @@ public class MemberService {
         return MemeberResponse.of(member);
     }
 
+    // 로그인
     @Transactional(readOnly = true)
     public MemeberResponse login(LoginRequest loginRequest) {
         Member member = memberRepository
@@ -58,5 +60,24 @@ public class MemberService {
         if (!matches) throw new BadRequestException("아이디 혹은 비밀번호를 확인하세요.");
 
         return MemeberResponse.of(member);
+    }
+
+    // 비밀번호 확인
+    @Transactional(readOnly = true)
+    public boolean confirmPassword(LoginRequest loginRequest) {
+        Member member = memberRepository
+                .findByMemberEmail(loginRequest.getMemberEmail())
+                .orElseThrow(() -> new BadRequestException("회원 정보가 없습니다."));
+
+        // TODO
+        // 일단 되는지 확인을 위한 임시 비밀번호 확인("임시 비밀번호"가 아니라 인코딩 안하고 임시적으로 비밀번호를 확인한다는 뜻임 나중에 바꿔야 함)
+        boolean matches = false;
+        if(member.getMemberPassword().equals(loginRequest.getMemberPassword())) matches = true;
+
+        //아래 코드가 passwordencoder 사용한거 이거로 바꿔야함
+//        boolean matches = passwordEncoder.matches(
+//                loginRequest.getMemberPassword(),
+//                member.getMemberPassword());
+        return matches;
     }
 }
