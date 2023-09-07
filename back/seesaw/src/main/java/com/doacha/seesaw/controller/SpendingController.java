@@ -2,7 +2,7 @@ package com.doacha.seesaw.controller;
 
 import com.doacha.seesaw.model.dto.MonthSpendingRequest;
 import com.doacha.seesaw.model.dto.MonthSpendingResponse;
-import com.doacha.seesaw.model.dto.SpendingUpdateDto;
+import com.doacha.seesaw.model.dto.SpendingUpdateRequest;
 import com.doacha.seesaw.model.entity.Spending;
 import com.doacha.seesaw.model.service.SpendingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,10 +51,10 @@ public class SpendingController {
 
     @PutMapping()
     @Operation(summary="지출 수정")
-    public ResponseEntity<?> updateSpending(SpendingUpdateDto spendingUpdateDto){
+    public ResponseEntity<?> updateSpending(SpendingUpdateRequest spendingUpdateRequest){
         try{
-            spendingService.update(spendingUpdateDto);
-            return new ResponseEntity<>(spendingUpdateDto,HttpStatus.OK);}
+            spendingService.update(spendingUpdateRequest);
+            return new ResponseEntity<>(spendingUpdateRequest,HttpStatus.OK);}
         catch(Exception e){
             return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -75,7 +75,7 @@ public class SpendingController {
     @Operation(summary="최신, 금액순 정렬")
     public ResponseEntity<Page<MonthSpendingResponse>> getSpendingList(@PageableDefault(page = 0, size = 10,
             sort = "spendingDate", direction = Sort.Direction.DESC) Pageable pageable, @RequestBody MonthSpendingRequest monthSpendingRequest){
-        Page<MonthSpendingResponse> spendingPage =spendingService.findAllByUserEmailAndYearAndMonth(pageable, monthSpendingRequest.getUserEmail(), monthSpendingRequest.getSpendingYear(), monthSpendingRequest.getSpendingMonth());
+        Page<MonthSpendingResponse> spendingPage =spendingService.findAllByMemberMemberEmailAndSpendingDateYearAndSpendingDateMonth(pageable, monthSpendingRequest.getMemberEmail(), monthSpendingRequest.getSpendingYear(), monthSpendingRequest.getSpendingMonth());
         return new ResponseEntity<>(spendingPage, HttpStatus.OK);
     }
 
