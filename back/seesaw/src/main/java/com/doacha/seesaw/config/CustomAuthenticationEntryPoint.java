@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+// 토큰 관련 예외 처리를 위함
 @Getter
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
