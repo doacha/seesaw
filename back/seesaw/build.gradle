@@ -43,6 +43,13 @@ dependencies {
     implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
     // javax.xml.bind
     implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+
+    implementation group: 'jakarta.activation', name: 'jakarta.activation-api', version: '2.1.0'
+
+    // mail
+    implementation group: 'jakarta.mail', name: 'jakarta.mail-api', version: '2.1.0'
+    implementation group: 'org.springframework', name: 'spring-context-support', version: '6.0.4'
+
 }
 
 tasks.named('test') {

@@ -1,7 +1,7 @@
 package com.doacha.seesaw.jwt;
 
 import com.doacha.seesaw.exception.ForbiddenException;
-import com.doacha.seesaw.model.dto.MemeberResponse;
+import com.doacha.seesaw.model.dto.user.MemberResponse;
 import com.doacha.seesaw.redis.RedisDao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,25 +39,25 @@ public class JwtProvider {
         key = Base64.getEncoder().encodeToString(key.getBytes());
     }
 
-    public TokenResponse reissueAtk(MemeberResponse memeberResponse) throws JsonProcessingException {
-        String rtkInRedis = redisDao.getValues(memeberResponse.getMemberEmail());
+    public TokenResponse reissueAtk(MemberResponse memberResponse) throws JsonProcessingException {
+        String rtkInRedis = redisDao.getValues(memberResponse.getMemberEmail());
         if (Objects.isNull(rtkInRedis)) throw new ForbiddenException("인증 정보가 만료되었습니다.");
         Subject atkSubject = Subject.atk(
-                memeberResponse.getMemberEmail(),
-                memeberResponse.getMemberNickname());
+                memberResponse.getMemberEmail(),
+                memberResponse.getMemberNickname());
         String atk = createToken(atkSubject, atkLive);
         return new TokenResponse(atk, null);
     }
-    public TokenResponse createTokensByLogin(MemeberResponse memeberResponse) throws JsonProcessingException {
+    public TokenResponse createTokensByLogin(MemberResponse memberResponse) throws JsonProcessingException {
         Subject atkSubject = Subject.atk(
-                memeberResponse.getMemberEmail(),
-                memeberResponse.getMemberNickname());
+                memberResponse.getMemberEmail(),
+                memberResponse.getMemberNickname());
         Subject rtkSubject = Subject.rtk(
-                memeberResponse.getMemberEmail(),
-                memeberResponse.getMemberNickname());
+                memberResponse.getMemberEmail(),
+                memberResponse.getMemberNickname());
         String atk = createToken(atkSubject, atkLive);
         String rtk = createToken(rtkSubject, rtkLive);
-        redisDao.setValues(memeberResponse.getMemberEmail(), rtk, Duration.ofMillis(rtkLive));
+        redisDao.setValues(memberResponse.getMemberEmail(), rtk, Duration.ofMillis(rtkLive));
         return new TokenResponse(atk, rtk);
     }
 

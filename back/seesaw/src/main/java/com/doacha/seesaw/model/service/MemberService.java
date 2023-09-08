@@ -1,9 +1,10 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.BadRequestException;
-import com.doacha.seesaw.model.dto.LoginRequest;
-import com.doacha.seesaw.model.dto.SignUpRequest;
-import com.doacha.seesaw.model.dto.MemeberResponse;
+import com.doacha.seesaw.model.dto.user.LoginRequest;
+import com.doacha.seesaw.model.dto.user.MyInfoResponse;
+import com.doacha.seesaw.model.dto.user.SignUpRequest;
+import com.doacha.seesaw.model.dto.user.MemberResponse;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.repository.MemberRepository;
 //import jakarta.transaction.Transactional;
@@ -21,7 +22,7 @@ public class MemberService {
 
     // 회원가입
     @Transactional
-    public MemeberResponse signUp(SignUpRequest signUpRequest) {
+    public MemberResponse signUp(SignUpRequest signUpRequest) {
         boolean isExist = memberRepository
                 .existsByMemberEmail(signUpRequest.getMemberEmail());
         if (isExist) throw new BadRequestException("이미 존재하는 이메일입니다.");
@@ -39,12 +40,12 @@ public class MemberService {
                 );
 
         member = memberRepository.save(member);
-        return MemeberResponse.of(member);
+        return MemberResponse.of(member);
     }
 
     // 로그인
     @Transactional(readOnly = true)
-    public MemeberResponse login(LoginRequest loginRequest) {
+    public MemberResponse login(LoginRequest loginRequest) {
         Member member = memberRepository
                 .findByMemberEmail(loginRequest.getMemberEmail())
                 .orElseThrow(() -> new BadRequestException("아이디 혹은 비밀번호를 확인하세요."));
@@ -55,12 +56,12 @@ public class MemberService {
                 member.getMemberPassword());
         if (!matches) throw new BadRequestException("아이디 혹은 비밀번호를 확인하세요.");
 
-        return MemeberResponse.of(member);
+        return MemberResponse.of(member);
     }
 
     // 비밀번호 확인
     @Transactional(readOnly = true)
-    public boolean confirmPassword(LoginRequest loginRequest) {
+    public MyInfoResponse confirmPassword(LoginRequest loginRequest) {
         Member member = memberRepository
                 .findByMemberEmail(loginRequest.getMemberEmail())
                 .orElseThrow(() -> new BadRequestException("회원 정보가 없습니다."));
@@ -69,6 +70,8 @@ public class MemberService {
         boolean matches = passwordEncoder.matches(
                 loginRequest.getMemberPassword(),
                 member.getMemberPassword());
-        return matches;
+        if (!matches) throw new BadRequestException("아이디 혹은 비밀번호를 확인하세요.");
+
+        return MyInfoResponse.of(member);
     }
 }
