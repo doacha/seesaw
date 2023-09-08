@@ -1,32 +1,42 @@
 import Providers from '@/utils/provider'
 import './globals.css'
 import type { Metadata } from 'next'
-import localFont from 'next/font/local';
+import localFont from 'next/font/local'
+
+//fontawesome 설정/////////////////////////////////////////
+import '@fortawesome/fontawesome-svg-core/styles.css'
+import { config } from '@fortawesome/fontawesome-svg-core'
+config.autoAddCss = false
+//////////////////////////////////////////////////////////
+//아이콘을 사용하는 페이지에서 FontAwesomeIcon태그 import //
+//필요한 아이콘명도 import////////////////////////////////
+//<FontAwesomeIcon icon={faMoneyBill1} /> 이런식으로 사용/
+////////////////////////////////////////////////////////
 
 const environmentR = localFont({
   src: '../public/font/환경R.ttf',
-  variable: "--font-environmentR",
-});
+  variable: '--font-environmentR',
+})
 
 const SCDream_Light = localFont({
   src: '../public/font/SCDream3.otf',
-  variable: "--font-SCDream-Light",
-});
+  variable: '--font-SCDream-Light',
+})
 
 const SCDream_Regular = localFont({
   src: '../public/font/SCDream4.otf',
-  variable: "--font-SCDream-Regular",
-});
+  variable: '--font-SCDream-Regular',
+})
 
 const SCDream_Medium = localFont({
   src: '../public/font/SCDream5.otf',
-  variable: "--font-SCDream-Medium",
-});
+  variable: '--font-SCDream-Medium',
+})
 
 const SCDream_ExBold = localFont({
   src: '../public/font/SCDream7.otf',
-  variable: "--font-SCDream-ExBold",
-});
+  variable: '--font-SCDream-ExBold',
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -39,10 +49,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${environmentR.variable} ${SCDream_Light.variable}
-    ${SCDream_Regular.variable} ${SCDream_Medium.variable} ${SCDream_ExBold.variable}`}>
+    <html
+      lang="en"
+      className={`${environmentR.variable} ${SCDream_Light.variable}
+    ${SCDream_Regular.variable} ${SCDream_Medium.variable} ${SCDream_ExBold.variable}`}
+    >
       <body>
-        <h1>내 월급에 스타벅스?</h1>
         <Providers>{children}</Providers>
       </body>
     </html>
