@@ -8,7 +8,7 @@ public class Comment {
     @Id
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int commentId;
+    private Long commentId;
 
     @Column(name="comment_content",nullable=false)
     private String commentContent;

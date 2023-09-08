@@ -18,7 +18,7 @@ public class Record {
     @Id
     @Column(name = "record_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int recordId;
+    private Long recordId;
 
     @Column(name = "record_content")
     private String recordContent;
@@ -41,6 +41,4 @@ public class Record {
     @JoinColumn(name="mission_id",referencedColumnName = "mission_id",nullable = false),
     @JoinColumn(name="member_email", referencedColumnName = "member_email",nullable = false)})
     private MemberMission memberMission;
-
-
 }
