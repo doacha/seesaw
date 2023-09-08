@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss'
-
+import {categoryColors} from './app/lib/constants'
 const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -21,6 +21,9 @@ const config: Config = {
          scDreamMedium: ["var(--font-SCDream-Medium)"],
          scDreamExBold: ["var(--font-SCDream-ExBold)"],
       },
+      colors: {
+        ...categoryColors
+      }
     },
   },
   plugins: [require('daisyui')],
