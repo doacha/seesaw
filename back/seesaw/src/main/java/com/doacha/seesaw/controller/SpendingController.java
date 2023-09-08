@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -72,13 +73,11 @@ public class SpendingController {
         }
     }
 
-    @GetMapping("/list")
+    @PostMapping("/list")
     @Operation(summary="최신, 금액순 정렬")
-    public ResponseEntity<Page<MonthSpendingResponse>> getSpendingList(@PageableDefault(page = 0, size = 10,
-            sort = "spendingDate", direction = Sort.Direction.DESC) Pageable pageable, @RequestBody MonthSpendingRequest monthSpendingRequest){
-        Page<MonthSpendingResponse> spendingPage =spendingService.findAllByMemberMemberEmailAndSpendingDateYearAndSpendingDateMonth(pageable, monthSpendingRequest.getMemberEmail(), monthSpendingRequest.getSpendingYear(), monthSpendingRequest.getSpendingMonth());
-        return new ResponseEntity<>(spendingPage, HttpStatus.OK);
+    public ResponseEntity<List<MonthSpendingResponse>> getSpendingList(@RequestBody MonthSpendingRequest monthSpendingRequest){
+        List<MonthSpendingResponse> spendingList =spendingService.findAllByMemberEmailAndSpendingYearAndSpendingMonth(monthSpendingRequest.getMemberEmail(), monthSpendingRequest.getSpendingYear(), monthSpendingRequest.getSpendingMonth());
+        return new ResponseEntity<>(spendingList, HttpStatus.OK);
     }
-
 
 }

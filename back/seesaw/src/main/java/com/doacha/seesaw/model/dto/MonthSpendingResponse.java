@@ -1,18 +1,20 @@
 package com.doacha.seesaw.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
+
+import java.sql.Timestamp;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder
+@Data
 public class MonthSpendingResponse {
+    private Long spendingId;
     private String spendingTitle;
     private int spendingCost;
-    private String spendingDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private Timestamp spendingDate;
     private Long categoryId;
-    private int memberEmail;
+    private String memberEmail;
 }
