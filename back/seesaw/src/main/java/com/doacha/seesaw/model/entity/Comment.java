@@ -28,9 +28,7 @@ public class Comment {
     private Record record;
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name="mission_id",referencedColumnName = "mission_id",nullable = false),
-            @JoinColumn(name="member_email", referencedColumnName = "member_email",nullable=false)})
-    private MemberMission memberMission;
+    @JoinColumn(name="member_email",nullable=false)
+    private Member member;
 
 }

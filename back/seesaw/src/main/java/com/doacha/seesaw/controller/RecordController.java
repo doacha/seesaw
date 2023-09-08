@@ -41,7 +41,7 @@ public class RecordController {
     @PutMapping("/write")
     public ResponseEntity<?> writeRecord(@RequestBody RecordRequest recordRequest) {
         log.info("작성 글 정보: " + recordRequest);
-        log.info("글 작성 및 수정");
+        log.info("글 작성");
         try {
             Record newRecord = recordService.writeRecord(recordRequest);
             log.info("글 작성 성공");
