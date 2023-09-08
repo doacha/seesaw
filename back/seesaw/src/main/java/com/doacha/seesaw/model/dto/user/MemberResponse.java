@@ -1,21 +1,21 @@
-package com.doacha.seesaw.model.dto;
+package com.doacha.seesaw.model.dto.user;
 
 import com.doacha.seesaw.model.entity.Member;
 import lombok.Getter;
 
 @Getter
-public class MemeberResponse {
+public class MemberResponse {
     private final String memberEmail;
 
     private final String memberNickname;
 
-    private MemeberResponse(String memberEmail, String memberNickname) {
+    private MemberResponse(String memberEmail, String memberNickname) {
         this.memberEmail = memberEmail;
         this.memberNickname = memberNickname;
     }
 
-    public static MemeberResponse of(Member member) {
-        return new MemeberResponse(
+    public static MemberResponse of(Member member) {
+        return new MemberResponse(
                 member.getMemberEmail(),
                 member.getMemberNickname());
     }
