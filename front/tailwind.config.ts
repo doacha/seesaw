@@ -13,13 +13,28 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      colors: {
+        primary: '#7091F5',
+        'primary-container': '#C6D3FB',
+        secondary: '#B0D44D',
+        'secondary-container': '#DFEEB8',
+        error: '#ED3A50',
+        'error-container': '#FFD0D0',
+        'point-pink': '#FFD1BF',
+        neutral: '#2b3440',
+        'background-fill': '#F3F4F8',
+        background: '#FAFCFF',
+        outline: '#787D85',
+        'outline-container': '#DCE1E9',
+        surface: '#001B2A',
+      },
       fontFamily: {
         // 👇 Add CSS variables
-         envR: ["var(--font-environmentR)"],
-         scDreamLight: ["var(--font-SCDream-Light)"],
-         scDreamRegular: ["var(--font-SCDream-Regular)"],
-         scDreamMedium: ["var(--font-SCDream-Medium)"],
-         scDreamExBold: ["var(--font-SCDream-ExBold)"],
+        envR: ['var(--font-environmentR)'],
+        scDreamLight: ['var(--font-SCDream-Light)'],
+        scDreamRegular: ['var(--font-SCDream-Regular)'],
+        scDreamMedium: ['var(--font-SCDream-Medium)'],
+        scDreamExBold: ['var(--font-SCDream-ExBold)'],
       },
       colors: {
         ...categoryColors
@@ -27,16 +42,33 @@ const config: Config = {
     },
   },
   plugins: [require('daisyui')],
-  // daisyUI config (optional - here are the default values)
   daisyui: {
-    themes: false, // true: all themes | false: only light + dark | array: specific themes like this ["light", "dark", "cupcake"]
-    darkTheme: 'dark', // name of one of the included themes for dark mode
-    base: true, // applies backgr ound color and foreground color for root element by default
-    styled: true, // include daisyUI colors and design decisions for all components
-    utils: true, // adds responsive and modifier utility classes
-    rtl: false, // rotate style direction from left-to-right to right-to-left. You also need to add dir="rtl" to your html tag and install `tailwindcss-flip` plugin for Tailwind CSS.
-    prefix: '', // prefix for daisyUI classnames (components, modifiers and responsive class names. Not colors)
-    logs: true, // Shows info about daisyUI version and used config in the console when building your CSS
+    themes: [
+      {
+        mytheme: {
+          primary: '#7091F5',
+          'primary-container': '#C6D3FB',
+          secondary: '#B0D44D',
+          'secondary-container': '#DFEEB8',
+          error: '#ED3A50',
+          'error-container': '#FFD0D0',
+          'point-pink': '#FFD1BF',
+          neutral: '#2b3440',
+          'background-fill': '#F3F4F8',
+          background: '#FAFCFF',
+          outline: '#787D85',
+          'outline-container': '#DCE1E9',
+          surface: '#001B2A',
+        },
+      },
+    ],
+    darkTheme: 'dark',
+    base: true,
+    styled: true,
+    utils: true,
+    rtl: false,
+    prefix: '',
+    logs: true,
   },
 }
 export default config
