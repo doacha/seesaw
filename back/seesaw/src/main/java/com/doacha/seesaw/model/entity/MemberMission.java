@@ -1,5 +1,6 @@
 package com.doacha.seesaw.model.entity;
 
+import com.doacha.seesaw.model.dto.MemberMissionId;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,14 +10,17 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
+import java.io.Serializable;
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Table(name = "MemberMission")
+@IdClass(MemberMissionId.class)
 @Schema(description = "member-mission 연결 테이블용 entity")
-public class MemberMission {
+public class MemberMission implements Serializable {
 
     @Id
     @ManyToOne
@@ -42,6 +46,6 @@ public class MemberMission {
 
     @Column(name = "member_mission_tnum")
     @Schema(description = "결제 번호", required = true)
-    private int memberMissionTnum;
+    private String memberMissionTnum;
 
 }
