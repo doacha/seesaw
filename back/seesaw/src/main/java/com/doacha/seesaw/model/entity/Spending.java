@@ -16,6 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "spending")
 public class Spending {
     @Id
     @Column(name="spending_id")
@@ -38,11 +39,11 @@ public class Spending {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name="member_email",nullable = false)
     private Member member;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name="record_id")
     private Record record;
 

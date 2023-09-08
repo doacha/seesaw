@@ -2,7 +2,8 @@ package com.doacha.seesaw.controller;
 
 import com.doacha.seesaw.model.dto.MonthSpendingRequest;
 import com.doacha.seesaw.model.dto.MonthSpendingResponse;
-import com.doacha.seesaw.model.dto.SpendingUpdateDto;
+import com.doacha.seesaw.model.dto.SpendingDto;
+import com.doacha.seesaw.model.dto.SpendingUpdateRequest;
 import com.doacha.seesaw.model.entity.Spending;
 import com.doacha.seesaw.model.service.SpendingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -30,9 +32,9 @@ public class SpendingController {
 
     @PostMapping()
     @Operation(summary="지출 등록")
-    public ResponseEntity<?> postSpending(@RequestBody Spending spending){
-        try{spendingService.save(spending);
-        return new ResponseEntity<>(spending, HttpStatus.OK);
+    public ResponseEntity<?> postSpending(@RequestBody SpendingDto spendingdto){
+        try{spendingService.save(spendingdto);
+        return new ResponseEntity<>(spendingdto, HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<String>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
@@ -49,17 +51,17 @@ public class SpendingController {
         }
     }
 
-    @PutMapping()
+    @PutMapping("/update")
     @Operation(summary="지출 수정")
-    public ResponseEntity<?> updateSpending(SpendingUpdateDto spendingUpdateDto){
+    public ResponseEntity<?> updateSpending(@RequestBody SpendingUpdateRequest spendingUpdateRequest){
         try{
-            spendingService.update(spendingUpdateDto);
-            return new ResponseEntity<>(spendingUpdateDto,HttpStatus.OK);}
+            spendingService.update(spendingUpdateRequest);
+            return new ResponseEntity<>(spendingUpdateRequest,HttpStatus.OK);}
         catch(Exception e){
             return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @DeleteMapping()
+    @DeleteMapping("/delete/{spendingId}")
     @Operation(summary="지출 삭제")
     public ResponseEntity<?> deleteSpending(@PathVariable Long spendingId){
         try{
@@ -71,13 +73,11 @@ public class SpendingController {
         }
     }
 
-    @GetMapping("/list")
+    @PostMapping("/list")
     @Operation(summary="최신, 금액순 정렬")
-    public ResponseEntity<Page<MonthSpendingResponse>> getSpendingList(@PageableDefault(page = 0, size = 10,
-            sort = "spendingDate", direction = Sort.Direction.DESC) Pageable pageable, @RequestBody MonthSpendingRequest monthSpendingRequest){
-        Page<MonthSpendingResponse> spendingPage =spendingService.findAllByUserEmailAndYearAndMonth(pageable, monthSpendingRequest.getUserEmail(), monthSpendingRequest.getSpendingYear(), monthSpendingRequest.getSpendingMonth());
-        return new ResponseEntity<>(spendingPage, HttpStatus.OK);
+    public ResponseEntity<List<MonthSpendingResponse>> getSpendingList(@RequestBody MonthSpendingRequest monthSpendingRequest){
+        List<MonthSpendingResponse> spendingList =spendingService.findAllByMemberEmailAndSpendingYearAndSpendingMonth(monthSpendingRequest.getMemberEmail(), monthSpendingRequest.getSpendingYear(), monthSpendingRequest.getSpendingMonth());
+        return new ResponseEntity<>(spendingList, HttpStatus.OK);
     }
-
 
 }
