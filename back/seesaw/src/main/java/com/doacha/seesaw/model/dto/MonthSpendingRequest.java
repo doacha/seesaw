@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Builder
 public class MonthSpendingRequest {
-    private String userEmail;
-    private String spendingYear;
-    private String spendingMonth;
+    private String memberEmail;
+    private int spendingYear;
+    private int spendingMonth;
 }

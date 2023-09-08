@@ -1,49 +1,73 @@
 package com.doacha.seesaw.model.service;
 
+import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.MonthSpendingResponse;
 import com.doacha.seesaw.model.dto.SpendingDto;
-import com.doacha.seesaw.model.dto.SpendingUpdateDto;
+import com.doacha.seesaw.model.dto.SpendingUpdateRequest;
 import com.doacha.seesaw.model.entity.Category;
+import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.Spending;
 import com.doacha.seesaw.repository.CategoryRepository;
+import com.doacha.seesaw.repository.MemberRepository;
+import com.doacha.seesaw.repository.RecordRepository;
 import com.doacha.seesaw.repository.SpendingRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SpendingServiceImpl implements SpendingService{
     private final SpendingRepository spendingRepository;
     private final CategoryRepository categoryRepository;
-
+    private final MemberRepository memberRepository;
+    private final RecordRepository recordRepository;
     // 등록 save
     @Override
-    public void save(Spending spending){
+    public void save(SpendingDto spendingdto){
+        Optional<Category> category = categoryRepository.findById(spendingdto.getCategoryId());
+        Optional<Member> member = memberRepository.findById(spendingdto.getMemberEmail());
+        Spending spending = Spending.builder()
+                .spendingTitle(spendingdto.getSpendingTitle())
+                .spendingCost(spendingdto.getSpendingCost())
+                .spendingDate(spendingdto.getSpendingDate())
+                .spendingMemo(spendingdto.getSpendingMemo())
+                .category(category.get())
+                .member(member.get())
+                .record(null)
+                .build();
         spendingRepository.save(spending);
     }
 
     // 지출 수정
     @Override
-    public void update(SpendingUpdateDto spendingUpdateDto){
+    public void update(SpendingUpdateRequest spendingUpdateRequest){
         // spendingId로 지출 찾기
-        Optional<Spending> spending = spendingRepository.findById(spendingUpdateDto.getSpendingId());
-        // s에 찾은 지출 저장
-        Spending s = spending.get();
+        Optional<Spending> spending = spendingRepository.findById(spendingUpdateRequest.getSpendingId());
+        if (!spending.isPresent()) throw new NoContentException();
+        else{
         // 입력받은 카테고리 번호로 해당하는 카테고리 찾기
-        Optional<Category> category = categoryRepository.findById(spendingUpdateDto.getCategoryId());
+        Optional<Category> category = categoryRepository.findById(spendingUpdateRequest.getCategoryId());
+        // 이메일로 멤버 찾기
+        Optional<Member> member = memberRepository.findById(spendingUpdateRequest.getMemberEmail());
+        // 기록 찾기
+//        Optional<Record> record = recordRepository.findById(spendingUpdateRequest.getRecordId());
         // 변경할 지출 새로 저장
         Spending update = Spending.builder()
-                .spendingTitle(spendingUpdateDto.getSpendingTitle())
-                .spendingCost(spendingUpdateDto.getSpendingCost())
-                .spendingDate(spendingUpdateDto.getSpendingDate())
-                .spendingMemo(spendingUpdateDto.getSpendingMemo())
+                .spendingId(spending.get().getSpendingId())
+                .spendingTitle(spendingUpdateRequest.getSpendingTitle())
+                .spendingCost(spendingUpdateRequest.getSpendingCost())
+                .spendingDate(spendingUpdateRequest.getSpendingDate())
+                .spendingMemo(spendingUpdateRequest.getSpendingMemo())
                 .category(category.get())
+                .member(member.get())
+                .record(null)
                 .build();
-        spendingRepository.save(update);
+        spendingRepository.save(update);}
     }
     // 지출 삭제
     @Override
@@ -51,16 +75,10 @@ public class SpendingServiceImpl implements SpendingService{
         spendingRepository.deleteById(spendingId);
     }
 
+
     @Override
-    public Page<MonthSpendingResponse> findAllByUserEmailAndYearAndMonth(Pageable pageable, String userEmail, String spendingYear, String spendingMonth) {
-        Page<Spending> spendingList = spendingRepository.findAllByUserEmailAndYearAndMonth(pageable,userEmail,spendingYear,spendingMonth);
-        Page<MonthSpendingResponse> monthSpendingResponses = spendingList.map(spending->MonthSpendingResponse.builder()
-                .spendingTitle(spending.getSpendingTitle())
-                .spendingCost(spending.getSpendingCost())
-                .spendingDate(spending.getSpendingDate())
-                .userEmail(spending.getUser().getUserEmail())
-                .categoryId(spending.getCategory().getCategoryId())
-                .build());
+    public List<MonthSpendingResponse> findAllByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth) {
+        List<MonthSpendingResponse> monthSpendingResponses = spendingRepository.findAllByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
         return monthSpendingResponses;
     }
 
