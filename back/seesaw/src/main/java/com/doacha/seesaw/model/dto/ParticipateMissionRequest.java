@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "미션 참여 request")
-public class MissionParticipateRequest {
+public class ParticipateMissionRequest {
     @Schema(description = "미션 아이디", example = "abcd1234", required = true)
     private String missionId;
 
@@ -18,4 +18,7 @@ public class MissionParticipateRequest {
 
     @Schema(description = "예치금", example = "40000", required = true)
     private int memberMissionDeposit;
+
+    @Schema(description = "결제 번호", example = "T1234567890123456789", required = true)
+    private String memberMissionTnum;
 }
