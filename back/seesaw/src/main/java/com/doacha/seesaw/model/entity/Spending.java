@@ -16,6 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "spending")
 public class Spending {
     @Id
     @Column(name="spending_id")

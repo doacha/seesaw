@@ -6,23 +6,21 @@ import com.doacha.seesaw.model.dto.SpendingDto;
 import com.doacha.seesaw.model.dto.SpendingUpdateRequest;
 import com.doacha.seesaw.model.entity.Category;
 import com.doacha.seesaw.model.entity.Member;
-import com.doacha.seesaw.model.entity.Record;
 import com.doacha.seesaw.model.entity.Spending;
 import com.doacha.seesaw.repository.CategoryRepository;
 import com.doacha.seesaw.repository.MemberRepository;
 import com.doacha.seesaw.repository.RecordRepository;
 import com.doacha.seesaw.repository.SpendingRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SpendingServiceImpl implements SpendingService{
     private final SpendingRepository spendingRepository;
     private final CategoryRepository categoryRepository;
@@ -79,8 +77,8 @@ public class SpendingServiceImpl implements SpendingService{
 
 
     @Override
-    public Page<MonthSpendingResponse> findAllByMemberMemberEmailAndSpendingDateYearAndSpendingDateMonth(Pageable pageable, String memberEmail, int spendingYear, int spendingMonth) {
-        Page<MonthSpendingResponse> monthSpendingResponses = spendingRepository.findAllByMemberMemberEmailAndSpendingDateYearAndSpendingDateMonth(pageable,memberEmail,spendingYear,spendingMonth);
+    public List<MonthSpendingResponse> findAllByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth) {
+        List<MonthSpendingResponse> monthSpendingResponses = spendingRepository.findAllByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
         return monthSpendingResponses;
     }
 
