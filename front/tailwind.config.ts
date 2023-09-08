@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import {categoryColors} from './app/lib/constants'
 const colors = require('tailwindcss/colors')
 
 const config: Config = {
@@ -54,6 +55,8 @@ const config: Config = {
         outline: '#787D85',
         'outline-container': '#DCE1E9',
         surface: '#001B2A',
+
+        ...categoryColors
       },
       fontFamily: {
         // 👇 Add CSS variables
