@@ -20,8 +20,8 @@ const Capsule = ({
 }) => {
   const tailwindBorder = isHasBorder ? 'border-[0.5px]' : 'border-0'
   const tailwindFontSize = isSmall
-    ? 'text-[10px] h-[16px] py-[3px]'
-    : 'text-[14px] h-[30px] py-[8px]'
+    ? 'text-[10px] h-4 py-[3px]'
+    : 'text-sm h-[30px] py-2'
 
   return (
     <span

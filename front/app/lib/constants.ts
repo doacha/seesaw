@@ -1,4 +1,4 @@
-const categoryList = [
+export const categoryList = [
   '미분류',
   '식비',
   '카페/간식',
