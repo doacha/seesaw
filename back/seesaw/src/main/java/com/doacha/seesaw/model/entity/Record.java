@@ -25,7 +25,7 @@ public class Record {
     private String recordContent;
 
     @Column(name = "record_write_time", nullable = false)
-    private String recordWriteTime;
+    private Timestamp recordWriteTime;
 
     @Column(name="record_number" ,nullable=false)
     private int recordNumber;
