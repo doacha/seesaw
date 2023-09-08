@@ -8,10 +8,7 @@ import com.doacha.seesaw.model.dto.MemeberResponse;
 import com.doacha.seesaw.model.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/member")
@@ -20,6 +17,11 @@ public class MemberController {
     private final MemberService memberService;
     private final JwtProvider jwtProvider;
 
+    // 토큰 테스트용
+    @GetMapping("/test")
+    public String test() {
+        return "good!";
+    }
     @PostMapping("/signup")
     public MemeberResponse signUp(@RequestBody SignUpRequest signUpRequest) {
         return memberService.signUp(signUpRequest);
