@@ -9,6 +9,7 @@ import org.hibernate.annotations.Comment;
 
 import java.sql.Timestamp;
 
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -24,7 +25,7 @@ public class Record {
     private String recordContent;
 
     @Column(name = "record_write_time", nullable = false)
-    private Timestamp recordWriteTime;
+    private String recordWriteTime;
 
     @Column(name="record_number" ,nullable=false)
     private int recordNumber;
