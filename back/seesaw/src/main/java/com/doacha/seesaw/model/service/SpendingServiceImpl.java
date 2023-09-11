@@ -4,10 +4,8 @@ import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.MonthSpendingResponse;
 import com.doacha.seesaw.model.dto.SpendingDto;
 import com.doacha.seesaw.model.dto.SpendingUpdateRequest;
-import com.doacha.seesaw.model.entity.Category;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.Spending;
-import com.doacha.seesaw.repository.CategoryRepository;
 import com.doacha.seesaw.repository.MemberRepository;
 import com.doacha.seesaw.repository.RecordRepository;
 import com.doacha.seesaw.repository.SpendingRepository;
@@ -23,20 +21,18 @@ import java.util.Optional;
 @Slf4j
 public class SpendingServiceImpl implements SpendingService{
     private final SpendingRepository spendingRepository;
-    private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
     private final RecordRepository recordRepository;
     // 등록 save
     @Override
     public void save(SpendingDto spendingdto){
-        Optional<Category> category = categoryRepository.findById(spendingdto.getCategoryId());
         Optional<Member> member = memberRepository.findById(spendingdto.getMemberEmail());
         Spending spending = Spending.builder()
                 .spendingTitle(spendingdto.getSpendingTitle())
                 .spendingCost(spendingdto.getSpendingCost())
                 .spendingDate(spendingdto.getSpendingDate())
                 .spendingMemo(spendingdto.getSpendingMemo())
-                .category(category.get())
+                .spendingCategoryId(spendingdto.getSpendingCategoryId())
                 .member(member.get())
                 .record(null)
                 .build();
@@ -50,8 +46,6 @@ public class SpendingServiceImpl implements SpendingService{
         Optional<Spending> spending = spendingRepository.findById(spendingUpdateRequest.getSpendingId());
         if (!spending.isPresent()) throw new NoContentException();
         else{
-        // 입력받은 카테고리 번호로 해당하는 카테고리 찾기
-        Optional<Category> category = categoryRepository.findById(spendingUpdateRequest.getCategoryId());
         // 이메일로 멤버 찾기
         Optional<Member> member = memberRepository.findById(spendingUpdateRequest.getMemberEmail());
         // 기록 찾기
@@ -63,7 +57,7 @@ public class SpendingServiceImpl implements SpendingService{
                 .spendingCost(spendingUpdateRequest.getSpendingCost())
                 .spendingDate(spendingUpdateRequest.getSpendingDate())
                 .spendingMemo(spendingUpdateRequest.getSpendingMemo())
-                .category(category.get())
+                .spendingCategoryId(spendingUpdateRequest.getCategoryId())
                 .member(member.get())
                 .record(null)
                 .build();
