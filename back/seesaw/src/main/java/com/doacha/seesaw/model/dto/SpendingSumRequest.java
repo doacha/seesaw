@@ -6,9 +6,8 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Builder
-public class MonthSpendingRequest {
+public class SpendingSumRequest {
     private String memberEmail;
     private int spendingYear;
     private int spendingMonth;
-    private String condition;
 }
