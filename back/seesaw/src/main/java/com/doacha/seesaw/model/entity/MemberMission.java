@@ -24,27 +24,27 @@ public class MemberMission implements Serializable {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "mission_id")
+    @JoinColumn(name = "mission_id", nullable = false)
     @Schema(description = "미션 아이디", example = "abcd1234", required = true)
     private Mission mission;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "member_email")
+    @JoinColumn(name = "member_email", nullable = false)
     @Schema(description = "사용자 이메일", example = "doacha@seesaw.com", required = true)
     private Member member;
 
-    @Column(name = "member_mission_deposit")
+    @Column(name = "member_mission_deposit", nullable = false)
     @Schema(description = "예치금", example = "40000", required = true)
     private int memberMissionDeposit;
 
-    @Column(name = "member_mission_state")
+    @Column(name = "member_mission_state", nullable = false)
     @ColumnDefault("0")
-    @Comment("0: 시작 전, 1: 성공, 2: 실패")
-    @Schema(description = "미션 상태 - 0:시작전, 1: 성공, 2:실패", example = "0", required = true)
+    @Comment("0: 시작 전, 1: 진행 중, 2: 성공, 3: 실패")
+    @Schema(description = "미션 상태 - 0: 시작 전, 1: 진행 중, 2: 성공, 3: 실패", example = "0", required = true)
     private int memberMissionState;
 
-    @Column(name = "member_mission_tnum")
+    @Column(name = "member_mission_tnum", nullable = false)
     @Schema(description = "결제 번호", required = true)
     private String memberMissionTnum;
 

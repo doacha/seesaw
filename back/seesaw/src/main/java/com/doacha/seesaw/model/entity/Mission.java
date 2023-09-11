@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -64,18 +65,30 @@ public class Mission {
     private int missionLimit;
 
     @Column(name = "mission_period", nullable = false)
-    @Schema(description = "미션 횟수", example = "4", required = true)
+    @Schema(description = "미션 기간", example = "7", required = true)
     private int missionPeriod;
 
-    @Column(name = "mission_cycle", nullable = false)
-    @Schema(description = "미션 주기", example = "7", required = true)
-    private int missionCycle;
+    @Column(name = "mission_total_cycle", nullable = false)
+    @Schema(description = "미션 총 횟수", example = "4", required = true)
+    private int missionTotalCycle;
+
+    @Column(name = "mission_current_cycle", nullable = false)
+    @ColumnDefault("0")
+    @Schema(description = "미션 현재 횟수", example = "4", required = true)
+    private int missionCurrentCycle;
+
+    @Column(name = "mission_status", nullable = false)
+    @ColumnDefault("0")
+    @Comment("0: 시작 전, 1: 진행 중, 2: 종료")
+    @Schema(description = "미션 상태", example = "0", required = true)
+    private int missionStatus;
 
     @Column(name = "mission_start_date", nullable = false)
     @Schema(description = "미션 시작일", example = "2023-09-11", required = true)
     private Date missionStartDate;
 
     @Column(name = "mission_creation_time", nullable = false)
+    @ColumnDefault("CURRENT_TIMESTAMP")
     @Schema(description = "미션 생성일시", example = "2023-09-05 09:11:14", required = false)
     private Timestamp missionCreationTime;
 
@@ -83,9 +96,10 @@ public class Mission {
     @Schema(description = "미션 그룹장 이메일", example = "doacha@seesaw.com", required = true)
     private String missionHostEmail;
 
-    @ManyToOne
-    @JoinColumn(name="category_id",nullable = false)
+    @Column(name="mission_category_id",nullable = false)
+    @Comment("0: 미분류, 1: 식비, 2: 카페/간식, 3: 술/유흥, 4: 생활, 5: 쇼핑, 6: 패션, 7: 뷰티/미용, 8: 교통, 9: 자동차, 10: 주거/통신" +
+            "11: 의료/건강, 12: 금융, 13: 문화/여가, 14: 여행/숙박, 15: 교육/학습, 16: 자녀/육아, 17: 반려동물, 18: 경조/선물")
     @Schema(description = "미션 카테고리", example = "0", required = true)
-    private Category category;
+    private int missionCategoryId;
 
 }
