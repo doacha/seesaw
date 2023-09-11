@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss'
-import {categoryColors} from './app/lib/constants'
+import { categoryColors } from './app/lib/constants'
 const colors = require('tailwindcss/colors')
 
 const config: Config = {
@@ -18,7 +18,7 @@ const config: Config = {
       colors: {
         transparent: 'transparent',
         current: 'currentColor',
-        black: colors.black,
+        black: '#001B2A',
         white: colors.white,
         gray: colors.gray,
         emerald: colors.emerald,
@@ -56,7 +56,7 @@ const config: Config = {
         'outline-container': '#DCE1E9',
         surface: '#001B2A',
 
-        ...categoryColors
+        ...categoryColors,
       },
       fontFamily: {
         // 👇 Add CSS variables
