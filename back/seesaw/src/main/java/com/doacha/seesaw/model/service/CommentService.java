@@ -31,13 +31,13 @@ public class CommentService {
 
     // 댓글 등록
     public CommentResponse registComment(CommentRequest commentRequest) {
-        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         Member member = memberRepository.findById(commentRequest.getMemberEmail()).get();
         Record record = recordRepository.findById(commentRequest.getRecordId()).get();
 
         Comment comment = Comment.builder()
                 .commentContent(commentRequest.getCommentContent())
-                .commentWriteTime(now)
+//                .commentWriteTime(now)
                 .member(member)
                 .record(record)
                 .build();
@@ -65,7 +65,7 @@ public class CommentService {
         Comment comment = Comment.builder()
                 .commentId(commentRequest.getCommentId())
                 .commentContent(commentRequest.getCommentContent())
-                .commentWriteTime(commentRequest.getCommentWriteTime())
+//                .commentWriteTime(commentRequest.getCommentWriteTime())
                 .member(member)
                 .record(record)
                 .build();
