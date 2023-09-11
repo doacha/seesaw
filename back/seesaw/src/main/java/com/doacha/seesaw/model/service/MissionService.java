@@ -3,9 +3,7 @@ package com.doacha.seesaw.model.service;
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.CreateMissionRequest;
 import com.doacha.seesaw.model.dto.MissionListResponse;
-import com.doacha.seesaw.model.entity.Category;
 import com.doacha.seesaw.model.entity.Mission;
-import com.doacha.seesaw.repository.CategoryRepository;
 import com.doacha.seesaw.repository.MissionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -14,10 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -27,8 +21,6 @@ public class MissionService {
     @Autowired
     MissionRepository missionRepository;
 
-    @Autowired
-    CategoryRepository categoryRepository;
 
     public Page<MissionListResponse> getMissionList(Pageable pageable) {
         Page<MissionListResponse> list = missionRepository.findAllByMissionIsPublic(pageable);
@@ -38,8 +30,7 @@ public class MissionService {
     // 미션 생성
     public Mission createMission(CreateMissionRequest mission) {
 
-        Category category = categoryRepository.findById(mission.getCategoryId()).get();
-        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         Mission createdMission = Mission.builder()
                 .missionId(createRandomId())
@@ -52,11 +43,11 @@ public class MissionService {
                 .missionIsPublic(mission.isMissionIsPublic())
                 .missionLimit(mission.getMissionLimit())
                 .missionPeriod(mission.getMissionPeriod())
-                .missionCycle(mission.getMissionCycle())
+                .missionTotalCycle(mission.getMissionTotalCycle())
                 .missionStartDate(mission.getMissionStartDate())
-                .missionCreationTime(Timestamp.valueOf(now))
+//                .missionCreationTime(Timestamp.valueOf(now))
                 .missionHostEmail(mission.getMissionHostEmail())
-                .category(category)
+                .missionCategoryId(mission.getCategoryId())
                 .build();
 
         return missionRepository.save(createdMission);
@@ -64,15 +55,14 @@ public class MissionService {
 
     // 미션 아이디 랜덤 생성
     private String createRandomId() {
-        String randomStr = RandomStringUtils.random(10, true, true);
+        String randomId = RandomStringUtils.random(10, true, true);
         // 동일한 아이디가 존재하면 아이디 다시 생성
-        while(missionRepository.existsById(randomStr)){
-            randomStr = RandomStringUtils.random(10, true, true);
+        while(missionRepository.existsById(randomId)){
+            randomId = RandomStringUtils.random(10, true, true);
         }
 
-        return randomStr;
+        return randomId;
     }
-
     // 미션 검색
     public Page<MissionListResponse> searchMission(Pageable pageable, String keyword) {
         log.info("페이지 정보 : {}", pageable);
@@ -102,11 +92,12 @@ public class MissionService {
                 .missionIsPublic(mission.get().isMissionIsPublic())
                 .missionLimit(mission.get().getMissionLimit())
                 .missionPeriod(mission.get().getMissionPeriod())
-                .missionCycle(mission.get().getMissionCycle())
+                .missionTotalCycle(mission.get().getMissionTotalCycle())
+                .missionCurrentCycle(mission.get().getMissionCurrentCycle())
                 .missionStartDate(mission.get().getMissionStartDate())
                 .missionCreationTime(mission.get().getMissionCreationTime())
                 .missionHostEmail(mission.get().getMissionHostEmail())
-                .category(mission.get().getCategory())
+                .missionCategoryId(mission.get().getMissionCategoryId())
                 .build();
 
         missionRepository.save(updatedMission);

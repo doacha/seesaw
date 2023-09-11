@@ -29,14 +29,14 @@ public class RecordService {
 
         if (recordOptional.isPresent()) {
             // 해당 record의 recordContent 등록 & 작성 시간으로 현재 시간 등록
-            String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//            String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             Record record = recordOptional.get();
             Record newRecord = Record.builder()
                     .recordId(record.getRecordId())
                     .recordContent(recordRequest.getRecordContent())
-                    .recordWriteTime(Timestamp.valueOf(now))
-                    .recordNumber(record.getRecordNumber())
+//                    .recordWriteTime(Timestamp.valueOf(now))
                     .recordTotalCost(record.getRecordTotalCost())
+                    .recordNumber(record.getRecordNumber())
                     .recordStatus(record.getRecordStatus())
                     .memberMission(record.getMemberMission())
                     .build();
