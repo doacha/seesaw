@@ -33,7 +33,7 @@ public class MemberMissionService {
                 .member(member)
                 .mission(mission)
                 .memberMissionDeposit(deposit)
-                .memberMissionState(0)
+                .memberMissionStatus(0)
                 .memberMissionTnum(tnum)
                 .build();
         memberMissionRepository.save(memberMission);
@@ -48,7 +48,7 @@ public class MemberMissionService {
                 .member(member)
                 .mission(mission)
                 .memberMissionDeposit(participateMissionRequest.getMemberMissionDeposit())
-                .memberMissionState(0)
+                .memberMissionStatus(0)
                 .memberMissionTnum(participateMissionRequest.getMemberMissionTnum())
                 .build();
 
