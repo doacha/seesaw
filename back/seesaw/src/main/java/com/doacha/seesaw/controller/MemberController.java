@@ -3,13 +3,12 @@ package com.doacha.seesaw.controller;
 import com.doacha.seesaw.jwt.JwtProvider;
 import com.doacha.seesaw.jwt.MemberDetail;
 import com.doacha.seesaw.jwt.TokenResponse;
-import com.doacha.seesaw.model.dto.user.LoginRequest;
-import com.doacha.seesaw.model.dto.user.MyInfoResponse;
-import com.doacha.seesaw.model.dto.user.SignUpRequest;
-import com.doacha.seesaw.model.dto.user.MemberResponse;
+import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,9 +35,20 @@ public class MemberController {
         return jwtProvider.createTokensByLogin(memberResponse);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest servletRequest) {
+        memberService.logout();
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/confirm")
     public MyInfoResponse confirmPassword(@RequestBody LoginRequest loginRequest) {
         return memberService.confirmPassword(loginRequest);
+    }
+
+    @PutMapping("/mypage")
+    public MyInfoResponse changeInfo(@RequestBody ChangeInfoRequest changeInfoRequest) throws JsonProcessingException {
+        return memberService.changeInfo(changeInfoRequest);
     }
 
     @GetMapping("/reissue")

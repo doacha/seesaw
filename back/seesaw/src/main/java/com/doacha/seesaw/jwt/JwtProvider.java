@@ -2,6 +2,7 @@ package com.doacha.seesaw.jwt;
 
 import com.doacha.seesaw.exception.ForbiddenException;
 import com.doacha.seesaw.model.dto.user.MemberResponse;
+import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.redis.RedisDao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,6 +60,14 @@ public class JwtProvider {
         String rtk = createToken(rtkSubject, rtkLive);
         redisDao.setValues(memberResponse.getMemberEmail(), rtk, Duration.ofMillis(rtkLive));
         return new TokenResponse(atk, rtk);
+    }
+
+    public void deleteTokensByLogout(Member member){
+        String atk = redisDao.getValues(member.getMemberEmail());
+        if (redisDao.getValues(member.getMemberEmail()) != null) {
+            redisDao.deleteValues(member.getMemberEmail()); //Token 삭제
+        }
+        redisDao.setValues(atk, "logout", Duration.ofMillis(atkLive));
     }
 
     private String createToken(Subject subject, Long tokenLive) throws JsonProcessingException {
