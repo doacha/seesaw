@@ -12,7 +12,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className="btm-nav">
+    <div className="btm-nav bg-white">
       <NavbarButton
         icon="wallet"
         activated={currentTab === 'wallet' ? true : false}
