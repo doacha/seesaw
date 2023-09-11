@@ -25,7 +25,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons'
 
 const MissionCard = ({ data }: { data: MissionCardProps }) => {
   return (
-    <div className="card w-[calc(50%-10px)] min-w-[165px] h-[184px] bg-base-100 shadow-xl rounded-lg">
+    <div className="card w-[calc(50%-10px)] min-w-[165px] h-[184px] bg-base-100 shadow-md rounded-lg">
       <figure className="relative h-25">
         <img
           src={dummyMissionCard.missionImgUrl}
