@@ -1,6 +1,7 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.NoContentException;
+import com.doacha.seesaw.model.dto.DailySpendingSumResponse;
 import com.doacha.seesaw.model.dto.MonthSpendingResponse;
 import com.doacha.seesaw.model.dto.SpendingDto;
 import com.doacha.seesaw.model.dto.SpendingUpdateRequest;
@@ -77,8 +78,8 @@ public class SpendingServiceImpl implements SpendingService{
 
 
     @Override
-    public List<MonthSpendingResponse> findAllByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth) {
-        List<MonthSpendingResponse> monthSpendingResponses = spendingRepository.findAllByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
+    public List<MonthSpendingResponse> findAllByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth, String condition) {
+        List<MonthSpendingResponse> monthSpendingResponses = spendingRepository.findAllByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth,condition);
         return monthSpendingResponses;
     }
 
@@ -86,5 +87,15 @@ public class SpendingServiceImpl implements SpendingService{
     public Optional<Spending> read(Long spendingId) {
         Optional<Spending> spending = spendingRepository.findById(spendingId);
         return spending;
+    }
+
+    @Override
+    public List<DailySpendingSumResponse> findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth) {
+        log.info("이메일 : {}", memberEmail);
+        log.info("년도 : {}", spendingYear);
+        log.info("월 : {}", spendingMonth);
+        List<DailySpendingSumResponse>dailySpendingSumResponses= spendingRepository.findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
+        log.info("성공");
+        return dailySpendingSumResponses;
     }
 }
