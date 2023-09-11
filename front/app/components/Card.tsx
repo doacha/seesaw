@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 
 type Props = {
   title: String
-  content: ReactNode
+  content: React.ReactNode
 }
 const Card = (props: Props) => {
   return (
@@ -12,9 +12,7 @@ const Card = (props: Props) => {
       <div className="card-body p-5">
         <div className="card-title font-scDreamRegular">{props.title}</div>
         <div className="h-[1px] bg-outline rounded-full"></div>
-        <div>
-          <FontAwesomeIcon icon={faMoneyBill1} />
-        </div>
+        <div>{props.content}</div>
       </div>
     </div>
   )

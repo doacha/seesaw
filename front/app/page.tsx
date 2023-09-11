@@ -1,21 +1,16 @@
 import Link from 'next/link'
-import Card from './components/card'
-import Input from './components/Input'
-import Button from './components/Button'
+import Card from './components/Card'
+import Header from './components/Header'
+import Navbar from './components/Navbar'
 
 const Entrance = () => {
   const onClick = () => {}
   const submitButton = <Button color="primary" label="test" size="xl" />
   return (
     <div className="h-screen w-screen">
-      <Card title={'내 통계'} />
-      <Input
-        label="text"
-        type="text"
-        placeholder="tttest"
-        interval="15"
-        submitButton={submitButton}
-      />
+      <Header title={'타이틀'} backButton plusButton />
+      {/* <Card title={'내 통계'} /> */}
+      <Navbar />
     </div>
   )
 }
