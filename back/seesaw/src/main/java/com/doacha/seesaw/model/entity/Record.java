@@ -26,11 +26,11 @@ public class Record {
     @Column(name = "record_content")
     private String recordContent;
 
-    @Column(name = "record_write_time", nullable = false)
-    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "record_write_time")
     private Timestamp recordWriteTime;
 
     @Column(name="record_total_cost" , nullable =false)
+    @ColumnDefault("0")
     private int recordTotalCost;
 
     @Column(name="record_number" , nullable =false)

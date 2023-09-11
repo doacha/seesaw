@@ -61,7 +61,7 @@ public class Mission {
     private boolean missionIsPublic;
 
     @Column(name = "mission_limit", nullable = false)
-    @Schema(description = "미션 금액", example = "50000", required = true)
+    @Schema(description = "미션 목표 금액", example = "50000", required = true)
     private int missionLimit;
 
     @Column(name = "mission_period", nullable = false)
@@ -82,6 +82,11 @@ public class Mission {
     @Comment("0: 시작 전, 1: 진행 중, 2: 종료")
     @Schema(description = "미션 상태", example = "0", required = true)
     private int missionStatus;
+
+    @Column(name = "mission_failure_count", nullable = false)
+    @ColumnDefault("0")
+    @Schema(description = "미션 실패 기준 횟수", example = "1", required = true)
+    private int missionFailureCount;
 
     @Column(name = "mission_start_date", nullable = false)
     @Schema(description = "미션 시작일", example = "2023-09-11", required = true)
