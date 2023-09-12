@@ -11,5 +11,5 @@ public class MonthCategoryResponse {
     private long spendingCostSum;
     private int spendingMonth;
     private String memberEmail;
-    private long spendingCategoryId;
+    private int spendingCategoryId;
 }
