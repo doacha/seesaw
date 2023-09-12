@@ -1,9 +1,6 @@
 package com.doacha.seesaw.model.service;
 
-import com.doacha.seesaw.model.dto.DailySpendingSumResponse;
-import com.doacha.seesaw.model.dto.MonthSpendingResponse;
-import com.doacha.seesaw.model.dto.SpendingDto;
-import com.doacha.seesaw.model.dto.SpendingUpdateRequest;
+import com.doacha.seesaw.model.dto.*;
 import com.doacha.seesaw.model.entity.Spending;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,4 +20,7 @@ public interface SpendingService {
     // Spending 상세보기
     Optional<Spending> read(Long spendingId);
     List<DailySpendingSumResponse> findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth);
+
+    List<MonthSpendingSumResponse> findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth);
+    List<MonthCategoryResponse> findMonthSumByCategory(String memberEmail, int spendingYear, int spendingMonth);
 }
