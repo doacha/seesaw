@@ -47,7 +47,7 @@ public class MemberController {
     }
 
     @PutMapping("/mypage")
-    public MyInfoResponse changeInfo(@RequestBody ChangeInfoRequest changeInfoRequest) throws JsonProcessingException {
+    public MyInfoResponse changeInfo(@RequestBody ChangeInfoRequest changeInfoRequest) {
         return memberService.changeInfo(changeInfoRequest);
     }
 
