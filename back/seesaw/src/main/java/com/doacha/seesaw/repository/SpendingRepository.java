@@ -1,6 +1,8 @@
 package com.doacha.seesaw.repository;
 import com.doacha.seesaw.model.dto.DailySpendingSumResponse;
+import com.doacha.seesaw.model.dto.MonthCategoryResponse;
 import com.doacha.seesaw.model.dto.MonthSpendingResponse;
+import com.doacha.seesaw.model.dto.MonthSpendingSumResponse;
 import com.doacha.seesaw.model.entity.Spending;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,6 +21,11 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
     List<DailySpendingSumResponse> findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(@Param("memberEmail") String memberEmail, @Param("spendingYear") int spendingYear, @Param("spendingMonth") int spendingMonth);
 
     // 월간 지출 합계
-//    @Query("SELECT NEW com.doacha.seesaw.model.dto.MonthSpendingSumResponse(SUM(s.spendingCost),MONTH(s.spendingDate),s.member.memberEmail)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingDate GROUP BY MONTH(s.spendingDate),s.member.memberEmail")
-//    List<MonthSpendingSumResponse> findMonthSumByMemeber
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.MonthSpendingSumResponse(SUM(s.spendingCost) AS spendingCostSum, MONTH(s.spendingDate) AS spendingMonth,s.member.memberEmail)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingMonth GROUP BY MONTH(s.spendingDate),s.member.memberEmail")
+    List<MonthSpendingSumResponse> findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(@Param("memberEmail")String memberEmail, @Param("spendingYear") int spendingYear,@Param("spendingMonth")int spendingMonth);
+
+    // 월간 카테고리별 합계
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.MonthCategoryResponse(SUM(s.spendingCost) AS spendingCostSum, MONTH(s.spendingDate) AS spendingMonth,s.member.memberEmail,s.category.categoryId AS spendingCategoryId)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingMonth GROUP BY s.categoryId, s.member.memberEmail")
+    List<MonthCategoryResponse> findMonthSumByCategory(@Param("memberEmail")String memberEmail, @Param("spendingYear") int spendingYear, @Param("spendingMonth")int spendingMonth);
+
 }

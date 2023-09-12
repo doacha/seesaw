@@ -1,6 +1,4 @@
 package com.doacha.seesaw.model.dto;
-
-
 import lombok.*;
 
 
@@ -9,9 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class DailySpendingSumResponse {
+public class MonthCategoryResponse {
     private long spendingCostSum;
-    private int spendingDay;
+    private int spendingMonth;
     private String memberEmail;
-
+    private long spendingCategoryId;
 }

@@ -9,9 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class DailySpendingSumResponse {
+public class MonthSpendingSumResponse {
     private long spendingCostSum;
-    private int spendingDay;
+    private int spendingMonth;
     private String memberEmail;
 
 }
