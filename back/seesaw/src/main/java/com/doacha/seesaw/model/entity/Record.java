@@ -27,6 +27,7 @@ public class Record {
     private String recordContent;
 
     @Column(name = "record_write_time")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     private Timestamp recordWriteTime;
 
     @Column(name="record_total_cost" , nullable =false)
