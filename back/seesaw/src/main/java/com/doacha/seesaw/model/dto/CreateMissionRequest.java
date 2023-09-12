@@ -38,11 +38,11 @@ public class CreateMissionRequest {
     @Schema(description = "미션 금액", example = "50000", required = true)
     private int missionLimit;
 
-    @Schema(description = "미션 횟수", example = "4", required = true)
+    @Schema(description = "미션 기간", example = "7", required = true)
     private int missionPeriod;
 
-    @Schema(description = "미션 주기", example = "7", required = true)
-    private int missionCycle;
+    @Schema(description = "미션 총 횟수", example = "4", required = true)
+    private int missionTotalCycle;
 
     @Schema(description = "미션 시작일", example = "2023-09-11", required = true)
     private Date missionStartDate;
@@ -51,7 +51,7 @@ public class CreateMissionRequest {
     private String missionHostEmail;
 
     @Schema(description = "미션 카테고리 아이디", example = "0", required = true)
-    private long categoryId;
+    private int categoryId;
 
     @Schema(description = "예치금", example = "40000", required = true)
     private int memberMissionDeposit;
