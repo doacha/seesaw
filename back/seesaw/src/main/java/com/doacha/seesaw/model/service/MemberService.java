@@ -97,9 +97,35 @@ public class MemberService {
                 .build();
 
         memberRepository.save(update);
-        
+
         return MyInfoResponse.of(member.get());
     }
+
+    // 회원 탈퇴 TODO : 진짜 탈퇴만 해놨음 조건 추가해야 함
+    @Transactional
+    public boolean deleteMember(String memberEmail) {
+
+        Optional<Member> member = memberRepository.findByMemberEmail(memberEmail);
+
+        System.out.println("이메일!!" + member.get().getMemberEmail());
+//        member.get().builder().memberIsWithdrawal(false).build();
+
+        Member update = Member.builder()
+                .memberEmail(member.get().getMemberEmail())
+                .memberPassword(member.get().getMemberPassword())
+                .memberBirth(member.get().getMemberBirth())
+                .memberName(member.get().getMemberName())
+                .memberGender(member.get().isMemberGender())
+                .memberNickname(member.get().getMemberNickname())
+                .memberImgUrl(member.get().getMemberImgUrl())
+                .memberPhoneNumber(member.get().getMemberPhoneNumber())
+                .memberIsWithdrawal(true)
+                .build();
+
+        memberRepository.save(update);
+        return true;
+    }
+
     // 비밀번호 확인
     @Transactional(readOnly = true)
     public MyInfoResponse confirmPassword(LoginRequest loginRequest) {
@@ -115,4 +141,7 @@ public class MemberService {
 
         return MyInfoResponse.of(member);
     }
+
+
+
 }

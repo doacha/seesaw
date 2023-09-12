@@ -46,9 +46,14 @@ public class MemberController {
         return memberService.confirmPassword(loginRequest);
     }
 
-    @PutMapping("/mypage")
+    @PutMapping("/modify")
     public MyInfoResponse changeInfo(@RequestBody ChangeInfoRequest changeInfoRequest) {
         return memberService.changeInfo(changeInfoRequest);
+    }
+
+    @GetMapping("/delete/{memberEmail}")
+    public boolean deleteMember(@PathVariable  String memberEmail) {
+        return memberService.deleteMember(memberEmail);
     }
 
     @GetMapping("/reissue")
