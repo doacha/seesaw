@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
@@ -18,22 +20,24 @@ import java.sql.Timestamp;
 public class Record {
     @Id
     @Column(name = "record_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long recordId;
 
     @Column(name = "record_content")
     private String recordContent;
 
-    @Column(name = "record_write_time", nullable = false)
+    @Column(name = "record_write_time")
     private Timestamp recordWriteTime;
 
-    @Column(name="record_number" ,nullable=false)
-    private int recordNumber;
-
     @Column(name="record_total_cost" , nullable =false)
+    @ColumnDefault("0")
     private int recordTotalCost;
 
+    @Column(name="record_number" , nullable =false)
+    private int recordNumber;
+
     @Column(name="record_status" ,nullable=false)
+    @ColumnDefault("0")
     @Comment("0: 진행중 , 1: 성공, 2: 실패")
     private int recordStatus;
 

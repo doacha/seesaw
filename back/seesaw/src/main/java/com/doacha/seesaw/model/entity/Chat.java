@@ -20,7 +20,7 @@ public class Chat {
 
     @Id
     @Column(name = "chat_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "채팅 아이디", example = "0", required = true)
     private Long chatId;
 
