@@ -33,30 +33,6 @@ public class MissionService {
     @Autowired
     MissionRepository missionRepository;
 
-    private Specification<Mission> getMissionSpecification(SearchMissionRequest request) {
-        return (Root<Mission> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (!StringUtils.isEmpty(request.getKeyword())) {
-                predicates.add(criteriaBuilder.like(root.get("missionTitle"), "%" + request.getKeyword() + "%"));
-            }
-
-            if (request.getMissionCategoryId() != 0) {
-                predicates.add(criteriaBuilder.equal(root.get("missionCategoryId"), request.getMissionCategoryId()));
-            }
-
-            if (request.getMissionPeriod() != 0) {
-                predicates.add(criteriaBuilder.equal(root.get("missionPeriod"), request.getMissionPeriod()));
-            }
-
-            if (request.getMissionCycle() != 0) {
-                predicates.add(criteriaBuilder.equal(root.get("missionTotalCycle"), request.getMissionCycle()));
-            }
-
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
-    }
-
     // 미션 목록
     public List<MissionListResponse> getMissionList(Pageable pageable) {
         List<MissionListResponse> list = missionRepository.findMissionListResponseByMissionByIsPublic(pageable);

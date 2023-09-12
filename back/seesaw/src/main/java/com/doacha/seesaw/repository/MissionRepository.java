@@ -27,7 +27,8 @@ public interface MissionRepository extends JpaRepository<Mission, String>, JpaSp
             "WHERE (:keyword IS NULL OR m.missionTitle LIKE %:keyword%) " +
             "AND (:missionCategoryId IS NULL OR m.missionCategoryId = :missionCategoryId) " +
             "AND (:missionPeriod IS NULL OR m.missionPeriod = :missionPeriod) " +
-            "AND (:missionCycle IS NULL OR m.missionTotalCycle = :missionCycle)")
+            "AND (:missionCycle IS NULL OR m.missionTotalCycle = :missionCycle)" +
+            "AND m.missionIsPublic = true")
     List<MissionListResponse> searchMissions(String keyword, Integer missionCategoryId, Integer missionPeriod, Integer missionCycle, Pageable pageable);
 
 }
