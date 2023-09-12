@@ -94,3 +94,16 @@ export const categoryColors = {
   'category-18': '#F287C7',
   'category-19': '#FEBAAD',
 }
+
+export const missionPeriodArray = [
+  'empty',
+  '매일',
+  '2일당 한 번',
+  '3일당 한 번',
+  '4일당 한 번',
+  '5일당 한 번',
+  '6일당 한 번',
+  '7일당 한 번',
+]
+
+export const missionCycleArray = []
