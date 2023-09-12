@@ -40,8 +40,8 @@ const Regist = () => {
 
   return (
     <div className="flex h-screen bg-background-fill">
-      <div className="px-5 py-5">
-        <div className="w-full h-[740px] px-5 py-5 gb-base-100 rounded-lg bg-background">
+      <div className="px-5 py-5 w-full">
+        <div className="h-[700px] px-5 py-5 gb-base-100 rounded-lg bg-background">
           <p className="font-envR pb-3 justify-start text-2xl">회원가입</p>
           {/* <form> */}
           <div>
@@ -84,7 +84,7 @@ const Regist = () => {
           {/* </form> */}
 
           {/* 계정이 있다면? */}
-          <div className="mt-10 mb-14 flex items-center justify-center gap-12">
+          <div className="mt-10 mb-14 flex items-center justify-center gap-8">
             <p>계정이 있으신가요?</p>
             <TextButton
               innerText="로그인"
