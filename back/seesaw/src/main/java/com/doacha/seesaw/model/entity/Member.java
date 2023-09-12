@@ -46,6 +46,9 @@ public class Member {
     @Column(name="member_imgUrl")
     private String memberImgUrl;
 
+    @Column(name="member_refresh_token")
+    private String memberRefreshToken;
+
     public Member(String memberEmail, String memberPassword, String memberName, String memberNickname, String memberBirth, boolean memberGender, boolean memberIsSocial, int memberState) {
         this.memberEmail = memberEmail;
         this.memberPassword = memberPassword;
