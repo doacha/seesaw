@@ -71,40 +71,33 @@ public class MemberService {
     }
 
     // 회원 정보 수정
-    @Transactional(readOnly = true)
+    @Transactional
     public MyInfoResponse changeInfo(ChangeInfoRequest changeInfoRequest) {
-//        Member member = memberRepository
-//                .findByMemberEmail(changeInfoRequest.getMemberEmail())
-//                .orElseThrow(() -> new BadRequestException("유저 정보가 없습니다."));
 
         Optional<Member> member = memberRepository.findByMemberEmail(changeInfoRequest.getMemberEmail());
 
-        member.get().builder().memberEmail(member.get().getMemberEmail()).build();
-        member.get().builder().memberName(member.get().getMemberName()).build();
-        member.get().builder().memberBirth(member.get().getMemberBirth()).build();
-        member.get().builder().memberGender(member.get().isMemberGender()).build();
-        member.get().builder().memberNickname(member.get().getMemberNickname()).build();
-        // TODO : 빨리 만들어!!!
+        Member update;
 
-        memberRepository.save(member.get());
+        if(changeInfoRequest.getMemberNewPassword()!=null || !"".equals(changeInfoRequest.getMemberNewPassword())){ // 비번 새로 바꾸려고 하면
+            if(!passwordEncoder.matches( changeInfoRequest.getMemberPassword(), member.get().getMemberPassword())){ // 비번 확인
+                throw new BadRequestException("비밀번호를 확인하세요."); // 비번 다르면 익셉션
+            }
+            member.get().builder().memberPassword(changeInfoRequest.getMemberNewPassword()).build();
+        }
 
-//        if(changeInfoRequest.getMemberNewPassword()!=null){ // 비번 새로 바꾸려고 하면
-//            if(!passwordEncoder.matches( changeInfoRequest.getMemberPassword(), member.getMemberPassword())){ // 비번 확인
-//                throw new BadRequestException("비밀번호를 확인하세요."); // 비번 다르면 익셉션
-//            }
-//            member.setMemberPassword(changeInfoRequest.getMemberNewPassword()); // 비번 일치하면 비번 바꿔줌
-//        }
-//        member.setMemberName(changeInfoRequest.getMemberName());
-//        member.setMemberEmail(changeInfoRequest.getMemberEmail());
-//        member.setMemberBirth(changeInfoRequest.getMemberBirth());
-//        member.setMemberGender(changeInfoRequest.isMemberGender());
-//        member.setMemberNickname(changeInfoRequest.getMemberNickname());
-//        member.setMemberImgUrl(changeInfoRequest.getMemberImgUrl());
-//        member.setMemberPhoneNumber(changeInfoRequest.getMemberPhoneNumber());
+        update = Member.builder()
+                .memberEmail(member.get().getMemberEmail())
+                .memberPassword(member.get().getMemberPassword())
+                .memberBirth(changeInfoRequest.getMemberBirth())
+                .memberName(changeInfoRequest.getMemberName())
+                .memberGender(changeInfoRequest.isMemberGender())
+                .memberNickname(changeInfoRequest.getMemberNickname())
+                .memberImgUrl(changeInfoRequest.getMemberImgUrl())
+                .memberPhoneNumber(changeInfoRequest.getMemberPhoneNumber())
+                .build();
 
-
-
-
+        memberRepository.save(update);
+        
         return MyInfoResponse.of(member.get());
     }
     // 비밀번호 확인
