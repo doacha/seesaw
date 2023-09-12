@@ -16,6 +16,6 @@ public class SpendingUpdateRequest {
     private int spendingCost;
     private Timestamp spendingDate;
     private String spendingMemo;
-    private int categoryId;
+    private int spendingCategoryId;
     private String memberEmail;
 }
