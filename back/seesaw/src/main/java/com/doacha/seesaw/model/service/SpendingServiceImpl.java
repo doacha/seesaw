@@ -55,7 +55,7 @@ public class SpendingServiceImpl implements SpendingService{
                 .spendingCost(spendingUpdateRequest.getSpendingCost())
                 .spendingDate(spendingUpdateRequest.getSpendingDate())
                 .spendingMemo(spendingUpdateRequest.getSpendingMemo())
-                .spendingCategoryId(spendingUpdateRequest.getCategoryId())
+                .spendingCategoryId(spendingUpdateRequest.getSpendingCategoryId())
                 .member(member.get())
                 .record(null)
                 .build();
