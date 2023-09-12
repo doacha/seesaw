@@ -38,11 +38,11 @@ public class MemberMission implements Serializable {
     @Schema(description = "예치금", example = "40000", required = true)
     private int memberMissionDeposit;
 
-    @Column(name = "member_mission_state", nullable = false)
+    @Column(name = "member_mission_status", nullable = false)
     @ColumnDefault("0")
     @Comment("0: 시작 전, 1: 진행 중, 2: 성공, 3: 실패")
     @Schema(description = "미션 상태 - 0: 시작 전, 1: 진행 중, 2: 성공, 3: 실패", example = "0", required = true)
-    private int memberMissionState;
+    private int memberMissionStatus;
 
     @Column(name = "member_mission_tnum", nullable = false)
     @Schema(description = "결제 번호", required = true)

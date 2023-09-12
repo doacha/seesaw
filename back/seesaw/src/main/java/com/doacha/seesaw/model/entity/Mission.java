@@ -1,19 +1,19 @@
 package com.doacha.seesaw.model.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-
-import static jakarta.persistence.FetchType.LAZY;
 
 
 @Entity
@@ -98,7 +98,7 @@ public class Mission {
     private Timestamp missionCreationTime;
 
     @Column(name = "mission_host_email", nullable = false)
-    @Schema(description = "미션 그룹장 이메일", example = "doacha@seesaw.com", required = true)
+    @Schema(description = "미션 생성자 이메일", example = "doacha@seesaw.com", required = true)
     private String missionHostEmail;
 
     @Column(name="mission_category_id",nullable = false)
