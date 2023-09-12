@@ -37,7 +37,7 @@ const Input = ({
   const tailwindLabelSize = isLabelBig ? 'text-[16px]' : 'text-[12px]'
   const tailwindLabelInterval = getTailwindScript(interval)
   return (
-    <div className="mx-5">
+    <div>
       {label && (
         <label className={`label p-0 ${tailwindLabelInterval}`}>
           <span
@@ -53,7 +53,7 @@ const Input = ({
           placeholder={placeholder}
           value={value}
           className="input flex-[2_1_0%] input-bordered placeholder:text-xs placeholder:font-scDreamRegular
-          input-primary border-outline-container border-1 w-full"
+          input-primary border-outline-container border-1 w-full h-10"
           onChange={onChange}
         />
         {submitButton && <div className="flex-[1_1_0%]">{submitButton}</div>}
