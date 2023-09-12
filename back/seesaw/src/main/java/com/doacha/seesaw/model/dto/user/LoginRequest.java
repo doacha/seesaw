@@ -1,4 +1,4 @@
-package com.doacha.seesaw.model.dto;
+package com.doacha.seesaw.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
