@@ -34,4 +34,10 @@ interface Mission {
   categoryId?: number
 }
 
-export type { User, Mission }
+interface ImageFile {
+  id: string
+  file?: File
+  url: string
+}
+
+export type { User, Mission, ImageFile }
