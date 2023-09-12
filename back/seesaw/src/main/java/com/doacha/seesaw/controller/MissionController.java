@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -20,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -46,13 +46,15 @@ public class MissionController {
             @ApiResponse(responseCode = "500", description = "미션 불러오기 실패 - 서버 오류")
     })
     @GetMapping()
-    public ResponseEntity<?> getMissionList(@Parameter(hidden = true)@PageableDefault(size=6, sort="missionCreationTime",direction = Sort.Direction.DESC) Pageable pageable) {
+//  public ResponseEntity<?> getMissionList(@Parameter(hidden = true)@PageableDefault(size=6, sort="missionCreationTime",direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<?> getMissionList(@PageableDefault(size=6, sort="missionCreationTime",direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("미션 목록 불러오기");
         log.info("페이지번호 : {}", String.valueOf(pageable.getPageNumber()));
         try {
-            Page<MissionListResponse> list = missionService.getMissionList(pageable);
+            List<MissionListResponse> list = missionService.getMissionList(pageable);
             log.info("미션 불러오기 성공");
-            return new ResponseEntity<Page<MissionListResponse>>(list, HttpStatus.OK);
+
+            return new ResponseEntity<List<MissionListResponse>>(list, HttpStatus.OK);
         } catch (Exception e) {
             log.info("미션 불러오기 실패 - 서버 오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -114,14 +116,13 @@ public class MissionController {
             @ApiResponse(responseCode = "200", description = "미션 검색 성공"),
             @ApiResponse(responseCode = "500", description = "미션 검색 실패 - 서버 오류")
     })
-    @GetMapping("/search/{keyword}")
-    public ResponseEntity<?> searchMission(@PathVariable String keyword, @Parameter(hidden = true)@PageableDefault(size=6, sort="missionCreationTime",direction = Sort.Direction.DESC) Pageable pageable) {
+    @GetMapping("/search")
+    public ResponseEntity<?> searchMission(SearchMissionRequest searchMissionRequest, @Parameter(hidden = true)@PageableDefault(size=6, sort="missionCreationTime",direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("미션 검색");
-        log.info(keyword);
         try {
-            Page<MissionListResponse> list = missionService.searchMission(pageable, keyword);
+            List<MissionListResponse> list = missionService.searchMission(pageable, searchMissionRequest);
             log.info("미션 검색 성공");
-            return new ResponseEntity<Page<MissionListResponse>>(list, HttpStatus.OK);
+            return new ResponseEntity<List<MissionListResponse>>(list, HttpStatus.OK);
         } catch (Exception e) {
             log.info("미션 검색 실패 - 서버 오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -157,17 +158,28 @@ public class MissionController {
     @Operation( summary = "미션 탈퇴", description = "미션 탈퇴하는 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "미션 탈퇴 성공"),
+            @ApiResponse(responseCode = "409", description = "미션 탈퇴 실패 - 이미 시작된 미션"),
             @ApiResponse(responseCode = "500", description = "미션 탈퇴 실패 - 서버 오류")
     })
     @PostMapping("/quit")
-    public ResponseEntity<?> quitMission(@RequestBody MemberMissionId memberMissionId) {
+    public ResponseEntity<?> quitMission(@RequestBody QuitMissionRequest quitMissionRequest) {
         log.info("미션 탈퇴");
         try {
             log.info("미션 탈퇴한 멤버 정보 삭제");
-            memberMissionService.deleteMemberMission(memberMissionId);
+            memberMissionService.deleteMemberMission(quitMissionRequest);
             log.info("미션 탈퇴한 멤버 정보 삭제 성공");
+
             log.info("미션 인원 수 줄이기");
-            missionService.updateMissionMemberCount(memberMissionId.getMission().getMissionId(), -1);
+            Mission updatedMission = missionService.updateMissionMemberCount(quitMissionRequest.getMissionId(), -1);
+
+            log.info("남은 인원 수 : {}",updatedMission.getMissionMemberCount());
+            if(updatedMission.getMissionMemberCount()==0){
+                log.info("미션 삭제");
+                missionService.deleteMission(quitMissionRequest.getMissionId());
+                log.info("미션 삭제 성공");
+                return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+            }
+
             log.info("미션 탈퇴 성공");
             return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         } catch (Exception e) {

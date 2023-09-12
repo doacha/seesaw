@@ -3,15 +3,27 @@ package com.doacha.seesaw.model.service;
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.CreateMissionRequest;
 import com.doacha.seesaw.model.dto.MissionListResponse;
+import com.doacha.seesaw.model.dto.SearchMissionRequest;
 import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.repository.MissionRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,21 +33,47 @@ public class MissionService {
     @Autowired
     MissionRepository missionRepository;
 
+    private Specification<Mission> getMissionSpecification(SearchMissionRequest request) {
+        return (Root<Mission> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
 
-    public Page<MissionListResponse> getMissionList(Pageable pageable) {
-        Page<MissionListResponse> list = missionRepository.findAllByMissionIsPublic(pageable);
+            if (!StringUtils.isEmpty(request.getKeyword())) {
+                predicates.add(criteriaBuilder.like(root.get("missionTitle"), "%" + request.getKeyword() + "%"));
+            }
+
+            if (request.getMissionCategoryId() != 0) {
+                predicates.add(criteriaBuilder.equal(root.get("missionCategoryId"), request.getMissionCategoryId()));
+            }
+
+            if (request.getMissionPeriod() != 0) {
+                predicates.add(criteriaBuilder.equal(root.get("missionPeriod"), request.getMissionPeriod()));
+            }
+
+            if (request.getMissionCycle() != 0) {
+                predicates.add(criteriaBuilder.equal(root.get("missionTotalCycle"), request.getMissionCycle()));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    // 미션 목록
+    public List<MissionListResponse> getMissionList(Pageable pageable) {
+        List<MissionListResponse> list = missionRepository.findMissionListResponseByMissionByIsPublic(pageable);
         return list;
     }
 
     // 미션 생성
     public Mission createMission(CreateMissionRequest mission) {
 
-//        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         Mission createdMission = Mission.builder()
                 .missionId(createRandomId())
+                .missionCategoryId(mission.getMissionCategoryId())
+                .missionCreationTime(Timestamp.valueOf(now))
                 .missionTitle(mission.getMissionTitle())
-                .missionMemberCount(mission.getMissionMemberCount())
+                .missionMemberCount(1)
                 .missionMaxCount(mission.getMissionMaxCount())
                 .missionImgUrl(mission.getMissionImgUrl())
                 .missionPurpose(mission.getMissionPurpose())
@@ -43,11 +81,13 @@ public class MissionService {
                 .missionIsPublic(mission.isMissionIsPublic())
                 .missionLimit(mission.getMissionLimit())
                 .missionPeriod(mission.getMissionPeriod())
+                .missionStatus(0)
+                .missionFailureCount(mission.getMissionFailureCount())
                 .missionTotalCycle(mission.getMissionTotalCycle())
-                .missionStartDate(mission.getMissionStartDate())
-//                .missionCreationTime(Timestamp.valueOf(now))
+                .missionCurrentCycle(0)
+                .missionStartDate(Date.valueOf(mission.getMissionStartDate()))
                 .missionHostEmail(mission.getMissionHostEmail())
-                .missionCategoryId(mission.getCategoryId())
+
                 .build();
 
         return missionRepository.save(createdMission);
@@ -63,11 +103,13 @@ public class MissionService {
 
         return randomId;
     }
+
     // 미션 검색
-    public Page<MissionListResponse> searchMission(Pageable pageable, String keyword) {
-        log.info("페이지 정보 : {}", pageable);
-        Page<MissionListResponse> list = missionRepository.findAllByMissionIsPublicAndMissionTitleLike(keyword, pageable);
-        return list;
+    public List<MissionListResponse> searchMission(Pageable pageable, SearchMissionRequest searchMissionRequest) {
+        return missionRepository.searchMissions(searchMissionRequest.getKeyword(),
+                searchMissionRequest.getMissionCategoryId(),
+                searchMissionRequest.getMissionPeriod(),
+                searchMissionRequest.getMissionCycle(), pageable);
     }
 
     // 미션 상세
@@ -79,7 +121,7 @@ public class MissionService {
     }
 
     // 미션 인원수 변경
-    public void updateMissionMemberCount(String missionId, int cnt){
+    public Mission updateMissionMemberCount(String missionId, int cnt){
         Optional<Mission> mission = missionRepository.findById(missionId);
         Mission updatedMission = Mission.builder()
                 .missionId(missionId)
@@ -100,7 +142,12 @@ public class MissionService {
                 .missionCategoryId(mission.get().getMissionCategoryId())
                 .build();
 
-        missionRepository.save(updatedMission);
+        return missionRepository.save(updatedMission);
     }
 
+
+    // 미션 삭제
+    public void deleteMission(String missionId){
+        missionRepository.deleteById(missionId);
+    }
 }

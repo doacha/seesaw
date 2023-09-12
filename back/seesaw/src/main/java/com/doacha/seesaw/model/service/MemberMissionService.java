@@ -1,8 +1,8 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.model.dto.GetMemberMissionTnumRequest;
-import com.doacha.seesaw.model.dto.MemberMissionId;
 import com.doacha.seesaw.model.dto.ParticipateMissionRequest;
+import com.doacha.seesaw.model.dto.QuitMissionRequest;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.model.entity.Mission;
@@ -33,7 +33,7 @@ public class MemberMissionService {
                 .member(member)
                 .mission(mission)
                 .memberMissionDeposit(deposit)
-                .memberMissionState(0)
+                .memberMissionStatus(0)
                 .memberMissionTnum(tnum)
                 .build();
         memberMissionRepository.save(memberMission);
@@ -48,7 +48,7 @@ public class MemberMissionService {
                 .member(member)
                 .mission(mission)
                 .memberMissionDeposit(participateMissionRequest.getMemberMissionDeposit())
-                .memberMissionState(0)
+                .memberMissionStatus(0)
                 .memberMissionTnum(participateMissionRequest.getMemberMissionTnum())
                 .build();
 
@@ -56,8 +56,8 @@ public class MemberMissionService {
     }
 
     // 미션 참여한 멤버 정보 삭제
-    public void deleteMemberMission(MemberMissionId memberMissionId) {
-        MemberMission memberMission = memberMissionRepository.findById(memberMissionId).get();
+    public void deleteMemberMission(QuitMissionRequest quitMissionRequest) {
+        MemberMission memberMission = memberMissionRepository.findByMissionIdAndMemberEmail(quitMissionRequest.getMissionId(), quitMissionRequest.getMemberEmail());
         memberMissionRepository.delete(memberMission);
     }
 
