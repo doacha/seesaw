@@ -12,6 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Service
@@ -30,12 +33,13 @@ public class MissionService {
     // 미션 생성
     public Mission createMission(CreateMissionRequest mission) {
 
-//        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         Mission createdMission = Mission.builder()
                 .missionId(createRandomId())
                 .missionTitle(mission.getMissionTitle())
-                .missionMemberCount(mission.getMissionMemberCount())
+                .missionStatus(0)
+                .missionMemberCount(1)
                 .missionMaxCount(mission.getMissionMaxCount())
                 .missionImgUrl(mission.getMissionImgUrl())
                 .missionPurpose(mission.getMissionPurpose())
@@ -44,10 +48,12 @@ public class MissionService {
                 .missionLimit(mission.getMissionLimit())
                 .missionPeriod(mission.getMissionPeriod())
                 .missionTotalCycle(mission.getMissionTotalCycle())
+                .missionCurrentCycle(0)
+                .missionFailureCount(mission.getMissionFailureCount())
                 .missionStartDate(mission.getMissionStartDate())
-//                .missionCreationTime(Timestamp.valueOf(now))
+                .missionCreationTime(Timestamp.valueOf(now))
                 .missionHostEmail(mission.getMissionHostEmail())
-                .missionCategoryId(mission.getCategoryId())
+                .missionCategoryId(mission.getMissionCategoryId())
                 .build();
 
         return missionRepository.save(createdMission);
@@ -55,12 +61,13 @@ public class MissionService {
 
     // 미션 아이디 랜덤 생성
     private String createRandomId() {
+        log.info("미션 아이디 생성");
         String randomId = RandomStringUtils.random(10, true, true);
-        // 동일한 아이디가 존재하면 아이디 다시 생성
         while(missionRepository.existsById(randomId)){
+            log.info("동일한 미션 아이디 존재 - 미션 아이디 재생성");
             randomId = RandomStringUtils.random(10, true, true);
         }
-
+        log.info("미션 아이디 생성 성공");
         return randomId;
     }
     // 미션 검색
