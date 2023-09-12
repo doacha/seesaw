@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -31,13 +32,13 @@ public class CommentService {
 
     // 댓글 등록
     public CommentResponse registComment(CommentRequest commentRequest) {
-//        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         Member member = memberRepository.findById(commentRequest.getMemberEmail()).get();
         Record record = recordRepository.findById(commentRequest.getRecordId()).get();
 
         Comment comment = Comment.builder()
                 .commentContent(commentRequest.getCommentContent())
-//                .commentWriteTime(now)
+                .commentWriteTime(Timestamp.valueOf(now))
                 .member(member)
                 .record(record)
                 .build();
@@ -59,23 +60,22 @@ public class CommentService {
 
     // 댓글 수정
     public CommentResponse updateComment(CommentRequest commentRequest) {
-        Member member = memberRepository.findById(commentRequest.getMemberEmail()).get();
-        Record record = recordRepository.findById(commentRequest.getRecordId()).get();
-
-        Comment comment = Comment.builder()
-                .commentId(commentRequest.getCommentId())
+        Comment comment = commentRepository.findById(commentRequest.getCommentId()).get();
+        Comment updatedComment = Comment.builder()
+                .commentId(comment.getCommentId())
                 .commentContent(commentRequest.getCommentContent())
-//                .commentWriteTime(commentRequest.getCommentWriteTime())
-                .member(member)
-                .record(record)
+                .commentWriteTime(comment.getCommentWriteTime())
+                .member(comment.getMember())
+                .record(comment.getRecord())
                 .build();
 
-        Comment newComment = commentRepository.save(comment);
+        commentRepository.save(updatedComment);
         CommentResponse response = CommentResponse.builder()
-                .commentId(newComment.getCommentId())
-                .memberNickname(member.getMemberNickname())
-                .commentContent(newComment.getCommentContent())
-                .commentWriteTime(newComment.getCommentWriteTime())
+                .commentId(updatedComment.getCommentId())
+                .memberNickname(comment.getMember().getMemberNickname())
+                .memberImgUrl(comment.getMember().getMemberImgUrl())
+                .commentContent(updatedComment.getCommentContent())
+                .commentWriteTime(updatedComment.getCommentWriteTime())
                 .build();
         return response;
     }

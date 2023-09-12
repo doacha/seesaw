@@ -61,7 +61,7 @@ public class CommentController {
         try{
             List<CommentResponse> list = commentService.getCommentList(recordId);
             log.info("댓글 목록 조회 성공");
-            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+            return new ResponseEntity<List<CommentResponse>>(list, HttpStatus.OK);
         }catch (Exception e) {
             log.info("댓글 목록 조회 실패 - 서버(DB) 오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
