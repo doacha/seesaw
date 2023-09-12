@@ -32,6 +32,7 @@ const Capsule = ({
   const [fontColor, setFontColor] = useState(textColor)
   const [isSelected, setIsSelected] = useState(false)
   const handleClick = () => {
+    console.log('asdfasdf')
     if (changeable) {
       setIsSelected(!isSelected)
       if (isSelected) {
