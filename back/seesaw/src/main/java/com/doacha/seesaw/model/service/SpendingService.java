@@ -1,8 +1,6 @@
 package com.doacha.seesaw.model.service;
 
-import com.doacha.seesaw.model.dto.MonthSpendingResponse;
-import com.doacha.seesaw.model.dto.SpendingDto;
-import com.doacha.seesaw.model.dto.SpendingUpdateRequest;
+import com.doacha.seesaw.model.dto.*;
 import com.doacha.seesaw.model.entity.Spending;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +16,11 @@ public interface SpendingService {
     // Spending 삭제
     void delete(Long spendingId);
     // 로그인되어 있는 유저의 이메일에 일치하는 Spending 목록 가져오기
-    List<MonthSpendingResponse> findAllByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth);
+    List<MonthSpendingResponse> findAllByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth,String condition);
     // Spending 상세보기
     Optional<Spending> read(Long spendingId);
+    List<DailySpendingSumResponse> findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth);
+
+    List<MonthSpendingSumResponse> findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth);
+    List<MonthCategoryResponse> findMonthSumByCategory(String memberEmail, int spendingYear, int spendingMonth);
 }

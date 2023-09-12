@@ -1,9 +1,7 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.NoContentException;
-import com.doacha.seesaw.model.dto.MonthSpendingResponse;
-import com.doacha.seesaw.model.dto.SpendingDto;
-import com.doacha.seesaw.model.dto.SpendingUpdateRequest;
+import com.doacha.seesaw.model.dto.*;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.Spending;
 import com.doacha.seesaw.repository.MemberRepository;
@@ -70,15 +68,36 @@ public class SpendingServiceImpl implements SpendingService{
     }
 
 
+    // 해당 월의 지출 목록 불러오기
     @Override
-    public List<MonthSpendingResponse> findAllByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth) {
-        List<MonthSpendingResponse> monthSpendingResponses = spendingRepository.findAllByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
+    public List<MonthSpendingResponse> findAllByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth, String condition) {
+        List<MonthSpendingResponse> monthSpendingResponses = spendingRepository.findAllByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth,condition);
         return monthSpendingResponses;
     }
-
+    // 지출 상세
     @Override
     public Optional<Spending> read(Long spendingId) {
         Optional<Spending> spending = spendingRepository.findById(spendingId);
         return spending;
     }
+
+    // 지출 일별 합계
+    @Override
+    public List<DailySpendingSumResponse> findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth) {
+        List<DailySpendingSumResponse>dailySpendingSumResponses= spendingRepository.findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
+        return dailySpendingSumResponses;
+    }
+    // 지출 월별 합계
+    @Override
+    public List<MonthSpendingSumResponse> findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth){
+        List<MonthSpendingSumResponse> monthSpendingSumResponses = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
+        return monthSpendingSumResponses;
+    }
+
+    @Override
+    public List<MonthCategoryResponse> findMonthSumByCategory(String memberEmail, int spendingYear, int spendingMonth) {
+        List<MonthCategoryResponse> monthCategoryResponses= spendingRepository.findMonthSumByCategory(memberEmail,spendingYear,spendingMonth);
+        return monthCategoryResponses;
+    }
+
 }

@@ -1,9 +1,6 @@
 package com.doacha.seesaw.controller;
 
-import com.doacha.seesaw.model.dto.MonthSpendingRequest;
-import com.doacha.seesaw.model.dto.MonthSpendingResponse;
-import com.doacha.seesaw.model.dto.SpendingDto;
-import com.doacha.seesaw.model.dto.SpendingUpdateRequest;
+import com.doacha.seesaw.model.dto.*;
 import com.doacha.seesaw.model.entity.Spending;
 import com.doacha.seesaw.model.service.SpendingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,8 +74,30 @@ public class SpendingController {
     @PostMapping("/list")
     @Operation(summary="최신, 금액순 정렬")
     public ResponseEntity<List<MonthSpendingResponse>> getSpendingList(@RequestBody MonthSpendingRequest monthSpendingRequest){
-        List<MonthSpendingResponse> spendingList =spendingService.findAllByMemberEmailAndSpendingYearAndSpendingMonth(monthSpendingRequest.getMemberEmail(), monthSpendingRequest.getSpendingYear(), monthSpendingRequest.getSpendingMonth());
+        List<MonthSpendingResponse> spendingList =spendingService.findAllByMemberEmailAndSpendingYearAndSpendingMonth(monthSpendingRequest.getMemberEmail(), monthSpendingRequest.getSpendingYear(), monthSpendingRequest.getSpendingMonth(),monthSpendingRequest.getCondition());
         return new ResponseEntity<>(spendingList, HttpStatus.OK);
     }
+
+    @PostMapping("/dailysum")
+    @Operation(summary="전체 일 합계")
+    public ResponseEntity<List<DailySpendingSumResponse>> getDailySum(@RequestBody SpendingSumRequest spendingSumRequest){
+        List<DailySpendingSumResponse> dailySpendingSumList=spendingService.findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(spendingSumRequest.getMemberEmail(), spendingSumRequest.getSpendingYear(), spendingSumRequest.getSpendingMonth());
+        return new ResponseEntity<>(dailySpendingSumList,HttpStatus.OK);
+    }
+
+    @PostMapping("/monthsum")
+    @Operation(summary="전체 월 합계")
+    public ResponseEntity<List<MonthSpendingSumResponse>> getMonthSum(@RequestBody SpendingSumRequest spendingSumRequest){
+        List<MonthSpendingSumResponse> monthSpendingSumList = spendingService.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(spendingSumRequest.getMemberEmail(), spendingSumRequest.getSpendingYear(), spendingSumRequest.getSpendingMonth());
+        return new ResponseEntity<>(monthSpendingSumList, HttpStatus.OK);
+    }
+
+    @PostMapping("/category")
+    @Operation(summary="월 별 카테고리")
+    public ResponseEntity<List<MonthCategoryResponse>> getMonthCategory(@RequestBody SpendingSumRequest spendingSumRequest){
+        List<MonthCategoryResponse> monthCategorygSumList = spendingService.findMonthSumByCategory(spendingSumRequest.getMemberEmail(), spendingSumRequest.getSpendingYear(), spendingSumRequest.getSpendingMonth());
+        return new ResponseEntity<>(monthCategorygSumList, HttpStatus.OK);
+    }
+
 
 }
