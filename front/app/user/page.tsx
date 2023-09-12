@@ -1,19 +1,29 @@
+'use client'
+import { useState } from 'react'
 import Header from '../components/Header'
 import Navbar from '../components/Navbar'
 import MyMissionListCard from './components/MyMissionListCard'
 import UserInfoCard from './components/UserInfoCard'
+import ProfileEditCard from './components/ProfileEditCard'
 
 UserInfoCard
 
 const User = () => {
+  const [openEditPage, setOpenEditPage] = useState<boolean>(false)
   return (
-    <div className="bg-background-fill flex flex-col h-screen w-screen gap-5">
+    <div className="bg-background-fill flex flex-col h-screen w-screen">
+      {openEditPage ? (
+        <div className="absolute w-full h-full bg-outline z-50 bg-opacity-50">
+          <ProfileEditCard />
+        </div>
+      ) : null}
+
       <Header title="마이페이지" />
-      <div className="mx-5">
-        <UserInfoCard />
-      </div>
-      <div className="mx-5">
-        <MyMissionListCard />
+      <div className="flex flex-col h-full gap-5 p-5">
+        <UserInfoCard setOpenEditPage={() => setOpenEditPage(true)} />
+        <div className="flex flex-col">
+          <MyMissionListCard />
+        </div>
       </div>
       <Navbar />
     </div>

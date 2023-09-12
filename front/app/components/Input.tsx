@@ -37,7 +37,7 @@ const Input = ({
   const tailwindLabelSize = isLabelBig ? 'text-[16px]' : 'text-[12px]'
   const tailwindLabelInterval = getTailwindScript(interval)
   return (
-    <div className="mx-5">
+    <div>
       {label && (
         <label className={`label p-0 ${tailwindLabelInterval}`}>
           <span

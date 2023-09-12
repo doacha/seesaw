@@ -6,6 +6,8 @@ import localFont from 'next/font/local'
 //fontawesome 설정/////////////////////////////////////////
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { config } from '@fortawesome/fontawesome-svg-core'
+import Header from './components/Header'
+import Navbar from './components/Navbar'
 config.autoAddCss = false
 //////////////////////////////////////////////////////////
 //아이콘을 사용하는 페이지에서 FontAwesomeIcon태그 import //
@@ -56,6 +58,7 @@ export default function RootLayout({
     >
       <body>
         <Providers>{children}</Providers>
+        <Navbar />
       </body>
     </html>
   )

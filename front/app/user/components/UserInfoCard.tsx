@@ -4,6 +4,10 @@ import UserDetailInfo from './UserDetailInfo'
 import TextButton from '@/app/components/TextButton'
 import { User } from '@/app/types'
 
+interface Props {
+  setOpenEditPage: () => void
+}
+
 const user: User = {
   userNickname: '차차아버님',
   userImgUrl: './차차_군침이.jpg',
@@ -12,9 +16,7 @@ const user: User = {
   savedMoney: 200000,
 }
 
-const UserInfoCard = () => {
-  const [openEditPage, setOpenEditPage] = useState<boolean>(false)
-  console.log(openEditPage)
+const UserInfoCard = (props: Props) => {
   return (
     <div className="card shadow-none bg-white rounded-lg">
       <div className="card-body relative p-5 gap-5">
@@ -22,7 +24,7 @@ const UserInfoCard = () => {
           <TextButton
             innerText="프로필 수정"
             textColor="text-primary"
-            onButtonClick={() => setOpenEditPage(true)}
+            onButtonClick={props.setOpenEditPage}
           ></TextButton>
         </div>
         <UserDetailInfo user={user} />
