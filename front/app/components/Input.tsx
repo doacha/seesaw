@@ -15,6 +15,7 @@
 
 interface inputProps {
   type: string
+  name?: string
   label?: string
   isLabelBig?: boolean
   value?: string | number
@@ -26,6 +27,7 @@ interface inputProps {
 
 const Input = ({
   type,
+  name,
   label,
   value,
   placeholder,
@@ -50,6 +52,7 @@ const Input = ({
       <div className="flex w-full gap-2.5">
         <input
           type={type}
+          name={name}
           placeholder={placeholder}
           value={value}
           className="input flex-[2_1_0%] input-bordered placeholder:text-xs placeholder:font-scDreamRegular
