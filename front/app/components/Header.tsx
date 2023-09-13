@@ -3,18 +3,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 
 interface Props {
-  title: String
-  backButton: boolean
-  plusButton: boolean
+  title: string
+  backButton?: boolean
+  plusButton?: boolean
+  route?: string
 }
 
 const Header = (props: Props) => {
   //add 버그 있음.
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar bg-white fixed top-0">
       <div className="flex-1">
-        {props.backButton ? (
-          <Link href={'/main'}>
+        {props.backButton && props.route ? (
+          <Link href={props.route}>
             <button className="btn btn-ghost normal-case text-xl">
               <FontAwesomeIcon icon={faChevronLeft} />
             </button>
@@ -23,8 +24,8 @@ const Header = (props: Props) => {
         <div
           className={
             props.backButton
-              ? 'btn btn-ghost normal-case text-xl font-envR p-0'
-              : 'btn btn-ghost normal-case text-xl font-envR'
+              ? 'btn btn-ghost normal-case text-2xl font-envR p-0'
+              : 'btn btn-ghost normal-case text-2xl font-envR'
           }
         >
           {props.title}
