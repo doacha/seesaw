@@ -1,22 +1,35 @@
 interface genderProps {
-  onClick: () => void
+  onClick: (e: any) => void
+  gender: string
 }
 
-const Gender = ({ onClick }: genderProps) => {
+const Gender = ({ onClick, gender }: genderProps) => {
   return (
     <>
       <p className="font-scDreamExBold text-xs justify-start">성별</p>
       <div className="mt-2 mb-5 w-full">
         <div className="grid grid-flow-col gap-2">
           <button
-            className="text-outline text-sm hover:text-white border border-outline hover:bg-outline focus:ring-1 focus:outline-none focus:ring-outline focus:bg-outline focus:text-white rounded-lg px-5 py-2.5 text-center mr-2 mb-2"
+            className={
+              gender === '남자'
+                ? 'text-white text-sm text-center ring-1 outline-none bg-outline rounded-lg px-5 py-2.5 mr-2 mb-2'
+                : 'text-outline text-sm border border-outline bg-white rounded-lg px-5 py-2.5 text-center mr-2 mb-2'
+            }
             onClick={onClick}
+            type="button"
+            name="gender"
           >
             남자
           </button>
           <button
-            className="text-outline text-sm hover:text-white border border-outline hover:bg-outline focus:ring-1 focus:outline-none focus:ring-outline focus:bg-outline focus:text-white rounded-lg px-5 py-2.5 text-center mr-2 mb-2"
+            className={
+              gender === '여자'
+                ? 'text-white text-sm text-center ring-1 outline-none bg-outline rounded-lg px-5 py-2.5 mr-2 mb-2'
+                : 'text-outline text-sm border border-outline bg-white rounded-lg px-5 py-2.5 text-center mr-2 mb-2'
+            }
             onClick={onClick}
+            type="button"
+            name="gender"
           >
             여자
           </button>
