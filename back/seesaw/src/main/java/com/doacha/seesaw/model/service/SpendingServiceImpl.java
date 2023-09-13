@@ -32,7 +32,6 @@ public class SpendingServiceImpl implements SpendingService{
                 .spendingMemo(spendingdto.getSpendingMemo())
                 .spendingCategoryId(spendingdto.getSpendingCategoryId())
                 .member(member.get())
-                .record(null)
                 .build();
         spendingRepository.save(spending);
     }
@@ -46,8 +45,7 @@ public class SpendingServiceImpl implements SpendingService{
         else{
         // 이메일로 멤버 찾기
         Optional<Member> member = memberRepository.findById(spendingUpdateRequest.getMemberEmail());
-        // 기록 찾기
-//        Optional<Record> record = recordRepository.findById(spendingUpdateRequest.getRecordId());
+
         // 변경할 지출 새로 저장
         Spending update = Spending.builder()
                 .spendingId(spending.get().getSpendingId())
@@ -57,7 +55,6 @@ public class SpendingServiceImpl implements SpendingService{
                 .spendingMemo(spendingUpdateRequest.getSpendingMemo())
                 .spendingCategoryId(spendingUpdateRequest.getSpendingCategoryId())
                 .member(member.get())
-                .record(null)
                 .build();
         spendingRepository.save(update);}
     }
