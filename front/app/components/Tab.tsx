@@ -3,17 +3,14 @@ import { useState } from 'react'
 
 interface TabProps {
   labels: string[]
+  handleTabChange: (tab: string) => void
+  activeTab: string
 }
 
-const Tab = ({ labels }: TabProps) => {
-  const [activeTab, setActiveTab] = useState<string>('tab1')
-
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab)
-  }
+const Tab = ({ labels, activeTab, handleTabChange }: TabProps) => {
   return (
-    <>
-      <div className="tabs grid grid-cols-2 h-10 font-scDreamMedium">
+    <div className="sticky top-[-1px]">
+      <div className="tabs grid grid-cols-2 h-10 font-scDreamMedium bg-white">
         <button
           className={`py-2 ${
             activeTab === 'tab1'
@@ -36,7 +33,7 @@ const Tab = ({ labels }: TabProps) => {
           {labels[1]}
         </button>
       </div>
-    </>
+    </div>
   )
 }
 

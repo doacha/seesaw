@@ -1,21 +1,19 @@
+import { User } from '@/app/types'
 import UserProfileImg from './UserProfileImg'
 
-const user = {
-  nickname: '차차아버님',
-  imgUrl: './차차_군침이.jpg',
-  successCnt: 2,
-  failCnt: 3,
+interface Props {
+  user: User
 }
 
-const UserDetailInfo = () => {
+const UserDetailInfo = (props: Props) => {
   return (
     <div className="flex gap-2 items-center">
-      <UserProfileImg src={user.imgUrl}></UserProfileImg>
+      <UserProfileImg src={props.user.userImgUrl}></UserProfileImg>
       <div className="flex flex-col">
-        <div className="text-lg font-extrabold">{user.nickname}</div>
+        <div className="text-lg font-extrabold">{props.user.userNickname}</div>
         <div className="text-outline">챌린지 정보</div>
         <div className="text-outline">
-          성공 {user.successCnt}회 실패 {user.failCnt}회
+          성공 {props.user.successCnt}회 실패 {props.user.failCnt}회
         </div>
       </div>
     </div>
