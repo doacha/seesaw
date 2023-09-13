@@ -29,7 +29,7 @@ const CompleteMission = () => {
     <div className="w-screen h-screen bg-background-fill">
       <Header title={mission.missionTitle} backButton route="/user" />
 
-      <div className="h-full pb-16">
+      <div className="h-full py-16 overflow-auto ">
         <CompleteMissionDetailCard mission={mission} />
         <Tab
           labels={['통계', '내 게시글']}
@@ -38,6 +38,7 @@ const CompleteMission = () => {
         ></Tab>
         <div className="p-5">
           {activeTab === 'tab1' ? <MystatisticCard /> : null}
+          <MystatisticCard />
         </div>
       </div>
     </div>

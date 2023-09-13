@@ -9,7 +9,7 @@ interface TabProps {
 
 const Tab = ({ labels, activeTab, handleTabChange }: TabProps) => {
   return (
-    <>
+    <div className="sticky top-[-1px]">
       <div className="tabs grid grid-cols-2 h-10 font-scDreamMedium bg-white">
         <button
           className={`py-2 ${
@@ -33,7 +33,7 @@ const Tab = ({ labels, activeTab, handleTabChange }: TabProps) => {
           {labels[1]}
         </button>
       </div>
-    </>
+    </div>
   )
 }
 
