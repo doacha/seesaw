@@ -12,7 +12,7 @@ interface Props {
 const Header = (props: Props) => {
   //add 버그 있음.
   return (
-    <div className="navbar bg-white">
+    <div className="navbar bg-white fixed top-0">
       <div className="flex-1">
         {props.backButton && props.route ? (
           <Link href={props.route}>

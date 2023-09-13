@@ -19,10 +19,12 @@ const User = () => {
       ) : null}
 
       <Header title="마이페이지" />
-      <div className="flex flex-col h-full gap-5 p-5">
-        <UserInfoCard setOpenEditPage={() => setOpenEditPage(true)} />
-        <div className="flex flex-col">
-          <MyMissionListCard />
+      <div className="flex h-full py-16 px-5">
+        <div className="flex flex-col py-5 gap-5">
+          <UserInfoCard setOpenEditPage={() => setOpenEditPage(true)} />
+          <div className="flex flex-col">
+            <MyMissionListCard />
+          </div>
         </div>
       </div>
       <Navbar />
