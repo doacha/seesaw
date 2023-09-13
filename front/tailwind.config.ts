@@ -65,6 +65,7 @@ const config: Config = {
         scDreamRegular: ['var(--font-SCDream-Regular)'],
         scDreamMedium: ['var(--font-SCDream-Medium)'],
         scDreamExBold: ['var(--font-SCDream-ExBold)'],
+        robotoM: ['var(--font-roboto-Middle)'],
       },
     },
   },
