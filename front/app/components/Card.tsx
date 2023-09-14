@@ -8,7 +8,7 @@ type Props = {
 }
 const Card = (props: Props) => {
   return (
-    <div className="card w-full h-fit bg-base-100 shadow-xl">
+    <div className="card w-full h-fit bg-background">
       <div className="card-body p-5">
         <div className="card-title font-scDreamRegular">{props.title}</div>
         <div className="h-[1px] bg-outline rounded-full"></div>
