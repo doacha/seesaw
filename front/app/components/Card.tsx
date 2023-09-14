@@ -3,16 +3,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ReactNode } from 'react'
 
 type Props = {
-  title: String
+  title?: String
   content: React.ReactNode
 }
 const Card = (props: Props) => {
   return (
-    <div className="card w-full h-fit bg-base-100 shadow-xl">
+    <div className="card w-full h-fit bg-white">
       <div className="card-body p-5">
-        <div className="card-title font-scDreamRegular">{props.title}</div>
-        <div className="h-[1px] bg-outline rounded-full"></div>
-        <div>{props.content}</div>
+        {props.title ? (
+          <>
+            <div className="card-title font-scDreamRegular">{props.title}</div>
+            <div className="h-[1px] bg-outline rounded-full"></div>
+          </>
+        ) : null}
+        <div className="flex flex-col gap-5">{props.content}</div>
       </div>
     </div>
   )
