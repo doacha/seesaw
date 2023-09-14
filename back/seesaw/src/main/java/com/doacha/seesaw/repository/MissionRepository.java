@@ -16,13 +16,13 @@ public interface MissionRepository extends JpaRepository<Mission, String>, JpaSp
 
     @Query("SELECT new com.doacha.seesaw.model.dto.MissionListResponse(" +
             "m.missionId, m.missionTitle, m.missionMemberCount, m.missionMaxCount, m.missionImgUrl, " +
-            "m.missionLimit, m.missionPeriod, m.missionTotalCycle, m.missionStartDate) " +
+            "m.missionTargetPrice, m.missionPeriod, m.missionTotalCycle, m.missionStartDate) " +
             "FROM Mission m WHERE m.missionIsPublic = true")
     List<MissionListResponse> findMissionListResponseByMissionByIsPublic(Pageable pageable);
 
     @Query("SELECT new com.doacha.seesaw.model.dto.MissionListResponse(" +
             "m.missionId, m.missionTitle, m.missionMemberCount, m.missionMaxCount, m.missionImgUrl, " +
-            "m.missionLimit, m.missionPeriod, m.missionTotalCycle, m.missionStartDate) " +
+            "m.missionTargetPrice, m.missionPeriod, m.missionTotalCycle, m.missionStartDate) " +
             "FROM Mission m " +
             "WHERE (:keyword IS NULL OR m.missionTitle LIKE %:keyword%) " +
             "AND (:missionCategoryId IS NULL OR m.missionCategoryId = :missionCategoryId) " +

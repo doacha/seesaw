@@ -6,23 +6,16 @@ import com.doacha.seesaw.model.dto.MissionListResponse;
 import com.doacha.seesaw.model.dto.SearchMissionRequest;
 import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.repository.MissionRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,9 +46,9 @@ public class MissionService {
                 .missionMaxCount(mission.getMissionMaxCount())
                 .missionImgUrl(mission.getMissionImgUrl())
                 .missionPurpose(mission.getMissionPurpose())
-                .missionMinDeposit(mission.getMissionMinDeposit())
+                .missionDeposit(mission.getMissionDeposit())
                 .missionIsPublic(mission.isMissionIsPublic())
-                .missionLimit(mission.getMissionLimit())
+                .missionTargetPrice(mission.getMissionTargetPrice())
                 .missionPeriod(mission.getMissionPeriod())
                 .missionStatus(0)
                 .missionFailureCount(mission.getMissionFailureCount())
@@ -106,9 +99,9 @@ public class MissionService {
                 .missionMaxCount(mission.get().getMissionMaxCount())
                 .missionImgUrl(mission.get().getMissionImgUrl())
                 .missionPurpose(mission.get().getMissionPurpose())
-                .missionMinDeposit(mission.get().getMissionMinDeposit())
+                .missionDeposit(mission.get().getMissionDeposit())
                 .missionIsPublic(mission.get().isMissionIsPublic())
-                .missionLimit(mission.get().getMissionLimit())
+                .missionTargetPrice(mission.get().getMissionTargetPrice())
                 .missionPeriod(mission.get().getMissionPeriod())
                 .missionTotalCycle(mission.get().getMissionTotalCycle())
                 .missionCurrentCycle(mission.get().getMissionCurrentCycle())

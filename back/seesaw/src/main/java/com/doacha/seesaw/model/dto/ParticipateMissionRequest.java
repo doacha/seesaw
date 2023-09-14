@@ -16,9 +16,6 @@ public class ParticipateMissionRequest {
     @Schema(description = "사용자 이메일", example = "doacha@seesaw.com", required = true)
     private String memberEmail;
 
-    @Schema(description = "예치금", example = "40000", required = true)
-    private int memberMissionDeposit;
-
-    @Schema(description = "결제 번호", example = "T1234567890123456789", required = true)
-    private String memberMissionTnum;
+    @Schema(description = "적금 연동 여부", example = "true", required = true)
+    private boolean memberMissionIsSavings;
 }

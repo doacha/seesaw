@@ -76,7 +76,7 @@ public class MissionController {
             Mission newMission = missionService.createMission(createMissionRequest);
             log.info("미션 생성 성공");
             log.info("미션 생성한 멤버 정보 저장 시도");
-            memberMissionService.registCreateMemberMission(newMission, createMissionRequest.getMemberMissionDeposit(), createMissionRequest.getMemberMissionTnum());
+            memberMissionService.registCreateMemberMission(newMission, createMissionRequest.isMemberMissionIsSaving());
             log.info("미션 생성한 멤버 정보 저장 성공");
             return new ResponseEntity<>(newMission, HttpStatus.OK);
         } catch (Exception e) {
@@ -190,23 +190,23 @@ public class MissionController {
     
 
     // 카카오페이 결제 번호 반환
-    @Operation( summary = "결제 번호 불러오기", description = "카카오페이 결제번호 불러오는 API")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "결제번호 불러오기 성공"),
-            @ApiResponse(responseCode = "500", description = "결제번호 불러오기 성공 실패 - 서버 오류")
-    })
-    @PostMapping("/tnum")
-    public ResponseEntity<?> getMemberMissionTnum(@RequestBody GetMemberMissionTnumRequest getMemberMissionTnumRequest) {
-        log.info("결제 번호 불러오기");
-        try {
-            String tnum = memberMissionService.getMemberMissionTnum(getMemberMissionTnumRequest);
-            log.info("결제 번호 불러오기 성공");
-            return new ResponseEntity<String>(tnum, HttpStatus.OK);
-        } catch (Exception e) {
-            log.info("결제 번호 불러오기 실패 - 서버 오류");
-            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @Operation( summary = "결제 번호 불러오기", description = "카카오페이 결제번호 불러오는 API")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "결제번호 불러오기 성공"),
+//            @ApiResponse(responseCode = "500", description = "결제번호 불러오기 성공 실패 - 서버 오류")
+//    })
+//    @PostMapping("/tnum")
+//    public ResponseEntity<?> getMemberMissionTnum(@RequestBody GetMemberMissionTnumRequest getMemberMissionTnumRequest) {
+//        log.info("결제 번호 불러오기");
+//        try {
+//            String tnum = memberMissionService.getMemberMissionTnum(getMemberMissionTnumRequest);
+//            log.info("결제 번호 불러오기 성공");
+//            return new ResponseEntity<String>(tnum, HttpStatus.OK);
+//        } catch (Exception e) {
+//            log.info("결제 번호 불러오기 실패 - 서버 오류");
+//            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
     
 
 }
