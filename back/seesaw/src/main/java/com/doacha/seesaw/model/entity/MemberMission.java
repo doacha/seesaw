@@ -34,9 +34,9 @@ public class MemberMission implements Serializable {
     @Schema(description = "사용자 이메일", example = "doacha@seesaw.com", required = true)
     private Member member;
 
-    @Column(name = "member_mission_deposit", nullable = false)
-    @Schema(description = "예치금", example = "40000", required = true)
-    private int memberMissionDeposit;
+    @Column(name = "member_mission_refund", nullable = false)
+    @Schema(description = "미션 환급금", example = "40000", required = true)
+    private int memberMissionRefund;
 
     @Column(name = "member_mission_status", nullable = false)
     @ColumnDefault("0")
@@ -44,8 +44,8 @@ public class MemberMission implements Serializable {
     @Schema(description = "미션 상태 - 0: 시작 전, 1: 진행 중, 2: 성공, 3: 실패", example = "0", required = true)
     private int memberMissionStatus;
 
-    @Column(name = "member_mission_tnum", nullable = false)
-    @Schema(description = "결제 번호", required = true)
-    private String memberMissionTnum;
+    @Column(name = "member_mission_is_saving", nullable = false)
+    @Schema(description = "적금 연동 여부", required = true)
+    private Boolean memberMissionIsSaving;
 
 }

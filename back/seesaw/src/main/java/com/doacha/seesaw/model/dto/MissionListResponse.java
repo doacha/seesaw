@@ -29,7 +29,7 @@ public class MissionListResponse {
     private String missionImgUrl;
 
     @Schema(description = "미션 목표 금액", example = "30000", required = true)
-    private int missionLimit;
+    private int missionTargetPrice;
 
     @Schema(description = "미션 기간", example = "7", required = true)
     private int missionPeriod;
