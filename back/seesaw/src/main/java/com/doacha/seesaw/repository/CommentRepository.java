@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @Query("SELECT new com.doacha.seesaw.model.dto.CommentResponse(c.commentId, c.commentContent, c.member.memberNickname, c.commentWriteTime) " +
+    @Query("SELECT new com.doacha.seesaw.model.dto.CommentResponse(c.commentId, c.commentContent, " +
+            "c.member.memberNickname, c.member.memberEmail, c.member.memberImgUrl, c.commentWriteTime) " +
             "FROM Comment c " +
             "WHERE c.record.recordId = :recordId " +
             "ORDER BY c.commentWriteTime ASC")

@@ -3,6 +3,7 @@ package com.doacha.seesaw.model.service;
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.RecordListResponse;
 import com.doacha.seesaw.model.dto.RecordRequest;
+import com.doacha.seesaw.model.dto.RecordResponse;
 import com.doacha.seesaw.model.entity.Record;
 import com.doacha.seesaw.repository.RecordRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -24,25 +25,26 @@ public class RecordService {
     RecordRepository recordRepository;
 
     // 글 작성
-    public Record writeRecord(RecordRequest recordRequest) {
+    public RecordResponse writeRecord(RecordRequest recordRequest) {
         Optional<Record> recordOptional = recordRepository.findById(recordRequest.getRecordId());
 
         if (recordOptional.isPresent()) {
-            // 해당 record의 recordContent 등록 & 작성 시간으로 현재 시간 등록
-//            String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//             해당 record의 recordContent 등록 & 작성 시간으로 현재 시간 등록
+            String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             Record record = recordOptional.get();
             Record newRecord = Record.builder()
                     .recordId(record.getRecordId())
                     .recordContent(recordRequest.getRecordContent())
-//                    .recordWriteTime(Timestamp.valueOf(now))
+                    .recordWriteTime(Timestamp.valueOf(now))
                     .recordTotalCost(record.getRecordTotalCost())
                     .recordNumber(record.getRecordNumber())
                     .recordStatus(record.getRecordStatus())
                     .memberMission(record.getMemberMission())
                     .build();
 
-            Record updatedRecord = recordRepository.save(newRecord);
-            return updatedRecord;
+            recordRepository.save(newRecord);
+            RecordResponse recordResponse = recordRepository.findRecordResponseById(record.getRecordId());
+            return recordResponse;
         } else {
             //존재하지 않는 RecordId인 경우
             throw new NoContentException();
@@ -50,7 +52,7 @@ public class RecordService {
     }
 
     // 글 수정
-    public Record updateRecord(RecordRequest recordRequest) {
+    public RecordResponse updateRecord(RecordRequest recordRequest) {
         Optional<Record> recordOptional = recordRepository.findById(recordRequest.getRecordId());
 
         if (recordOptional.isPresent()) {
@@ -66,7 +68,9 @@ public class RecordService {
                     .memberMission(record.getMemberMission())
                     .build();
 
-            return recordRepository.save(updatedRecord);
+            recordRepository.save(updatedRecord);
+            RecordResponse recordResponse = recordRepository.findRecordResponseById(record.getRecordId());
+            return recordResponse;
         } else {
             //존재하지 않는 RecordId인 경우
             throw new NoContentException();
@@ -97,12 +101,12 @@ public class RecordService {
     }
 
     // 글 상세
-    public Optional<Record> getRecordDetail(long recordId) {
-        Optional<Record> record = recordRepository.findById(recordId);
-        if(!record.isPresent()){
+    public RecordResponse getRecordDetail(long recordId) {
+        if(!recordRepository.existsById(recordId)){
             throw new NoContentException();
         }
-        return record;
+        RecordResponse recordResponse = recordRepository.findRecordResponseById(recordId);
+        return recordResponse;
     }
 
     // 글 목록

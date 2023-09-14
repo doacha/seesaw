@@ -48,6 +48,12 @@ public class Member {
 
     @Column(name="member_refresh_token")
     private String memberRefreshToken;
+    
+    @Column(name="member_account")
+    private String memberAccount;
+
+    @Column(name="member_saving_account")
+    private String memberSavingAccount;
 
     public Member(String memberEmail, String memberPassword, String memberName, String memberNickname, String memberBirth, boolean memberGender, boolean memberIsSocial, int memberState) {
         this.memberEmail = memberEmail;

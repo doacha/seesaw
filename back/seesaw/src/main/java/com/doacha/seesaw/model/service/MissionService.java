@@ -3,18 +3,20 @@ package com.doacha.seesaw.model.service;
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.CreateMissionRequest;
 import com.doacha.seesaw.model.dto.MissionListResponse;
+import com.doacha.seesaw.model.dto.SearchMissionRequest;
 import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.repository.MissionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,9 +26,9 @@ public class MissionService {
     @Autowired
     MissionRepository missionRepository;
 
-
-    public Page<MissionListResponse> getMissionList(Pageable pageable) {
-        Page<MissionListResponse> list = missionRepository.findAllByMissionIsPublic(pageable);
+    // 미션 목록
+    public List<MissionListResponse> getMissionList(Pageable pageable) {
+        List<MissionListResponse> list = missionRepository.findMissionListResponseByMissionByIsPublic(pageable);
         return list;
     }
 
@@ -37,23 +39,24 @@ public class MissionService {
 
         Mission createdMission = Mission.builder()
                 .missionId(createRandomId())
+                .missionCategoryId(mission.getMissionCategoryId())
+                .missionCreationTime(Timestamp.valueOf(now))
                 .missionTitle(mission.getMissionTitle())
-                .missionStatus(0)
                 .missionMemberCount(1)
                 .missionMaxCount(mission.getMissionMaxCount())
                 .missionImgUrl(mission.getMissionImgUrl())
                 .missionPurpose(mission.getMissionPurpose())
-                .missionMinDeposit(mission.getMissionMinDeposit())
+                .missionDeposit(mission.getMissionDeposit())
                 .missionIsPublic(mission.isMissionIsPublic())
-                .missionLimit(mission.getMissionLimit())
+                .missionTargetPrice(mission.getMissionTargetPrice())
                 .missionPeriod(mission.getMissionPeriod())
+                .missionStatus(0)
+                .missionFailureCount(mission.getMissionFailureCount())
                 .missionTotalCycle(mission.getMissionTotalCycle())
                 .missionCurrentCycle(0)
-                .missionFailureCount(mission.getMissionFailureCount())
-                .missionStartDate(mission.getMissionStartDate())
-                .missionCreationTime(Timestamp.valueOf(now))
+                .missionStartDate(Date.valueOf(mission.getMissionStartDate()))
                 .missionHostEmail(mission.getMissionHostEmail())
-                .missionCategoryId(mission.getMissionCategoryId())
+
                 .build();
 
         return missionRepository.save(createdMission);
@@ -70,11 +73,13 @@ public class MissionService {
         log.info("미션 아이디 생성 성공");
         return randomId;
     }
+
     // 미션 검색
-    public Page<MissionListResponse> searchMission(Pageable pageable, String keyword) {
-        log.info("페이지 정보 : {}", pageable);
-        Page<MissionListResponse> list = missionRepository.findAllByMissionIsPublicAndMissionTitleLike(keyword, pageable);
-        return list;
+    public List<MissionListResponse> searchMission(Pageable pageable, SearchMissionRequest searchMissionRequest) {
+        return missionRepository.searchMissions(searchMissionRequest.getKeyword(),
+                searchMissionRequest.getMissionCategoryId(),
+                searchMissionRequest.getMissionPeriod(),
+                searchMissionRequest.getMissionCycle(), pageable);
     }
 
     // 미션 상세
@@ -86,7 +91,7 @@ public class MissionService {
     }
 
     // 미션 인원수 변경
-    public void updateMissionMemberCount(String missionId, int cnt){
+    public Mission updateMissionMemberCount(String missionId, int cnt){
         Optional<Mission> mission = missionRepository.findById(missionId);
         Mission updatedMission = Mission.builder()
                 .missionId(missionId)
@@ -95,9 +100,9 @@ public class MissionService {
                 .missionMaxCount(mission.get().getMissionMaxCount())
                 .missionImgUrl(mission.get().getMissionImgUrl())
                 .missionPurpose(mission.get().getMissionPurpose())
-                .missionMinDeposit(mission.get().getMissionMinDeposit())
+                .missionDeposit(mission.get().getMissionDeposit())
                 .missionIsPublic(mission.get().isMissionIsPublic())
-                .missionLimit(mission.get().getMissionLimit())
+                .missionTargetPrice(mission.get().getMissionTargetPrice())
                 .missionPeriod(mission.get().getMissionPeriod())
                 .missionTotalCycle(mission.get().getMissionTotalCycle())
                 .missionCurrentCycle(mission.get().getMissionCurrentCycle())
@@ -107,7 +112,12 @@ public class MissionService {
                 .missionCategoryId(mission.get().getMissionCategoryId())
                 .build();
 
-        missionRepository.save(updatedMission);
+        return missionRepository.save(updatedMission);
     }
 
+
+    // 미션 삭제
+    public void deleteMission(String missionId){
+        missionRepository.deleteById(missionId);
+    }
 }
