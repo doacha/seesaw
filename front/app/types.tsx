@@ -21,3 +21,10 @@ export interface MissionCardProps {
   missionHostEmail: string
   categoryId: number
 }
+
+export interface SearchState {
+  period: Array<number>
+  cycle: Array<number>
+  category: Array<number>
+  [key: string]: any
+}
