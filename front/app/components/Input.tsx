@@ -23,6 +23,7 @@ interface inputProps {
   interval: string
   onChange?: any
   submitButton?: JSX.Element
+  name?: string
 }
 
 const Input = ({
@@ -35,6 +36,7 @@ const Input = ({
   interval,
   onChange,
   submitButton,
+  name,
 }: inputProps) => {
   const tailwindLabelSize = isLabelBig ? 'text-[16px]' : 'text-[12px]'
   const tailwindLabelInterval = getTailwindScript(interval)
@@ -58,6 +60,7 @@ const Input = ({
           className="input flex-[2_1_0%] input-bordered placeholder:text-xs placeholder:font-scDreamRegular
           input-primary border-outline-container border-1 w-full h-10"
           onChange={onChange}
+          name={name}
         />
         {submitButton && <div className="flex-[1_1_0%]">{submitButton}</div>}
       </div>
