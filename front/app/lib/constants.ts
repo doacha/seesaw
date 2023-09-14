@@ -110,3 +110,25 @@ export const missionPeriodArray = [
 ]
 
 export const missionCycleArray = ['1주', '2주', '3주', '한달']
+
+export const categoryIcon = {
+  'category-1': 'faUtensils',
+  'category-2': 'faMugHot',
+  'category-3': 'faChampagneGlasses',
+  'category-4': 'faHouse',
+  'category-5': 'faCartShopping',
+  'category-6': 'faShirt',
+  'category-7': 'faGem',
+  'category-8': 'faBus',
+  'category-9': 'faCar',
+  'category-10': 'faMobileScreenButton',
+  'category-11': 'faBriefcaseMedical',
+  'category-12': 'faWonSign',
+  'category-13': 'faTicket',
+  'category-14': 'faPlane',
+  'category-15': 'faBookOpen',
+  'category-16': 'faBaby',
+  'category-17': 'faPaw',
+  'category-18': 'faGift',
+  'category-19': 'faCircleQuestion',
+}

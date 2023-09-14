@@ -66,3 +66,12 @@ export interface SearchState {
   category: Array<number>
   [key: string]: any
 }
+
+export interface HomeListProps {
+  spendingTitle: string
+  spendingCost: number
+  spendingDate: string
+  spendingMemo: string
+  spendingCategoryId: number
+  memberEmail: string
+}
