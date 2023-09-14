@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 interface User {
   userEmail?: string
   userPassword?: string
@@ -42,12 +41,6 @@ interface ImageFile {
 }
 
 export type { User, Mission, ImageFile }
-=======
-export type User = {
-  id: number
-  name: string
-  email: string
-}
 
 export interface MissionCardProps {
   missionId: string
@@ -66,4 +59,3 @@ export interface MissionCardProps {
   missionHostEmail: string
   categoryId: number
 }
->>>>>>> b62350a21697bc74cca7fc50249e78d02f271cca
