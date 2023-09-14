@@ -25,6 +25,12 @@ public class CommentResponse {
     @Schema(description = "사용자 닉네임", example = "도아차차", required = true)
     private String memberNickname;
 
+    @Schema(description = "사용자 이메일", example = "도아차차", required = true)
+    private String memberEmail;
+
+    @Schema(description = "사용자 프로필 사진", required = true)
+    private String memberImgUrl;
+
     @Schema(description = "게시글 작성일시", example = "2023-09-08 10:12:34", required = true)
     private Timestamp commentWriteTime;
 }

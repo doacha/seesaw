@@ -18,3 +18,4 @@ public class MemberMissionId implements Serializable {
     private Mission mission;
     private Member member;
 }
+

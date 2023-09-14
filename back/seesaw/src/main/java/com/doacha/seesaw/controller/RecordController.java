@@ -1,8 +1,10 @@
 package com.doacha.seesaw.controller;
 
 import com.doacha.seesaw.exception.NoContentException;
+import com.doacha.seesaw.model.dto.RecordListRequest;
 import com.doacha.seesaw.model.dto.RecordListResponse;
 import com.doacha.seesaw.model.dto.RecordRequest;
+import com.doacha.seesaw.model.dto.RecordResponse;
 import com.doacha.seesaw.model.entity.Record;
 import com.doacha.seesaw.model.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,7 +45,7 @@ public class RecordController {
         log.info("작성 글 정보: " + recordRequest);
         log.info("글 작성");
         try {
-            Record newRecord = recordService.writeRecord(recordRequest);
+            RecordResponse newRecord = recordService.writeRecord(recordRequest);
             log.info("글 작성 성공");
             return new ResponseEntity<>(newRecord, HttpStatus.OK);
         } catch (NoContentException e) {
@@ -66,9 +68,9 @@ public class RecordController {
     public ResponseEntity<?> updateRecord(@RequestBody RecordRequest recordRequest) {
         log.info("글 수정");
         try {
-            Record updatedRecord = recordService.updateRecord(recordRequest);
+            RecordResponse updatedRecord = recordService.updateRecord(recordRequest);
             log.info("글 수정 성공");
-            return new ResponseEntity<Record>(updatedRecord, HttpStatus.OK);
+            return new ResponseEntity<RecordResponse>(updatedRecord, HttpStatus.OK);
         } catch (NoContentException e) {
             log.info("글 수정 실패 - {}번 레코드 없음", recordRequest.getRecordId());
             return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
@@ -85,7 +87,7 @@ public class RecordController {
             @ApiResponse(responseCode = "200", description = "글 삭제 성공"),
             @ApiResponse(responseCode = "500", description = "글 삭제 실패 - 서버 오류")
     })
-    @PutMapping("delete/{recordId}")
+    @PutMapping("/{recordId}")
     public ResponseEntity<?> deleteRecord(@PathVariable Long recordId) {
         log.info("글 삭제");
         try {
@@ -108,13 +110,13 @@ public class RecordController {
             @ApiResponse(responseCode = "200", description = "글 상세 정보 불러오기 성공"),
             @ApiResponse(responseCode = "500", description = "글 상세 정보 불러오기 실패 - 서버 오류")
     })
-    @GetMapping("detail/{recordId}")
+    @GetMapping("/{recordId}")
     public ResponseEntity<?> getRecordDetail(@PathVariable long recordId) {
         log.info("글 상세 가져오기");
         try {
-            Optional<Record> record = recordService.getRecordDetail(recordId);
+            RecordResponse record = recordService.getRecordDetail(recordId);
             log.info("글 상세 가져오기 성공");
-            return new ResponseEntity<Record>(record.get(), HttpStatus.OK);
+            return new ResponseEntity<RecordResponse>(record, HttpStatus.OK);
         } catch (NoContentException e) {
             log.info("게시글 상세 가져오기 실패 - {}번 게시글 없음", recordId);
             return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
@@ -131,11 +133,11 @@ public class RecordController {
             @ApiResponse(responseCode = "200", description = "글 목록 불러오기 성공"),
             @ApiResponse(responseCode = "500", description = "글 목록 불러오기 실패 - 서버 오류")
     })
-    @GetMapping("/{missionId}/{recordNumber}")
-    public ResponseEntity<?> getRecordList(@PathVariable String missionId, @PathVariable int recordNumber) {
+    @PostMapping()
+    public ResponseEntity<?> getRecordList(@RequestBody RecordListRequest recordListRequest) {
         log.info("글 목록 불러오기");
         try {
-            List<RecordListResponse> list = recordService.getRecordList(missionId, recordNumber);
+            List<RecordListResponse> list = recordService.getRecordList(recordListRequest.getMissionId(), recordListRequest.getRecordNumber());
             log.info("게시글 목록 불러오기 성공");
             return new ResponseEntity<List<RecordListResponse>>(list, HttpStatus.OK);
         } catch (Exception e) {
