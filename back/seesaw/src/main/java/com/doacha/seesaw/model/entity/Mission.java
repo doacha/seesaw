@@ -1,20 +1,19 @@
 package com.doacha.seesaw.model.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-
-import static jakarta.persistence.FetchType.LAZY;
-
 
 @Entity
 @Data
@@ -51,18 +50,18 @@ public class Mission {
     @Schema(description = "미션 소개글", example = "일주일동안 5만원쓰기 같이 하실 분!!", required = true)
     private String missionPurpose;
 
-    @Column(name = "mission_min_deposit", nullable = false)
-    @Schema(description = "최소 예치금", example = "30000", required = true)
-    private int missionMinDeposit;
+    @Column(name = "mission_deposit", nullable = false)
+    @Schema(description = "미션 예치금", example = "30000", required = true)
+    private int missionDeposit;
 
     @Column(name = "mission_is_public", nullable = false)
     @Comment("0: 비공개, 1: 공개")
     @Schema(description = "미션 공개 여부", example = "true", required = true)
     private boolean missionIsPublic;
 
-    @Column(name = "mission_limit", nullable = false)
+    @Column(name = "mission_target_price", nullable = false)
     @Schema(description = "미션 목표 금액", example = "50000", required = true)
-    private int missionLimit;
+    private int missionTargetPrice;
 
     @Column(name = "mission_period", nullable = false)
     @Schema(description = "미션 기간", example = "7", required = true)
@@ -98,7 +97,7 @@ public class Mission {
     private Timestamp missionCreationTime;
 
     @Column(name = "mission_host_email", nullable = false)
-    @Schema(description = "미션 그룹장 이메일", example = "doacha@seesaw.com", required = true)
+    @Schema(description = "미션 생성자 이메일", example = "doacha@seesaw.com", required = true)
     private String missionHostEmail;
 
     @Column(name="mission_category_id",nullable = false)
