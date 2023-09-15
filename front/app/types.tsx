@@ -13,25 +13,25 @@ interface User {
 }
 
 interface Mission {
-  mission?: string
-  dueDate?: string
   missionId?: string
   missionTitle: string
   missionMemberCount?: number
   missionMaxCount?: number
   missionImgUrl: string
   missionPurpose?: string
-  missionMinDeposit?: number
+  missionDeposit?: number
   missionIsPublic?: boolean
-  missionLimit?: number
+  missionTargetPrice?: number
   missionPeriod: number
-  missionCycle: number
+  missionTotalCycle?: number
+  missionCurrentCycle: number
   missionStartDate: string
-  missionEndDate: string
-  missionResult: string
+  missionEndDate?: string
+  missionStatus?: number
   missionCreationTime?: string
   missionHostEmail?: string
-  categoryId?: number
+  missionCategoryId?: number
+  memberMissionStatus?: number
 }
 
 interface ImageFile {
@@ -65,4 +65,46 @@ export interface SearchState {
   cycle: Array<number>
   category: Array<number>
   [key: string]: any
+}
+
+{
+  "missionId": "LyowDxcWP8",
+  "missionTitle": "일주일동안 5만원 쓰기",
+  "missionMemberCount": 1,
+  "missionMaxCount": 6,
+  "missionImgUrl": "string",
+  "missionPurpose": "일주일동안 5만원쓰기 같이 하실 분!!",
+  "missionDeposit": 30000,
+  "missionIsPublic": true,
+  "missionTargetPrice": 50000,
+  "missionPeriod": 7,
+  "missionTotalCycle": 4,
+  "missionCurrentCycle": 0,
+  "missionStatus": 0,
+  "missionFailureCount": 1,
+  "missionStartDate": "2023-09-14",
+  "missionCreationTime": "2023-09-14T01:34:05.000+00:00",
+  "missionHostEmail": "doacha@seesaw.com",
+  "missionCategoryId": 0
+}
+
+{
+  "missionId": "LyowDxcWP8",
+  "missionTitle": "일주일동안 5만원 쓰기",
+  "missionMemberCount": 3,
+  "missionMaxCount": 6,
+  "missionImgUrl": "string",
+  "missionPurpose": "일주일동안 5만원쓰기 같이 하실 분!!",
+  "missionDeposit": 30000,
+  "missionIsPublic": true,
+  "missionTargetPrice": 50000,
+  "missionPeriod": 7,
+  "missionTotalCycle": 4,
+  "missionCurrentCycle": 0,
+  "missionStatus": 0,
+  "missionFailureCount": 0,
+  "missionStartDate": "2023-09-14",
+  "missionCreationTime": "2023-09-14T01:34:05.000+00:00",
+  "missionHostEmail": "doacha@seesaw.com",
+  "missionCategoryId": 0
 }
