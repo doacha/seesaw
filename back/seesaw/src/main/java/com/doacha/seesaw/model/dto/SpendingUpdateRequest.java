@@ -1,5 +1,6 @@
 package com.doacha.seesaw.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -15,6 +16,6 @@ public class SpendingUpdateRequest {
     private int spendingCost;
     private Timestamp spendingDate;
     private String spendingMemo;
-    private int categoryId;
+    private int spendingCategoryId;
     private String memberEmail;
 }
