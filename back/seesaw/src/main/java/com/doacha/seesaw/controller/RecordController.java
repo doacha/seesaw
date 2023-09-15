@@ -1,11 +1,10 @@
 package com.doacha.seesaw.controller;
 
 import com.doacha.seesaw.exception.NoContentException;
-import com.doacha.seesaw.model.dto.RecordListRequest;
-import com.doacha.seesaw.model.dto.RecordListResponse;
-import com.doacha.seesaw.model.dto.RecordRequest;
-import com.doacha.seesaw.model.dto.RecordResponse;
-import com.doacha.seesaw.model.entity.Record;
+import com.doacha.seesaw.model.dto.record.RecordListRequest;
+import com.doacha.seesaw.model.dto.record.RecordListResponse;
+import com.doacha.seesaw.model.dto.record.RecordRequest;
+import com.doacha.seesaw.model.dto.record.RecordResponse;
 import com.doacha.seesaw.model.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @Tag(name = "Record", description = "Record API")

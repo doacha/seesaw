@@ -1,4 +1,4 @@
-package com.doacha.seesaw.model.dto;
+package com.doacha.seesaw.model.dto.record;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "카카오페이 결제번호 request")
-public class GetMemberMissionTnumRequest {
+@Schema(description = "Record 글 목록 request")
+public class RecordListRequest {
+
     @Schema(description = "미션 아이디", example = "abcd1234", required = true)
     private String missionId;
 
-    @Schema(description = "사용자 이메일", example = "doacha@seesaw.com", required = true)
-    private String memberEmail;
+    @Schema(description = "미션(레코드) 회차", example = "1", required = true)
+    private int recordNumber;
 }
