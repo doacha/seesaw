@@ -1,11 +1,11 @@
 import { types } from 'util'
 
-const missionDetail = {
+export const missionDetail = {
   missionId: 'LyowDxcWP8',
   missionTitle: '일주일동안 5만원 쓰기',
   missionMemberCount: 3,
   missionMaxCount: 6,
-  missionImgUrl: 'string',
+  missionImgUrl: '/차차_군침이.jpg',
   missionPurpose: '일주일동안 5만원쓰기 같이 하실 분!!',
   missionDeposit: 30000,
   missionIsPublic: true,
