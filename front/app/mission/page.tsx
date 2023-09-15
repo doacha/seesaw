@@ -6,6 +6,8 @@ import SearchBar from './components/SearchBar'
 import SearchContainer from './components/SearchContainer'
 import SearchContainerSimple from './components/SearchContainerSimple'
 import { dummyMissionCard } from './components/dummy'
+// mission detail
+import MissionDetailContainer from './detail/MissionDetailContainer'
 import type { SearchState } from '@/app/types'
 
 const page = () => {
@@ -24,8 +26,9 @@ const page = () => {
     setIsSearchContainerFull(false)
   }
   return (
-    <div className="bg-background-fill">
-      {!isSearchContainerFull && (
+    <div className="bg-background-fill bg-black">
+      <MissionDetailContainer />
+      {/* {!isSearchContainerFull && (
         <SearchContainerSimple
           state={selectedSearchState}
           onClick={handleContainerExpand}
@@ -46,7 +49,7 @@ const page = () => {
         <MissionCard data={dummyMissionCard} />
         <MissionCard data={dummyMissionCard} />
         <MissionCard data={dummyMissionCard} />
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -13,25 +13,25 @@ interface User {
 }
 
 interface Mission {
-  mission?: string
-  dueDate?: string
   missionId?: string
   missionTitle: string
   missionMemberCount?: number
   missionMaxCount?: number
   missionImgUrl: string
   missionPurpose?: string
-  missionMinDeposit?: number
+  missionDeposit?: number
   missionIsPublic?: boolean
-  missionLimit?: number
+  missionTargetPrice?: number
   missionPeriod: number
-  missionCycle: number
+  missionTotalCycle?: number
+  missionCurrentCycle: number
   missionStartDate: string
-  missionEndDate: string
-  missionResult: string
+  missionEndDate?: string
+  missionStatus?: number
   missionCreationTime?: string
   missionHostEmail?: string
-  categoryId?: number
+  missionCategoryId?: number
+  memberMissionStatus?: number
 }
 
 interface ImageFile {
@@ -67,11 +67,26 @@ export interface SearchState {
   [key: string]: any
 }
 
-export interface HomeListProps {
-  spendingTitle: string
-  spendingCost: number
-  spendingDate: string
-  spendingMemo: string
-  spendingCategoryId: number
-  memberEmail: string
+export interface MissionList {
+  missionId: string
+  missionTitle: string
+  missionMemberCount: number
+  missionMaxCount: number
+  missionImgUrl: string
+  missionTargetPrice: number
+  missionPeriod: number
+  missionTotalCycle: number
+  missionStartDate: string
+}
+
+export interface MissionDetail extends MissionList {
+  missionPurpose: string
+  missionDeposit: number
+  missionIsPublic: boolean
+  missionCurrentCycle: number
+  missionStatus: number
+  missionFailureCount: number
+  missionCreationTime: string
+  missionHostEmail: string
+  missionCategoryId: number
 }
