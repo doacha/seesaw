@@ -1,7 +1,7 @@
 package com.doacha.seesaw.controller;
 
-import com.doacha.seesaw.model.dto.CommentRequest;
-import com.doacha.seesaw.model.dto.CommentResponse;
+import com.doacha.seesaw.model.dto.comment.CommentRequest;
+import com.doacha.seesaw.model.dto.comment.CommentResponse;
 import com.doacha.seesaw.model.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

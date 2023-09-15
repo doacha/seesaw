@@ -1,7 +1,7 @@
 package com.doacha.seesaw.model.service;
 
-import com.doacha.seesaw.model.dto.CommentRequest;
-import com.doacha.seesaw.model.dto.CommentResponse;
+import com.doacha.seesaw.model.dto.comment.CommentRequest;
+import com.doacha.seesaw.model.dto.comment.CommentResponse;
 import com.doacha.seesaw.model.entity.Comment;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.Record;
