@@ -66,3 +66,27 @@ export interface SearchState {
   category: Array<number>
   [key: string]: any
 }
+
+export interface MissionList {
+  missionId: string
+  missionTitle: string
+  missionMemberCount: number
+  missionMaxCount: number
+  missionImgUrl: string
+  missionTargetPrice: number
+  missionPeriod: number
+  missionTotalCycle: number
+  missionStartDate: string
+}
+
+export interface MissionDetail extends MissionList {
+  missionPurpose: string
+  missionDeposit: number
+  missionIsPublic: boolean
+  missionCurrentCycle: number
+  missionStatus: number
+  missionFailureCount: number
+  missionCreationTime: string
+  missionHostEmail: string
+  missionCategoryId: number
+}
