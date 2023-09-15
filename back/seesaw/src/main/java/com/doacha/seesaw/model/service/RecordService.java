@@ -1,9 +1,9 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.NoContentException;
-import com.doacha.seesaw.model.dto.RecordListResponse;
-import com.doacha.seesaw.model.dto.RecordRequest;
-import com.doacha.seesaw.model.dto.RecordResponse;
+import com.doacha.seesaw.model.dto.record.RecordListResponse;
+import com.doacha.seesaw.model.dto.record.RecordRequest;
+import com.doacha.seesaw.model.dto.record.RecordResponse;
 import com.doacha.seesaw.model.entity.Record;
 import com.doacha.seesaw.repository.RecordRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
