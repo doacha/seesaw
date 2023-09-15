@@ -44,6 +44,16 @@ interface Spending {
   spendingMemo?: string
 }
 
+interface Spending {
+  spendingId: number
+  spendingTitle: string
+  spendingCost: number
+  spendingDate: string
+  spendingCategoryId: number
+  memberEmail: string
+  spendingMemo?: string
+}
+
 interface ImageFile {
   id: string
   file?: File
