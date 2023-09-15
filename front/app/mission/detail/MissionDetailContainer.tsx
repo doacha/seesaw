@@ -11,12 +11,13 @@ import {
   missionCycleArray,
   missionPeriodArray,
 } from '@/app/lib/constants'
-const MissionDetailContainer = ({ missionDetailProps }) => {
+import type { MissionDetail } from '@/app/types'
+const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
   return (
-    <div className="rounded-lg my-[50px] bg-background">
-      <div className="w-full h-[210px] overflow-hidden relative rounded-t-lg">
+    <div className="my-[50px] bg-background">
+      <div className="w-full h-[210px] overflow-hidden relative">
         <Image
-          src="/차차_군침이.jpg"
+          src={`${data.missionImgUrl}`}
           alt="미션 대표 이미지"
           width={390}
           height={210}
@@ -25,44 +26,49 @@ const MissionDetailContainer = ({ missionDetailProps }) => {
           className="absolute top-[-50%]"
         />
       </div>
-      <div className="px-5 py-2.5">
+      <div className="px-5 py-[15px]">
         {/* 타이틀 */}
         <div className="flex justify-between mb-2.5">
-          <div className="text-base font-scDreamExBold">{`미션 타이틀`}</div>
+          <div className="text-base font-scDreamExBold">
+            {data.missionTitle}
+          </div>
           <div className="text-sm">
-            <FontAwesomeIcon icon={faUser} className="text-primary" />
-            {`인원`}
+            <FontAwesomeIcon icon={faUser} className="text-primary mr-2" />
+            {`${data.missionMemberCount} / ${data.missionMaxCount}`}
           </div>
         </div>
         {/* 내용 */}
-        <div className="text-sm mb-2.5">
-          1일 1차차 사진찍어 올리기 챌린지입니다.
-        </div>
-        <div></div>
+        <div className="text-sm mb-[15px] h-[70px]">{data.missionPurpose}</div>
         {/* 카테고리 */}
-        <Capsule bgColor="3" textColor="background">
-          {`${categoryList[3]}`}
+        <Capsule
+          bgColor={`${data.missionCategoryId}`}
+          textColor="background"
+          className="mb-2.5"
+        >
+          {`${categoryList[data.missionCategoryId]}`}
         </Capsule>
         {/* 금액 */}
-        <div>
-          <FontAwesomeIcon icon={faMoneyBillWave} />
-          {`예치금`}
+        <div className="mb-2.5">
+          <FontAwesomeIcon icon={faMoneyBillWave} className="mr-[15px]" />
+          {`${data.missionTargetPrice}`}
         </div>
         {/* 일정 */}
-        <div>
+        <div className="mb-2.5 flex gap-[15px] items-center">
           <FontAwesomeIcon icon={faCalendarCheck} />
-          <Capsule
-            bgColor="background-fill"
-            textColor="black"
-          >{`period`}</Capsule>
-          <Capsule
-            bgColor="background-fill"
-            textColor="black"
-          >{`cycle`}</Capsule>
-          <span>{`n회`}</span>
+          <Capsule bgColor="background-fill" textColor="black">{`${
+            missionPeriodArray[data.missionPeriod - 1]
+          }`}</Capsule>
+          <Capsule bgColor="background-fill" textColor="black">
+            {
+              missionCycleArray[
+                (data.missionPeriod * data.missionTotalCycle) / 7 - 1
+              ]
+            }
+          </Capsule>
+          <span className="text-outline text-xs">{`(${data.missionTotalCycle} 회)`}</span>
         </div>
         {/* 실패 한도 */}
-        <div>{`실패 한도: n회`}</div>
+        <div className="mb-2.5">{`실패 한도 : ${data.missionFailureCount}회`}</div>
       </div>
     </div>
   )
