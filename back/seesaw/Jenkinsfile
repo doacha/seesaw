@@ -2,23 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('gitlab clone'){
-            steps {
-                git branch: 'back',
-                credentialsId: 'seesawGitLabToken',
-                url: 'git@lab.ssafy.com:s09-fintech-finance-sub2/S09P22A409.git'
-            }
-
-             post {
-                success {
-                    sh 'echo "Successfully Cloned Repository"'
-                }
-                failure {
-                    sh 'echo "Fail Cloned Repository"'
-                }
-            }
-        }
-
 
         stage('Gradle Build') { // Gradle 빌드 스테이지: Spring Boot 프로젝트를 빌드합니다.
             steps {
