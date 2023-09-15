@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Gradle Build') { // Gradle 빌드 스테이지: Spring Boot 프로젝트를 빌드합니다.
             steps {
-                dir('backend/seesaw') { // 'backend/seesaw' 디렉터리 내에서 작업을 실행합니다.
+                dir('back/seesaw') { // 'backend/seesaw' 디렉터리 내에서 작업을 실행합니다.
                     sh 'chmod +x gradlew' // gradlew 실행 권한 부여
                     sh './gradlew clean build -x test' // gradlew를 사용해 프로젝트를 빌드하며 테스트는 제외합니다.
                 }
@@ -22,7 +22,7 @@ pipeline {
 
         stage('Docker Build') { // Docker 이미지 빌드 스테이지: Dockerfile을 기반으로 이미지를 빌드합니다.
             steps {
-                dir('backend/seesaw') {
+                dir('back/seesaw') {
                     sh 'docker build -t herosof-trashbin:latest .' // 이미지를 빌드합니다
                 }
             }
