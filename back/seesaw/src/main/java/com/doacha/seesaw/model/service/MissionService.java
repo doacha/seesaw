@@ -1,9 +1,9 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.NoContentException;
-import com.doacha.seesaw.model.dto.CreateMissionRequest;
-import com.doacha.seesaw.model.dto.MissionListResponse;
-import com.doacha.seesaw.model.dto.SearchMissionRequest;
+import com.doacha.seesaw.model.dto.mission.CreateMissionRequest;
+import com.doacha.seesaw.model.dto.mission.MissionListResponse;
+import com.doacha.seesaw.model.dto.mission.SearchMissionRequest;
 import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.repository.MissionRepository;
 import lombok.extern.slf4j.Slf4j;

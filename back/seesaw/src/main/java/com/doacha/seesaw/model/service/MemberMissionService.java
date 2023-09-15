@@ -1,7 +1,7 @@
 package com.doacha.seesaw.model.service;
 
-import com.doacha.seesaw.model.dto.ParticipateMissionRequest;
-import com.doacha.seesaw.model.dto.QuitMissionRequest;
+import com.doacha.seesaw.model.dto.mission.ParticipateMissionRequest;
+import com.doacha.seesaw.model.dto.mission.QuitMissionRequest;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.model.entity.Mission;
