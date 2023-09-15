@@ -12,7 +12,23 @@ import { categoryList } from '@/app/lib/constants'
 import styles from './components/Home.module.css'
 import { useState } from 'react'
 import Card from '../components/Card'
+import FaskMakeButton from '../components/FastMakeButton'
+import { Spending } from '@/app/types'
+
+import { useRouter } from 'next/navigation'
+
 import { categoryColors } from '@/app/lib/constants'
+
+const spendingList: Spending[] = [
+  {
+    spendingId: 1,
+    spendingTitle: '하늘보리',
+    spendingCost: 3800,
+    spendingDate: '2023-09-14T04:22:08.885Z',
+    spendingCategoryId: 3,
+    memberEmail: 'doacha@seesaw.com',
+  },
+]
 
 const Home = () => {
   const [sort, setSort] = useState('최신순')
@@ -25,6 +41,12 @@ const Home = () => {
   const clickText = (e: any) => {
     console.log('텍버 클릭')
     setSort(e.target.innerText)
+  }
+  const router = useRouter()
+
+  const clickDetail = () => {
+    // 해당 내역의 번호를 가지고 페이지 이동해야해
+    router.push('/home/detail')
   }
   // "2023-09-14T04:22:08.885Z",
   const now = new Date('2023-09-14T04:22:08.885Z') // 현재 날짜 및 시간
@@ -43,6 +65,10 @@ const Home = () => {
   ]
   const week = WEEKDAY[now.getDay()]
   console.log(year, month, day, dayOfWeek, week)
+
+  const clickPlus = (e: any) => {
+    console.log('플버 클릭')
+  }
 
   return (
     <div className="flex flex-col h-screen bg-background-fill">
@@ -148,12 +174,44 @@ const Home = () => {
         </div>
       </div>
       <div className="mx-5 my-5">
-        <Card
-          title={'30일 수요일'}
-          content={
-            // if works!
-            <>
-              <div className="h-9 mb-5 flex w-full flex-row gap-5">
+        {sort === '최신순' ? (
+          <Card
+            title={'30일 수요일'}
+            content={
+              // if works!
+              <>
+                <div
+                  onClick={clickDetail}
+                  className="h-9 mb-5 flex w-full flex-row gap-5"
+                >
+                  <div className="flex my-auto">
+                    <FontAwesomeIcon
+                      icon={faPoo}
+                      style={{ color: '#5c3600' }}
+                      size="xl"
+                    />
+                  </div>
+                  <div className="flex w-full justify-between">
+                    <div className="flex flex-col">
+                      <span className="font-scDreamRegular text-sm">
+                        으아아
+                      </span>
+                      <span className="font-scDreamRegular text-xs text-outline">
+                        요일일거야
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-scDreamExBold text-xl">으아아아원</p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            }
+          />
+        ) : (
+          <div className="w-full h-fit rounded-lg bg-background">
+            <div className="p-5">
+              <div className="h-9 flex w-full flex-row gap-5 mb-2">
                 <div className="flex my-auto">
                   <FontAwesomeIcon
                     icon={faPoo}
@@ -173,93 +231,12 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-
-              <div className="h-9 mb-5 flex w-full flex-row gap-5">
-                <div className="flex my-auto">
-                  <FontAwesomeIcon
-                    icon={faPoo}
-                    style={{ color: '#5c3600' }}
-                    size="xl"
-                  />
-                </div>
-                <div className="flex w-full justify-between">
-                  <div className="flex flex-col">
-                    <span className="font-scDreamRegular text-sm">으아아</span>
-                    <span className="font-scDreamRegular text-xs text-outline">
-                      요일일거야
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-scDreamExBold text-xl">으아아아원</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="h-9 mb-5 flex w-full flex-row gap-5">
-                <div className="flex my-auto">
-                  <FontAwesomeIcon
-                    icon={faPoo}
-                    style={{ color: '#5c3600' }}
-                    size="xl"
-                  />
-                </div>
-                <div className="flex w-full justify-between">
-                  <div className="flex flex-col">
-                    <span className="font-scDreamRegular text-sm">으아아</span>
-                    <span className="font-scDreamRegular text-xs text-outline">
-                      요일일거야
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-scDreamExBold text-xl">으아아아원</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="h-9 mb-5 flex w-full flex-row gap-5">
-                <div className="flex my-auto">
-                  <FontAwesomeIcon
-                    icon={faPoo}
-                    style={{ color: '#5c3600' }}
-                    size="xl"
-                  />
-                </div>
-                <div className="flex w-full justify-between">
-                  <div className="flex flex-col">
-                    <span className="font-scDreamRegular text-sm">으아아</span>
-                    <span className="font-scDreamRegular text-xs text-outline">
-                      요일일거야
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-scDreamExBold text-xl">으아아아원</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="h-9 mb-5 flex w-full flex-row gap-5">
-                <div className="flex my-auto">
-                  <FontAwesomeIcon
-                    icon={faPoo}
-                    style={{ color: '#5c3600' }}
-                    size="xl"
-                  />
-                </div>
-                <div className="flex w-full justify-between">
-                  <div className="flex flex-col">
-                    <span className="font-scDreamRegular text-sm">으아아</span>
-                    <span className="font-scDreamRegular text-xs text-outline">
-                      요일일거야
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-scDreamExBold text-xl">으아아아원</p>
-                  </div>
-                </div>
-              </div>
-            </>
-          }
-        />
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="fixed top-[690px] right-[20px]">
+        <FaskMakeButton onClick={clickPlus} />
       </div>
     </div>
   )

@@ -34,13 +34,23 @@ interface Mission {
   memberMissionStatus?: number
 }
 
+interface Spending {
+  spendingId: number
+  spendingTitle: string
+  spendingCost: number
+  spendingDate: string
+  spendingCategoryId: number
+  memberEmail: string
+  spendingMemo?: string
+}
+
 interface ImageFile {
   id: string
   file?: File
   url: string
 }
 
-export type { User, Mission, ImageFile }
+export type { User, Mission, ImageFile, Spending }
 
 export interface MissionCardProps {
   missionId: string
