@@ -20,3 +20,52 @@ export const missionDetail = {
   missionHostEmail: 'doacha@seesaw.com',
   missionCategoryId: 0,
 }
+
+export const todayMission = {
+  missionCurrentCycle: 5,
+  missionTargetPrice: 30000,
+  missionTodayList: [
+    {
+      userName: '차차아버지',
+      userImgUrl: '/차차_군침이.jpg',
+      successCount: 5,
+      spending: 30000,
+      balance: 20000,
+    },
+    {
+      userName: '차차아버지',
+      userImgUrl: '/차차_군침이.jpg',
+      successCount: 5,
+      spending: 40000,
+      balance: 0,
+    },
+    {
+      userName: '차차아버지',
+      userImgUrl: '/차차_군침이.jpg',
+      successCount: 5,
+      spending: 30000,
+      balance: 20000,
+    },
+    {
+      userName: '차차아버지',
+      userImgUrl: '/차차_군침이.jpg',
+      successCount: 5,
+      spending: 30000,
+      balance: 20000,
+    },
+    {
+      userName: '차차아버지',
+      userImgUrl: '/차차_군침이.jpg',
+      successCount: 5,
+      spending: 40000,
+      balance: 0,
+    },
+    {
+      userName: '차차아버지',
+      userImgUrl: '/차차_군침이.jpg',
+      successCount: 5,
+      spending: 30000,
+      balance: 20000,
+    },
+  ],
+}
