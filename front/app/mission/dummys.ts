@@ -69,3 +69,123 @@ export const todayMission = {
     },
   ],
 }
+
+export const groupMissionHistory = {
+  startDate: '2023-09-14',
+  groupMissionData: [
+    {
+      cycleCount: 3,
+      successCount: 13,
+      failCount: 5,
+      missionPeriod: 3,
+      individualResult: [
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더차차파',
+          status: true,
+          spending: 3000,
+        },
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: true,
+          spending: 8000,
+        },
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: true,
+          spending: 15000,
+        },
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: false,
+          spending: 31000,
+        },
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: false,
+          spending: 33000,
+        },
+      ],
+    },
+    {
+      cycleCount: 2,
+      successCount: 13,
+      failCount: 5,
+      missionPeriod: 3,
+      individualResult: [
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: true,
+          spending: 3000,
+        },
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: true,
+          spending: 8000,
+        },
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: true,
+          spending: 15000,
+        },
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: false,
+          spending: 31000,
+        },
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: false,
+          spending: 33000,
+        },
+      ],
+    },
+    {
+      cycleCount: 1,
+      successCount: 13,
+      failCount: 5,
+      missionPeriod: 3,
+      individualResult: [
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: true,
+          spending: 3000,
+        },
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: true,
+          spending: 8000,
+        },
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: true,
+          spending: 15000,
+        },
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: false,
+          spending: 31000,
+        },
+        {
+          userImgUrl: '/차차_군침이.jpg',
+          userName: '차차파더',
+          status: false,
+          spending: 33000,
+        },
+      ],
+    },
+  ],
+}
