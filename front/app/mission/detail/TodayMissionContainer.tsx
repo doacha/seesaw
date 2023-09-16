@@ -2,10 +2,10 @@ import { todayMission } from '../dummys'
 import TodayMissionCard from './components/TodayMissionCard'
 const TodayMissionContainer = () => {
   return (
-    <div className=" rounded-lg bg-background p-5 m-5">
+    <div className=" rounded-lg bg-background px-5 pt-5 m-5">
       <div>오늘의 미션 {`${todayMission.missionCurrentCycle} 회`}</div>
       <hr />
-      <div className="carousel w-full overflow-scroll mt-5">
+      <div className="carousel w-full overflow-scroll pt-5 pb-6">
         {todayMission.missionTodayList.map((element, idx) => (
           <TodayMissionCard
             data={element}

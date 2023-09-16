@@ -57,6 +57,8 @@ const config: Config = {
         surface: '#001B2A',
         'seesaw-blue-100': '#E2E9FD',
         'seesaw-red-100': '#FFE8DF',
+        'seesaw-purple-600': '#6132B2',
+        'seesaw-red-700': '#99543A',
         ...categoryColors,
       },
       fontFamily: {
