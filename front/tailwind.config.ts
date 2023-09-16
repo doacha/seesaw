@@ -55,7 +55,8 @@ const config: Config = {
         outline: '#787D85',
         'outline-container': '#DCE1E9',
         surface: '#001B2A',
-
+        'seesaw-blue-100': '#E2E9FD',
+        'seesaw-red-100': '#FFE8DF',
         ...categoryColors,
       },
       fontFamily: {

@@ -7,9 +7,11 @@ import SearchContainer from './components/SearchContainer'
 import SearchContainerSimple from './components/SearchContainerSimple'
 import { dummyMissionCard } from './components/dummy'
 // mission detail
+import { missionDetail } from './dummys'
 import MissionDetailContainer from './detail/MissionDetailContainer'
 import type { SearchState } from '@/app/types'
-
+// todayMission
+import TodayMissionContainer from './detail/TodayMissionContainer'
 const page = () => {
   const [isSearchContainerFull, setIsSearchContainerFull] = useState(false)
   const [selectedPeriod, setSelectedPeriod] = useState([])
@@ -26,8 +28,9 @@ const page = () => {
     setIsSearchContainerFull(false)
   }
   return (
-    <div className="bg-background-fill bg-black">
-      <MissionDetailContainer />
+    <div className="bg-background-fill">
+      <MissionDetailContainer data={missionDetail} />
+      <TodayMissionContainer />
       {/* {!isSearchContainerFull && (
         <SearchContainerSimple
           state={selectedSearchState}
