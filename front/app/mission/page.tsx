@@ -14,6 +14,8 @@ import type { SearchState } from '@/app/types'
 import TodayMissionContainer from './detail/TodayMissionContainer'
 // groupMissionHistory
 import GroupMissionHistoryContainer from './detail/components/GroupMissionHistoryContainer'
+// myMissionHistory
+import MyMissionHistoryContainer from './detail/components/MyMissionHistoryContainer'
 const page = () => {
   const [isSearchContainerFull, setIsSearchContainerFull] = useState(false)
   const [selectedPeriod, setSelectedPeriod] = useState([])
@@ -32,8 +34,9 @@ const page = () => {
   return (
     <div className="bg-background-fill">
       <MissionDetailContainer data={missionDetail} />
-      <TodayMissionContainer />
-      <GroupMissionHistoryContainer />
+      {/* <TodayMissionContainer /> */}
+      {/* <GroupMissionHistoryContainer /> */}
+      <MyMissionHistoryContainer />
       {/* {!isSearchContainerFull && (
         <SearchContainerSimple
           state={selectedSearchState}

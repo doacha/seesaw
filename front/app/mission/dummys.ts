@@ -204,3 +204,91 @@ export const groupMissionHistory = {
     },
   ],
 }
+
+export const myMissionHistory = {
+  startDate: '2023-09-14',
+  missionPeriod: 3,
+  missionTargetPrice: 30000,
+  cycleResult: [
+    {
+      cycleCount: 4,
+      spendingRecord: [
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+      ],
+    },
+    {
+      cycleCount: 3,
+      spendingRecord: [
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+      ],
+    },
+    {
+      cycleCount: 2,
+      spendingRecord: [
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+      ],
+    },
+    {
+      cycleCount: 1,
+      spendingRecord: [
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+        {
+          recordName: '스타벅수',
+          recordPrice: 5500,
+        },
+      ],
+    },
+  ],
+}
