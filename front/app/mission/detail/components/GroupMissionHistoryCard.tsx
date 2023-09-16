@@ -6,6 +6,7 @@ interface missionResult {
   userName: string
   status: boolean
   spending: number
+  boardId: number
 }
 
 interface groupMissionHistoryProps {
