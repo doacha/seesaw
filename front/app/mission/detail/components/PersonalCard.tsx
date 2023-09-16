@@ -5,6 +5,7 @@ interface missionResult {
   userName: string
   status: boolean
   spending: number
+  boardId: number
 }
 
 const PersonalCard = ({ data }: { data: missionResult }) => {
