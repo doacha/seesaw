@@ -292,3 +292,15 @@ export const myMissionHistory = {
     },
   ],
 }
+
+const boardDetail = {
+  recordId: 1,
+  recordContent: '수정을 해보자',
+  recordWriteTime: '2023-09-12T14:42:17.000+00:00',
+  recordTotalCost: 0,
+  recordNumber: 1,
+  recordStatus: 0,
+  memberEmail: 'doacha1@seesaw.com',
+  memberNickname: '도아차',
+  memberImgUrl: '/차차_군침이.jpg',
+}

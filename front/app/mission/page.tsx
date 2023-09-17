@@ -16,6 +16,8 @@ import TodayMissionContainer from './detail/TodayMissionContainer'
 import GroupMissionHistoryContainer from './detail/components/GroupMissionHistoryContainer'
 // myMissionHistory
 import MyMissionHistoryContainer from './detail/components/MyMissionHistoryContainer'
+// BoardContentContainer
+import BoardContentContainer from '../missionBoard/[missionBoard]/components/BoardContentContainer'
 const page = () => {
   const [isSearchContainerFull, setIsSearchContainerFull] = useState(false)
   const [selectedPeriod, setSelectedPeriod] = useState([])
@@ -33,10 +35,12 @@ const page = () => {
   }
   return (
     <div className="bg-background-fill">
-      <MissionDetailContainer data={missionDetail} />
+      <BoardContentContainer />
+      {/* <MissionDetailContainer data={missionDetail} /> */}
       {/* <TodayMissionContainer /> */}
       {/* <GroupMissionHistoryContainer /> */}
-      <MyMissionHistoryContainer />
+      {/* <MyMissionHistoryContainer /> */}
+
       {/* {!isSearchContainerFull && (
         <SearchContainerSimple
           state={selectedSearchState}
