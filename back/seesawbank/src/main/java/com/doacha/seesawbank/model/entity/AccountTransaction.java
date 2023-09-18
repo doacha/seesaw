@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -32,6 +33,14 @@ public class AccountTransaction {
     @Column(name="amount_balance",nullable=false)
     private int accountBalance;
 
+    @Column(name="account_is_deposit",nullable=false)
+    private boolean accountIsDeposit;
+
+    @Column(name="account_transaction_name", nullable=false)
+    private String accountTransactionName;
+
+    @Column(name="account_transaction_num",nullable=true)
+    private String accountTransactionNum;
 
 
 
