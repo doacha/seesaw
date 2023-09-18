@@ -11,6 +11,7 @@ interface SpendingListProps {
   clickDetail: () => void
   spendingList: Spending[]
   formatDayTime: (date: Date) => string
+  newSelected?: Number[]
 }
 
 const SpendingList = ({
@@ -20,9 +21,12 @@ const SpendingList = ({
   clickDetail,
   spendingList,
   formatDayTime,
+  newSelected,
 }: SpendingListProps) => {
   return (
     <>
+      {/* 맞는 카테고리 매핑 */}
+      {/* {newSelected?.map((element, idx) => ())} */}
       {sort === '최신순' ? (
         <>
           {/* Object.entries가 그룹화된 데이터를 배열로 변환하는 과정 */}
