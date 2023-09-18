@@ -19,7 +19,6 @@ public class AccountTransaction {
     @Column(name="account_deal_num",nullable=false)
     private String accountDealNum;
 
-
     @ManyToOne
     @JoinColumn(name="account_num",referencedColumnName = "account_num",nullable = false)
     private Account account;

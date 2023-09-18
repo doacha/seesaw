@@ -23,6 +23,9 @@ public class Account {
     @JoinColumn(name="user_id",referencedColumnName = "user_id",nullable=false)
     private User user;
 
+    @Column(name="account_name",nullable=false)
+    private String accountName;
+
     @Column(name="account_type",nullable=false)
     private int accountType;
 
