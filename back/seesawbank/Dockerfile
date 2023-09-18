@@ -11,7 +11,7 @@ FROM openjdk:17
 WORKDIR /app
 # ARG JAR_FILE=/build/libs/*.jar
 COPY --from=builder /app/build/libs/*.jar /app/app.jar
-# 해당 컨테이너는 8080 port 사용 (생략 가능)
+# 해당 컨테이너는 8081 port 사용 (생략 가능)
 EXPOSE 8081
 # docker run 시 실행할 필수 명령어
 ENTRYPOINT ["java", "-jar", "app.jar"]
