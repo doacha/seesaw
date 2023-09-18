@@ -59,20 +59,26 @@ pipeline {
             }
         }
 
+        
         stage('Deploy') { // 배포 스테이지: 이전에 실행 중인 'back-seesaw' 컨테이너를 제거하고 새로운 이미지로 컨테이너를 실행
             steps {
-                // 이미지 저장을 위한 Volume 설정
-                def volumeMappings = [
-                            "/home/ubuntu/images/mission:/mission",
-                            "/home/ubuntu/images/spending:/spending",
-                            "/home/ubuntu/images/member:/member",
-                            "/home/ubuntu/images/comment:/comment",
-                            "/home/ubuntu/images/record:/record"
-                        ].join(' -v ')
+                // dir('develop/frontend/petmeeting/'){
+                //         // Image 저장을 위한 Volume 설정
+                //         def volumeMappings = [
+                //             "/home/ubuntu/images/member:/member",
+                //             "/home/ubuntu/images/shelter:/shelter",
+                //             "/home/ubuntu/images/board:/board",
+                //             "/home/ubuntu/images/regist:/regist",
+                //             "/home/ubuntu/images/dog:/dog"
+                //         ].join(' -v ')
+
+                //         sh "docker rm -f back_server1"
+                //         sh "docker run -d -p 5000:5000 -v ${volumeMappings} --name back_server1 ${dockerImage.id}"
+                //    }
 
                 sh 'docker rm -f back-seesaw' // 실행 중인 'back-seesaw' 컨테이너 제거
-                // sh 'docker run -d --name back-seesaw -p 8080:8080 -u root herosof-trashbin:latest' // 새로운 이미지 실행
-                sh 'docker run -d ---name back-seesaw -p 8080:8080 -v ${volumeMappings} -u root back-seesaw:latest'
+                sh 'docker run -d --name back-seesaw -p 8080:8080 -u root back-seesaw:latest' // 새로운 이미지 실행
+                // sh 'docker run -d ---name back-seesaw -p 8080:8080 -v ${volumeMappings} -u root back-seesaw:latest'
             }
 
             post {
