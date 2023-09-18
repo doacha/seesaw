@@ -3,20 +3,11 @@ pipeline {
 
     stages {
 
-        // stage('Git Clone') {
-        //     steps {
-        //         git branch: 'back', credentialsId: 'GitLab-account', url: 'https://lab.ssafy.com/s09-fintech-finance-sub2/S09P22A409.git'
-
-        //     }
-        // }
-
-        stage('Add Secret File') {
+        stage('Add Secret File') { // credentials에 저장해놓은 application.properties 파일 복사
 	        steps {
-    	        withCredentials([file(credentialsId: 'seesaw-application', variable: 'configFile')]) {
+    	        withCredentials([file(credentialsId: 'seesaw-application', variable: 'File')]) {
         	        script {
-                        // sh 'rm .back/seesaw/src/main/resources/application.properties'
-				        // sh 'cp /home/env/application.properties /var/lib/jenkins/workspace/pipeline/src/main/resources'
-                        sh 'cp $ConfigFile back/seesaw/src/main/resources/application.properties'
+                        sh 'cp $File /var/jenkins_home/workspace/BE-SEESAW/back/seesaw/src/main/resources'
                     }
 		        }
 	        }
@@ -78,7 +69,6 @@ pipeline {
 
                 sh 'docker rm -f back-seesaw' // 실행 중인 'back-seesaw' 컨테이너 제거
                 sh 'docker run -d --name back-seesaw -p 8080:8080 -u root back-seesaw:latest' // 새로운 이미지 실행
-                // sh 'docker run -d ---name back-seesaw -p 8080:8080 -v ${volumeMappings} -u root back-seesaw:latest'
             }
 
             post {
