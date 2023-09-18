@@ -23,7 +23,6 @@ interface inputProps {
   interval: string
   onChange?: any
   submitButton?: JSX.Element
-  name?: string
 }
 
 const Input = ({
@@ -36,7 +35,6 @@ const Input = ({
   interval,
   onChange,
   submitButton,
-  name,
 }: inputProps) => {
   const tailwindLabelSize = isLabelBig ? 'text-[16px]' : 'text-[12px]'
   const tailwindLabelInterval = getTailwindScript(interval)
