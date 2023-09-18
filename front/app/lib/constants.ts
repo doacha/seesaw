@@ -18,6 +18,7 @@ export const categoryList = [
   '자녀/육아',
   '반려동물',
   '경조/선물',
+  '편의점',
   '미분류',
 ]
 
@@ -43,6 +44,7 @@ export const capsuleColor: Record<string, Record<string, string>> = {
     '17': 'bg-category-17',
     '18': 'bg-category-18',
     '19': 'bg-category-19',
+    '20': 'bg-category-20',
     'background-fill': 'bg-background-fill',
     background: 'bg-background',
     primary: 'bg-primary',
@@ -70,6 +72,7 @@ export const capsuleColor: Record<string, Record<string, string>> = {
     '17': 'text-category-17',
     '18': 'text-category-18',
     '19': 'text-category-19',
+    '20': 'text-category-20',
     black: 'text-black',
     primary: 'text-primary',
     background: 'text-background',
@@ -97,6 +100,7 @@ export const categoryColors = {
   'category-17': '#AB8AE2',
   'category-18': '#F287C7',
   'category-19': '#FEBAAD',
+  'category-20': '#DE68C4',
 }
 
 export const iconColors: Record<number, string> = {
@@ -120,6 +124,7 @@ export const iconColors: Record<number, string> = {
   17: '#AB8AE2',
   18: '#F287C7',
   19: '#FEBAAD',
+  20: '#DE68C4',
 }
 
 export const missionPeriodArray = [
@@ -155,6 +160,7 @@ import {
   faBaby,
   faPaw,
   faGift,
+  faStore,
   faCircleQuestion,
 } from '@fortawesome/free-solid-svg-icons'
 export const categoryIcon: Record<number, IconDefinition> = {
@@ -176,5 +182,6 @@ export const categoryIcon: Record<number, IconDefinition> = {
   16: faBaby,
   17: faPaw,
   18: faGift,
-  19: faCircleQuestion,
+  19: faStore,
+  20: faCircleQuestion,
 }
