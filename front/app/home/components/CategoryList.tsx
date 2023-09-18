@@ -1,6 +1,6 @@
 'use client'
 
-import ToggleCapsule from '@/app/components/Capsule'
+import ToggleCapsule from '@/app/components/ToggleCapsule'
 import { categoryList } from '@/app/lib/constants'
 import styles from './Home.module.css'
 // interface CategoryListProps {

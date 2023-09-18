@@ -119,8 +119,18 @@ const Home = () => {
     console.log('플버 클릭')
   }
 
-  const clickCategory = (e: any) => {
-    console.log(e.target.innerText)
+  const [state, setState] = useState<number[]>([])
+  const clickCategory = (id: number, isSelected: boolean) => {
+    const newSelected = [...state]
+    console.log(id)
+    if (isSelected) {
+      const idx = newSelected.indexOf(id)
+      newSelected.splice(idx, 1)
+      setState(newSelected)
+    } else {
+      newSelected.push(id)
+      setState(newSelected)
+    }
   }
 
   return (
@@ -142,6 +152,7 @@ const Home = () => {
           formatDayTime={formatDayTime}
           clickDetail={clickDetail}
           spendingList={spendingList}
+          // newSelected = {newSelected}
         />
       </div>
       <div className="fixed top-[690px] right-[20px]">
