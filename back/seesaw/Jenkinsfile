@@ -5,7 +5,7 @@ pipeline {
 
         stage('Git Clone') {
             steps {
-                git branch: 'back', git credentialsId: 'GitLab-token', url: 'https://lab.ssafy.com/s09-fintech-finance-sub2/S09P22A409.git'
+                git branch: 'back', credentialsId: 'GitLab-token', url: 'https://lab.ssafy.com/s09-fintech-finance-sub2/S09P22A409.git'
 
             }
         }
