@@ -25,7 +25,7 @@ public class Card {
 
     @ManyToOne
     @JoinColumn(name="user_id",nullable = false)
-    private User user;
+    private Member member;
 
     @Column(name = "card_payment_date")
     private Timestamp cardPaymentDate;

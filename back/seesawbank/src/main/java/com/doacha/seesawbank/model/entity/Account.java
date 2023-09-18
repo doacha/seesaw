@@ -21,7 +21,7 @@ public class Account {
 
     @ManyToOne
     @JoinColumn(name="user_id",referencedColumnName = "user_id",nullable=false)
-    private User user;
+    private Member member;
 
     @Column(name="account_name",nullable=false)
     private String accountName;
