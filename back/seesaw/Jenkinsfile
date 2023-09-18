@@ -7,7 +7,7 @@ pipeline {
 	        steps {
     	        withCredentials([file(credentialsId: 'seesaw-application', variable: 'File')]) {
         	        script {
-                        sh 'cp $File /var/jenkins_home/workspace/BE-SEESAW/back/seesaw/src/main/resources'
+                        sh 'cp $File /var/jenkins_home/workspace/seesaw_back/back/seesaw/src/main/resources'
                     }
 		        }
 	        }
@@ -35,7 +35,7 @@ pipeline {
         stage('Docker Build') { // Docker 이미지 빌드 스테이지: Dockerfile을 기반으로 이미지를 빌드합니다.
             steps {
                 dir('back/seesaw') {
-                    sh 'docker build -t back-seesaw:latest .' // 이미지를 빌드합니다
+                    sh 'docker build -t seesaw_back:latest .' // 이미지를 빌드합니다
                 }
             }
 
@@ -51,7 +51,7 @@ pipeline {
         }
 
         
-        stage('Deploy') { // 배포 스테이지: 이전에 실행 중인 'back-seesaw' 컨테이너를 제거하고 새로운 이미지로 컨테이너를 실행
+        stage('Deploy') { // 배포 스테이지: 이전에 실행 중인 'seesaw_back' 컨테이너를 제거하고 새로운 이미지로 컨테이너를 실행
             steps {
                 // dir('develop/frontend/petmeeting/'){
                 //         // Image 저장을 위한 Volume 설정
@@ -67,8 +67,8 @@ pipeline {
                 //         sh "docker run -d -p 5000:5000 -v ${volumeMappings} --name back_server1 ${dockerImage.id}"
                 //    }
 
-                sh 'docker rm -f back-seesaw' // 실행 중인 'back-seesaw' 컨테이너 제거
-                sh 'docker run -d --name back-seesaw -p 8080:8080 -u root back-seesaw:latest' // 새로운 이미지 실행
+                sh 'docker rm -f seesaw_back' // 실행 중인 'seesaw_back' 컨테이너 제거
+                sh 'docker run -d --name seesaw_back -p 8080:8080 -u root seesaw_back:latest' // 새로운 이미지 실행
             }
 
             post {
