@@ -8,8 +8,6 @@ import ProfileEditCard from './components/edit/ProfileEditCard'
 import Tab from '../components/Tab'
 import AccountCard from './components/account/AccountCard'
 
-UserInfoCard
-
 const User = () => {
   const [openEditPage, setOpenEditPage] = useState<boolean>(false)
   const [activeTab, setActiveTab] = useState<string>('tab1')
@@ -34,16 +32,16 @@ const User = () => {
           handleTabChange={handleTabChange}
         />
         {activeTab === 'tab1' ? (
-          <div className="flex flex-col h-full px-5">
-            <div className="flex flex-col py-5">
-              <UserInfoCard setOpenEditPage={() => setOpenEditPage(true)} />
-            </div>
-            <div className="flex flex-col pb-5">
-              <MyMissionListCard />
-            </div>
+          <div className="flex flex-col h-full p-5 gap-5">
+            <UserInfoCard setOpenEditPage={() => setOpenEditPage(true)} />
+            <MyMissionListCard />
           </div>
         ) : (
-          <AccountCard />
+          <div className="flex flex-col h-full p-5 gap-5">
+            <AccountCard />
+            <AccountCard />
+            <AccountCard />
+          </div>
         )}
       </div>
     </div>

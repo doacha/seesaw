@@ -4,6 +4,25 @@ export interface ImageFile {
   url: string
 }
 
+export interface Account {
+  accountImg: string
+  accountName: string
+  accountNum: string
+  accountBalance: number
+  accountType: number
+  accountInactivate: boolean
+  accountInterestRate: number
+}
+
+export interface Transaction {
+  accountApprovalAmount: number
+  amountBalance: number
+  accountTransactionTime: string
+  accountNum: string
+  accountIsDeposit: boolean
+  accountTransactionName: string
+}
+
 export interface User {
   userEmail?: string
   userPassword?: string
