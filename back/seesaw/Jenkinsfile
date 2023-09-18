@@ -16,7 +16,7 @@ pipeline {
         	        script {
                         // sh 'rm /src/main/resources/application.properties'
 				        // sh 'cp /home/env/application.properties /var/lib/jenkins/workspace/pipeline/src/main/resources'
-                        sh 'cp $secret-file /src/main/resources/application.properties'
+                        sh 'cp $secret-file /var/lib/jenkins/workspace/pipeline/src/main/resources'
                     }
 		        }
 	        }
