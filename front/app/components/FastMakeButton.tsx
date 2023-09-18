@@ -4,14 +4,11 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 const FaskMakeButton = ({ onClick }: { onClick: any }) => {
   // fast 버튼은 가계부에만 넣는건가?
   return (
-    <div
-      className="z-50 flex justify-center items-center rounded-full bg-primary-container w-[70px] h-[70px] m-0 drop-shadow-md"
-      onClick={onClick}
-    >
+    <div className="fixed right-[5vw] z-30 bottom-[80px] rounded-full bg-primary-container w-[60px] h-[60px] m-0 flex justify-center items-center drop-shadow-md">
       <FontAwesomeIcon
         icon={faPlus}
         size="2xl"
-        className=" text-white absolute m-auto"
+        className="text-background absolute m-auto"
       />
     </div>
   )
