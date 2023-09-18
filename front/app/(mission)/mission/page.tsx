@@ -8,10 +8,10 @@ import SearchContainerSimple from './components/SearchContainerSimple'
 import { dummyMissionCard } from './components/dummy'
 // mission detail
 import { missionDetail } from './dummys'
-import MissionDetailContainer from './detail/MissionDetailContainer'
+import MissionDetailContainer from './detail/components/MissionDetailContainer'
 import type { SearchState } from '@/app/types'
 // todayMission
-import TodayMissionContainer from './detail/TodayMissionContainer'
+import TodayMissionContainer from './detail/components/TodayMissionContainer'
 // groupMissionHistory
 import GroupMissionHistoryContainer from './detail/components/GroupMissionHistoryContainer'
 // myMissionHistory
@@ -20,6 +20,7 @@ import MyMissionHistoryContainer from './detail/components/MyMissionHistoryConta
 import BoardContentContainer from '../board/[boardId]/components/BoardContentContainer'
 import BoardCommentsContainer from '../board/[boardId]/components/BoardCommentsContainer'
 import CommentInput from '../board/[boardId]/components/CommentInput'
+import DepositStatusContainer from './detail/components/DepositeStatusContainer'
 const page = () => {
   const [isSearchContainerFull, setIsSearchContainerFull] = useState(false)
   const [selectedPeriod, setSelectedPeriod] = useState([])
@@ -37,9 +38,7 @@ const page = () => {
   }
   return (
     <div className="bg-background-fill">
-      <BoardContentContainer />
-      <BoardCommentsContainer />
-      <CommentInput />
+      <DepositStatusContainer />
       {/* <MissionDetailContainer data={missionDetail} /> */}
       {/* <TodayMissionContainer /> */}
       {/* <GroupMissionHistoryContainer /> */}
