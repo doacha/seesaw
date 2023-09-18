@@ -45,6 +45,9 @@ export const capsuleColor: Record<string, Record<string, string>> = {
     '19': 'bg-category-19',
     'background-fill': 'bg-background-fill',
     background: 'bg-background',
+    primary: 'bg-primary',
+    'primary-container': 'bg-primary-container',
+    black: 'bg-black',
   },
   text: {
     '0': 'text-category-0',
@@ -68,6 +71,7 @@ export const capsuleColor: Record<string, Record<string, string>> = {
     '18': 'text-category-18',
     '19': 'text-category-19',
     black: 'text-black',
+    primary: 'text-primary',
     background: 'text-background',
   },
 }
@@ -94,3 +98,15 @@ export const categoryColors = {
   'category-18': '#F287C7',
   'category-19': '#FEBAAD',
 }
+
+export const missionPeriodArray = [
+  '매일',
+  '2일당 한 번',
+  '3일당 한 번',
+  '4일당 한 번',
+  '5일당 한 번',
+  '6일당 한 번',
+  '7일당 한 번',
+]
+
+export const missionCycleArray = ['1주', '2주', '3주', '한달']

@@ -17,6 +17,29 @@ export interface User {
   failCnt: number
   savedMoney: number
 }
+
+export interface Mission {
+  missionId?: string
+  missionTitle: string
+  missionMemberCount?: number
+  missionMaxCount?: number
+  missionImgUrl: string
+  missionPurpose?: string
+  missionDeposit?: number
+  missionIsPublic?: boolean
+  missionTargetPrice?: number
+  missionPeriod: number
+  missionTotalCycle?: number
+  missionCurrentCycle: number
+  missionStartDate: string
+  missionEndDate?: string
+  missionStatus?: number
+  missionCreationTime?: string
+  missionHostEmail?: string
+  missionCategoryId?: number
+  memberMissionStatus?: number
+}
+
 export interface MissionCardProps {
   missionId: string
   missionTitle: string
@@ -46,4 +69,35 @@ export interface Record {
   memberEmail: string
   missionId: string
   recordContent: string
+}
+
+export interface SearchState {
+  period: Array<number>
+  cycle: Array<number>
+  category: Array<number>
+  [key: string]: any
+}
+
+export interface MissionList {
+  missionId: string
+  missionTitle: string
+  missionMemberCount: number
+  missionMaxCount: number
+  missionImgUrl: string
+  missionTargetPrice: number
+  missionPeriod: number
+  missionTotalCycle: number
+  missionStartDate: string
+}
+
+export interface MissionDetail extends MissionList {
+  missionPurpose: string
+  missionDeposit: number
+  missionIsPublic: boolean
+  missionCurrentCycle: number
+  missionStatus: number
+  missionFailureCount: number
+  missionCreationTime: string
+  missionHostEmail: string
+  missionCategoryId: number
 }
