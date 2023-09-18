@@ -72,6 +72,9 @@ public class Prediction {
     @Column(name = "prediction_gift", nullable = false)
     private int predictionGift;
 
+    @Column(name="prediction_convenience",nullable = false)
+    private int predictionConvenience;
+
 
 
 

@@ -31,7 +31,7 @@ public class SpendingServiceImpl implements SpendingService{
             case "카페","제과점"-> category=2;
             case "주점"-> category = 3;
             case "마트","슈퍼마켓","시장","문구점"-> category=4;
-            case "백화점","쇼핑몰","아울렛"-> category = 5;
+            case "백화점","쇼핑몰","아울렛"-> category =5;
             case "의류가게","신발가게","모자가게"-> category = 6;
             case "화장품가게","미용실","드럭스토어","네일아트","피부샵"-> category = 7;
             case "버스","택시","지하철","기차","비행기","배"->category=8;
@@ -45,6 +45,7 @@ public class SpendingServiceImpl implements SpendingService{
             case "애완 동물"-> category = 16;
             case "자녀/육아"-> category=17;
             case "경조/선물"-> category = 18;
+            case "편의점"-> category = 19;
         }
         Spending spending = Spending.builder()
                 .spendingTitle(spendingdto.getSpendingTitle())
