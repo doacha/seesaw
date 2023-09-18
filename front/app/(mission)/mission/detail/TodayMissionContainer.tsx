@@ -1,5 +1,5 @@
-import { todayMission } from '../dummys'
-import TodayMissionCard from './components/TodayMissionCard'
+import { todayMission } from '../../(mission)/mission/dummys'
+import TodayMissionCard from '../../(mission)/mission/detail/components/TodayMissionCard'
 const TodayMissionContainer = () => {
   return (
     <div className=" rounded-lg bg-background px-5 pt-5 m-5">

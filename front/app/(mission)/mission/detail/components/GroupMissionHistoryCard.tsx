@@ -1,7 +1,7 @@
 import { MissingStaticPage } from 'next/dist/shared/lib/utils'
 import StatusBar from './StatusBar'
 import PersonalCard from './PersonalCard'
-import { getCycleTerm } from '../util'
+import { getCycleTerm } from '../../../../mission/detail/util'
 
 interface missionResult {
   userImgUrl: string
