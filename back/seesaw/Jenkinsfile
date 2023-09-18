@@ -42,7 +42,7 @@ pipeline {
 
         stage('Deploy') { // 배포 스테이지: 이전에 실행 중인 'back-seesaw' 컨테이너를 제거하고 새로운 이미지로 컨테이너를 실행
             steps {
-                sh 'docker rm -f back' // 실행 중인 'back' 컨테이너 제거
+                sh 'docker rm -f back-seesaw' // 실행 중인 'back-seesaw' 컨테이너 제거
                 sh 'docker run -d --name back-seesaw -p 8080:8080 -u root herosof-trashbin:latest' // 새로운 이미지 실행
             }
 
