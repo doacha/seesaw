@@ -3,6 +3,25 @@ pipeline {
 
     stages {
 
+        stage('Git Clone') {
+            steps {
+                git branch: 'back', git credentialsId: 'GitLab-token', url: 'https://lab.ssafy.com/s09-fintech-finance-sub2/S09P22A409.git'
+
+            }
+        }
+
+        stage('Add Secret File') {
+	        steps {
+    	        withCredentials([file(credentialsId: 'seesaw-application', variable: 'configFile')]) {
+        	        script {
+                        // sh 'rm ./src/main/resources/application.properties'
+				        // sh 'cp /home/env/application.properties /var/lib/jenkins/workspace/pipeline/src/main/resources'
+                        sh 'cp $ConfigFile src/main/resources/application.properties'
+                    }
+		        }
+	        }
+        }
+
         stage('Gradle Build') { // Gradle 빌드 스테이지: Spring Boot 프로젝트를 빌드합니다.
             steps {
                 dir('back/seesaw') { // 'backend/seesaw' 디렉터리 내에서 작업을 실행합니다.
@@ -25,7 +44,7 @@ pipeline {
         stage('Docker Build') { // Docker 이미지 빌드 스테이지: Dockerfile을 기반으로 이미지를 빌드합니다.
             steps {
                 dir('back/seesaw') {
-                    sh 'docker build -t herosof-trashbin:latest .' // 이미지를 빌드합니다
+                    sh 'docker build -t back-seesaw:latest .' // 이미지를 빌드합니다
                 }
             }
 
@@ -42,8 +61,18 @@ pipeline {
 
         stage('Deploy') { // 배포 스테이지: 이전에 실행 중인 'back-seesaw' 컨테이너를 제거하고 새로운 이미지로 컨테이너를 실행
             steps {
+                // 이미지 저장을 위한 Volume 설정
+                def volumeMappings = [
+                            "/home/ubuntu/images/mission:/mission",
+                            "/home/ubuntu/images/spending:/spending",
+                            "/home/ubuntu/images/member:/member",
+                            "/home/ubuntu/images/comment:/comment",
+                            "/home/ubuntu/images/record:/record"
+                        ].join(' -v ')
+
                 sh 'docker rm -f back-seesaw' // 실행 중인 'back-seesaw' 컨테이너 제거
-                sh 'docker run -d --name back-seesaw -p 8080:8080 -u root herosof-trashbin:latest' // 새로운 이미지 실행
+                // sh 'docker run -d --name back-seesaw -p 8080:8080 -u root herosof-trashbin:latest' // 새로운 이미지 실행
+                sh 'docker run -d ---name back-seesaw -p 8080:8080 -v ${volumeMappings} -u root back-seesaw:latest'
             }
 
             post {
