@@ -3,20 +3,20 @@ pipeline {
 
     stages {
 
-        stage('Git Clone') {
-            steps {
-                git branch: 'back', credentialsId: 'GitLab-account', url: 'https://lab.ssafy.com/s09-fintech-finance-sub2/S09P22A409.git'
+        // stage('Git Clone') {
+        //     steps {
+        //         git branch: 'back', credentialsId: 'GitLab-account', url: 'https://lab.ssafy.com/s09-fintech-finance-sub2/S09P22A409.git'
 
-            }
-        }
+        //     }
+        // }
 
         stage('Add Secret File') {
 	        steps {
     	        withCredentials([file(credentialsId: 'seesaw-application', variable: 'configFile')]) {
         	        script {
-                        // sh 'rm ./src/main/resources/application.properties'
+                        // sh 'rm .back/seesaw/src/main/resources/application.properties'
 				        // sh 'cp /home/env/application.properties /var/lib/jenkins/workspace/pipeline/src/main/resources'
-                        sh 'cp $ConfigFile src/main/resources/application.properties'
+                        sh 'cp $ConfigFile back/seesaw/src/main/resources/application.properties'
                     }
 		        }
 	        }
