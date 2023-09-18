@@ -1,7 +1,7 @@
 package com.doacha.seesaw.controller;
 
 import com.doacha.seesaw.exception.NoContentException;
-import com.doacha.seesaw.model.dto.*;
+import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.model.service.MemberMissionService;
 import com.doacha.seesaw.model.service.MissionService;
