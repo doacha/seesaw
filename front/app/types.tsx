@@ -35,23 +35,17 @@ interface Mission {
 }
 
 interface Spending {
-  spendingId: number
-  spendingTitle: string
-  spendingCost: number
-  spendingDate: string
-  spendingCategoryId: number
+  spendingId?: number
+  spendingTitle?: string
+  spendingCost?: number
+  spendingDate?: string | undefined
+  spendingCategoryId?: number
   memberEmail: string
   spendingMemo?: string
-}
-
-interface Spending {
-  spendingId: number
-  spendingTitle: string
-  spendingCost: number
-  spendingDate: string
-  spendingCategoryId: number
-  memberEmail: string
-  spendingMemo?: string
+  spendingCostSum?: number
+  spendingMonth?: number
+  spendingYear?: number
+  spendingDay?: number
 }
 
 interface ImageFile {
