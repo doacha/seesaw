@@ -12,11 +12,11 @@ pipeline {
 
         stage('Add Secret File') {
 	        steps {
-    	        withCredentials([file(credentialsId: 'seesaw-application', variable: 'secret-file')]) {
+    	        withCredentials([file(credentialsId: 'seesaw-application', variable: 'File')]) {
         	        script {
                         // sh 'rm /src/main/resources/application.properties'
 				        // sh 'cp /home/env/application.properties /var/lib/jenkins/workspace/pipeline/src/main/resources'
-                        sh 'cp $secret-file /var/jenkins_home/workspace/BE-SEESAW/back/seesaw/src/main/resources'
+                        sh 'cp $File /var/jenkins_home/workspace/BE-SEESAW/back/seesaw/src/main/resources'
                     }
 		        }
 	        }
