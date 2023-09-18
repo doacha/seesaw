@@ -11,7 +11,7 @@ import {
   categoryList,
   missionCycleArray,
   missionPeriodArray,
-} from '../../lib/constants'
+} from '../../../lib/constants'
 const DropdownCapsule = ({
   isSmall,
   onClick,
