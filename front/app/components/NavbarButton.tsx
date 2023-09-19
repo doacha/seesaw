@@ -9,7 +9,6 @@ interface Props {
 }
 
 const NavbarButton = (props: Props) => {
-  console.log(props.icon)
   return (
     <button
       onClick={props.onTabClick}
