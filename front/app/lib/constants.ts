@@ -18,6 +18,7 @@ export const categoryList = [
   '자녀/육아',
   '반려동물',
   '경조/선물',
+  '편의점',
   '미분류',
 ]
 
@@ -43,6 +44,7 @@ export const capsuleColor: Record<string, Record<string, string>> = {
     '17': 'bg-category-17',
     '18': 'bg-category-18',
     '19': 'bg-category-19',
+    '20': 'bg-category-20',
     'background-fill': 'bg-background-fill',
     background: 'bg-background',
     primary: 'bg-primary',
@@ -70,6 +72,7 @@ export const capsuleColor: Record<string, Record<string, string>> = {
     '17': 'text-category-17',
     '18': 'text-category-18',
     '19': 'text-category-19',
+    '20': 'text-category-20',
     black: 'text-black',
     primary: 'text-primary',
     background: 'text-background',
@@ -97,6 +100,31 @@ export const categoryColors = {
   'category-17': '#AB8AE2',
   'category-18': '#F287C7',
   'category-19': '#FEBAAD',
+  'category-20': '#DE68C4',
+}
+
+export const iconColors: Record<number, string> = {
+  0: '#001B2A',
+  1: '#E98080',
+  3: '#FEB087',
+  2: '#FFAD69',
+  4: '#FFC875',
+  5: '#FFE681',
+  6: '#FFF16A',
+  7: '#DAE475',
+  8: '#BEDEAD',
+  9: '#85D7B5',
+  10: '#65E0D0',
+  11: '#74EFF5',
+  12: '#83DFF4',
+  13: '#8ED7E6',
+  14: '#75BAE2',
+  15: '#A6C4F1',
+  16: '#8AA1E2',
+  17: '#AB8AE2',
+  18: '#F287C7',
+  19: '#FEBAAD',
+  20: '#DE68C4',
 }
 
 export const missionPeriodArray = [
@@ -110,3 +138,50 @@ export const missionPeriodArray = [
 ]
 
 export const missionCycleArray = ['1주', '2주', '3주', '한달']
+
+// 죽는줄
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import {
+  faUtensils,
+  faMugHot,
+  faChampagneGlasses,
+  faHouse,
+  faCartShopping,
+  faShirt,
+  faGem,
+  faBus,
+  faCar,
+  faMobileScreenButton,
+  faBriefcaseMedical,
+  faWonSign,
+  faTicket,
+  faPlane,
+  faBookOpen,
+  faBaby,
+  faPaw,
+  faGift,
+  faStore,
+  faCircleQuestion,
+} from '@fortawesome/free-solid-svg-icons'
+export const categoryIcon: Record<number, IconDefinition> = {
+  1: faUtensils,
+  2: faMugHot,
+  3: faChampagneGlasses,
+  4: faHouse,
+  5: faCartShopping,
+  6: faShirt,
+  7: faGem,
+  8: faBus,
+  9: faCar,
+  10: faMobileScreenButton,
+  11: faBriefcaseMedical,
+  12: faWonSign,
+  13: faTicket,
+  14: faPlane,
+  15: faBookOpen,
+  16: faBaby,
+  17: faPaw,
+  18: faGift,
+  19: faStore,
+  20: faCircleQuestion,
+}

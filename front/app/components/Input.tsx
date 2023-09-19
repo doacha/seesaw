@@ -15,7 +15,6 @@
 
 interface inputProps {
   type: string
-  name?: string
   label?: string
   isLabelBig?: boolean
   value?: string | number
@@ -27,7 +26,6 @@ interface inputProps {
 
 const Input = ({
   type,
-  name,
   label,
   value,
   placeholder,
@@ -58,7 +56,6 @@ const Input = ({
           className="input flex-[2_1_0%] input-bordered placeholder:text-xs placeholder:font-scDreamRegular
           input-primary border-outline-container border-1 w-full h-10"
           onChange={onChange}
-          name={name}
         />
         {submitButton && <div className="flex-[1_1_0%]">{submitButton}</div>}
       </div>
