@@ -1,21 +1,21 @@
-package com.doacha.seesaw.model.dto;
+package com.doacha.seesaw.model.dto.spending;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Builder
-public class SpendingUpdateRequest {
-    private Long spendingId;
+public class SpendingDto {
     private String spendingTitle;
     private int spendingCost;
     private Timestamp spendingDate;
     private String spendingMemo;
-    private int spendingCategoryId;
+    private String spendingCategory;
     private String memberEmail;
 }
