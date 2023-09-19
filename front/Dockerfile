@@ -45,7 +45,7 @@
 
 
 # docker로 빌드할 이미지를 설정
-FROM node:20.5.9 as builder
+FROM node as builder
 
 # 작업 경로 및 디렉토리 설정
 WORKDIR /app
