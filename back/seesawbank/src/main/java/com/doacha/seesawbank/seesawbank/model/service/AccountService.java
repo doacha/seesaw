@@ -1,5 +1,6 @@
 package com.doacha.seesawbank.seesawbank.model.service;
 
+import com.doacha.seesawbank.seesawbank.exception.BadRequestException;
 import com.doacha.seesawbank.seesawbank.model.dto.account.AccountResponse;
 import com.doacha.seesawbank.seesawbank.model.dto.account.CreateAccountRequest;
 import com.doacha.seesawbank.seesawbank.model.entity.Account;
@@ -25,6 +26,10 @@ public class AccountService {
 
     @Transactional
     public AccountResponse createAccount(CreateAccountRequest createAccountRequest) {
+        boolean isExist = memberRepository
+                .existsByMemberId(createAccountRequest.getMemberId());
+        if (!isExist) throw new BadRequestException("존재하지 않는 아이디입니다.");
+
         Optional<Member> member = memberRepository.findById(createAccountRequest.getMemberId());
         String encodedPassword = passwordEncoder.encode(createAccountRequest.getAccountPassword());
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -41,7 +46,11 @@ public class AccountService {
 
         accountRepository.save(newAccount);
 
-        String realAccountNum = "457899-01-" + newAccount.getAccountNum();
+//        Account account = accountRepository.findByAccountId(newAccount.getAccountId()).orElseThrow(()->new BadRequestException("계좌 생성 실패"));
+        String realAccountNum = "457899-01-" + 100000 + newAccount.getAccountId();
+
+        accountRepository.updateAccountNumByAccountIdAndMemberId(newAccount.getAccountId(), newAccount.getMember().getMemberId(), realAccountNum);
+
         AccountResponse accountResponse = new AccountResponse(
                 realAccountNum,
                 newAccount.getAccountName(),
