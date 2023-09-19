@@ -11,8 +11,8 @@ import ShieldGroup from './ShieldGroup'
 const dummy = {
   missionFailMemberCount: 5,
   missionPrice: 36000,
-  missionMyFailureCount: 2,
-  missionFailureCount: 27,
+  missionMyFailureCount: 8,
+  missionFailureCount: 8,
   missionTargetPrice: 30000,
   memberNickname: '차차애비',
 }
