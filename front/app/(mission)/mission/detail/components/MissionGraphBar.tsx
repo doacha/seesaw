@@ -6,8 +6,8 @@ interface Props {
   txtColor: string
 }
 
-const VerticalGraphBar = (props: Props) => {
-  console.log('흠냐', props.length)
+const MissionGraphBar = (props: Props) => {
+  console.log(props.length)
   return (
     <div className="flex flex-col items-center gap-2">
       <div className={`${props.txtColor} text-[10px]`}>
@@ -22,4 +22,4 @@ const VerticalGraphBar = (props: Props) => {
   )
 }
 
-export default VerticalGraphBar
+export default MissionGraphBar
