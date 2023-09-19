@@ -1,4 +1,29 @@
-interface User {
+export interface ImageFile {
+  id: string
+  file?: File
+  url: string
+}
+
+export interface Account {
+  accountImg: string
+  accountName: string
+  accountNum: string
+  accountBalance: number
+  accountType: number
+  accountInactivate: boolean
+  accountInterestRate: number
+}
+
+export interface Transaction {
+  accountApprovalAmount: number
+  amountBalance: number
+  accountTransactionTime: string
+  accountNum: string
+  accountIsDeposit: boolean
+  accountTransactionName: string
+}
+
+export interface User {
   userEmail?: string
   userPassword?: string
   userName?: string
@@ -12,7 +37,7 @@ interface User {
   savedMoney: number
 }
 
-interface Mission {
+export interface Mission {
   missionId?: string
   missionTitle: string
   missionMemberCount?: number
@@ -34,14 +59,6 @@ interface Mission {
   memberMissionStatus?: number
 }
 
-interface ImageFile {
-  id: string
-  file?: File
-  url: string
-}
-
-export type { User, Mission, ImageFile }
-
 export interface MissionCardProps {
   missionId: string
   missionTitle: string
@@ -55,9 +72,22 @@ export interface MissionCardProps {
   missionPeriod: number
   missionCycle: number
   missionStartDate: string
+  missionEndDate: string
   missionCreationTime: string
   missionHostEmail: string
   categoryId: number
+  memberMissionStatus?: string
+}
+
+export interface Record {
+  recordNumber: number
+  recordStatus: number
+  recordTotalCost: number
+  recordId: number
+  recordWriteTime: string
+  memberEmail: string
+  missionId: string
+  recordContent: string
 }
 
 export interface SearchState {
