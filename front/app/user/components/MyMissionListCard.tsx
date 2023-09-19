@@ -1,11 +1,12 @@
 'use client'
 
-import { Mission } from '@/app/types'
+import { MissionCardProps } from '@/app/types'
 import MyMissionInfoCard from './MyMissionInfoCard'
 import Dropdown from '@/app/components/Dropdown'
 
-const missionList: Mission[] = [
+const missionList: MissionCardProps[] = [
   {
+    missionId: '1',
     missionTitle: '술 그만마셔 그러다 뒤져',
     missionCycle: 1,
     missionImgUrl: './차차_군침이.jpg',
@@ -15,6 +16,7 @@ const missionList: Mission[] = [
     missionResult: '진행중',
   },
   {
+    missionId: '2',
     missionTitle: '술 그만마셔 그러다 뒤져',
     missionCycle: 1,
     missionImgUrl: './차차_군침이.jpg',
@@ -24,6 +26,7 @@ const missionList: Mission[] = [
     missionResult: '성공',
   },
   {
+    missionId: '3',
     missionTitle: '술 그만마셔 그러다 뒤져',
     missionCycle: 1,
     missionImgUrl: './차차_군침이.jpg',
@@ -33,6 +36,7 @@ const missionList: Mission[] = [
     missionResult: '실패',
   },
   {
+    missionId: '4',
     missionTitle: '술 그만마셔 그러다 뒤져',
     missionCycle: 1,
     missionImgUrl: './차차_군침이.jpg',
@@ -42,6 +46,7 @@ const missionList: Mission[] = [
     missionResult: '진행중',
   },
   {
+    missionId: '5',
     missionTitle: '술 그만마셔 그러다 뒤져',
     missionCycle: 1,
     missionImgUrl: './차차_군침이.jpg',
@@ -51,6 +56,7 @@ const missionList: Mission[] = [
     missionResult: '진행중',
   },
   {
+    missionId: '6',
     missionTitle: '술 그만마셔 그러다 뒤져',
     missionCycle: 1,
     missionImgUrl: './차차_군침이.jpg',
@@ -72,7 +78,7 @@ const MyMissionListCard = () => {
       </div>
       <div className="flex flex-col gap-3 h-auto max-h-[480px] overflow-auto">
         {missionList.map((mission) => (
-          <MyMissionInfoCard mission={mission} />
+          <MyMissionInfoCard mission={mission} key={mission.missionId} />
         ))}
       </div>
     </div>
