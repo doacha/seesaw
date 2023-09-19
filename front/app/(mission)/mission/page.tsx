@@ -29,7 +29,6 @@ const page = () => {
     cycle: [],
     category: [],
   })
-  console.log('selected 현황', selectedSearchState)
   const handleContainerExpand = () => {
     setIsSearchContainerFull(true)
   }

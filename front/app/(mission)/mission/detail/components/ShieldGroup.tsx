@@ -1,11 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faShieldHalved } from '@fortawesome/free-solid-svg-icons'
 const BrokenShield = ({ isSmall }: { isSmall?: boolean }) => {
-  const xMarkSize = isSmall ? 'text-[18px]' : 'text-[50px]'
-  const shieldSize = isSmall ? 'text-[25px]' : 'text-[70px]'
-  const topPosition = isSmall ? 'top-[9px]' : 'top-[27px]'
+  const xMarkSize = isSmall ? 'text-[18px]' : 'text-[40px]'
+  const shieldSize = isSmall ? 'text-[25px]' : 'text-[60px]'
+  const topPosition = isSmall ? 'top-[6.5px]' : 'top-[1px]'
   return (
-    <span className="relative">
+    <span className="relative mr-1">
       <FontAwesomeIcon
         icon={faShieldHalved}
         className={`text-primary ${shieldSize}`}
@@ -39,7 +39,7 @@ const ShieldGroup = ({
         .map((element, idx) => (
           <FontAwesomeIcon
             icon={faShieldHalved}
-            className={`${shieldSize} mr-1`}
+            className={`${shieldSize} mr-1 text-seesaw-purple-600`}
             key={idx}
           />
         ))}
