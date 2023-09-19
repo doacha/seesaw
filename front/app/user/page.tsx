@@ -25,7 +25,7 @@ const User = () => {
 
       <Header title="마이페이지" />
 
-      <div className="flex flex-col h-full py-16 overflow-auto">
+      <div className="flex flex-col h-full py-16 overflow-scroll">
         <Tab
           labels={['내 정보', '내 계좌']}
           activeTab={activeTab}
@@ -37,7 +37,7 @@ const User = () => {
             <MyMissionListCard />
           </div>
         ) : (
-          <div className="flex flex-col h-full p-5 gap-5">
+          <div className="flex flex-col h-min-full p-5 gap-5">
             <AccountCard />
             <AccountCard />
             <AccountCard />

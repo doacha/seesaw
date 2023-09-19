@@ -17,7 +17,7 @@ const VerticalGraphBar = (props: Props) => {
         className={`${props.bgColor} w-[30px] rounded-md`}
         style={{ height: props.length }}
       ></div>
-      <div className="text-xs">{props.round}회차</div>
+      <div className="text-xs whitespace-nowrap w-fit">{props.round}회차</div>
     </div>
   )
 }
