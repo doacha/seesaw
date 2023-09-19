@@ -14,9 +14,14 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class Account {
     @Id
-    @Column(name="account_num",nullable=false)
+    @Column(name="account_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int accountId;
+
+    @Column(name="account_num")
     private String accountNum;
 
     @ManyToOne
@@ -27,10 +32,11 @@ public class Account {
     private String accountName;
 
     @Column(name="account_type",nullable=false)
+    @ColumnDefault("1") // 만들 때는 적금 계좌만 만들어서
     private int accountType;
 
     @Column(name="aacount_interest_rate",nullable=false)
-    private int accountInterestRate;
+    private float accountInterestRate;
 
     @Column(name="account_is_inactivate",nullable=false)
     @ColumnDefault("0")
@@ -41,7 +47,5 @@ public class Account {
 
     @Column(name="account_password",nullable=false)
     private String accountPassword;
-
-
 
 }
