@@ -17,14 +17,18 @@ const CompleteMissionDetailCard = (props: Props) => {
           </div>
           <div
             className={
-              props.mission.missionResult === '성공'
+              props.mission.memberMissionStatus === 1
                 ? 'text-primary font-scDreamExBold'
-                : props.mission.missionResult === '실패'
+                : props.mission.memberMissionStatus === 2
                 ? 'text-error font-scDreamExBold'
                 : ''
             }
           >
-            {props.mission.missionResult}
+            {props.mission.memberMissionStatus === 0
+              ? '진행중'
+              : props.mission.memberMissionStatus === 1
+              ? '성공'
+              : '실패'}
           </div>
         </div>
         <div>{props.mission.missionPurpose}</div>
