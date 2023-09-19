@@ -115,16 +115,6 @@ export const recordList: type.Record[] = [
   },
 ]
 
-export const account: type.Account = {
-  accountImg: './seesaw_logo.svg',
-  accountBalance: 310000,
-  accountName: '시소적금통장',
-  accountNum: '123-45-6789',
-  accountInactivate: false,
-  accountInterestRate: 5,
-  accountType: 1,
-}
-
 export const transactionList: type.Transaction[] = [
   {
     accountApprovalAmount: 20000,
@@ -149,5 +139,176 @@ export const transactionList: type.Transaction[] = [
     amountBalance: 310000,
     accountTransactionName: '차차',
     accountIsDeposit: false,
+  },
+]
+
+export const account: type.Account = {
+  accountImg: './seesaw_logo.svg',
+  accountBalance: 310000,
+  accountName: '시소적금통장',
+  accountNum: '123-45-6789',
+  accountInactivate: false,
+  accountInterestRate: 5,
+  accountType: 1,
+}
+
+export const spend: type.Spending[] = [
+  {
+    spendingCostSum: 2240000,
+    spendingMonth: 9,
+    memberEmail: 'doacha@seesaw.com',
+  },
+]
+
+export const sumList: type.Spending[] = [
+  {
+    spendingCostSum: 224000,
+    spendingDate: '2023-09-01T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 324000,
+    spendingDate: '2023-09-02T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 440000,
+    spendingDate: '2023-09-03T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 143000,
+    spendingDate: '2023-09-04T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 530000,
+    spendingDate: '2023-09-05T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 233400,
+    spendingDate: '2023-09-06T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 358000,
+    spendingDate: '2023-09-07T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingDate: '2023-09-08T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingDate: '2023-09-09T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingDate: '2023-09-10T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 13300,
+    spendingDate: '2023-09-11T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 89000,
+    spendingDate: '2023-09-12T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 74000,
+    spendingDate: '2023-09-13T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 17800,
+    spendingDate: '2023-09-14T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 0,
+    spendingDate: '2023-09-15T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 18000,
+    spendingDate: '2023-09-16T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 19800,
+    spendingDate: '2023-09-17T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 9500,
+    spendingDate: '2023-09-18T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 95000,
+    spendingDate: '2023-09-19T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 65456,
+    spendingDate: '2023-09-20T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 3250,
+    spendingDate: '2023-09-21T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 68700,
+    spendingDate: '2023-09-22T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 90000,
+    spendingDate: '2023-09-23T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 110000,
+    spendingDate: '2023-09-24T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 8000,
+    spendingDate: '2023-09-25T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 80000,
+    spendingDate: '2023-09-26T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 46500,
+    spendingDate: '2023-09-27T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 98500,
+    spendingDate: '2023-09-28T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingDate: '2023-09-29T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 38000000,
+    spendingDate: '2023-09-30T04:32:44.853Z',
+    memberEmail: 'doacha@seesaw.com',
   },
 ]
