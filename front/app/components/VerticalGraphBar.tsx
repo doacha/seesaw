@@ -10,7 +10,7 @@ const VerticalGraphBar = (props: Props) => {
   console.log(props.length)
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className={`${props.txtColor} text-xs`}>
+      <div className={`${props.txtColor} text-[10px]`}>
         {props.amount.toLocaleString()}
       </div>
       <div

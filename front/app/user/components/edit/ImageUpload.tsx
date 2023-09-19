@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ImageFile } from '../../types'
+import { ImageFile } from '../../../types'
 
 interface Props {
   imageList: ImageFile[]
@@ -38,7 +38,7 @@ const ImageUpload = () => {
 
   const uploadButton = (
     <div
-      className="min-w-[250px] min-h-[250px] bg-gray-100 rounded-lg flex flex-col justify-center mr-5"
+      className="min-w-[200px] min-h-[200px] bg-gray-100 rounded-lg flex flex-col justify-center mr-5"
       onClick={onUploadButtonClicked}
     >
       <i className="fa-solid fa-plus text-4xl"></i>
