@@ -1,6 +1,6 @@
 package com.doacha.seesawbank.controller;
 
-import com.doacha.seesawbank.model.dto.SpendingResponse;
+import com.doacha.seesawbank.model.dto.cardTransaction.SpendingResponse;
 import com.doacha.seesawbank.model.service.CardTransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
