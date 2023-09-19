@@ -99,7 +99,7 @@ pipeline {
 
          stage('front - Docker Build') {
             steps {
-                dir('font') {
+                dir('front') {
                     sh sh "docker build -t seesaw_front:latest ." // 이미지를 빌드합니다
                 }
             }
