@@ -59,6 +59,20 @@ export interface Mission {
   memberMissionStatus?: number
 }
 
+export interface Spending {
+  spendingId?: number
+  spendingTitle?: string
+  spendingCost?: number
+  spendingDate?: string | undefined
+  spendingCategoryId?: number
+  memberEmail: string
+  spendingMemo?: string
+  spendingCostSum?: number
+  spendingMonth?: number
+  spendingYear?: number
+  spendingDay?: number
+}
+
 export interface MissionCardProps {
   missionId: string
   missionTitle: string
