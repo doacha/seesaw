@@ -7,7 +7,7 @@ pipeline {
 	        steps {
     	        withCredentials([file(credentialsId: 'seesaw-application', variable: 'File')]) {
         	        script {
-                        sh 'cp $File /var/jenkins_home/workspace/seesaw_back/back/seesaw/src/main/resources'
+                        sh 'cp $File /var/jenkins_home/workspace/seesawPJT/back/seesaw/src/main/resources'
                     }
 		        }
 	        }
@@ -54,7 +54,7 @@ pipeline {
 	        steps {
     	        withCredentials([file(credentialsId: 'seesawbank-application', variable: 'File')]) {
         	        script {
-                        sh 'cp $File /var/jenkins_home/workspace/seesawbank_back/back/seesaw/src/main/resources'
+                        sh 'cp $File /var/jenkins_home/workspace/seesawPJT/back/seesaw/src/main/resources'
                     }
 		        }
 	        }
