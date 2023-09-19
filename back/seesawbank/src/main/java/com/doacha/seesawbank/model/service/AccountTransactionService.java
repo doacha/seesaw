@@ -97,9 +97,9 @@ public class AccountTransactionService {
         accountTransactionRepository.save(accountTransferTransaction);
 
         AccountTransferResponse accountTransferResponse = new AccountTransferResponse(
-                accountTransferTransaction.getAccountTransactionNum(),
+                accountTransaction.getAccountTransactionNum(),
                 accountTransferTransaction.getAccountApprovalAmount(),
-                accountTransferTransaction.getAccountTransactionName()
+                accountTransaction.getAccountTransactionName()
         );
 
         return accountTransferResponse;
