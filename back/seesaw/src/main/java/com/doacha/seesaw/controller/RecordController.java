@@ -125,21 +125,21 @@ public class RecordController {
     }
 
 
-    // 글 목록
-    @Operation( summary = "글 목록", description = "글 목록 불러오는 API (사용자 닉네임, 사용금액, 성공여부를 금액기준 오름차순으로)")
+    // 레코드 목록
+    @Operation( summary = "글 목록", description = "레코드 목록 불러오는 API (사용자 닉네임, 사용금액, 성공여부를 금액기준 오름차순으로)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "글 목록 불러오기 성공"),
-            @ApiResponse(responseCode = "500", description = "글 목록 불러오기 실패 - 서버 오류")
+            @ApiResponse(responseCode = "200", description = "레코드 목록 불러오기 성공"),
+            @ApiResponse(responseCode = "500", description = "레코드 목록 불러오기 실패 - 서버 오류")
     })
     @PostMapping()
     public ResponseEntity<?> getRecordList(@RequestBody RecordListRequest recordListRequest) {
-        log.info("글 목록 불러오기");
+        log.info("레코드 목록 불러오기");
         try {
             List<RecordListResponse> list = recordService.getRecordList(recordListRequest.getMissionId(), recordListRequest.getRecordNumber());
-            log.info("게시글 목록 불러오기 성공");
+            log.info("레코드 목록 불러오기 성공");
             return new ResponseEntity<List<RecordListResponse>>(list, HttpStatus.OK);
         } catch (Exception e) {
-            log.info("게시글 목록 불러오기 실패 - 서버(DB)오류");
+            log.info("레코드 목록 불러오기 실패 - 서버(DB)오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
