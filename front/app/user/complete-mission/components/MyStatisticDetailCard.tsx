@@ -1,16 +1,26 @@
 import StatisticIcon from './StatisticIcon'
 
-const MyStatisticDetailCard = () => {
+interface Props {
+  title: string
+  content: string
+  amount: number
+  icon: string
+  iconColor: string
+}
+
+const MyStatisticDetailCard = (props: Props) => {
   return (
     <div className="w-full flex justify-between items-center">
       <div className="flex gap-2 items-center">
-        <StatisticIcon icon="faMoneyBill" color="bg-point-pink" />
+        <StatisticIcon icon={props.icon} color={props.iconColor} />
         <div className="flex flex-col">
-          <div>내 총 소비액</div>
-          <div>30명 중 10등</div>
+          <div>{props.title}</div>
+          <div className="text-outline text-sm">{props.content}</div>
         </div>
       </div>
-      <div className="text-xl font-scDreamMedium">196,840원</div>
+      <div className="text-xl font-scDreamMedium">
+        {props.amount.toLocaleString()}원
+      </div>
     </div>
   )
 }

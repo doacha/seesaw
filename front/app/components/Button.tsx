@@ -3,6 +3,7 @@ interface ButtonProps {
   label: string
   onClick: () => void
   size?: 'xl' | 'lg' | 'sm' | 'xs'
+  disabled?: boolean
 }
 
 interface buttonConfigType {
@@ -20,9 +21,10 @@ const buttonConfig: buttonConfigType = {
   sm: 'text-sm',
   xs: 'text-xs',
 }
-const Button = ({ color, label, onClick, size }: ButtonProps) => {
+const Button = ({ color, label, onClick, size, disabled }: ButtonProps) => {
   return (
     <button
+      disabled={disabled}
       onClick={onClick}
       className={`btn btn-sm h-10 w-full border-transparent ${
         buttonConfig[color]
