@@ -3,12 +3,16 @@ pipeline {
 
     stages {
 
-        stage('seesaw back - Add Secret File') { // credentials에 저장해놓은 application.properties 파일 복사
+        stage('Add Secret File') { // credentials에 저장해놓은 application.properties 파일 복사
+        
 	        steps {
-    	        withCredentials([file(credentialsId: 'seesaw-application', variable: 'File')]) {
-        	        script {
-                        sh 'cp $File /var/jenkins_home/workspace/seesawPJT/back/seesaw/src/main/resources'
+                withCredentials([file(credentialsId: 'seesaw-application', variable: 'seesaw'),
+                                file(credentialsId: 'seesawbank-application', variable: 'seesawbank')]) {
+                    script {
+                        sh 'cp $seesaw /var/jenkins_home/workspace/seesawPJT/back/seesaw/src/main/resources'
+                        sh 'cp $seesawbank /var/jenkins_home/workspace/seesawPJT/back/seesaw/src/main/resources'
                     }
+    	        
 		        }
 	        }
         }
@@ -48,16 +52,6 @@ pipeline {
                     echo 'docker build failed'
                 }
             }
-        }
-
-        stage('seesawbank back - Add Secret File') { // credentials에 저장해놓은 application.properties 파일 복사
-	        steps {
-    	        withCredentials([file(credentialsId: 'seesawbank-application', variable: 'File')]) {
-        	        script {
-                        sh 'cp $File /var/jenkins_home/workspace/seesawPJT/back/seesaw/src/main/resources'
-                    }
-		        }
-	        }
         }
 
         stage('seesawbank back - Gradle Build') { // Gradle 빌드 스테이지: Spring Boot 프로젝트를 빌드합니다.
