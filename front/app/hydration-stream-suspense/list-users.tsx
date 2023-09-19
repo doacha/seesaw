@@ -42,15 +42,15 @@ export default function ListUsers() {
         >
           {data?.map((user) => (
             <div
-              key={user.id}
+              key={user.userEmail}
               style={{ border: '1px solid #ccc', textAlign: 'center' }}
             >
               <img
-                src={`https://robohash.org/${user.id}?set=set2&size=180x180`}
-                alt={user.name}
+                src={`https://robohash.org/${user.userEmail}?set=set2&size=180x180`}
+                alt={user.userName}
                 style={{ width: 180, height: 180 }}
               />
-              <h3>{user.name}</h3>
+              <h3>{user.userName}</h3>
             </div>
           ))}
         </div>

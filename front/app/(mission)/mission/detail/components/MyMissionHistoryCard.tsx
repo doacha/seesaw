@@ -1,4 +1,4 @@
-import { getCycleTerm } from '../../../../mission/detail/util'
+import { getCycleTerm } from '../../../util'
 interface CycleResult {
   cycleCount: number
   spendingRecord: Array<{ recordName: string; recordPrice: number }>
