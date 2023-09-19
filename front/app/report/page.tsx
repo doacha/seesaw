@@ -56,6 +56,121 @@ const monthSumList: Spending[] = [
     spendingMonth: 8,
     memberEmail: 'doacha@seesaw.com',
   },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 8,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 8,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 9,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 10,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 11,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 12,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 13,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 14,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 15,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 16,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 17,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 18,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 19,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 20,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 21,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 22,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 23,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 24,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 25,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 26,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 27,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 28,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingCostSum: 150000,
+    spendingMonth: 29,
+    memberEmail: 'doacha@seesaw.com',
+  },
 ]
 
 const spend: Spending[] = [
@@ -137,11 +252,13 @@ const Report = () => {
         <div className="flex p-5">
           <TextCard />
         </div>
-        <SumGraphCard
-          handleCalendarTabChange={handleCalendarTabChange}
-          activeCalendarTab={activeCalendarTab}
-          monthSumList={monthSumList}
-        />
+        <div className="flex p-5">
+          <SumGraphCard
+            handleCalendarTabChange={handleCalendarTabChange}
+            activeCalendarTab={activeCalendarTab}
+            monthSumList={monthSumList}
+          />
+        </div>
       </div>
     </div>
   )
