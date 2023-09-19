@@ -11,7 +11,7 @@ import ShieldGroup from './ShieldGroup'
 const dummy = {
   missionFailMemberCount: 5,
   missionPrice: 36000,
-  missionMyFailureCount: 8,
+  missionMyFailureCount: 4,
   missionFailureCount: 8,
   missionTargetPrice: 30000,
   memberNickname: '차차애비',
@@ -63,7 +63,7 @@ const DepositStatusContainer = () => {
       <div className="font-scDreamMedium">예치금 현황</div>
       <hr className="border-outline my-2.5" />
       {/* 예치금 현황 */}
-      <div className="rounded-lg bg-background-fill p-5">
+      <div className="rounded-lg bg-background-fill p-3">
         <div className="text-outline text-xs mb-2.5">
           현재{' '}
           <span className="text-black text-sm">
@@ -127,7 +127,7 @@ const DepositStatusContainer = () => {
         )}
       </div>
       {/* 내 실패 현황 */}
-      <div className="rounded-lg bg-background-fill p-5 my-5">
+      <div className="rounded-lg bg-background-fill p-3 my-5">
         <div className="text-xs">
           <span className="text-sm font-scDreamMedium mr-1">
             {data.memberNickname}
@@ -140,9 +140,9 @@ const DepositStatusContainer = () => {
             myFailureCount={data.missionMyFailureCount}
           />
         </div>
-        <div>
-          <span>3</span>
-          <span>/ 5</span>
+        <div className="font-scDreamExBold text-right text-[20px]">
+          <span className="text-error">{data.missionMyFailureCount}</span>
+          <span> / {data.missionFailureCount}</span>
         </div>
       </div>
     </div>

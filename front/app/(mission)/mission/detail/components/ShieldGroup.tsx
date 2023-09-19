@@ -1,11 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faShieldHalved } from '@fortawesome/free-solid-svg-icons'
 const BrokenShield = ({ isSmall }: { isSmall?: boolean }) => {
-  const xMarkSize = isSmall ? 'text-[18px]' : 'text-[40px]'
-  const shieldSize = isSmall ? 'text-[25px]' : 'text-[60px]'
-  const topPosition = isSmall ? 'top-[6.5px]' : 'top-[1px]'
+  const [xMarkSize, shieldSize, topPosition, margin] = isSmall
+    ? ['text-[18px]', 'text-[25px]', 'top-[6.5px]', 'mr-[3px] mb-[3px]']
+    : ['text-[40px]', 'text-[60px]', 'bottom-[-4px]', 'mr-2 mb-2']
   return (
-    <span className="relative mr-1">
+    <div className={`relative ${margin}`}>
       <FontAwesomeIcon
         icon={faShieldHalved}
         className={`text-primary ${shieldSize}`}
@@ -14,7 +14,7 @@ const BrokenShield = ({ isSmall }: { isSmall?: boolean }) => {
         icon={faXmark}
         className={`absolute text-error left-0 ${topPosition} ${xMarkSize}`}
       />
-    </span>
+    </div>
   )
 }
 
@@ -26,9 +26,12 @@ const ShieldGroup = ({
   myFailureCount: number
 }) => {
   const isSmall = failureCount > 8 ? true : false
-  const shieldSize = isSmall ? 'text-[25px]' : 'text-[70px]'
+  const [shieldSize, margin, emptyCount] = isSmall
+    ? ['text-[25px]', 'mr-[3px] mb-[3px]', 10]
+    : ['text-[60px]', 'mr-2 mb-2', 4]
+  const numberOfEmpty = emptyCount - (failureCount % emptyCount)
   return (
-    <div>
+    <div className="flex w-full flex-wrap flex-row justify-center my-5 content-end mx-auto">
       {Array(myFailureCount)
         .fill(0)
         .map((element, idx) => (
@@ -39,7 +42,16 @@ const ShieldGroup = ({
         .map((element, idx) => (
           <FontAwesomeIcon
             icon={faShieldHalved}
-            className={`${shieldSize} mr-1 text-seesaw-purple-600`}
+            className={`${shieldSize} ${margin} text-seesaw-purple-600`}
+            key={idx}
+          />
+        ))}
+      {Array(numberOfEmpty % emptyCount)
+        .fill(0)
+        .map((element, idx) => (
+          <FontAwesomeIcon
+            icon={faShieldHalved}
+            className={`${shieldSize} ${margin} text-seesaw-purple-600 opacity-0`}
             key={idx}
           />
         ))}
