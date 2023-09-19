@@ -79,10 +79,10 @@ public class AccountTransactionService {
     public void checkAuthentication (CheckAuthenticationRequest request){
         Optional<AccountTransaction> accountTransaction = accountTransactionRepository.findById(request.getAccountDealNum());
 
-        String accountTransactionNum = accountTransaction.get().getAccountTransactionName();
-        log.info("인증 번호: {}", accountTransactionNum);
+        String accountTransactionName = accountTransaction.get().getAccountTransactionName();
+        log.info("인증 번호: {}", accountTransactionName);
         String authenticationNum = request.getAuthenticationNum();
         log.info("입력한 번호: {}", authenticationNum);
-        if(!accountTransactionNum.equals(authenticationNum)) throw new BadRequestException("인증번호 불일치");
+        if(!accountTransactionName.equals(authenticationNum)) throw new BadRequestException("인증번호 불일치");
     }
 }

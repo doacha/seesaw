@@ -1,6 +1,6 @@
 #Stage 1
 #######################################
-FROM node:20 AS builder
+FROM node AS builder
 
 # set working directory
 WORKDIR /app
