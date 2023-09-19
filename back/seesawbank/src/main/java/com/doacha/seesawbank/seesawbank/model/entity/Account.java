@@ -14,17 +14,15 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SequenceGenerator(
-        name = "MEMBER_SEQ_GENERATOR",
-        sequenceName = "MEMBER_SEQ", // 매핑할 데이터베이스 시퀀스 이름
-        initialValue = 100001,
-        allocationSize = 1)
+
 public class Account {
     @Id
+    @Column(name="account_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int accountId;
+
     @Column(name="account_num")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "MEMBER_SEQ_GENERATOR")
-    private int accountNum;
+    private String accountNum;
 
     @ManyToOne
     @JoinColumn(name="member_id",referencedColumnName = "member_id",nullable=false)

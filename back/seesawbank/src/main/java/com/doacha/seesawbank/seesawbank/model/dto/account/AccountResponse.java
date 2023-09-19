@@ -17,5 +17,5 @@ public class AccountResponse {
     private String accountNum;
 
     @Schema(description = "사용자 이름", example = "도아차", required = true)
-    private String memberId;
+    private String memberName;
 }
