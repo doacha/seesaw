@@ -20,6 +20,11 @@ import java.sql.Timestamp;
 public class AccountTransaction {
 
     @Id
+    @Column(name="account_transaction_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "계좌 거래 아이디", example = "1")
+    private int accountTransactionId;
+
     @Column(name="account_deal_num",nullable=false)
     @Schema(description = "거래 번호", example = "abcd1234", required = true)
     private String accountDealNum;
