@@ -71,7 +71,7 @@ FROM nginx
 RUN rm -rf /etc/nginx/conf.d
 
 # 디폴트 리소스 경로에 있는 conf 폴더를 도커의 /etc/nginx 폴더로 복사한다.
-COPY conf /etc/nginx
+COPY nginx.conf /etc/nginx
 
 # 맨위의 as builder 로부터 복사한다는 것을 선언한다. 
 # 그리고 builder의 /app/build를 새로 생성된 컨테이너의 /usr/share/nginx/html로 복사한다.
