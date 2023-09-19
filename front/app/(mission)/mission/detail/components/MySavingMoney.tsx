@@ -1,4 +1,4 @@
-import VerticalGraphBar from '@/app/components/VerticalGraphBar'
+import MissionGraphbar from './MissionGraphBar'
 // import styles from '@/app/(mission)/mission/components/SearchContainer.module.css'
 import { useEffect, useState } from 'react'
 
@@ -12,7 +12,7 @@ const dummy = [
     missionNumber: 2,
   },
   {
-    savingMoney: 3500,
+    savingMoney: -3500,
     missionNumber: 3,
   },
   {
@@ -44,11 +44,11 @@ const dummy = [
     missionNumber: 3,
   },
   {
-    savingMoney: 3800,
+    savingMoney: -3800,
     missionNumber: 4,
   },
   {
-    savingMoney: 2800,
+    savingMoney: -2800,
     missionNumber: 15,
   },
   {
@@ -63,7 +63,7 @@ const dummy = [
 
 const targetPrice = 30000
 const MySavingMoney = () => {
-  const [lengthList, setLengthList] = useState<Array<string>>([])
+  const [lengthList, setLengthList] = useState<Array<number>>([])
   useEffect(() => {
     const averageAmount = dummy.reduce(
       (prev, curr) => {
@@ -74,14 +74,14 @@ const MySavingMoney = () => {
     ).savingMoney
 
     setLengthList(
-      dummy.map((element) => (element.savingMoney / targetPrice) * 160 + 'px'),
+      dummy.map((element) => (element.savingMoney / targetPrice) * 160),
     )
   }, [])
   return (
     <div className="bg-background rounded-lg p-5">
       <div>절약 금액</div>
       <hr className="my-[15px] text-outline" />
-      <div className="bg-background-fill rounded-lg p-5">
+      <div className="bg-background-fill rounded-sm p-5">
         <div className="text-sm">
           누적 금액{' '}
           <span className="text-primary font-scDreamExBold text-base mx-1">
@@ -99,8 +99,8 @@ const MySavingMoney = () => {
         </div>
         <div dir="rtl">
           <div className={`overflow-auto h-[210px]`}>
-            <div className="flex flex-row gap-5 items-end">
-              <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-row gap-5 items-center justify-center">
+              {/* <div className="flex flex-col items-center gap-2">
                 <div className={`text-primary text-[10px]`}>
                   {dummy[0].savingMoney.toLocaleString()}
                 </div>
@@ -111,20 +111,20 @@ const MySavingMoney = () => {
                 <div className="text-xs w-fit whitespace-nowrap text-primary">
                   이번회
                 </div>
-              </div>
+              </div> */}
               {dummy
                 .reverse()
                 .map(
                   (element, idx) =>
                     idx > 0 && (
-                      <VerticalGraphBar
+                      <MissionGraphbar
                         round={element.missionNumber}
                         amount={element.savingMoney}
                         txtColor="text-black"
                         bgColor={
                           idx === 0 ? 'bg-primary' : 'bg-primary-container'
                         }
-                        length={`-${lengthList[idx]}`}
+                        length={Math.trunc(lengthList[idx])}
                       />
                     ),
                 )}
