@@ -10,7 +10,7 @@ pipeline {
                                 file(credentialsId: 'seesawbank-application', variable: 'seesawbank')]) {
                     script {
                         sh 'cp $seesaw /var/jenkins_home/workspace/seesawPJT/back/seesaw/src/main/resources'
-                        sh 'cp $seesawbank /var/jenkins_home/workspace/seesawPJT/back/seesaw/src/main/resources'
+                        sh 'cp $seesawbank /var/jenkins_home/workspace/seesawPJT/back/seesawbank/src/main/resources'
                     }
     	        
 		        }
