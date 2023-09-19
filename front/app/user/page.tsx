@@ -1,12 +1,12 @@
 'use client'
 import { useState } from 'react'
 import Header from '../components/Header'
-import Navbar from '../components/Navbar'
 import MyMissionListCard from './components/MyMissionListCard'
 import UserInfoCard from './components/UserInfoCard'
 import ProfileEditCard from './components/edit/ProfileEditCard'
 import Tab from '../components/Tab'
 import AccountCard from './components/account/AccountCard'
+import AccountRegistModal from './components/account/AccountRegistModal'
 
 const User = () => {
   const [openEditPage, setOpenEditPage] = useState<boolean>(false)
@@ -41,6 +41,7 @@ const User = () => {
             <AccountCard />
             <AccountCard />
             <AccountCard />
+            <AccountRegistModal />
           </div>
         )}
       </div>
