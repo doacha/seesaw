@@ -17,11 +17,7 @@ import java.sql.Timestamp;
 @Table(name = "account")
 public class Account {
     @Id
-    @Column(name="account_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int accountId;
-
-    @Column(name="account_num")
+    @Column(name="account_num", nullable = false)
     private String accountNum;
 
     @ManyToOne
