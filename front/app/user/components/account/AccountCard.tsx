@@ -4,43 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
 import TransactionInfo from './TransactionInfo'
-
-const account: Account = {
-  accountImg: './seesaw_logo.svg',
-  accountBalance: 310000,
-  accountName: '시소적금통장',
-  accountNum: '123-45-6789',
-  accountInactivate: false,
-  accountInterestRate: 5,
-  accountType: 1,
-}
-
-const transactionList: Transaction[] = [
-  {
-    accountApprovalAmount: 20000,
-    accountNum: '987-65-4321',
-    accountTransactionTime: '2023-09-18T13:55:00.111Z',
-    amountBalance: 310000,
-    accountTransactionName: '차차',
-    accountIsDeposit: true,
-  },
-  {
-    accountApprovalAmount: 20000,
-    accountNum: '987-65-4321',
-    accountTransactionTime: '2023-09-18T13:55:00.111Z',
-    amountBalance: 310000,
-    accountTransactionName: '차차',
-    accountIsDeposit: false,
-  },
-  {
-    accountApprovalAmount: 20000,
-    accountNum: '987-65-4321',
-    accountTransactionTime: '2023-09-18T13:55:00.111Z',
-    amountBalance: 310000,
-    accountTransactionName: '차차',
-    accountIsDeposit: false,
-  },
-]
+import { account, transactionList } from '@/app/dummies'
 
 const formatDay = (date: Date): string => {
   const options: Intl.DateTimeFormatOptions = {
@@ -97,12 +61,12 @@ const AccountCard = () => {
       </div>
       <div className="collapse-content p-x5">
         {Object.entries(groupedTransaction).map(([day, data]) => (
-          <div>
+          <div key={day} className="h-max">
             <div className="text-lg font-scDreamLight">{day}</div>
             <div className="h-[1px] bg-outline-container w-full mb-2" />
             <div className="flex flex-col gap-5">
-              {data.map((transaction) => (
-                <TransactionInfo transaction={transaction} />
+              {data.map((transaction, index) => (
+                <TransactionInfo transaction={transaction} key={index} />
               ))}
             </div>
           </div>

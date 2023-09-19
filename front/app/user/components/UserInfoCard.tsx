@@ -3,17 +3,10 @@ import { useState } from 'react'
 import UserDetailInfo from './UserDetailInfo'
 import TextButton from '@/app/components/TextButton'
 import { User } from '@/app/types'
+import { user } from '@/app/dummies'
 
 interface Props {
   setOpenEditPage: () => void
-}
-
-const user: User = {
-  userNickname: '차차아버님',
-  userImgUrl: './차차_군침이.jpg',
-  successCnt: 2,
-  failCnt: 3,
-  savedMoney: 200000,
 }
 
 const UserInfoCard = (props: Props) => {

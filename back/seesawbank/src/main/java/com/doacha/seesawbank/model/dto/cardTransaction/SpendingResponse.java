@@ -1,4 +1,4 @@
-package com.doacha.seesawbank.model.dto;
+package com.doacha.seesawbank.model.dto.cardTransaction;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class SpendingResponse {
     private String memberId;
+    private String cardApprovalNum;
     private String cardStoreName;
     private int cardApprovalAmount;
     private String cardCompany;
