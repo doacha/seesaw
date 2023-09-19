@@ -6,8 +6,8 @@ FROM node:20 AS builder
 WORKDIR /app
 
 # install app dependencies
-#copies package.json and package-lock.json to Docker environment
-COPY package-lock.json ./
+#copies package.json and pnpm-lock.yaml(package-lock.json) to Docker environment
+COPY pnpm-lock.yaml ./
 COPY package.json ./
 
 # Installs all node packages
