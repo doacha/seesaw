@@ -40,7 +40,7 @@ const SpendingList = ({
                     {data.map((spending) => (
                       <div
                         onClick={clickDetail}
-                        className="h-9 mb-5 flex w-full flex-row gap-5"
+                        className="h-9 flex w-full flex-row gap-5"
                       >
                         <div className="flex my-auto w-6 ml-1">
                           {spending.spendingCategoryId && (

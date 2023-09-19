@@ -15,6 +15,9 @@ import { Spending } from '@/app/types'
 
 import { sumList } from '../dummies'
 import { spend } from '../dummies'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import { Doughnut } from 'react-chartjs-2'
+
 // 내가 데이터 호출을 할 때 1부터 현재 해당하는 달 -1 까지 호출해야해
 // monthSumList에 호출한 객체 append해주기
 
@@ -70,6 +73,52 @@ const Report = () => {
   const groupedSpending = groupSpendingByWeek(sumList)
   console.log(groupedSpending)
 
+  ChartJS.register(ArcElement, Tooltip, Legend)
+
+  // const data = {
+  //   labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+  //   datasets: [
+  //     {
+  //       label: '# of Votes',
+  //       data: [12, 19, 3, 5, 2, 3],
+  //       backgroundColor: [
+  //         'rgba(255, 99, 132, 0.2)',
+  //         'rgba(54, 162, 235, 0.2)',
+  //         'rgba(255, 206, 86, 0.2)',
+  //         'rgba(75, 192, 192, 0.2)',
+  //         'rgba(153, 102, 255, 0.2)',
+  //         'rgba(255, 159, 64, 0.2)',
+  //       ],
+  //       borderColor: [
+  //         'rgba(255, 99, 132, 1)',
+  //         'rgba(54, 162, 235, 1)',
+  //         'rgba(255, 206, 86, 1)',
+  //         'rgba(75, 192, 192, 1)',
+  //         'rgba(153, 102, 255, 1)',
+  //         'rgba(255, 159, 64, 1)',
+  //       ],
+  //       borderWidth: 1,
+  //     },
+  //   ],
+  // }
+  const data = {
+    labels: ['식비', '술/유흥', '카페/간식', '자동차', ''],
+    datasets: [
+      {
+        label: 'category',
+        data: [300, 50, 100, 55, 20],
+        backgroundColor: [
+          '#E98080',
+          '#FEB087',
+          '#FFAD69',
+          '#65E0D0',
+          '#F287C7',
+        ],
+        hoverOffset: 4,
+      },
+    ],
+  }
+
   return (
     <div className="w-screen h-screen bg-background-fill">
       <div>
@@ -124,6 +173,9 @@ const Report = () => {
         {activeTab == 'tab2' && <CalendarCard />}
         <div className="flex p-5">
           <TextCard />
+        </div>
+        <div className="flex p-5">
+          <Doughnut data={data} />
         </div>
         <div className="flex px-5 pb-5">
           <SumGraphCard

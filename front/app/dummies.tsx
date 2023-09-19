@@ -307,7 +307,7 @@ export const sumList: type.Spending[] = [
     memberEmail: 'doacha@seesaw.com',
   },
   {
-    spendingCostSum: 38000000,
+    spendingCostSum: 380000,
     spendingDate: '2023-09-30T04:32:44.853Z',
     memberEmail: 'doacha@seesaw.com',
   },
