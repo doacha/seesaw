@@ -81,7 +81,7 @@ const AccountCard = () => {
   const [isOpened, setIsOpened] = useState<Boolean>(false)
 
   return (
-    <div className="collapse bg-white">
+    <div className="collapse bg-white rounded-lg">
       <input type="checkbox" onClick={() => setIsOpened(!isOpened)} />
       <div className="collapse-title text-xl font-medium p-5 pb-3 flex flex-col gap-2">
         <AccountInfo account={account} />
