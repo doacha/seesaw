@@ -11,7 +11,9 @@ COPY pnpm-lock.yaml ./
 COPY package.json ./
 
 # Installs all node packages
-RUN pnpm i
+Run corepack enable
+Run corepack prepare pnpm@latest-8 --activate
+Run pnpm install
 
 # Copies everything over to Docker environment
 COPY . ./
