@@ -1,6 +1,6 @@
 package com.doacha.seesaw.controller;
 
-import com.doacha.seesaw.model.dto.*;
+import com.doacha.seesaw.model.dto.spending.*;
 import com.doacha.seesaw.model.entity.Spending;
 import com.doacha.seesaw.model.service.SpendingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +27,7 @@ public class SpendingController {
     @Operation(summary="지출 등록")
     public ResponseEntity<?> postSpending(@RequestBody SpendingDto spendingdto){
         try{spendingService.save(spendingdto);
-        return new ResponseEntity<>(spendingdto, HttpStatus.OK);
+            return new ResponseEntity<>(spendingdto, HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<String>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
@@ -38,7 +38,7 @@ public class SpendingController {
     public ResponseEntity<?> detailSpending(@PathVariable Long spendingId){
         try{
             Optional<Spending> spending = spendingService.read(spendingId);
-        return new ResponseEntity<Spending>(spending.get(),HttpStatus.OK);}
+            return new ResponseEntity<Spending>(spending.get(),HttpStatus.OK);}
         catch(Exception e ){
             return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -68,23 +68,32 @@ public class SpendingController {
 
     @PostMapping("/list")
     @Operation(summary="최신, 금액순 정렬")
-    public ResponseEntity<List<MonthSpendingResponse>> getSpendingList(@RequestBody MonthSpendingRequest monthSpendingRequest){
-        List<MonthSpendingResponse> spendingList =spendingService.findAllByMemberEmailAndSpendingYearAndSpendingMonth(monthSpendingRequest.getMemberEmail(), monthSpendingRequest.getSpendingYear(), monthSpendingRequest.getSpendingMonth(),monthSpendingRequest.getCondition());
-        return new ResponseEntity<>(spendingList, HttpStatus.OK);
+    public ResponseEntity<?> getSpendingList(@RequestBody MonthSpendingRequest monthSpendingRequest){
+        try{List<MonthSpendingResponse> spendingList =spendingService.findAllByMemberEmailAndSpendingYearAndSpendingMonth(monthSpendingRequest.getMemberEmail(), monthSpendingRequest.getSpendingYear(), monthSpendingRequest.getSpendingMonth(),monthSpendingRequest.getCondition());
+            return new ResponseEntity<>(spendingList, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/dailysum")
     @Operation(summary="전체 일 합계")
-    public ResponseEntity<List<DailySpendingSumResponse>> getDailySum(@RequestBody SpendingSumRequest spendingSumRequest){
-        List<DailySpendingSumResponse> dailySpendingSumList=spendingService.findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(spendingSumRequest.getMemberEmail(), spendingSumRequest.getSpendingYear(), spendingSumRequest.getSpendingMonth());
-        return new ResponseEntity<>(dailySpendingSumList,HttpStatus.OK);
+    public ResponseEntity<?> getDailySum(@RequestBody SpendingSumRequest spendingSumRequest){
+        try{List<DailySpendingSumResponse> dailySpendingSumList=spendingService.findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(spendingSumRequest.getMemberEmail(), spendingSumRequest.getSpendingYear(), spendingSumRequest.getSpendingMonth());
+            return new ResponseEntity<>(dailySpendingSumList,HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/monthsum")
     @Operation(summary="전체 월 합계")
-    public ResponseEntity<List<MonthSpendingSumResponse>> getMonthSum(@RequestBody SpendingSumRequest spendingSumRequest){
-        List<MonthSpendingSumResponse> monthSpendingSumList = spendingService.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(spendingSumRequest.getMemberEmail(), spendingSumRequest.getSpendingYear(), spendingSumRequest.getSpendingMonth());
-        return new ResponseEntity<>(monthSpendingSumList, HttpStatus.OK);
+    public ResponseEntity<?> getMonthSum(@RequestBody SpendingSumRequest spendingSumRequest){
+        try {MonthSpendingSumResponse monthSpendingSum = spendingService.findAllMonthSumByMemberEmailAndSpendingYear(spendingSumRequest.getMemberEmail(), spendingSumRequest.getSpendingYear(), spendingSumRequest.getSpendingMonth());
+            return new ResponseEntity<>(monthSpendingSum, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/category")
@@ -94,5 +103,14 @@ public class SpendingController {
         return new ResponseEntity<>(monthCategorygSumList, HttpStatus.OK);
     }
 
-
+    @PostMapping("/compare")
+    @Operation(summary="분석 결과 전달과 비교")
+    public ResponseEntity<?> getMonthCompare(@RequestBody SpendingSumRequest spendingSumRequest){
+        try {
+            MonthCompareResponse monthCompareResponse = spendingService.findMonthDifferenceByMemberEmailAndSpendingYearAndSpendingMonth(spendingSumRequest.getMemberEmail(), spendingSumRequest.getSpendingYear(), spendingSumRequest.getSpendingMonth());
+            return new ResponseEntity<>(monthCompareResponse, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

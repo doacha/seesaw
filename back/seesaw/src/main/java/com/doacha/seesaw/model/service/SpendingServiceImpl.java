@@ -1,7 +1,7 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.NoContentException;
-import com.doacha.seesaw.model.dto.*;
+import com.doacha.seesaw.model.dto.spending.*;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.Spending;
 import com.doacha.seesaw.repository.MemberRepository;
@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,20 +66,20 @@ public class SpendingServiceImpl implements SpendingService{
         Optional<Spending> spending = spendingRepository.findById(spendingUpdateRequest.getSpendingId());
         if (!spending.isPresent()) throw new NoContentException();
         else{
-        // 이메일로 멤버 찾기
-        Optional<Member> member = memberRepository.findById(spendingUpdateRequest.getMemberEmail());
+            // 이메일로 멤버 찾기
+            Optional<Member> member = memberRepository.findById(spendingUpdateRequest.getMemberEmail());
 
-        // 변경할 지출 새로 저장
-        Spending update = Spending.builder()
-                .spendingId(spending.get().getSpendingId())
-                .spendingTitle(spendingUpdateRequest.getSpendingTitle())
-                .spendingCost(spendingUpdateRequest.getSpendingCost())
-                .spendingDate(spendingUpdateRequest.getSpendingDate())
-                .spendingMemo(spendingUpdateRequest.getSpendingMemo())
-                .spendingCategoryId(spendingUpdateRequest.getSpendingCategoryId())
-                .member(member.get())
-                .build();
-        spendingRepository.save(update);}
+            // 변경할 지출 새로 저장
+            Spending update = Spending.builder()
+                    .spendingId(spending.get().getSpendingId())
+                    .spendingTitle(spendingUpdateRequest.getSpendingTitle())
+                    .spendingCost(spendingUpdateRequest.getSpendingCost())
+                    .spendingDate(spendingUpdateRequest.getSpendingDate())
+                    .spendingMemo(spendingUpdateRequest.getSpendingMemo())
+                    .spendingCategoryId(spendingUpdateRequest.getSpendingCategoryId())
+                    .member(member.get())
+                    .build();
+            spendingRepository.save(update);}
     }
     // 지출 삭제
     @Override
@@ -108,10 +109,22 @@ public class SpendingServiceImpl implements SpendingService{
     }
     // 지출 월별 합계
     @Override
-    public List<MonthSpendingSumResponse> findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth){
-        List<MonthSpendingSumResponse> monthSpendingSumResponses = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
+    public MonthSpendingSumResponse findAllMonthSumByMemberEmailAndSpendingYear(String memberEmail, int spendingYear,int spendingMonth){
+        MonthSpendingSumResponse monthSpendingSumResponses = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
         return monthSpendingSumResponses;
     }
+    @Override
+    public MonthCompareResponse findMonthDifferenceByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth){
+        MonthSpendingSumResponse currentSum = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
+        MonthSpendingSumResponse pastSum = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth-1);
+        MonthCompareResponse monthCompareResponse = MonthCompareResponse.builder()
+                .memberEmail(memberEmail)
+                .difference(currentSum.getSpendingCostSum()- pastSum.getSpendingCostSum())
+                .build();
+        return monthCompareResponse;
+    }
+
+
 
     @Override
     public List<MonthCategoryResponse> findMonthSumByCategory(String memberEmail, int spendingYear, int spendingMonth) {
