@@ -28,7 +28,9 @@ const Button = ({ color, label, onClick, size, disabled }: ButtonProps) => {
       onClick={onClick}
       className={`btn btn-sm h-10 w-full border-transparent ${
         buttonConfig[color]
-      } ${buttonConfig[size ?? 'xl']} text-background font-sans`}
+      } ${
+        buttonConfig[size ?? 'xl']
+      } text-background font-sans disabled:text-background`}
     >
       <span>{label}</span>
     </button>
