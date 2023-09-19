@@ -8,6 +8,7 @@ import com.doacha.seesawbank.model.entity.Member;
 import com.doacha.seesawbank.repository.AccountRepository;
 import com.doacha.seesawbank.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ public class AccountService {
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         Account newAccount = Account.builder()
+                .accountNum(createAccountNum())
                 .member(member.get())
                 .accountName(createAccountRequest.getAccountName())
                 .accountType(1)
@@ -46,17 +48,21 @@ public class AccountService {
 
         accountRepository.save(newAccount);
 
-//        Account account = accountRepository.findByAccountId(newAccount.getAccountId()).orElseThrow(()->new BadRequestException("계좌 생성 실패"));
-        String realAccountNum = "457899-01-" + 100000 + newAccount.getAccountId();
-
-        accountRepository.updateAccountNumByAccountIdAndMemberId(newAccount.getAccountId(), newAccount.getMember().getMemberId(), realAccountNum);
-
         AccountResponse accountResponse = new AccountResponse(
-                realAccountNum,
+                newAccount.getAccountNum(),
                 newAccount.getAccountName(),
                 newAccount.getMember().getMemberId()
         );
         return accountResponse;
+    }
+
+    // 거래 번호 만들기
+    private String createAccountNum() {
+        String accountNum = "457899-01-"+ RandomStringUtils.random(6, false, true);
+        while(accountRepository.existsById(accountNum)){
+            accountNum = "457899-01-"+RandomStringUtils.random(6, false, true);
+        }
+        return accountNum;
     }
 
 }
