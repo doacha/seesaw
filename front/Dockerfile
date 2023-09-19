@@ -3,7 +3,7 @@
 FROM node AS builder
 
 # set working directory
-WORKDIR /
+WORKDIR ./
 
 # install app dependencies
 #copies package.json and pnpm-lock.yaml(package-lock.json) to Docker environment
