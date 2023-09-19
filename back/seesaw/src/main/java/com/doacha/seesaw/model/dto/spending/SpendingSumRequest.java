@@ -1,6 +1,9 @@
-package com.doacha.seesaw.model.dto;
+package com.doacha.seesaw.model.dto.spending;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
