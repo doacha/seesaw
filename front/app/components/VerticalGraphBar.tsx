@@ -7,7 +7,6 @@ interface Props {
 }
 
 const VerticalGraphBar = (props: Props) => {
-  console.log('흠냐', props.length)
   return (
     <div className="flex flex-col items-center gap-2">
       <div className={`${props.txtColor} text-[10px]`}>
