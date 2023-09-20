@@ -13,6 +13,7 @@ export const dummyMissionCard: MissionCardProps = {
   missionPeriod: 4,
   missionCycle: 7,
   missionStartDate: '2023-09-08',
+  missionEndDate: '2023-09-08',
   missionCreationTime: '2023-09-08T05:07:56.000+00:00',
   missionHostEmail: 'doacha@seesaw.com',
   categoryId: 0,
