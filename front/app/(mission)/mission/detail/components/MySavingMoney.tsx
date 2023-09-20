@@ -55,10 +55,7 @@ const MySavingMoney = () => {
     },
     { savingMoney: 0, missionNumber: 0 },
   ).savingMoney
-  console.log(
-    (-largestFailMoney * HEIGHT_MAX) / targetPrice / 2,
-    largestFailMoney,
-  )
+
   const [lengthList, setLengthList] = useState<Array<number>>([])
   useEffect(() => {
     setLengthList(
@@ -72,9 +69,8 @@ const MySavingMoney = () => {
   // const lengthList = dummy.map(
   //   (element) => (Math.abs(element.savingMoney) / targetPrice) * 160,
   // )
-  console.log(boxHeight, '진짜높이')
   return (
-    <div className="bg-background rounded-lg p-5">
+    <div className="bg-background rounded-lg p-5 m-5">
       <div>절약 금액</div>
       <hr className="my-[15px] text-outline" />
       <div className="bg-background-fill rounded-sm p-5">
@@ -98,8 +94,11 @@ const MySavingMoney = () => {
           className={`overflow-x-auto ${styles.delScroll}`}
           style={{ height: `${boxHeight}px` }}
         >
-          <div className="flex flex-row gap-5 justify-center pt-5">
-            {Array(4)
+          <div
+            className="flex flex-row gap-5 justify-center pt-5"
+            style={{ width: `${dummy.length * 50 - 10}px` }}
+          >
+            {/* {Array(5)
               .fill(0)
               .map((element, idx) => (
                 <MissionGraphbar
@@ -111,7 +110,7 @@ const MySavingMoney = () => {
                     (-largestFailMoney * HEIGHT_MAX) / targetPrice / 3
                   }
                 />
-              ))}
+              ))} */}
             {dummy.map((element, idx) => (
               <MissionGraphbar
                 round={element.missionNumber}
