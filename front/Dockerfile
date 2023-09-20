@@ -1,49 +1,5 @@
-# #Stage 1
-# #######################################
-# FROM node AS builder
-
-# # set working directory
-# WORKDIR /var/jenkins_home/workspace/seesawPJT/front
-
-# # install app dependencies
-# #copies package.json and pnpm-lock.yaml(package-lock.json) to Docker environment
-# COPY pnpm-lock.yaml ./
-# COPY package.json ./
-
-# # Installs all node packages
-# Run corepack enable
-# Run corepack prepare pnpm@latest-8 --activate
-# Run pnpm install
-
-# # Copies everything over to Docker environment
-# COPY . ./
-# RUN pnpm run build
-# # RUN pnpm build
-
-
-# #Stage 2
-# #######################################
-# #pull the official nginx base image
-# FROM nginx
-
-# # nginx 의 default.conf 를 삭제
-# RUN rm /etc/nginx/conf.d/default.conf
-
-# # host pc 의 nginx.conf 를 아래 경로에 복사
-# COPY ./nginx.conf /etc/nginx/conf.d
-
-# # Remove default nginx static resources
-# RUN rm -rf ./usr/share/nginx/html/*
-# # Copies static resources from builder stage
-# COPY --from=builder /app/build /usr/share/nginx/html/
-
-# # Containers run nginx with global directives and daemon off
-# EXPOSE 3000
-# ENTRYPOINT ["nginx", "-g", "daemon off;"]
-
-
-
-
+# build stage
+#################################################
 # docker로 빌드할 이미지를 설정
 FROM node as builder
 
@@ -64,18 +20,20 @@ COPY . /app
 # 빌드 시작
 RUN pnpm run build
 
+# production stage
+#################################################
 # docker 기본 이미지 설정
-FROM nginx
+FROM nginx as production-stage
 
 # nginx의 기본 설정을 삭제한다.
 RUN rm -rf /etc/nginx/conf.d
 
-# 디폴트 리소스 경로에 있는 conf 폴더를 도커의 /etc/nginx 폴더로 복사한다.
-COPY nginx.conf /etc/nginx
+# 디폴트 리소스 경로에 있는 conf 폴더를 도커의 /etc/nginx/conf.d로 복사한다.
+COPY ./nginx.conf /etc/nginx/conf.d
 
 # 맨위의 as builder 로부터 복사한다는 것을 선언한다. 
 # 그리고 builder의 /app/build를 새로 생성된 컨테이너의 /usr/share/nginx/html로 복사한다.
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /app/.next /usr/share/nginx/html
 
 # 80포트 오픈하고 nginx 실행
 EXPOSE 3000
