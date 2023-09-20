@@ -28,7 +28,7 @@ public class AccountTransactionService {
     @Autowired
     AccountRepository accountRepository;
 
-    // 계좌이체 전 확인
+    // 계좌 잔액 확인
     @Transactional
     public int checkRecentBalance (String accountNum){
         // 내 계좌 찾기
@@ -68,18 +68,20 @@ public class AccountTransactionService {
         // 존재 하지 않는 계좌인 경우 예외 처리
         if(!account.isPresent()) throw new NoContentException("내 계좌");
         if(!accountTransfer.isPresent()) throw new NoContentException("없는 계좌");
+        // 잔액 부족일 경우 예외처리
+        if(account.get().getAccountRecentBalance()<atRequest.getAccountApprovalAmount()) throw new BadRequestException("잔액이 부족합니다.");
 
         String accountDealNum = createAccountDealNum();//계좌 거래 번호 생성
 
-        // 내 계좌 남은 금액
-        Optional<AccountTransaction> recentTransaction = accountTransactionRepository.findTopByAccountOrderByAccountTransactionTimeDesc(account.get());
-        int recentBalance = 0;
-        if(recentTransaction.isPresent()) recentBalance = recentTransaction.get().getAccountBalance(); // 이전 거래 내역 있으면 최근 거래의 잔액 가져오기
-
-        // 상대 계좌 남은 금액
-        Optional<AccountTransaction> recentTransferTransaction = accountTransactionRepository.findTopByAccountOrderByAccountTransactionTimeDesc(accountTransfer.get());
-        int recentTransferBalance = 0;
-        if(recentTransferTransaction.isPresent()) recentTransferBalance = recentTransferTransaction.get().getAccountBalance();// 이전 거래 내역 있으면 최근 거래의 잔액 가져오기
+//        // 내 계좌 남은 금액
+//        Optional<AccountTransaction> recentTransaction = accountTransactionRepository.findTopByAccountOrderByAccountTransactionTimeDesc(account.get());
+//        int recentBalance = 0;
+//        if(recentTransaction.isPresent()) recentBalance = recentTransaction.get().getAccountBalance(); // 이전 거래 내역 있으면 최근 거래의 잔액 가져오기
+//
+//        // 상대 계좌 남은 금액
+//        Optional<AccountTransaction> recentTransferTransaction = accountTransactionRepository.findTopByAccountOrderByAccountTransactionTimeDesc(accountTransfer.get());
+//        int recentTransferBalance = 0;
+//        if(recentTransferTransaction.isPresent()) recentTransferBalance = recentTransferTransaction.get().getAccountBalance();// 이전 거래 내역 있으면 최근 거래의 잔액 가져오기
 
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
@@ -88,27 +90,30 @@ public class AccountTransactionService {
                 .account(account.get())
                 .accountDealNum(accountDealNum)
                 .accountTransactionName(accountTransfer.get().getMember().getMemberName())
-                .accountBalance(recentBalance-atRequest.getAccountApprovalAmount())
+                .accountBalance(account.get().getAccountRecentBalance()-atRequest.getAccountApprovalAmount())
                 .accountTransactionTime(Timestamp.valueOf(now))
                 .accountApprovalAmount(atRequest.getAccountApprovalAmount()*(-1))
                 .accountIsDeposit(false)
                 .accountTransactionNum(atRequest.getAccountTransactionNum())
                 .build();
 
-        accountTransactionRepository.save(accountTransaction);
+        accountTransactionRepository.save(accountTransaction); // 계좌 거래 내역 생성
+        updateRecentBalance(accountTransaction); // 계좌 잔액 업데이트
+
 
         // 상대 계좌 입금
         AccountTransaction accountTransferTransaction = AccountTransaction.builder()
                 .account(accountTransfer.get())
                 .accountDealNum(accountDealNum)
                 .accountTransactionName(account.get().getMember().getMemberName())
-                .accountBalance(recentTransferBalance+atRequest.getAccountApprovalAmount())
+                .accountBalance(accountTransfer.get().getAccountRecentBalance()+atRequest.getAccountApprovalAmount())
                 .accountTransactionTime(Timestamp.valueOf(now))
                 .accountApprovalAmount(atRequest.getAccountApprovalAmount())
                 .accountIsDeposit(true)
                 .build();
 
-        accountTransactionRepository.save(accountTransferTransaction);
+        accountTransactionRepository.save(accountTransferTransaction); // 상대 계좌 거래 내역 생성
+        updateRecentBalance(accountTransferTransaction); // 상대 계좌 잔액 업데이트
 
         AccountTransferResponse accountTransferResponse = new AccountTransferResponse(
                 accountTransaction.getAccountTransactionNum(),
@@ -118,6 +123,28 @@ public class AccountTransactionService {
 
         return accountTransferResponse;
     }
+
+    // 계좌 잔액 업데이트
+    @Transactional
+    public void updateRecentBalance(AccountTransaction accountTransaction) {
+        Optional<Account> account = accountRepository.findAccountByAccountNum(accountTransaction.getAccount().getAccountNum());
+
+        Account newAccount = Account.builder()
+                .accountNum(account.get().getAccountNum())
+                .member(account.get().getMember())
+                .accountName(account.get().getAccountName())
+                .accountType(account.get().getAccountType())
+                .accountInterestRate(account.get().getAccountInterestRate())
+                .accountStatus(account.get().getAccountStatus())
+                .accountCreationTime(account.get().getAccountCreationTime())
+                .accountPassword(account.get().getAccountPassword())
+                .accountBankName(account.get().getAccountBankName())
+                .accountRecentBalance(accountTransaction.getAccountBalance())
+                .build();
+
+        accountRepository.save(newAccount);
+    }
+
 
     // 1원 인증 보내기
     public String sendAuthentication (String accountNum){
@@ -144,6 +171,7 @@ public class AccountTransactionService {
                 .build();
 
         accountTransactionRepository.save(accountTransaction);
+        updateRecentBalance(accountTransaction); // 계좌 잔액 업데이트
 
         return accountDealNum;
     }
