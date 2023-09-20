@@ -1,7 +1,7 @@
 # build stage
 #################################################
 # docker로 빌드할 이미지를 설정
-FROM node as builder
+FROM node as build
 
 # 작업 경로 및 디렉토리 설정
 WORKDIR /app
@@ -31,12 +31,9 @@ RUN rm -rf /etc/nginx/conf.d
 # 디폴트 리소스 경로에 있는 conf 폴더를 도커의 /etc/nginx/conf.d로 복사한다.
 COPY ./nginx.conf /etc/nginx/conf.d
 
-# 맨위의 as builder 로부터 복사한다는 것을 선언한다. 
+# 맨위의 as build 로부터 복사한다는 것을 선언한다. 
 # 그리고 builder의 /app/build를 새로 생성된 컨테이너의 /usr/share/nginx/html로 복사한다.
-COPY --from=builder /app/.next /usr/share/nginx/html
+COPY --from=build /app/.next /usr/share/nginx/html
 
 # 80포트 오픈하고 nginx 실행
-EXPOSE 3000
-
-# Ubuntu에서 Nginx를 포어그라운드에서 실행할 경우 아래와 같이 실행
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 80
