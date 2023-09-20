@@ -151,6 +151,86 @@ export const account: type.Account = {
   accountInterestRate: 5,
   accountType: 1,
 }
+export const categorySumList: type.Spending[] = [
+  {
+    spendingCostSum: 2220000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 2,
+  },
+  {
+    spendingCostSum: 2000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 5,
+  },
+  {
+    spendingCostSum: 180000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 3,
+  },
+  {
+    spendingCostSum: 20000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 4,
+  },
+  {
+    spendingCostSum: 20000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 5,
+  },
+  {
+    spendingCostSum: 20000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 7,
+  },
+  {
+    spendingCostSum: 20000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 8,
+  },
+  {
+    spendingCostSum: 20000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 10,
+  },
+  {
+    spendingCostSum: 20000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 11,
+  },
+  {
+    spendingCostSum: 20000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 12,
+  },
+  {
+    spendingCostSum: 20000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 13,
+  },
+  {
+    spendingCostSum: 20000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 14,
+  },
+  {
+    spendingCostSum: 20000,
+    spendingMonth: 9,
+    memberEmail: 'test',
+    spendingCategoryId: 15,
+  },
+]
 
 export const spend: type.Spending[] = [
   {
