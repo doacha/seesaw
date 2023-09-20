@@ -11,7 +11,7 @@ export const user: type.User = {
 export const mission: type.Mission = {
   missionTitle: '술 그만마셔 그러다 뒤져',
   missionCurrentCycle: 1,
-  missionImgUrl: '../차차_군침이.jpg',
+  missionImgUrl: '../../차차_군침이.jpg',
   missionPeriod: 10,
   missionStartDate: '2023-09-11',
   missionEndDate: '2023-09-30',

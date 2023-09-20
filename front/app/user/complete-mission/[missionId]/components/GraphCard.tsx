@@ -89,6 +89,7 @@ const GraphCard = (props: Props) => {
                 amount={amount}
                 length={lengthList[index]}
                 title={'이전'}
+                height="big"
                 bgColor={
                   index === props.amountList.length - 1
                     ? 'bg-secondary'
