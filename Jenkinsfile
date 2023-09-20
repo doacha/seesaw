@@ -121,7 +121,7 @@ pipeline {
                 // 새로운 이미지 실행
                 sh 'docker run -d --name seesaw_back -p 8080:8080 -e TZ=Asia/Seoul -u root seesaw_back:latest'
                 sh 'docker run -d --name seesawbank_back -p 8081:8081 -e TZ=Asia/Seoul -u root seesawbank_back:latest'
-                sh 'docker run -d --name seesaw_front -p 3000:3000 -e TZ=Asia/Seoul -u root seesaw_front:latest'
+                sh 'docker run -d --name seesaw_front -p 3000:80 -e TZ=Asia/Seoul -u root seesaw_front:latest'
             }
 
             post {
