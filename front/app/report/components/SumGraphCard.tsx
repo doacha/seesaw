@@ -38,8 +38,8 @@ const SumGraphCard = ({
     const tmpLengthList: string[] = []
 
     for (let i = 0; i < amountList.length; i++) {
-      const tmp = `${(Math.round(amountList[i]) / averageAmount()) * 100}px`
-      mean += (Math.round(amountList[i]) / averageAmount()) * 100
+      const tmp = `${(Math.round(amountList[i]) / averageAmount()) * 60}px`
+      mean += (Math.round(amountList[i]) / averageAmount()) * 60
       tmpLengthList.push(tmp)
     }
 
@@ -99,12 +99,53 @@ const SumGraphCard = ({
               </div>
             </div>
           </>
-        ) : (
+        ) : activeCalendarTab == 'tab2' ? (
           <MonthSumGraphCard
             activeCalendarTab="tab2"
             groupedSpending={groupedSpending}
             handleCalendarTabChange={handleCalendarTabChange}
           />
+        ) : (
+          <>
+            <div className="w-full flex">
+              <div className="flex w-full justify-between bg-blue-100 m-5 px-5 pt-10 pb-5 rounded-lg overflow-auto">
+                {amountList.map((amount, index) => (
+                  <>
+                    <div className="flex items-end justify-between">
+                      <ReportVerticalGraphBar
+                        amount={amount}
+                        length={lengthList[index]}
+                        round={index}
+                        bgColor={
+                          index === amountList.length - 1
+                            ? 'bg-primary'
+                            : 'bg-blue-300'
+                        }
+                        txtColor={
+                          index === amountList.length - 1
+                            ? 'text-secondary'
+                            : 'text-black'
+                        }
+                        key={index}
+                        amountListLength={amountList.length}
+                        activeCalendarTab={activeCalendarTab}
+
+                        // meanLenght={meanLenght}
+                      />
+                    </div>
+                  </>
+                ))}
+              </div>
+            </div>
+            <div className="mx-5 mb-5 p-2 bg-slate-100 rounded-lg  flex justify-between">
+              <div className="ml-1 my-auto font-scDreamRegular text-xs">
+                평균지출금액
+              </div>
+              <div className="my-auto text-xs font-scDreamExBold">
+                {Math.round(averageAmount()).toLocaleString('ko-KR')}원
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>

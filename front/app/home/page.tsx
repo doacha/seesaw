@@ -46,9 +46,11 @@ const spendingList: Spending[] = [
 ]
 const Home = () => {
   const [sort, setSort] = useState('최신순')
+
+  const router = useRouter()
   // 카테고리 클릭 시 해당 캡슐 색상 변하고
   const clickReport = () => {
-    console.log('소비리포트 클릭')
+    router.push('/report')
   }
   const clickArrow = () => {
     console.log('arrow 클릭')
@@ -57,7 +59,6 @@ const Home = () => {
     console.log('최신순, 고액순 클릭')
     setSort(e.target.innerText)
   }
-  const router = useRouter()
 
   const clickDetail = () => {
     // 해당 내역의 번호를 가지고 페이지 이동해야해
