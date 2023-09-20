@@ -2,13 +2,13 @@ package com.doacha.seesawbank.controller;
 
 import com.doacha.seesawbank.model.dto.account.AccountResponse;
 import com.doacha.seesawbank.model.dto.account.CreateAccountRequest;
+import com.doacha.seesawbank.model.dto.account.DeleteAccountRequest;
 import com.doacha.seesawbank.model.service.AccountService;
 import com.doacha.seesawbank.model.service.AccountTransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/account")
@@ -22,8 +22,13 @@ public class AccountController {
         return accountService.createAccount(createAccountRequest);
     }
 
-    @PostMapping("/checkRecentBalance")
+    @PostMapping("/check")
     public int checkRecentBalance(@RequestBody String accountNum){
         return accountTransactionService.checkRecentBalance(accountNum);
+    }
+
+    @PutMapping("/delete")
+    public boolean deleteAccount(@RequestBody DeleteAccountRequest deleteAccountRequest) {
+        return accountService.deleteAccount(deleteAccountRequest);
     }
 }

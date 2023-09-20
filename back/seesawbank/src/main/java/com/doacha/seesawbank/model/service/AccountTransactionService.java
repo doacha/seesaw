@@ -32,7 +32,7 @@ public class AccountTransactionService {
     @Transactional
     public int checkRecentBalance (String accountNum){
         // 내 계좌 찾기
-        Optional<Account> accountTransfer = accountRepository.findAccountTransactionNameByAccountNum(accountNum);
+        Optional<Account> accountTransfer = accountRepository.findAccountByAccountNum(accountNum);
         if(!accountTransfer.isPresent()) throw new NoContentException("없는 계좌");
         // 가장 최근 거래 내역
         Optional<AccountTransaction> recentTransaction = accountTransactionRepository.findTopByAccountOrderByAccountTransactionTimeDesc(accountTransfer.get());
@@ -46,7 +46,7 @@ public class AccountTransactionService {
     @Transactional
     public AccountTransferResponse checkAccountTransfer (CheckAccountTransactionRequest catRequest){
         //받는 계좌(타인 계좌)
-        Optional<Account> accountTransfer = accountRepository.findAccountTransactionNameByAccountNum(catRequest.getAccountTransactionNum());
+        Optional<Account> accountTransfer = accountRepository.findAccountByAccountNum(catRequest.getAccountTransactionNum());
         // 존재 하지 않는 계좌인 경우 예외 처리
         if(!accountTransfer.isPresent()) throw new NoContentException("없는 계좌");
 
@@ -64,7 +64,7 @@ public class AccountTransactionService {
         //보내는 계좌(내계좌)
         Optional<Account> account = accountRepository.findById(atRequest.getAccountNum());
         //받는 계좌(타인 계좌)
-        Optional<Account> accountTransfer = accountRepository.findAccountTransactionNameByAccountNum(atRequest.getAccountTransactionNum());
+        Optional<Account> accountTransfer = accountRepository.findAccountByAccountNum(atRequest.getAccountTransactionNum());
         // 존재 하지 않는 계좌인 경우 예외 처리
         if(!account.isPresent()) throw new NoContentException("내 계좌");
         if(!accountTransfer.isPresent()) throw new NoContentException("없는 계좌");
