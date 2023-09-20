@@ -53,4 +53,12 @@ public class Account {
     @Schema(description = "계좌 비밀번호", example = "1234", required = true)
     private String accountPassword;
 
+    @Column(name="account_bank_name",nullable=false)
+    @Schema(description = "은행 이름(번호로 소통)", example = "0", required = true)
+    private int accountBankName;
+
+    @Column(name="account_recent_balance",nullable=false)
+    @Schema(description = "계좌 잔액", example = "1000000", required = true)
+    private int accountRecentBalance;
+
 }

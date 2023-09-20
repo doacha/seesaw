@@ -42,7 +42,7 @@ public class AccountTransaction {
     @Schema(description = "계좌 거래 금액", example = "10000", required = true)
     private int accountApprovalAmount;
 
-    @Column(name="amount_balance",nullable=false)
+    @Column(name="account_amount_balance",nullable=false)
     @Schema(description = "거래 후 잔액", example = "20000", required = true)
     private int accountBalance;
 

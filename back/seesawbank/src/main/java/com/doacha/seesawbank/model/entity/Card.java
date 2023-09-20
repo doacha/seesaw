@@ -34,4 +34,7 @@ public class Card {
     @Column(name = "card_type")
     private String cardType;
 
+    @Column(name = "card_company_name")
+    private int cardCompanyName;
+
 }
