@@ -11,9 +11,12 @@ import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, String>, JpaSpecificationExecutor<Account>  {
 //    boolean existsAccountNum(String memberEmail);
-    Optional<Account> findByAccountId(int accountId);
+//    @Query("SELECT a From Account a WHERE a.accountNum = :accountNum")
+//    Optional<Account> findAccountTransactionNameByAccountNum(@Param("accountNum") String accountNum);
 
-    @Modifying
-    @Query("UPDATE Account a set a.accountNum = :accountNum WHERE a.accountId = :accountId and a.member.memberId = :memberId")
-    void updateAccountNumByAccountIdAndMemberId(@Param("accountId") int accountId, @Param("memberId") String memberId, @Param("accountNum") String accountNum);
+    Optional<Account> findAccountByAccountNum(@Param("accountNum") String accountNum);
+
+//    @Modifying
+//    @Query("UPDATE Account a set a.accountNum = :accountNum WHERE a.accountId = :accountId and a.member.memberId = :memberId")
+//    void updateAccountNumByAccountIdAndMemberId(@Param("accountId") int accountId, @Param("memberId") String memberId, @Param("accountNum") String accountNum);
 }

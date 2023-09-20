@@ -18,6 +18,7 @@ interface inputProps {
   label?: string
   isLabelBig?: boolean
   value?: string | number
+  name?: string | undefined
   placeholder: string | undefined
   interval: string
   onChange?: any
@@ -28,6 +29,7 @@ const Input = ({
   type,
   label,
   value,
+  name,
   placeholder,
   isLabelBig,
   interval,
