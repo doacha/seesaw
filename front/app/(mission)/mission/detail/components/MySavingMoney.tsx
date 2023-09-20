@@ -1,82 +1,78 @@
 import MissionGraphbar from './MissionGraphBar'
-// import styles from '@/app/(mission)/mission/components/SearchContainer.module.css'
+import styles from '@/app/(mission)/mission/components/SearchContainer.module.css'
 import { useEffect, useState } from 'react'
 
 const dummy = [
   {
-    savingMoney: 3000,
-    missionNumber: 1,
+    savingMoney: 30000,
+    missionNumber: 43,
   },
   {
-    savingMoney: 4000,
+    savingMoney: 300000,
+    missionNumber: 3,
+  },
+  {
+    savingMoney: -3590,
     missionNumber: 2,
   },
   {
     savingMoney: -3500,
-    missionNumber: 3,
-  },
-  {
-    savingMoney: 3800,
-    missionNumber: 4,
-  },
-  {
-    savingMoney: 2800,
-    missionNumber: 5,
-  },
-  {
-    savingMoney: 2900,
-    missionNumber: 6,
-  },
-  {
-    savingMoney: 4200,
-    missionNumber: 7,
-  },
-  {
-    savingMoney: 3000,
     missionNumber: 1,
   },
   {
-    savingMoney: 4000,
-    missionNumber: 2,
-  },
-  {
-    savingMoney: 3500,
-    missionNumber: 3,
-  },
-  {
-    savingMoney: -3800,
+    savingMoney: -10000,
     missionNumber: 4,
   },
   {
-    savingMoney: -2800,
-    missionNumber: 15,
+    savingMoney: 4000,
+    missionNumber: 3,
   },
   {
-    savingMoney: 2900,
-    missionNumber: 6,
+    savingMoney: -3500,
+    missionNumber: 332,
   },
   {
-    savingMoney: 30000,
-    missionNumber: 15,
+    savingMoney: -3500,
+    missionNumber: 1,
+  },
+  {
+    savingMoney: -3500,
+    missionNumber: 1,
+  },
+  {
+    savingMoney: -3500,
+    missionNumber: 1,
   },
 ]
 
 const targetPrice = 30000
 const MySavingMoney = () => {
+  const HEIGHT_MAX = 100
+  const largestFailMoney = dummy.reduce(
+    (prev, curr) => {
+      prev.savingMoney = Math.min(prev.savingMoney, curr.savingMoney)
+      return prev
+    },
+    { savingMoney: 0, missionNumber: 0 },
+  ).savingMoney
+  console.log(
+    (-largestFailMoney * HEIGHT_MAX) / targetPrice / 2,
+    largestFailMoney,
+  )
   const [lengthList, setLengthList] = useState<Array<number>>([])
   useEffect(() => {
-    const averageAmount = dummy.reduce(
-      (prev, curr) => {
-        prev.savingMoney += curr.savingMoney
-        return prev
-      },
-      { savingMoney: 0, missionNumber: 0 },
-    ).savingMoney
-
     setLengthList(
-      dummy.map((element) => (element.savingMoney / targetPrice) * 160),
+      dummy.map(
+        (element) => (Math.abs(element.savingMoney) / targetPrice) * HEIGHT_MAX,
+      ),
     )
   }, [])
+  const boxHeight =
+    15 + HEIGHT_MAX + (-largestFailMoney * HEIGHT_MAX) / targetPrice / 2 + 50
+  // const lengthList = dummy.map(
+  //   (element) => (Math.abs(element.savingMoney) / targetPrice) * 160,
+  // )
+  console.log(boxHeight, '진짜높이')
   return (
     <div className="bg-background rounded-lg p-5">
       <div>절약 금액</div>
@@ -97,38 +93,35 @@ const MySavingMoney = () => {
           </span>
           원
         </div>
-        <div dir="rtl">
-          <div className={`overflow-auto h-[210px]`}>
-            <div className="flex flex-row gap-5 items-center justify-center">
-              {/* <div className="flex flex-col items-center gap-2">
-                <div className={`text-primary text-[10px]`}>
-                  {dummy[0].savingMoney.toLocaleString()}
-                </div>
-                <div
-                  className={`bg-primary w-[30px] rounded-md`}
-                  style={{ height: lengthList[0] }}
-                ></div>
-                <div className="text-xs w-fit whitespace-nowrap text-primary">
-                  이번회
-                </div>
-              </div> */}
-              {dummy
-                .reverse()
-                .map(
-                  (element, idx) =>
-                    idx > 0 && (
-                      <MissionGraphbar
-                        round={element.missionNumber}
-                        amount={element.savingMoney}
-                        txtColor="text-black"
-                        bgColor={
-                          idx === 0 ? 'bg-primary' : 'bg-primary-container'
-                        }
-                        length={Math.trunc(lengthList[idx])}
-                      />
-                    ),
-                )}
-            </div>
+        <div
+          dir="rtl"
+          className={`overflow-x-auto ${styles.delScroll}`}
+          style={{ height: `${boxHeight}px` }}
+        >
+          <div className="flex flex-row gap-5 justify-center pt-5">
+            {Array(4)
+              .fill(0)
+              .map((element, idx) => (
+                <MissionGraphbar
+                  round={0}
+                  amount={0}
+                  length={0}
+                  key={idx}
+                  labelHeight={
+                    (-largestFailMoney * HEIGHT_MAX) / targetPrice / 3
+                  }
+                />
+              ))}
+            {dummy.map((element, idx) => (
+              <MissionGraphbar
+                round={element.missionNumber}
+                amount={element.savingMoney}
+                length={Math.min(lengthList[idx], HEIGHT_MAX)}
+                key={idx}
+                isToday={idx === 0}
+                labelHeight={(-largestFailMoney * HEIGHT_MAX) / targetPrice / 2}
+              />
+            ))}
           </div>
         </div>
       </div>
