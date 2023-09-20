@@ -10,7 +10,7 @@ pipeline {
                                 file(credentialsId: 'seesawbank-application', variable: 'seesawbank')]) {
                     script {
                         sh 'cp $seesaw /var/jenkins_home/workspace/seesawPJT/back/seesaw/src/main/resources'
-                        sh 'cp $seesawbank /var/jenkins_home/workspace/seesawPJT/back/seesaw/src/main/resources'
+                        sh 'cp $seesawbank /var/jenkins_home/workspace/seesawPJT/back/seesawbank/src/main/resources'
                     }
     	        
 		        }
@@ -119,7 +119,7 @@ pipeline {
                 
                 // 새로운 이미지 실행
                 sh 'docker run -d --name seesaw_back -p 8080:8080 -u root seesaw_back:latest'
-                sh 'docker run -d --name seesawbank_back -p 8081:8081 -u root seesawbank_back:latest'
+                sh 'docker run -d --name seesawbank_back -p 8081:8080 -u root seesawbank_back:latest'
                 // sh 'docker run -d --name seesaw_front -p 3000:3000 -u root seesaw_front:latest'
             }
 
