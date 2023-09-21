@@ -1,5 +1,4 @@
 import Card from '@/app/components/Card'
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
 import { categorySumList } from '@/app/dummies'
 import { categoryList, categoryIcon, iconColors } from '@/app/lib/constants'
@@ -8,6 +7,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
 
 interface DataProps {
+  // labels: string[]
   data: {
     datasets: {
       label: string
@@ -15,12 +15,25 @@ interface DataProps {
       backgroundColor: string[]
     }[]
   }
+  options: {
+    plugins: {
+      datalabels: {
+        color: string
+        // formatter: (value: number, context: stirng) => string;
+        font: {
+          size: number
+          // 하 굵기 왜 지정 안돼
+          // weight: string
+        }
+        padding: number
+        formatter: (value: number, context: any) => string
+      }
+    }
+  }
 }
 
-const DoughnutChart = ({ data }: DataProps) => {
+const DoughnutChart = ({ data, options }: DataProps) => {
   const [isOpened, setIsOpened] = useState<boolean>(false)
-
-  ChartJS.register(ArcElement, Tooltip, Legend)
 
   const clickDownArrow = () => {
     setIsOpened(!isOpened)
@@ -42,7 +55,7 @@ const DoughnutChart = ({ data }: DataProps) => {
             </p>
           </div>
           <div className="flex w-full mx-auto p-5">
-            <Doughnut data={data} />
+            <Doughnut data={data} options={options} />
           </div>
           <div className="flex w-full flex-col">
             {categorySumList

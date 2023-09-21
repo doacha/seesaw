@@ -18,8 +18,9 @@ import { spend } from '../dummies'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import DoughtnutChart from './components/DoughnutChartCard'
 import { categorySumList } from '../dummies'
-import { categoryList, iconColors } from '../lib/constants'
+import { iconColors, categoryList } from '../lib/constants'
 
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 // 내가 데이터 호출을 할 때 1부터 현재 해당하는 달 -1 까지 호출해야해
 // monthSumList에 호출한 객체 append해주기
 
@@ -27,6 +28,8 @@ import { categoryList, iconColors } from '../lib/constants'
 // 일단 백으로 요청보낼때 spendingMonth는 무조건 전해줘야해
 
 const Report = () => {
+  ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels)
+
   const clickArrow = () => {
     console.log('화살표 클릭')
   }
@@ -75,10 +78,7 @@ const Report = () => {
   const groupedSpending = groupSpendingByWeek(sumList)
   console.log(groupedSpending)
 
-  ChartJS.register(ArcElement, Tooltip, Legend)
-
   const data = {
-    // 라벨을 띄워말아..
     labels: categorySumList
       .slice(0, 5)
       .map(
@@ -86,6 +86,7 @@ const Report = () => {
           element.spendingCategoryId &&
           categoryList[element.spendingCategoryId]?.toString(),
       ) as string[],
+    plugins: [ChartDataLabels],
     datasets: [
       {
         label: 'category',
@@ -101,6 +102,27 @@ const Report = () => {
           ) as string[],
       },
     ],
+  }
+
+  const options = {
+    plugins: {
+      legend: {
+        display: false,
+      },
+      datalabels: {
+        color: 'white',
+        font: {
+          size: 13,
+          weight: 'bold',
+        },
+        padding: 6,
+        formatter: function (value: number, context: any) {
+          // return context.chart.data.labels[context.dataIndex]
+          // return Math.round(value * 100) + '%'
+          return Math.round(value).toString()
+        },
+      },
+    },
   }
 
   return (
@@ -155,14 +177,16 @@ const Report = () => {
           handleTabChange={handleTabChange}
         />
         {activeTab == 'tab2' ? (
-          <CalendarCard />
+          <div className="flex w-full p-5">
+            <CalendarCard />
+          </div>
         ) : (
           <>
             <div className="flex p-5">
               <TextCard />
             </div>
             <div className="flex px-5 pb-5">
-              <DoughtnutChart data={data} />
+              <DoughtnutChart data={data} options={options} />
               {/* <Doughnut data={data} /> */}
             </div>
             <div className="flex px-5 pb-5">
