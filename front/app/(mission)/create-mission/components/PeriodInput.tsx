@@ -19,6 +19,7 @@ const PeriodInput = ({
             className="carousel-item"
             bgColor="background-fill"
             textColor="black"
+            key={idx}
             value={idx}
           >
             {element}
