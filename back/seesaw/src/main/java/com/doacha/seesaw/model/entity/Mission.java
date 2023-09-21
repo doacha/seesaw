@@ -82,11 +82,6 @@ public class Mission {
     @Schema(description = "미션 상태", example = "0", required = true)
     private int missionStatus;
 
-    @Column(name = "mission_failure_count", nullable = false)
-    @ColumnDefault("0")
-    @Schema(description = "미션 실패 기준 횟수", example = "1", required = true)
-    private int missionFailureCount;
-
     @Column(name = "mission_start_date", nullable = false)
     @Schema(description = "미션 시작일", example = "2023-09-11", required = true)
     private Date missionStartDate;
