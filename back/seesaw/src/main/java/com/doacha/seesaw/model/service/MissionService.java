@@ -51,7 +51,6 @@ public class MissionService {
                 .missionTargetPrice(mission.getMissionTargetPrice())
                 .missionPeriod(mission.getMissionPeriod())
                 .missionStatus(0)
-                .missionFailureCount(mission.getMissionFailureCount())
                 .missionTotalCycle(mission.getMissionTotalCycle())
                 .missionCurrentCycle(0)
                 .missionStartDate(Date.valueOf(mission.getMissionStartDate()))

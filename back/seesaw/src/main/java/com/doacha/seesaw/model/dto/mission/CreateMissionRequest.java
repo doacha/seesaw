@@ -38,9 +38,6 @@ public class CreateMissionRequest {
     @Schema(description = "미션 총 횟수", example = "4", required = true)
     private int missionTotalCycle;
 
-    @Schema(description = "미션 실패 기준 횟수", example = "1", required = true)
-    private int missionFailureCount;
-
     @Schema(description = "미션 시작일", example = "2023-09-11", required = true)
     private String missionStartDate;
 
