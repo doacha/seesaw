@@ -137,7 +137,21 @@ export const missionPeriodArray = [
   '7일당 한 번',
 ]
 
-export const missionCycleArray = ['1주', '2주', '3주', '한달']
+export const missionCycleArray = [
+  ,
+  '1주',
+  '2주',
+  '3주',
+  '한 달',
+  ,
+  '6주',
+  ,
+  '두 달',
+  ,
+  ,
+  ,
+  '세 달',
+]
 
 // 죽는줄
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'

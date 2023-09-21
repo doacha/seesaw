@@ -64,7 +64,7 @@ const ToggleCapsule = ({
   const tailwindBorder = isHasBorder ? 'border-[0.5px]' : 'border-0'
   const tailwindFontSize = isSmall
     ? 'text-[10px] h-4 py-[3px]'
-    : 'text-sm h-[30px] py-2'
+    : 'text-sm h-[30px]'
 
   return (
     <span
