@@ -21,7 +21,7 @@ public class Card {
     private String cardNum;
 
     @ManyToOne
-    @JoinColumn(name="account_num",nullable = false)
+    @JoinColumn(name="account_num", referencedColumnName = "account_num" , nullable = false)
     private Account account;
 
     @ManyToOne
@@ -33,8 +33,5 @@ public class Card {
 
     @Column(name = "card_type")
     private String cardType;
-
-    @Column(name = "card_company_name")
-    private int cardCompanyName;
 
 }
