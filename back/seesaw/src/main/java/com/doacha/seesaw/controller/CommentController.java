@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @Tag(name = "Comment", description = "Comment API")
 @RequestMapping("/comment")
-@CrossOrigin("*")
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @Slf4j
 public class CommentController {
 

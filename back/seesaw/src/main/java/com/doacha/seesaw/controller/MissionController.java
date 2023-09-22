@@ -25,7 +25,7 @@ import java.util.Optional;
 @RestController
 @Tag(name = "Mission", description = "Mission API")
 @RequestMapping("/mission")
-@CrossOrigin("*")
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @Slf4j
 public class MissionController {
 
