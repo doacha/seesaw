@@ -2,7 +2,7 @@ package com.doacha.seesawbank.model.service;
 
 import com.doacha.seesawbank.exception.BadRequestException;
 import com.doacha.seesawbank.exception.NoContentException;
-import com.doacha.seesawbank.model.dto.account.*;
+import com.doacha.seesawbank.model.dto.account.CheckAuthenticationRequest;
 import com.doacha.seesawbank.model.entity.Account;
 import com.doacha.seesawbank.model.entity.AccountTransaction;
 import com.doacha.seesawbank.repository.AccountRepository;
@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -27,97 +26,6 @@ public class AccountTransactionService {
 
     @Autowired
     AccountRepository accountRepository;
-
-    // 계좌이체 전 확인
-    @Transactional
-    public int checkRecentBalance (String accountNum){
-        // 내 계좌 찾기
-        Optional<Account> accountTransfer = accountRepository.findAccountByAccountNum(accountNum);
-        if(!accountTransfer.isPresent()) throw new NoContentException("없는 계좌");
-        // 가장 최근 거래 내역
-        Optional<AccountTransaction> recentTransaction = accountTransactionRepository.findTopByAccountOrderByAccountTransactionTimeDesc(accountTransfer.get());
-        int recentBalance = 0;
-        if(recentTransaction.isPresent()) recentBalance = recentTransaction.get().getAccountBalance(); // 이전 거래 내역 있으면 최근 거래의 잔액 가져오기
-
-        return recentBalance;
-    }
-
-    // 계좌이체 전 확인
-    @Transactional
-    public AccountTransferResponse checkAccountTransfer (CheckAccountTransactionRequest catRequest){
-        //받는 계좌(타인 계좌)
-        Optional<Account> accountTransfer = accountRepository.findAccountByAccountNum(catRequest.getAccountTransactionNum());
-        // 존재 하지 않는 계좌인 경우 예외 처리
-        if(!accountTransfer.isPresent()) throw new NoContentException("없는 계좌");
-
-        AccountTransferResponse accountTransferResponse = new AccountTransferResponse(
-                catRequest.getAccountTransactionNum(),
-                catRequest.getAccountApprovalAmount(),
-                accountTransfer.get().getMember().getMemberName()
-        );
-        return accountTransferResponse;
-    }
-
-    // 계좌이체
-    @Transactional
-    public AccountTransferResponse accountTransfer (AccountTransferRequest atRequest){
-        //보내는 계좌(내계좌)
-        Optional<Account> account = accountRepository.findById(atRequest.getAccountNum());
-        //받는 계좌(타인 계좌)
-        Optional<Account> accountTransfer = accountRepository.findAccountByAccountNum(atRequest.getAccountTransactionNum());
-        // 존재 하지 않는 계좌인 경우 예외 처리
-        if(!account.isPresent()) throw new NoContentException("내 계좌");
-        if(!accountTransfer.isPresent()) throw new NoContentException("없는 계좌");
-
-        String accountDealNum = createAccountDealNum();//계좌 거래 번호 생성
-
-        // 내 계좌 남은 금액
-        Optional<AccountTransaction> recentTransaction = accountTransactionRepository.findTopByAccountOrderByAccountTransactionTimeDesc(account.get());
-        int recentBalance = 0;
-        if(recentTransaction.isPresent()) recentBalance = recentTransaction.get().getAccountBalance(); // 이전 거래 내역 있으면 최근 거래의 잔액 가져오기
-
-        // 상대 계좌 남은 금액
-        Optional<AccountTransaction> recentTransferTransaction = accountTransactionRepository.findTopByAccountOrderByAccountTransactionTimeDesc(accountTransfer.get());
-        int recentTransferBalance = 0;
-        if(recentTransferTransaction.isPresent()) recentTransferBalance = recentTransferTransaction.get().getAccountBalance();// 이전 거래 내역 있으면 최근 거래의 잔액 가져오기
-
-        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-        // 내 계좌 출금
-        AccountTransaction accountTransaction = AccountTransaction.builder()
-                .account(account.get())
-                .accountDealNum(accountDealNum)
-                .accountTransactionName(accountTransfer.get().getMember().getMemberName())
-                .accountBalance(recentBalance-atRequest.getAccountApprovalAmount())
-                .accountTransactionTime(Timestamp.valueOf(now))
-                .accountApprovalAmount(atRequest.getAccountApprovalAmount()*(-1))
-                .accountIsDeposit(false)
-                .accountTransactionNum(atRequest.getAccountTransactionNum())
-                .build();
-
-        accountTransactionRepository.save(accountTransaction);
-
-        // 상대 계좌 입금
-        AccountTransaction accountTransferTransaction = AccountTransaction.builder()
-                .account(accountTransfer.get())
-                .accountDealNum(accountDealNum)
-                .accountTransactionName(account.get().getMember().getMemberName())
-                .accountBalance(recentTransferBalance+atRequest.getAccountApprovalAmount())
-                .accountTransactionTime(Timestamp.valueOf(now))
-                .accountApprovalAmount(atRequest.getAccountApprovalAmount())
-                .accountIsDeposit(true)
-                .build();
-
-        accountTransactionRepository.save(accountTransferTransaction);
-
-        AccountTransferResponse accountTransferResponse = new AccountTransferResponse(
-                accountTransaction.getAccountTransactionNum(),
-                accountTransferTransaction.getAccountApprovalAmount(),
-                accountTransaction.getAccountTransactionName()
-        );
-
-        return accountTransferResponse;
-    }
 
     // 1원 인증 보내기
     public String sendAuthentication (String accountNum){
@@ -152,7 +60,7 @@ public class AccountTransactionService {
     private String createAccountDealNum() {
         log.info("거래 번호 생성");
         String accountDealNum = "T"+RandomStringUtils.random(8, true, true);
-        while(accountTransactionRepository.existsByAccountDealNum(accountDealNum)){
+        while(accountTransactionRepository.existsById(accountDealNum)){
             log.info("동일한 거래 번호 존재 - 거래 번호 재생성");
             accountDealNum = "T"+RandomStringUtils.random(8, true, true);
         }
@@ -171,10 +79,10 @@ public class AccountTransactionService {
     public void checkAuthentication (CheckAuthenticationRequest request){
         Optional<AccountTransaction> accountTransaction = accountTransactionRepository.findById(request.getAccountDealNum());
 
-        String accountTransactionName = accountTransaction.get().getAccountTransactionName();
-        log.info("인증 번호: {}", accountTransactionName);
+        String accountTransactionNum = accountTransaction.get().getAccountTransactionName();
+        log.info("인증 번호: {}", accountTransactionNum);
         String authenticationNum = request.getAuthenticationNum();
         log.info("입력한 번호: {}", authenticationNum);
-        if(!accountTransactionName.equals(authenticationNum)) throw new BadRequestException("인증번호 불일치");
+        if(!accountTransactionNum.equals(authenticationNum)) throw new BadRequestException("인증번호 불일치");
     }
 }
