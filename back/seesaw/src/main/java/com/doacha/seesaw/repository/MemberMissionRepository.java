@@ -29,4 +29,7 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Me
     List<MyPageMissionListResponse> findMyPageMissionList(@Param("memberEmail") String memberEmail);
 
     List<MemberMission> findMemberMissionByMember(Member member);
+
+    @Query("SELECT COUNT(mm) FROM MemberMission mm WHERE mm.mission.missionId = :missionId AND mm.memberMissionStatus = 3")
+    int countFail(String missionId);
 }
