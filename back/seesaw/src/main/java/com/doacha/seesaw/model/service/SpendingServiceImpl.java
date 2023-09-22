@@ -113,19 +113,31 @@ public class SpendingServiceImpl implements SpendingService{
         MonthSpendingSumResponse monthSpendingSumResponses = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
         return monthSpendingSumResponses;
     }
+
+    // 전 월과 금액 비교
     @Override
     public MonthCompareResponse findMonthDifferenceByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth){
         MonthSpendingSumResponse currentSum = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
-        MonthSpendingSumResponse pastSum = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth-1);
+        Optional<MonthSpendingSumResponse> pastSum = spendingRepository.findPastMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth-1);
+        if(pastSum.isPresent()){
         MonthCompareResponse monthCompareResponse = MonthCompareResponse.builder()
                 .memberEmail(memberEmail)
-                .difference(currentSum.getSpendingCostSum()- pastSum.getSpendingCostSum())
+                .difference(currentSum.getSpendingCostSum()- pastSum.get().getSpendingCostSum())
                 .build();
-        return monthCompareResponse;
+            return monthCompareResponse;
+        }
+        else{
+            MonthCompareResponse monthCompareResponse = MonthCompareResponse.builder()
+                    .memberEmail(memberEmail)
+                    .difference(currentSum.getSpendingCostSum())
+                    .build();
+            return monthCompareResponse;
+        }
+
     }
 
 
-
+    // 월 카테고리별 금액 합계
     @Override
     public List<MonthCategoryResponse> findMonthSumByCategory(String memberEmail, int spendingYear, int spendingMonth) {
         List<MonthCategoryResponse> monthCategoryResponses= spendingRepository.findMonthSumByCategory(memberEmail,spendingYear,spendingMonth);
