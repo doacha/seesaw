@@ -127,7 +127,7 @@ public class MissionService {
         missionRepository.deleteById(missionId);
     }
 
-    // 미션에 해당하는 카테고리별 개인 금액 합계 및 총합
+//     미션에 해당하는 카테고리별 개인 금액 합계 및 총합
     public MissionStatsResponse getCategorySumAndAverageByMissionAndMember (String memberEmail, String missionId){
         MissionStatsResponse missionStatsRequestList =spendingRepository.getCategorySumAndAverageByMissionAndMember(memberEmail, missionId);
         return missionStatsRequestList;
