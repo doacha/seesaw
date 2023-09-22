@@ -21,6 +21,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class MemberController {
     private final MemberService memberService;
     private final MemberMissionService memberMissionService;
