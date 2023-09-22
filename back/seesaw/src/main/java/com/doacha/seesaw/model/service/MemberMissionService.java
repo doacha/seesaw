@@ -5,7 +5,6 @@ import com.doacha.seesaw.exception.BadRequestException;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.model.entity.Mission;
-import com.doacha.seesaw.model.entity.Record;
 import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MemberRepository;
 import com.doacha.seesaw.repository.MissionRepository;
@@ -74,7 +73,7 @@ public class MemberMissionService {
 
 
     // 미션 상세 - 나의 현황
-    public GetMyMissionDataResponse getReturnDeposit(GetMyMissionDataRequest getMyMissionDataRequest) {
+    public GetDepositConditionResponse getDepositCondition(GetMyMissionDataRequest getMyMissionDataRequest) {
         String missionId = getMyMissionDataRequest.getMissionId();
         String memberEmail = getMyMissionDataRequest.getMemberEmail();
 
@@ -97,7 +96,7 @@ public class MemberMissionService {
             // 모인 벌금 / 성공한 사람 수(총인원 - 실패한 사람 수)
             changedDeposit = mission.getMissionPenaltyPrice()/(totalMemberCnt-failMemberCnt);
         }
-        GetMyMissionDataResponse mydata = GetMyMissionDataResponse.builder()
+        GetDepositConditionResponse depositCondition = GetDepositConditionResponse.builder()
                 .missionMemberCnt(totalMemberCnt)
                 .missionFailMemberCnt(failMemberCnt)
                 .changedDeposit(changedDeposit)
@@ -105,7 +104,7 @@ public class MemberMissionService {
                 .myFailCnt(myFailCnt)
                 .build();
 
-        return mydata;
+        return depositCondition;
     }
 
     // 미션 리스트 가져오기(마이페이지

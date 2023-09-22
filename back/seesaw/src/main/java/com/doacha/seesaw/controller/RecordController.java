@@ -2,7 +2,6 @@ package com.doacha.seesaw.controller;
 
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.mission.GetMyMissionDataRequest;
-import com.doacha.seesaw.model.dto.mission.GetMyMissionDataResponse;
 import com.doacha.seesaw.model.dto.record.*;
 import com.doacha.seesaw.model.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Schema(description = "미션 상세 나의 현황 response")
-public class GetMyMissionDataResponse {
+public class GetDepositConditionResponse {
 
     @Schema(description = "미션 총인원", example = "1", required = true)
     private int missionMemberCnt;
