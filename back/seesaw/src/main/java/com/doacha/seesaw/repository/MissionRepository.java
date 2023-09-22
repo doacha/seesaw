@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -27,5 +28,8 @@ public interface MissionRepository extends JpaRepository<Mission, String>, JpaSp
             "AND (:missionCycle IS NULL OR m.missionTotalCycle = :missionCycle)" +
             "AND m.missionIsPublic = true")
     List<MissionListResponse> searchMissions(String keyword, Integer missionCategoryId, Integer missionPeriod, Integer missionCycle, Pageable pageable);
+
+
+
 
 }

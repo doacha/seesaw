@@ -22,8 +22,12 @@ public class CardTransactionService {
     MemberRepository memberRepository;
     public List<SpendingResponse> findAllByMemberId (String memberId){
         Optional<Member> member = memberRepository.findById(memberId);
-        List<SpendingResponse> cardTranscationList = findAllByMemberId(member.get().getMemberId());
-        return cardTranscationList;
+        if(member.isPresent()){
+        List<SpendingResponse> cardTranscationList = cardTransactionRepository.findAllCardTransactionByMemberId(member.get().getMemberId());
+        return cardTranscationList;}
+        else{
+            return null;
+        }
     }
 
 }
