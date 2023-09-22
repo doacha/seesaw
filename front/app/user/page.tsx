@@ -44,22 +44,19 @@ const UserPage = () => {
   }
 
   const getUser = async () => {
-    const value = await fetch(
-      `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/mypage`,
-      {
-        // force-cache 가 디폴트 옵션, 캐시를 검색해서 일치하는 데이터가 있고 fresh하다면 그 값을 반환. 요청 안보냄.
-        // no-store 는 캐시 검색을 하지 않고 항상 다시 data를 서버에서 불러옴.
-        cache: 'force-cache',
-        //next: false 무한, 0 캐시안함, number 초단위로 캐시 수명 정할수 있음.
-        // next: { revalidate: false },
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
-        },
-        body: JSON.stringify('doacha@seesaw.com'), // 데이터를 JSON 문자열로 변환하여 전송
+    const value = await fetch(`/member/mypage`, {
+      // force-cache 가 디폴트 옵션, 캐시를 검색해서 일치하는 데이터가 있고 fresh하다면 그 값을 반환. 요청 안보냄.
+      // no-store 는 캐시 검색을 하지 않고 항상 다시 data를 서버에서 불러옴.
+      // cache: 'force-cache',
+      //next: false 무한, 0 캐시안함, number 초단위로 캐시 수명 정할수 있음.
+      // next: { revalidate: false },
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
       },
-    )
-    console.log(value)
+      body: JSON.stringify('jiwon@seesaw.com'), // 데이터를 JSON 문자열로 변환하여 전송
+    })
+    console.log('왜 안돼?', value)
     console.log('비동기함수1')
     console.log('비동기함수2')
   }
