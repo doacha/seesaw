@@ -63,6 +63,11 @@ public class Mission {
     @Schema(description = "미션 목표 금액", example = "50000", required = true)
     private int missionTargetPrice;
 
+    @Column(name = "mission_penalty_price", nullable = false)
+    @ColumnDefault("0")
+    @Schema(description = "지금까지 모인 벌금 금액", example = "0")
+    private int missionPenaltyPrice;
+
     @Column(name = "mission_period", nullable = false)
     @Schema(description = "미션 기간", example = "7", required = true)
     private int missionPeriod;
@@ -73,7 +78,7 @@ public class Mission {
 
     @Column(name = "mission_current_cycle", nullable = false)
     @ColumnDefault("0")
-    @Schema(description = "미션 현재 횟수", example = "4", required = true)
+    @Schema(description = "미션 현재 횟수", example = "4")
     private int missionCurrentCycle;
 
     @Column(name = "mission_status", nullable = false)
