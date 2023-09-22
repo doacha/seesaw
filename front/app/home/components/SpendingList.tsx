@@ -1,14 +1,18 @@
+'use client'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Card from '@/app/components/Card'
 import { iconColors } from '@/app/lib/constants'
 import { categoryIcon } from '@/app/lib/constants'
 import { Spending } from '@/app/types'
 
+import { useState } from 'react'
+import DetailModal from './DetailModal'
+
 interface SpendingListProps {
   sort: string
   groupedSpending: Record<string, Spending[]>
   formatTime: (date: Date) => string
-  clickDetail: () => void
   spendingList: Spending[]
   formatDayTime: (date: Date) => string
   newSelected?: Number[]
@@ -18,11 +22,15 @@ const SpendingList = ({
   sort,
   groupedSpending,
   formatTime,
-  clickDetail,
   spendingList,
   formatDayTime,
   newSelected,
 }: SpendingListProps) => {
+  console.log('무한?')
+
+  const [open, setOpen] = useState(false)
+  const handleToggle = () => setOpen((prev) => !prev)
+
   return (
     <>
       {/* 맞는 카테고리 매핑 */}
@@ -39,7 +47,7 @@ const SpendingList = ({
                   <>
                     {data.map((spending) => (
                       <div
-                        onClick={clickDetail}
+                        onClick={handleToggle}
                         className="h-9 flex w-full flex-row gap-5"
                       >
                         <div className="flex my-auto w-6 ml-1">
@@ -118,6 +126,7 @@ const SpendingList = ({
           </div>
         </div>
       )}
+      <DetailModal open={open} handleToggle={handleToggle} />
     </>
   )
 }

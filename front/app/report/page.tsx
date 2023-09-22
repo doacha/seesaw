@@ -23,7 +23,7 @@ import { sumList, spend } from '../dummies'
 // 여기의 spendingMonth는 뭐지?
 // 일단 백으로 요청보낼때 spendingMonth는 무조건 전해줘야해
 
-const Report = () => {
+const ReportPage = () => {
   const clickArrow = () => {
     console.log('화살표 클릭')
   }
@@ -153,4 +153,4 @@ const Report = () => {
     </div>
   )
 }
-export default Report
+export default ReportPage
