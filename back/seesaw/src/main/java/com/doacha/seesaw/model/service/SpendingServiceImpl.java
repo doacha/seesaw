@@ -10,6 +10,8 @@ import com.doacha.seesaw.repository.SpendingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,7 +111,6 @@ public class SpendingServiceImpl implements SpendingService{
     @Override
     public MonthSpendingSumResponse findAllMonthSumByMemberEmailAndSpendingYear(String memberEmail, int spendingYear,int spendingMonth){
         MonthSpendingSumResponse monthSpendingSumResponses = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
-
         return monthSpendingSumResponses;
     }
     @Override
