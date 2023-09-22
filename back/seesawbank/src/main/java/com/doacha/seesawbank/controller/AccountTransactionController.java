@@ -2,6 +2,9 @@ package com.doacha.seesawbank.controller;
 
 import com.doacha.seesawbank.exception.BadRequestException;
 import com.doacha.seesawbank.exception.NoContentException;
+import com.doacha.seesawbank.model.dto.account.AccountTransferRequest;
+import com.doacha.seesawbank.model.dto.account.AccountTransferResponse;
+import com.doacha.seesawbank.model.dto.account.CheckAccountTransactionRequest;
 import com.doacha.seesawbank.model.dto.account.CheckAuthenticationRequest;
 import com.doacha.seesawbank.model.service.AccountTransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +28,17 @@ public class AccountTransactionController {
     @Autowired
     AccountTransactionService accountTransactionService;
 
+    // 계좌 이체 전 확인
+    @PostMapping ("/check-transfer")
+    public AccountTransferResponse checkAccountTransfer(@RequestBody CheckAccountTransactionRequest checkAccountTransactionRequest) {
+        return accountTransactionService.checkAccountTransfer(checkAccountTransactionRequest);
+    }
+
+    // 계좌 이체
+    @PostMapping ("/transfer")
+    public AccountTransferResponse accountTransfer(@RequestBody AccountTransferRequest accountTransferRequest) {
+        return accountTransactionService.accountTransfer(accountTransferRequest);
+    }
 
     // 1원 인증 전송
     @Operation( summary = "1원 인증 전송", description = "계좌 번호 입력받아서 해당 계좌에 1원 보낸후 거래번호 반환하는 API")
