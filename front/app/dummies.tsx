@@ -151,3 +151,19 @@ export const transactionList: type.Transaction[] = [
     accountIsDeposit: false,
   },
 ]
+
+export const MissionCreateDummy = {
+  missionTitle: '일주일동안 5만원 쓰기',
+  missionMaxCount: 6,
+  missionImgUrl: 'string',
+  missionPurpose: '일주일동안 5만원쓰기 같이 하실 분!!',
+  missionDeposit: 30000,
+  missionIsPublic: true,
+  missionTargetPrice: 50000,
+  missionPeriod: 7,
+  missionTotalCycle: 4,
+  missionStartDate: '2023-09-14',
+  missionHostEmail: 'doacha@seesaw.com',
+  missionCategoryId: 0,
+  memberMissionIsSaving: true,
+}

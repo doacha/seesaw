@@ -111,6 +111,10 @@ export interface SearchState {
   [key: string]: any
 }
 
+export interface MissionRequire {
+
+}
+
 export interface MissionList {
   missionId: string
   missionTitle: string
@@ -134,3 +138,20 @@ export interface MissionDetail extends MissionList {
   missionHostEmail: string
   missionCategoryId: number
 }
+
+export interface MissionCreate {
+  missionTitle: string
+  missionMaxCount: number
+  missionImgUrl: string
+  missionPurpose: string
+  missionDeposit: number
+  missionIsPublic: boolean
+  missionTargetPrice: number
+  missionPeriod: number
+  missionTotalCycle: number
+  missionStartDate: string
+  missionHostEmail: string
+  missionCategoryId: number
+  memberMissionIsSaving: boolean
+}
+
