@@ -44,8 +44,12 @@ public class MemberMission implements Serializable {
     @Schema(description = "미션 상태 - 0: 시작 전, 1: 진행 중, 2: 성공, 3: 실패", example = "0", required = true)
     private int memberMissionStatus;
 
-    @Column(name = "member_mission_is_saving", nullable = false)
-    @Schema(description = "적금 연동 여부", required = true)
-    private Boolean memberMissionIsSaving;
+    @Column(name = "member_mission_saving_money", nullable = false)
+    @Schema(description = "적금 금액 (0원이면 적금 연동 안한 것)", required = true)
+    private int memberMissionSavingMoney;
 
+
+    @Column(name = "member_mission_is_saving", nullable = false)
+    @Schema(description = "적금 넣는 날인지 여부", required = true)
+    private Boolean memberMissionIsSaving;
 }

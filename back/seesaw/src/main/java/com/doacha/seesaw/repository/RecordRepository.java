@@ -38,4 +38,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "ORDER BY r.recordTotalCost ASC")
     List<MemberHistory> getMemberHistoryByMissionId(@Param("missionId") String missionId, @Param("currentCycle") int currentCycle);
 
+//    @Query("SELECT COUNT(r) FROM Record r WHERE r.MissionId = :missionId AND r.MemberEmail = :memberEmail AND r.recordStatus = 2")
+//    int countFail(String missionId, String memberEmail);
+
 }
