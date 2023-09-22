@@ -1,10 +1,7 @@
 package com.doacha.seesaw.model.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +11,8 @@ import org.hibernate.annotations.Comment;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -86,6 +85,11 @@ public class Mission {
     @Comment("0: 시작 전, 1: 진행 중, 2: 종료")
     @Schema(description = "미션 상태", example = "0", required = true)
     private int missionStatus;
+
+    @Column(name = "mission_failure_count", nullable = false)
+    @ColumnDefault("0")
+    @Schema(description = "미션 실패 기준 횟수", example = "1", required = true)
+    private int missionFailureCount;
 
     @Column(name = "mission_start_date", nullable = false)
     @Schema(description = "미션 시작일", example = "2023-09-11", required = true)

@@ -1,11 +1,11 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.NoContentException;
-import com.doacha.seesaw.model.dto.record.*;
+import com.doacha.seesaw.model.dto.record.RecordListResponse;
+import com.doacha.seesaw.model.dto.record.RecordRequest;
+import com.doacha.seesaw.model.dto.record.RecordResponse;
 import com.doacha.seesaw.model.entity.Record;
-import com.doacha.seesaw.repository.MissionRepository;
 import com.doacha.seesaw.repository.RecordRepository;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -21,9 +22,6 @@ public class RecordService {
 
     @Autowired
     RecordRepository recordRepository;
-
-    @Autowired
-    MissionRepository missionRepository;
 
     // 글 작성
     public RecordResponse writeRecord(RecordRequest recordRequest) {
@@ -116,32 +114,4 @@ public class RecordService {
         return recordListResponse;
     }
 
-    // 과거 글 목록
-    public List<List<MemberHistory>> getRecordHistoryResponse(String missionId) {
-        int currentCycle = missionRepository.findById(missionId).get().getMissionCurrentCycle();
-        List<MemberHistory> memberHistoryList = recordRepository.getMemberHistoryByMissionId(missionId, currentCycle);
-
-        Collections.sort(memberHistoryList, Comparator.comparingInt(MemberHistory::getRecordNumber));
-
-        // recordNumber가 같은 객체들을 같은 그룹으로 묶기
-        List<List<MemberHistory>> groupedMemberHistory = new ArrayList<>();
-        List<MemberHistory> currentGroup = new ArrayList<>();
-
-        for (MemberHistory memberHistory : memberHistoryList) {
-            if (currentGroup.isEmpty() || currentGroup.get(0).getRecordNumber() == memberHistory.getRecordNumber()) {
-                currentGroup.add(memberHistory);
-            } else {
-                groupedMemberHistory.add(currentGroup);
-                currentGroup = new ArrayList<>();
-                currentGroup.add(memberHistory);
-            }
-        }
-
-        // 마지막 그룹 추가
-        if (!currentGroup.isEmpty()) {
-            groupedMemberHistory.add(currentGroup);
-        }
-
-        return groupedMemberHistory;
-    }
 }
