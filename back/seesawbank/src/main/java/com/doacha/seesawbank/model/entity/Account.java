@@ -36,7 +36,7 @@ public class Account {
     @ColumnDefault("1") // 만들 때는 적금 계좌만 만들어서
     private int accountType;
 
-    @Column(name="acount_interest_rate",nullable=false)
+    @Column(name="account_interest_rate",nullable=false)
     @Schema(description = "이자율", example = "2.0f", required = true)
     private float accountInterestRate;
 

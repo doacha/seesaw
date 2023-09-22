@@ -1,11 +1,11 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.NoContentException;
-import com.doacha.seesaw.model.dto.mission.CreateMissionRequest;
-import com.doacha.seesaw.model.dto.mission.MissionListResponse;
-import com.doacha.seesaw.model.dto.mission.SearchMissionRequest;
+import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.repository.MissionRepository;
+import com.doacha.seesaw.repository.RecordRepository;
+import com.doacha.seesaw.repository.SpendingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,12 @@ public class MissionService {
 
     @Autowired
     MissionRepository missionRepository;
+
+    @Autowired
+    RecordRepository recordRepository;
+
+    @Autowired
+    SpendingRepository spendingRepository;
 
     // 미션 목록
     public List<MissionListResponse> getMissionList(Pageable pageable) {
@@ -119,4 +125,32 @@ public class MissionService {
     public void deleteMission(String missionId){
         missionRepository.deleteById(missionId);
     }
+
+//     미션에 해당하는 카테고리별 개인 금액 합계 및 총합
+    public MissionStatsResponse getCategorySumAndAverageByMissionAndMember (String memberEmail, String missionId){
+        MissionStatsResponse missionStatsRequestList =spendingRepository.getCategorySumAndAverageByMissionAndMember(memberEmail, missionId);
+        return missionStatsRequestList;
+    }
+
+    public MissionRankingResponse getMissionRanking(String missionId){
+        MissionTopSpendingResponse missionTopSpenderResult =  recordRepository.getMissionTopSpender(missionId);
+        MissionFrugalSpendingResponse missionFrugalSpenderResult = recordRepository.getMissionFrugalSpender(missionId);
+        DailyTopSpendingResponse dailyTopSpenderResult = recordRepository.getDailyTopSpender(missionId);
+//        if (!missionTopSpenderResult.isEmpty()&&!missionFrugalSpenderResult.isEmpty()&&!dailyTopSpenderResult.isEmpty()) {
+            MissionRankingResponse missionRankingResponse = MissionRankingResponse.builder()
+                    .missionTopSpender(missionTopSpenderResult.getMissionTopSpender())
+                    .missionTopSpending(missionTopSpenderResult.getMissionTopSpending())
+                    .missionFrugalSpender(missionFrugalSpenderResult.getMissionFrugalSpender())
+                    .missionFrugalSpending(missionFrugalSpenderResult.getMissionFrugalSpending())
+                    .dailyTopSpender(dailyTopSpenderResult.getDailyTopSpender())
+                    .dailyTopSpending(dailyTopSpenderResult.getDailyTopSpending())
+                    .dailyTopSpendingNum(dailyTopSpenderResult.getDailyTopSpendingNum())
+                    .build();
+            return missionRankingResponse;
+//        }
+//
+//        return null;
+    }
+
+
 }
