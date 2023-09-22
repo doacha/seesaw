@@ -1,6 +1,7 @@
 package com.doacha.seesawbank.repository;
 
 import com.doacha.seesawbank.model.dto.account.AccountListResponse;
+import com.doacha.seesawbank.model.dto.account.AccountTransactionListResponse;
 import com.doacha.seesawbank.model.entity.Account;
 import com.doacha.seesawbank.model.entity.AccountTransaction;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,13 @@ public interface AccountTransactionRepository extends JpaRepository<AccountTrans
 
     boolean existsByAccountDealNum(String accountDealNum);
     Optional<AccountTransaction> findTopByAccountOrderByAccountTransactionTimeDesc(Account account);
+
+    @Query("SELECT new com.doacha.seesawbank.model.dto.account.AccountTransactionListResponse(" +
+            "a.accountTransactionName, a.accountTransactionTime, a.accountApprovalAmount) " +
+            "FROM AccountTransaction a " +
+            "WHERE a.account = :account "+
+            "order by a.accountTransactionTime desc ")
+    List<AccountTransactionListResponse> findAccountTransactionsByAccountTimeDesc(Account account);
 
 //    @Query("SELECT new com.doacha.seesawbank.model.dto.account.AccountListResponse(" +
 //            "a.accountName, a.accountNum, a.accountName, (select at.accountBalance from at where at.account.accountNum = a.accountNum order by at.accountTransactionTime desc limit 1)) " +
