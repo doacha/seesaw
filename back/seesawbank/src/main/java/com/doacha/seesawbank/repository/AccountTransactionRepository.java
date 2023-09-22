@@ -8,6 +8,5 @@ import java.util.Optional;
 
 public interface AccountTransactionRepository extends JpaRepository<AccountTransaction, String> {
 
-    boolean existsByAccountDealNum(String accountDealNum);
     Optional<AccountTransaction> findTopByAccountOrderByAccountTransactionTimeDesc(Account account);
 }

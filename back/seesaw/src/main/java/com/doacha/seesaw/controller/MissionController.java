@@ -61,7 +61,29 @@ public class MissionController {
         }
     }
 
+    @Operation(summary="미션 통계", description = "미션 통계 API")
+    @PostMapping("/stats")
+    public ResponseEntity<?>getMissionStats(@RequestBody GetMemberMissionTnumRequest getMemberMissionTnumRequest){
+        try{
+            MissionStatsResponse missionStatsResponseList = missionService.getCategorySumAndAverageByMissionAndMember(getMemberMissionTnumRequest.getMemberEmail(), getMemberMissionTnumRequest.getMissionId());
+            return new ResponseEntity<>(missionStatsResponseList,HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @Operation(summary="미션 최고 금액, 최저 금액", description = "미션내에 최고 금액, 최저 금액 사용자와 금액 불러오는 API")
+    @PostMapping("/ranking/{missionId}")
+    public ResponseEntity<?>getMissionRanking(@PathVariable String missionId){
+        try{
+            MissionRankingResponse missionRankingResponse = missionService.getMissionRanking(missionId);
+            return new ResponseEntity<>(missionRankingResponse,HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     // 미션 생성
     @Operation( summary = "미션 생성", description = "새로운 미션 생성하는 API")
     @ApiResponses(value = {
@@ -76,7 +98,7 @@ public class MissionController {
             Mission newMission = missionService.createMission(createMissionRequest);
             log.info("미션 생성 성공");
             log.info("미션 생성한 멤버 정보 저장 시도");
-            memberMissionService.registCreateMemberMission(newMission, createMissionRequest.isMemberMissionIsSaving());
+            memberMissionService.registCreateMemberMission(newMission, createMissionRequest.getMemberMissionSavingMoney());
             log.info("미션 생성한 멤버 정보 저장 성공");
             return new ResponseEntity<>(newMission, HttpStatus.OK);
         } catch (Exception e) {
@@ -187,6 +209,28 @@ public class MissionController {
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // 미션 상세 - 나의 현황
+//    @Operation( summary = "미션 상세 - 나의 현황", description = "미션 상세페이지의 나의 현황 데이터 반환하는 API")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "나의 현황 불러오기 성공"),
+//            @ApiResponse(responseCode = "500", description = "나의 현황 불러오기 실패 - 서버 오류")
+//    })
+//    @PostMapping("/mymissiondata")
+//    public ResponseEntity<?> getMyMissionData(@RequestBody GetMyMissionDataRequest getMyMissionDataRequest) {
+//        log.info("미션 상세 - 나의 현황");
+//        try {
+//            log.info("예치금 현황");
+//            // 미션 실패 인원 / 내가 받을 수 있는 예치금
+//            memberMissionService.getReturnDeposit(getMyMissionDataRequest);
+//
+//            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+//        } catch (Exception e) {
+//            log.info("미션 탈퇴 실패 - 서버 오류");
+//            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+
     
 
     // 카카오페이 결제 번호 반환

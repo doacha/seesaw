@@ -8,14 +8,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "미션 참여 request")
-public class ParticipateMissionRequest {
+@Schema(description = "미션 상세 나의 현황 request")
+public class GetMyMissionDataRequest {
+
     @Schema(description = "미션 아이디", example = "abcd1234", required = true)
     private String missionId;
 
     @Schema(description = "사용자 이메일", example = "doacha@seesaw.com", required = true)
     private String memberEmail;
-
-    @Schema(description = "적금 금액", example = "true", required = true)
-    private int memberMissionSavingMoney;
+    
 }
