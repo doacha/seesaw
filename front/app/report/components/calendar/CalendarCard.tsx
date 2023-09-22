@@ -1,20 +1,23 @@
 'use client'
 
-import Calendar from 'react-calendar'
-import moment from 'moment' // 날짜 데이터 관리
 import { useState } from 'react'
-import '../styles/calendar.css'
+import Calendar from 'react-calendar' // react-calendar 라이브러리
+import moment from 'moment' // 날짜 데이터 관리
+import '../../styles/calendar.css' // calendar 전체 style
 
-import { sumList } from '@/app/dummies'
+import { sumList, spendingList } from '@/app/dummies'
 
 type ValuePiece = Date | null
-
 type Value = ValuePiece | [ValuePiece, ValuePiece]
 
 const CalendarCard = () => {
-  const [value, onChange] = useState<Value>(new Date())
   // todo...클릭시 해당 요일 데이터 모달로 띄워야 함
 
+  const [value, onChange] = useState<Value>(new Date())
+
+  const showModal = (newValue: Value) => {
+    onChange(newValue)
+  }
   // const mark = ['2023-09-21', '2023-09-20', '2023-09-19']
   const mark = sumList.map((element, idx) =>
     moment(element.spendingDate).format('YYYY-MM-DD'),
@@ -23,7 +26,7 @@ const CalendarCard = () => {
   return (
     <Calendar
       calendarType="US" // 요일은 일요일부터 시작
-      onChange={onChange} // useState로 포커스 변경 시 현재 날짜 받아오기
+      onChange={showModal} // useState로 포커스 변경 시 현재 날짜 받아오기
       formatDay={(locale, date) => moment(date).format('DD')} // 날'일' 제외하고 숫자만 보이도록 설정
       value={value}
       minDetail="month" // 상단 네비게이션에서 '월' 단위만 보이게 설정

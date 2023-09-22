@@ -1,44 +1,21 @@
 import Card from '@/app/components/Card'
-import { Doughnut } from 'react-chartjs-2'
-import { categorySumList } from '@/app/dummies'
 import { categoryList, categoryIcon, iconColors } from '@/app/lib/constants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
+import DoughnutChart from './DoughnutChart'
 
-interface DataProps {
-  // labels: string[]
-  data: {
-    datasets: {
-      label: string
-      data: number[]
-      backgroundColor: string[]
-    }[]
-  }
-  options: {
-    plugins: {
-      datalabels: {
-        color: string
-        // formatter: (value: number, context: stirng) => string;
-        font: {
-          size: number
-          // 하 굵기 왜 지정 안돼
-          // weight: string
-        }
-        padding: number
-        formatter: (value: number, context: any) => string
-      }
-    }
-  }
-}
+import { Doughnut } from 'react-chartjs-2'
 
-const DoughnutChart = ({ data, options }: DataProps) => {
+// 가져오는 데이터
+import { categorySumList } from '@/app/dummies'
+
+const DoughtnutChartCard = () => {
   const [isOpened, setIsOpened] = useState<boolean>(false)
 
   const clickDownArrow = () => {
     setIsOpened(!isOpened)
   }
-
   return (
     <Card
       title="카테고리 지출현황"
@@ -55,7 +32,7 @@ const DoughnutChart = ({ data, options }: DataProps) => {
             </p>
           </div>
           <div className="flex w-full mx-auto p-5">
-            <Doughnut data={data} options={options} />
+            <DoughnutChart />
           </div>
           <div className="flex w-full flex-col">
             {categorySumList
@@ -119,4 +96,4 @@ const DoughnutChart = ({ data, options }: DataProps) => {
   )
 }
 
-export default DoughnutChart
+export default DoughtnutChartCard

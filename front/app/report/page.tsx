@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChevronLeft,
@@ -6,21 +7,16 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import Header from '../components/Header'
 import Tab from '../components/Tab'
-import { useState } from 'react'
 
-import CalendarCard from './components/CalendarCard'
+import CalendarCard from './components/calendar/CalendarCard'
 import TextCard from './components/TextCard'
+import DoughtnutChartCard from './components/DoughnutChartCard'
 import SumGraphCard from './components/SumGraphCard'
+
 import { Spending } from '@/app/types'
 
-import { sumList } from '../dummies'
-import { spend } from '../dummies'
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
-import DoughtnutChart from './components/DoughnutChartCard'
-import { categorySumList } from '../dummies'
-import { iconColors, categoryList } from '../lib/constants'
+import { sumList, spend } from '../dummies'
 
-import ChartDataLabels from 'chartjs-plugin-datalabels'
 // 내가 데이터 호출을 할 때 1부터 현재 해당하는 달 -1 까지 호출해야해
 // monthSumList에 호출한 객체 append해주기
 
@@ -28,17 +24,16 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'
 // 일단 백으로 요청보낼때 spendingMonth는 무조건 전해줘야해
 
 const Report = () => {
-  ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels)
-
   const clickArrow = () => {
     console.log('화살표 클릭')
   }
 
+  // 통계 / 캘린더
+  const [activeTab, setActiveTab] = useState<string>('tab1')
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
   }
-  // 통계 / 캘린더
-  const [activeTab, setActiveTab] = useState<string>('tab1')
 
   const spendMonth = spend[0].spendingMonth
 
@@ -51,7 +46,6 @@ const Report = () => {
   const formatWeek = (date: Date): string => {
     const currentDate = date.getDate()
     const firstDay = new Date(date.setDate(1)).getDay()
-
     return Math.ceil((currentDate + firstDay) / 7) + '주차'
   }
 
@@ -62,7 +56,6 @@ const Report = () => {
     sumList.forEach((spending: Spending) => {
       const week = formatWeek(new Date(spending.spendingDate as string))
       const spendingCost = spending.spendingCostSum as number
-
       // 해당주차에 값있어? 누적해
       if (groupedData[week]) {
         groupedData[week] += spendingCost
@@ -71,62 +64,20 @@ const Report = () => {
         groupedData[week] = spendingCost
       }
     })
-
     return groupedData
   }
 
   const groupedSpending = groupSpendingByWeek(sumList)
-  console.log(groupedSpending)
 
-  const data = {
-    labels: categorySumList
-      .slice(0, 5)
-      .map(
-        (element) =>
-          element.spendingCategoryId &&
-          categoryList[element.spendingCategoryId]?.toString(),
-      ) as string[],
-    plugins: [ChartDataLabels],
-    datasets: [
-      {
-        label: 'category',
-        data: categorySumList
-          .slice(0, 5)
-          .map((element) => element.spendingCostSum) as number[],
-        backgroundColor: categorySumList
-          .slice(0, 5)
-          .map(
-            (element) =>
-              element.spendingCategoryId &&
-              iconColors[element.spendingCategoryId]?.toString(),
-          ) as string[],
-      },
-    ],
-  }
-
-  const options = {
-    plugins: {
-      legend: {
-        display: false,
-      },
-      datalabels: {
-        color: 'white',
-        font: {
-          size: 13,
-          weight: 'bold',
-        },
-        padding: 6,
-        formatter: function (value: number, context: any) {
-          // return context.chart.data.labels[context.dataIndex]
-          // return Math.round(value * 100) + '%'
-          return Math.round(value).toString()
-        },
-      },
-    },
-  }
+  const [openEditPage, setOpenEditPage] = useState<boolean>(false)
 
   return (
     <div className="w-screen h-screen bg-background-fill">
+      {openEditPage ? (
+        <div className="absolute w-full h-full bg-outline z-50 bg-opacity-50">
+          {/* <DaySpendingModal /> */}
+        </div>
+      ) : null}
       <div>
         <Header title="소비리포트" backButton route="/home" />
       </div>
@@ -186,8 +137,7 @@ const Report = () => {
               <TextCard />
             </div>
             <div className="flex px-5 pb-5">
-              <DoughtnutChart data={data} options={options} />
-              {/* <Doughnut data={data} /> */}
+              <DoughtnutChartCard />
             </div>
             <div className="flex px-5 pb-5">
               <SumGraphCard
