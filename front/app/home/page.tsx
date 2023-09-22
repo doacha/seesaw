@@ -44,7 +44,7 @@ const spendingList: Spending[] = [
     memberEmail: 'doacha@seesaw.com',
   },
 ]
-const Home = () => {
+const HomePage = () => {
   const [sort, setSort] = useState('최신순')
 
   const router = useRouter()
@@ -58,11 +58,6 @@ const Home = () => {
   const clickText = (e: any) => {
     console.log('최신순, 고액순 클릭')
     setSort(e.target.innerText)
-  }
-
-  const clickDetail = () => {
-    // 해당 내역의 번호를 가지고 페이지 이동해야해
-    router.push('/home/detail')
   }
 
   const formatTime = (date: Date): string => {
@@ -134,6 +129,11 @@ const Home = () => {
     }
   }
 
+  // const clickDetail = () => {
+  //   // 해당 내역의 번호를 가지고 페이지 이동해야해
+  //   router.push('/home/detail')
+  // }
+
   return (
     <div className="flex flex-col h-screen bg-background-fill">
       <div className="w-full h-44 bg-background">
@@ -151,7 +151,6 @@ const Home = () => {
           sort={sort}
           groupedSpending={groupedSpending}
           formatDayTime={formatDayTime}
-          clickDetail={clickDetail}
           spendingList={spendingList}
           // newSelected = {newSelected}
         />
@@ -163,4 +162,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default HomePage
