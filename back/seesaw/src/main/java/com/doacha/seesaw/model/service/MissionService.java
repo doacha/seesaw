@@ -119,4 +119,32 @@ public class MissionService {
     public void deleteMission(String missionId){
         missionRepository.deleteById(missionId);
     }
+
+//     미션에 해당하는 카테고리별 개인 금액 합계 및 총합
+    public MissionStatsResponse getCategorySumAndAverageByMissionAndMember (String memberEmail, String missionId){
+        MissionStatsResponse missionStatsRequestList =spendingRepository.getCategorySumAndAverageByMissionAndMember(memberEmail, missionId);
+        return missionStatsRequestList;
+    }
+
+    public MissionRankingResponse getMissionRanking(String missionId){
+        MissionTopSpendingResponse missionTopSpenderResult =  recordRepository.getMissionTopSpender(missionId);
+        MissionFrugalSpendingResponse missionFrugalSpenderResult = recordRepository.getMissionFrugalSpender(missionId);
+        DailyTopSpendingResponse dailyTopSpenderResult = recordRepository.getDailyTopSpender(missionId);
+//        if (!missionTopSpenderResult.isEmpty()&&!missionFrugalSpenderResult.isEmpty()&&!dailyTopSpenderResult.isEmpty()) {
+            MissionRankingResponse missionRankingResponse = MissionRankingResponse.builder()
+                    .missionTopSpender(missionTopSpenderResult.getMissionTopSpender())
+                    .missionTopSpending(missionTopSpenderResult.getMissionTopSpending())
+                    .missionFrugalSpender(missionFrugalSpenderResult.getMissionFrugalSpender())
+                    .missionFrugalSpending(missionFrugalSpenderResult.getMissionFrugalSpending())
+                    .dailyTopSpender(dailyTopSpenderResult.getDailyTopSpender())
+                    .dailyTopSpending(dailyTopSpenderResult.getDailyTopSpending())
+                    .dailyTopSpendingNum(dailyTopSpenderResult.getDailyTopSpendingNum())
+                    .build();
+            return missionRankingResponse;
+//        }
+//
+//        return null;
+    }
+
+
 }
