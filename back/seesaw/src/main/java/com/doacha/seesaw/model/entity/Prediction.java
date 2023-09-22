@@ -4,8 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
-
 @Entity
 @Data
 @NoArgsConstructor
@@ -17,9 +15,6 @@ public class Prediction {
     @JoinColumn(name = "member_email", nullable = false)
     @Schema(description = "사용자 이메일", example = "doacha@seesaw.com", required = true)
     private Member member;
-
-    @Column(name="prediction_date")
-    private Timestamp predictionDate;
 
     @Column(name = "prediction_unclassified", nullable = false)
     private int predictionUnclassified;
@@ -47,7 +42,6 @@ public class Prediction {
 
     @Column(name = "prediction_transportation", nullable = false)
     private int predictionTransportation;
-
     @Column(name = "prediction_car", nullable = false)
     private int predictionCar;
 
@@ -80,6 +74,10 @@ public class Prediction {
 
     @Column(name="prediction_convenience",nullable = false)
     private int predictionConvenience;
+
+
+
+
 
 
 }

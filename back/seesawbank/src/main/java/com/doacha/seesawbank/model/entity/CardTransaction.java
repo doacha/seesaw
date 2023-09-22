@@ -23,7 +23,7 @@ public class CardTransaction {
     @JoinColumn(name="card_num",referencedColumnName = "card_num",nullable = false)
     private Card card;
 
-    @Column(name="card_company", nullable = false)
+    @Column(name="card_company",nullable = false)
     private String cardCompany;
 
     @Column(name="card_approval_amount",nullable = false)

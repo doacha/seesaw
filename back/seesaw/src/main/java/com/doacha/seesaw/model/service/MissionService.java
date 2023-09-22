@@ -1,11 +1,11 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.NoContentException;
-import com.doacha.seesaw.model.dto.mission.*;
+import com.doacha.seesaw.model.dto.mission.CreateMissionRequest;
+import com.doacha.seesaw.model.dto.mission.MissionListResponse;
+import com.doacha.seesaw.model.dto.mission.SearchMissionRequest;
 import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.repository.MissionRepository;
-import com.doacha.seesaw.repository.RecordRepository;
-import com.doacha.seesaw.repository.SpendingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +25,6 @@ public class MissionService {
 
     @Autowired
     MissionRepository missionRepository;
-
-    @Autowired
-    RecordRepository recordRepository;
-    @Autowired
-    SpendingRepository spendingRepository;
 
     // 미션 목록
     public List<MissionListResponse> getMissionList(Pageable pageable) {
@@ -56,7 +51,6 @@ public class MissionService {
                 .missionTargetPrice(mission.getMissionTargetPrice())
                 .missionPeriod(mission.getMissionPeriod())
                 .missionStatus(0)
-                .missionFailureCount(mission.getMissionFailureCount())
                 .missionTotalCycle(mission.getMissionTotalCycle())
                 .missionCurrentCycle(0)
                 .missionStartDate(Date.valueOf(mission.getMissionStartDate()))
@@ -66,7 +60,6 @@ public class MissionService {
 
         return missionRepository.save(createdMission);
     }
-
 
     // 미션 아이디 랜덤 생성
     private String createRandomId() {

@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,20 +23,6 @@ import java.util.Optional;
 public class SpendingController {
     private final SpendingService spendingService;
 
-
-    @PostMapping("/cardTransaction")
-    @Operation(summary="카드 내역 가져오기")
-    public ResponseEntity<?>getCardTransaction (@RequestBody String memberEmail){
-        WebClient webClient = WebClient.create("http://localhost:8081/seesawbank");
-        String uri = "/cardtransactions/list?memberId=" + memberEmail;
-        String response = webClient.get()
-                .uri(uri)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-        log.info(response);
-        return null;
-    }
     @PostMapping()
     @Operation(summary="지출 등록")
     public ResponseEntity<?> postSpending(@RequestBody SpendingDto spendingdto){
@@ -128,7 +113,4 @@ public class SpendingController {
             return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
-
 }
