@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @Tag(name = "Record", description = "Record API")
 @RequestMapping("/record")
-@CrossOrigin("*")
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @Slf4j
 public class RecordController {
 
