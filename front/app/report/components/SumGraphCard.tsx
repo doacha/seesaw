@@ -44,7 +44,7 @@ const SumGraphCard = ({
     }
 
     setLengthList(tmpLengthList)
-    setMeanLength('h-[' + Math.round(mean / amountList.length) + 'px]')
+    setMeanLength('t-[' + Math.round(mean / amountList.length) + 'px]')
 
     console.log(tmpLengthList)
     console.log(mean)

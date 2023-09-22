@@ -159,7 +159,7 @@ export const categorySumList: type.Spending[] = [
     spendingCategoryId: 2,
   },
   {
-    spendingCostSum: 2000,
+    spendingCostSum: 2000000,
     spendingMonth: 9,
     memberEmail: 'test',
     spendingCategoryId: 5,
@@ -177,7 +177,7 @@ export const categorySumList: type.Spending[] = [
     spendingCategoryId: 4,
   },
   {
-    spendingCostSum: 20000,
+    spendingCostSum: 180000,
     spendingMonth: 9,
     memberEmail: 'test',
     spendingCategoryId: 5,
@@ -236,6 +236,33 @@ export const spend: type.Spending[] = [
   {
     spendingCostSum: 2240000,
     spendingMonth: 9,
+    memberEmail: 'doacha@seesaw.com',
+  },
+]
+
+export const spendingList: type.Spending[] = [
+  {
+    spendingId: 3,
+    spendingTitle: 'test',
+    spendingCost: 1110000,
+    spendingDate: '2023-09-13T07:36:18.000+00:00',
+    spendingCategoryId: 1,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingId: 0,
+    spendingTitle: 'test',
+    spendingCost: 1110000,
+    spendingDate: '2023-09-15T07:36:18.000+00:00',
+    spendingCategoryId: 2,
+    memberEmail: 'doacha@seesaw.com',
+  },
+  {
+    spendingId: 2,
+    spendingTitle: 'testzzz',
+    spendingCost: 111,
+    spendingDate: '2023-09-13T07:40:06.978+00:00',
+    spendingCategoryId: 18,
     memberEmail: 'doacha@seesaw.com',
   },
 ]
