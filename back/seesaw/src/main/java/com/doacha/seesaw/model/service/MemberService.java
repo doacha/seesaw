@@ -5,6 +5,7 @@ import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.redis.RedisDao;
+import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MemberRepository;
 //import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final MemberMissionRepository memberMissionRepository;
     // TODO: 나중에 PasswordEncoder 다시 설정 해주기
     private final PasswordEncoder passwordEncoder;
     private final RedisDao redisDao;
@@ -68,6 +70,23 @@ public class MemberService {
         //Token에서 로그인한 사용자 정보 get해 로그아웃 처리
         Member member = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+    }
+
+    // 마이페이지 내 정보
+    @Transactional
+    public MyPageInfoResponse myPageInfo(String memberEmail) {
+        Member member = memberRepository
+                .findByMemberEmail(memberEmail)
+                .orElseThrow(() -> new BadRequestException("유효하지 않은 사용자입니다."));
+
+       MyPageInfoResponse myPageInfoResponse = new MyPageInfoResponse(
+               member.getMemberNickname(),
+               member.getMemberImgUrl(),
+               memberMissionRepository.countMissionsByMemberIdAndMissionStatus(memberEmail, 2),
+               memberMissionRepository.countMissionsByMemberIdAndMissionStatus(memberEmail, 3),
+               memberMissionRepository.countMissionsByMemberIdAndMissionStatus(memberEmail, 1)
+       );
+        return myPageInfoResponse;
     }
 
     // 회원 정보 수정
