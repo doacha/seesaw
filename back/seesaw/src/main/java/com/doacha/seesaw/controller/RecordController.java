@@ -1,10 +1,7 @@
 package com.doacha.seesaw.controller;
 
 import com.doacha.seesaw.exception.NoContentException;
-import com.doacha.seesaw.model.dto.record.RecordListRequest;
-import com.doacha.seesaw.model.dto.record.RecordListResponse;
-import com.doacha.seesaw.model.dto.record.RecordRequest;
-import com.doacha.seesaw.model.dto.record.RecordResponse;
+import com.doacha.seesaw.model.dto.record.*;
 import com.doacha.seesaw.model.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -125,8 +122,8 @@ public class RecordController {
     }
 
 
-    // 레코드 목록
-    @Operation( summary = "글 목록", description = "레코드 목록 불러오는 API (사용자 닉네임, 사용금액, 성공여부를 금액기준 오름차순으로)")
+    // 특정 회차 레코드 목록
+    @Operation( summary = "특정 회차 레코드 목록", description = "레코드 목록 불러오는 API (사용자 닉네임, 사용금액, 성공여부를 금액기준 오름차순으로)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "레코드 목록 불러오기 성공"),
             @ApiResponse(responseCode = "500", description = "레코드 목록 불러오기 실패 - 서버 오류")
@@ -140,6 +137,26 @@ public class RecordController {
             return new ResponseEntity<List<RecordListResponse>>(list, HttpStatus.OK);
         } catch (Exception e) {
             log.info("레코드 목록 불러오기 실패 - 서버(DB)오류");
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    // 과거 레코드 목록
+    @Operation( summary = "과거 레코드 목록", description = "과거 레코드 목록 불러오는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "과거 레코드 목록 불러오기 성공"),
+            @ApiResponse(responseCode = "500", description = "과거 레코드 목록 불러오기 실패 - 서버 오류")
+    })
+    @PostMapping("/history")
+    public ResponseEntity<?> getRecordHistoryList(@RequestBody String missionId) {
+        log.info(missionId+"의 과거 레코드 목록 불러오기");
+        try {
+            List<List<MemberHistory>> list = recordService.getRecordHistoryResponse(missionId);
+            log.info("과거 레코드 목록 불러오기 성공");
+            return new ResponseEntity<List<List<MemberHistory>>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("과거 레코드 목록 불러오기 실패 - 서버(DB)오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

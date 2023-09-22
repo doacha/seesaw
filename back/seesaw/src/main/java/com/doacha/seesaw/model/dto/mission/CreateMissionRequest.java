@@ -38,9 +38,6 @@ public class CreateMissionRequest {
     @Schema(description = "미션 총 횟수", example = "4", required = true)
     private int missionTotalCycle;
 
-    @Schema(description = "미션 실패 기준 횟수", example = "1", required = true)
-    private int missionFailureCount;
-
     @Schema(description = "미션 시작일", example = "2023-09-11", required = true)
     private String missionStartDate;
 
@@ -50,6 +47,6 @@ public class CreateMissionRequest {
     @Schema(description = "미션 카테고리 아이디", example = "0", required = true)
     private int missionCategoryId;
 
-    @Schema(description = "적금 연동 여부", example = "true", required = true)
-    private boolean memberMissionIsSaving;
+    @Schema(description = "적금 금액", example = "true", required = true)
+    private int memberMissionSavingMoney;
 }
