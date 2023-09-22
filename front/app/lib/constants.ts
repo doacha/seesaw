@@ -128,6 +128,7 @@ export const iconColors: Record<number, string> = {
 }
 
 export const missionPeriodArray = [
+  ,
   '매일',
   '2일당 한 번',
   '3일당 한 번',

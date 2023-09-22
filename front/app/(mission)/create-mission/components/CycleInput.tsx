@@ -1,26 +1,22 @@
-import ToggleCapsule from '@/app/components/ToggleCapsule'
 import { missionCycleArray } from '@/app/lib/constants'
-
+import ToggleCapsule from './ToggleCapsule'
+import { MissionCreate } from '@/app/types'
+import styles from '@/app/(mission)/mission/components/SearchContainer.module.css'
 const CycleInput = ({
-  name,
-  value,
-  onChange,
-  period,
   state,
+  setState,
 }: {
-  name: string
-  value?: string
-  onChange: any
-  period?: number
-  state: number
+  state: MissionCreate
+  setState: React.Dispatch<React.SetStateAction<MissionCreate>>
 }) => {
   return (
-    <div>
+    <div className={`overflow-auto ${styles.delScroll}`}>
       <div className="flex justify-between items-center">
         <span className="font-scDreamExBold">미션 기간을 설정해주세요.</span>
-        {period && (
+        {state.missionPeriod > 0 && state.missionTotalCycle > 0 && (
           <span className="text-outline font-scDreamRegular text-xs">
-            총 {(state * 7) / period}회입니다.
+            총 {Math.trunc((state.missionTotalCycle * 7) / state.missionPeriod)}
+            회
           </span>
         )}
       </div>
@@ -29,13 +25,17 @@ const CycleInput = ({
           (element, idx) =>
             element && (
               <ToggleCapsule
-                className="carousel-item"
+                className="carousel-item mr-[15px]"
                 bgColor="background-fill"
                 textColor="black"
-                value={idx}
                 key={idx}
+                value={idx}
+                state={state}
+                setState={setState}
+                isSelected={idx === state.missionTotalCycle}
+                type="missionTotalCycle"
               >
-                {element ?? ''}
+                {element}
               </ToggleCapsule>
             ),
         )}
