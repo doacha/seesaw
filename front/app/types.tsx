@@ -111,9 +111,7 @@ export interface SearchState {
   [key: string]: any
 }
 
-export interface MissionRequire {
-
-}
+export interface MissionRequire {}
 
 export interface MissionList {
   missionId: string
@@ -149,9 +147,9 @@ export interface MissionCreate {
   missionTargetPrice: number
   missionPeriod: number
   missionTotalCycle: number
-  missionStartDate: string
+  missionStartDate: { month: number; day: number }
   missionHostEmail: string
   missionCategoryId: number
   memberMissionIsSaving: boolean
+  [key: string]: any
 }
-
