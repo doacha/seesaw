@@ -12,6 +12,7 @@ import DepositeInput from './DepositInput'
 import SelectPublicInput from './SelectPublicInput'
 import ImageInput from './ImageInput'
 import Button from '@/app/components/Button'
+import TargetPriceInput from './TargetPriceInput'
 import type { MissionCreate } from '@/app/types'
 import { MissionCreateDummy } from '@/app/dummies'
 import { useState } from 'react'
@@ -27,7 +28,7 @@ const CreateMissionContainer = () => {
     missionTargetPrice: 0,
     missionPeriod: -1,
     missionTotalCycle: 0,
-    missionStartDate: '',
+    missionStartDate: { month: -1, day: -1 },
     missionHostEmail: '',
     missionCategoryId: -1,
     memberMissionIsSaving: true,
@@ -37,7 +38,21 @@ const CreateMissionContainer = () => {
     const { name, value } = event.target
     setInput({ ...input, [name]: value })
   }
+  const handleSubmit = () => {
+    for (const property in input) {
+      if (
+        input[property] === -1 ||
+        input[property] === 0 ||
+        input[property] === ''
+      ) {
+        if (property === 'missionImgUrl') continue
+        console.log('빈 입력값 존재')
+        return
+      }
+    }
 
+    // 제출
+  }
   return (
     <div className="bg-background rounded-lg flex flex-col gap-5 p-5">
       {/* 그룹 이름 */}
@@ -51,7 +66,7 @@ const CreateMissionContainer = () => {
         interval="20"
       />
       {/* 그룹 소개글  */}
-      <GroupIntroInput name="groupIntro" onChange={() => {}} />
+      <GroupIntroInput state={input} setState={setInput} />
       {/* 미션 카테고리 */}
       <CategoryInput state={input} setState={setInput} />
       {/* 미션 빈도 */}
@@ -60,14 +75,22 @@ const CreateMissionContainer = () => {
       <CycleInput state={input} setState={setInput} />
       {/* 시작 날짜 */}
       <StartDateInput state={input} setState={setInput} />
+      {/* target price */}
+      <TargetPriceInput state={input} setState={setInput} />
       {/* 최소 예치금 */}
-      <DepositeInput />
-      {/* 공개 설정 */}
-      <SelectPublicInput />
-      {/* 사진 설정 */}
-      <ImageInput />
+      <DepositeInput state={input} setState={setInput} />
 
-      <div className="grid grid-cols-2 gap-2">
+      {/* 공개 설정 */}
+      <SelectPublicInput state={input} setState={setInput} />
+      {/* 사진 설정 */}
+      <ImageInput state={input} setState={setInput} />
+
+      <div className="mt-10 grid grid-cols-2 gap-5">
+        <Button color="error" label="취소" onClick={() => {}} />
+        <Button color="primary" label="등록하기" onClick={handleSubmit} />
+      </div>
+
+      <div className=" invisible">
         <Button color="error" label="취소" onClick={() => {}} />
         <Button color="primary" label="등록하기" onClick={() => {}} />
       </div>

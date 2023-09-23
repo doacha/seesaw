@@ -10,43 +10,70 @@ const StartDateInput = ({
   state: MissionCreate
   setState: React.Dispatch<React.SetStateAction<MissionCreate>>
 }) => {
-  const [selectedMonth, setSelectedMonth] = useState(-1)
-  const [selectedDay, setSelectedDay] = useState(-1)
+  // const [selectedMonth, setSelectedMonth] = useState(-1)
+  // const [selectedDay, setSelectedDay] = useState(-1)
   const [isDateCorrect, setIsDateCorrect] = useState(true)
   const month = Array(3).fill(currentMonth)
+  const selectedDay = state.missionStartDate.day
+  const selectedMonth = state.missionStartDate.month
   let days = Array(getLastDayOfMonth(selectedMonth))
     .fill(0)
     .map((element, idx) => {
       return String(idx + 1).padStart(2, '0')
     })
+
   const handleMonthClick = (month: number) => {
-    if (month + 1 === selectedMonth) {
-      setSelectedMonth(-1)
+    // console.log('엥', state)
+    const newState = {
+      ...state,
+      missionStartDate: { ...state.missionStartDate },
+    }
+    if (month + 1 === newState.missionStartDate.month) {
+      // 재클릭 시 비활성화
+      newState.missionStartDate.month = -1
+      setState(newState)
       return
     }
-    setSelectedMonth(month + 1)
-    if (checkDateCorrect(month + 1, selectedDay)) {
-      setSelectedDay(-1)
+    newState.missionStartDate.month = month + 1 // 월 설정
+
+    if (checkDateCorrect(month + 1, newState.missionStartDate.day)) {
+      // 일 설정된 상태에서 월 바꿨을때 과거날짜면 일 해제
+      newState.missionStartDate.day = -1
     }
+
+    setState(newState)
+    console.log('화긴', newState)
   }
+
   const handleDayClick = (day: number) => {
+    const newState = {
+      ...state,
+      missionStartDate: { ...state.missionStartDate },
+    }
+
     if (day + 1 === selectedDay) {
-      setSelectedDay(-1)
+      // 이미 선택한 day 비활성화
+      newState.missionStartDate.day = -1
+      setState(newState)
       return
     }
+
     if (day !== -2 && checkDateCorrect(selectedMonth, day + 1)) {
+      // 취소가 아니면서 과거 선택시
       setIsDateCorrect(false)
       return
     }
-    setIsDateCorrect(true)
-    setSelectedDay(day + 1)
+
+    setIsDateCorrect(true) // 정상선택이므로 안내문구 비활성화
+    newState.missionStartDate.day = day + 1
     if (selectedMonth === -1) {
-      setSelectedMonth(currentMonth + 1)
+      newState.missionStartDate.month = currentMonth + 1
     }
+    setState(newState)
   }
-  const handleSubmitDate = () => {
-    setState({ ...state, missionStartDate: getSelectedDate() })
-  }
+  // const handleSubmitDate = () => {
+  //   setState({ ...state, missionStartDate: getSelectedDate() })
+  // }
   const getSelectedDate = () => {
     return (
       currentYear +
@@ -107,7 +134,7 @@ const StartDateInput = ({
               {/* if there is a button in form, it will close the modal */}
               <div className="grid grid-cols-2 gap-2.5">
                 <button
-                  onClick={() => handleMonthClick(-2)}
+                  // onClick={() => handleMonthClick(-2)}
                   className="font-scDreamExBold text-[18px] text-gray leading-10 outline-transparent text-center"
                 >
                   취소
@@ -158,7 +185,7 @@ const StartDateInput = ({
               {/* if there is a button in form, it will close the modal */}
               <div className="grid grid-cols-2 gap-2.5">
                 <button
-                  onClick={() => handleDayClick(-2)}
+                  // onClick={() => handleDayClick(-2)}
                   className="font-scDreamExBold text-[18px] outline-transparent text-gray leading-10 text-center"
                 >
                   취소
@@ -166,7 +193,7 @@ const StartDateInput = ({
                 <Button
                   color="primary"
                   label="확인"
-                  onClick={handleSubmitDate}
+                  onClick={() => {}}
                   size="lg"
                   disabled={selectedDay === -1 ? true : false}
                 />
