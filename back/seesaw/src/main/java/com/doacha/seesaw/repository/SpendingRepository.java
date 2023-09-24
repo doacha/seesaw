@@ -1,5 +1,6 @@
 package com.doacha.seesaw.repository;
 import com.doacha.seesaw.model.dto.mission.MissionStatsResponse;
+import com.doacha.seesaw.model.dto.mission.MyMissionRankingResponse;
 import com.doacha.seesaw.model.dto.spending.DailySpendingSumResponse;
 import com.doacha.seesaw.model.dto.spending.MonthCategoryResponse;
 import com.doacha.seesaw.model.dto.spending.MonthSpendingResponse;
@@ -47,6 +48,11 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
             "  AND s.record.memberMission.mission.missionId = :missionId " +
             "GROUP BY s.member.memberEmail, s.spendingCategoryId")
     MissionStatsResponse getCategorySumAndAverageByMissionAndMember(@Param("memberEmail") String memberEmail, @Param("missionId") String missionId);
+
+
+
+
+
 
 
 }

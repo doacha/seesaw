@@ -134,13 +134,35 @@ public class MissionController {
     public ResponseEntity<?>getMissionStats(@RequestBody GetMemberMissionTnumRequest getMemberMissionTnumRequest){
         try{
             MissionStatsResponse missionStatsResponseList = missionService.getCategorySumAndAverageByMissionAndMember(getMemberMissionTnumRequest.getMemberEmail(), getMemberMissionTnumRequest.getMissionId());
-            return new ResponseEntity<>(missionStatsResponseList,HttpStatus.OK);
+            return new ResponseEntity<MissionStatsResponse>(missionStatsResponseList,HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @Operation(summary="미션 통계 등수")
+    @PostMapping("/myranking")
+    public ResponseEntity<?>getMyMissionRanking(@RequestBody QuitMissionRequest quitMissionRequest){
+        try{
+            MyMissionRankingResponse myMissionRankingResponse = missionService.getMyMissionRanking(quitMissionRequest.getMissionId(),quitMissionRequest.getMemberEmail());
+            return new ResponseEntity<MyMissionRankingResponse>(myMissionRankingResponse,HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @Operation(summary="미션 평균 사용 금액")
+    @PostMapping("/average")
+    public ResponseEntity<?>getMyMissionAverage(@RequestBody QuitMissionRequest quitMissionRequest){
+        try{
+            MyMissionAverageResponse myMissionAverageResponse = missionService.getMyMissionAverage(quitMissionRequest.getMissionId(),quitMissionRequest.getMemberEmail());
+            return new ResponseEntity<MyMissionAverageResponse>(myMissionAverageResponse,HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @Operation(summary="미션 최고 금액, 최저 금액", description = "미션내에 최고 금액, 최저 금액 사용자와 금액 불러오는 API")
     @PostMapping("/ranking/{missionId}")
     public ResponseEntity<?>getMissionRanking(@PathVariable String missionId){
