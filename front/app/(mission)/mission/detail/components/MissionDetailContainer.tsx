@@ -44,9 +44,8 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
           bgColor={`${data.missionCategoryId}`}
           textColor="background"
           className="mb-2.5"
+          content={`${categoryList[data.missionCategoryId]}`}/
         >
-          {`${categoryList[data.missionCategoryId]}`}
-        </Capsule>
         {/* 금액 */}
         <div className="mb-2.5">
           <FontAwesomeIcon icon={faMoneyBillWave} className="mr-[15px]" />
@@ -55,16 +54,14 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
         {/* 일정 */}
         <div className="mb-2.5 flex gap-[15px] items-center">
           <FontAwesomeIcon icon={faCalendarCheck} />
-          <Capsule bgColor="background-fill" textColor="black">{`${
+          <Capsule bgColor="background-fill" textColor="black" content={`${
             missionPeriodArray[data.missionPeriod - 1]
-          }`}</Capsule>
-          <Capsule bgColor="background-fill" textColor="black">
-            {
+          }`}/>
+          <Capsule bgColor="background-fill" textColor="black" content= {
               missionCycleArray[
                 (data.missionPeriod * data.missionTotalCycle) / 7 - 1
               ]
-            }
-          </Capsule>
+            }/>
           <span className="text-outline text-xs">{`(${data.missionTotalCycle} 회)`}</span>
         </div>
         {/* 실패 한도 */}
