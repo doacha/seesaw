@@ -2,11 +2,14 @@
 import { useState } from 'react'
 import '../user/styles/style.css'
 
-const Dropdown = () => {
-  const [currentSort, setCurrentSort] = useState('최신순')
+interface Props {
+  sortType: 0 | 1 | 2
+  onSortTypeChange: (value: 0 | 1 | 2) => void
+}
 
-  const onSortButtonClick = (value: string) => {
-    setCurrentSort(value)
+const Dropdown = (props: Props) => {
+  const onSortButtonClick = (value: 0 | 1 | 2) => {
+    props.onSortTypeChange(value)
     const box = document.getElementById('sortOpen') as HTMLInputElement
     box.checked = false
     console.log(box.checked)
@@ -23,21 +26,25 @@ const Dropdown = () => {
         id="sortOpen"
       />
       <div className="collapse-title text-base h-[40px] min-h-0 w-full text-left px-3 py-2">
-        {currentSort}
+        {props.sortType === 0
+          ? '최신순'
+          : props.sortType === 1
+          ? '성공'
+          : '실패'}
       </div>
       <div className=" collapse-content">
         <p
           className="text-left"
           onClick={() => {
-            onSortButtonClick('최신순')
+            onSortButtonClick(0)
           }}
         >
           최신순
         </p>
-        <p className="text-left" onClick={() => onSortButtonClick('성공')}>
+        <p className="text-left" onClick={() => onSortButtonClick(1)}>
           성공
         </p>
-        <p className="text-left" onClick={() => onSortButtonClick('실패')}>
+        <p className="text-left" onClick={() => onSortButtonClick(2)}>
           실패
         </p>
       </div>

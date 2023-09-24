@@ -11,7 +11,7 @@ import Card from '@/app/components/Card'
 import RecordCard from './components/RecordCard'
 import { recordList, mission } from '@/app/dummies'
 
-const CompleteMission = () => {
+const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1')
 
   const handleTabChange = (tab: string) => {
@@ -49,4 +49,4 @@ const CompleteMission = () => {
   )
 }
 
-export default CompleteMission
+export default CompleteMissionPage

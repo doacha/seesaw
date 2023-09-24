@@ -23,6 +23,7 @@ import CommentInput from '../board/[boardId]/components/CommentInput'
 import DepositStatusContainer from './detail/components/DepositeStatusContainer'
 import MySavingMoney from './detail/components/MySavingMoney'
 import CreatePostContainer from '../board/create/CreatePostContainer'
+import CreateMissionContainer from '../create-mission/components/CreateMissionContainer'
 const page = () => {
   const [isSearchContainerFull, setIsSearchContainerFull] = useState(false)
   const [selectedPeriod, setSelectedPeriod] = useState([])
@@ -39,19 +40,20 @@ const page = () => {
   }
   return (
     <div className="bg-background-fill">
+      <CreateMissionContainer />
       {/* <DepositStatusContainer /> */}
-      <CreatePostContainer />
-      <MySavingMoney />
+      {/* <CreatePostContainer />
+      <MySavingMoney /> */}
       {/* <MissionDetailContainer data={missionDetail} /> */}
       {/* <TodayMissionContainer /> */}
       {/* <GroupMissionHistoryContainer /> */}
       {/* <MyMissionHistoryContainer /> */}
       {/* {isSearchContainerFull && ( */}
-      <SearchContainer
+      {/* <SearchContainer
         state={selectedSearchState}
         setState={setSelectedSearchState}
         onClick={handleContainerShrink}
-      />
+      /> */}
       {/* {!isSearchContainerFull && (
         <SearchContainerSimple
           state={selectedSearchState}

@@ -75,9 +75,10 @@ const SearchContainer = ({
               type="category"
               select={state['category'].includes(idx)}
               onClick={handleCapsuleClick}
+              content={element}
+              /
             >
-              {element}
-            </ToggleCapsule>
+              
           ))}
         </div>
       </div>
@@ -117,18 +118,14 @@ const SearchContainer = ({
             <div className="mb-5 w-full">인증 주기</div>
             <div className="w-full">
               {missionPeriodArray.map((element, idx) => (
-                <ToggleCapsule
-                  bgColor="background-fill"
+                <ToggleCapsule bgColor="background-fill"
                   textColor="black"
                   className="mr-[15px] mb-[15px]"
                   key={idx}
                   value={idx}
                   type="period"
                   select={state['period'].includes(idx)}
-                  onClick={handleCapsuleClick}
-                >
-                  {element}
-                </ToggleCapsule>
+                  onClick={handleCapsuleClick} content={element}/>
               ))}
               <Button
                 color="primary"
@@ -162,9 +159,9 @@ const SearchContainer = ({
                   type="cycle"
                   select={state['cycle'].includes(idx)}
                   onClick={handleCapsuleClick}
+                  content={element}
+                  /
                 >
-                  {element}
-                </ToggleCapsule>
               ))}
               <Button
                 color="primary"

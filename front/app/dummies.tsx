@@ -11,7 +11,7 @@ export const user: type.User = {
 export const mission: type.Mission = {
   missionTitle: '술 그만마셔 그러다 뒤져',
   missionCurrentCycle: 1,
-  missionImgUrl: '../차차_군침이.jpg',
+  missionImgUrl: '../../차차_군침이.jpg',
   missionPeriod: 10,
   missionStartDate: '2023-09-11',
   missionEndDate: '2023-09-30',
@@ -141,6 +141,22 @@ export const transactionList: type.Transaction[] = [
     accountIsDeposit: false,
   },
 ]
+
+export const MissionCreateDummy = {
+  missionTitle: '일주일동안 5만원 쓰기',
+  missionMaxCount: 6,
+  missionImgUrl: 'string',
+  missionPurpose: '일주일동안 5만원쓰기 같이 하실 분!!',
+  missionDeposit: 30000,
+  missionIsPublic: true,
+  missionTargetPrice: 50000,
+  missionPeriod: 7,
+  missionTotalCycle: 4,
+  missionStartDate: '2023-09-14',
+  missionHostEmail: 'doacha@seesaw.com',
+  missionCategoryId: 0,
+  memberMissionIsSaving: true,
+}
 
 export const account: type.Account = {
   accountImg: './seesaw_logo.svg',
