@@ -1,6 +1,7 @@
 package com.doacha.seesaw.controller;
 
 import com.doacha.seesaw.exception.NoContentException;
+import com.doacha.seesaw.model.dto.mission.GetMyMissionDataRequest;
 import com.doacha.seesaw.model.dto.record.*;
 import com.doacha.seesaw.model.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +19,7 @@ import java.util.List;
 @RestController
 @Tag(name = "Record", description = "Record API")
 @RequestMapping("/record")
-@CrossOrigin("*")
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @Slf4j
 public class RecordController {
 
@@ -123,7 +124,7 @@ public class RecordController {
 
 
     // 특정 회차 레코드 목록
-    @Operation( summary = "특정 회차 레코드 목록", description = "레코드 목록 불러오는 API (사용자 닉네임, 사용금액, 성공여부를 금액기준 오름차순으로)")
+    @Operation( summary = "미션 상세 - 그룹 현황 - 특정 회차 레코드 목록", description = "레코드 목록 불러오는 API (사용자 닉네임, 사용금액, 성공여부를 금액기준 오름차순으로)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "레코드 목록 불러오기 성공"),
             @ApiResponse(responseCode = "500", description = "레코드 목록 불러오기 실패 - 서버 오류")
@@ -143,7 +144,7 @@ public class RecordController {
 
 
     // 과거 레코드 목록
-    @Operation( summary = "과거 레코드 목록", description = "과거 레코드 목록 불러오는 API")
+    @Operation( summary = "미션 상세 - 그룹 현황 - 과거 레코드 목록", description = "과거 레코드 목록 불러오는 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "과거 레코드 목록 불러오기 성공"),
             @ApiResponse(responseCode = "500", description = "과거 레코드 목록 불러오기 실패 - 서버 오류")
@@ -160,5 +161,25 @@ public class RecordController {
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // 회차별 절약 금액
+    @Operation( summary = "미션 상세 - 나의 현황 - 회차별 절약 금액", description = "회차별 절약 금액 목록 불러오는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회차별 절약 금액 목록 불러오기 성공"),
+            @ApiResponse(responseCode = "500", description = "회차별 절약 금액 목록 불러오기 실패 - 서버 오류")
+    })
+    @PostMapping("/saving-list")
+    public ResponseEntity<?> getSavingMoneyList(@RequestBody GetMyMissionDataRequest getMyMissionDataRequest) {
+        log.info("회차별 절약 금액 목록 불러오기");
+        try {
+            List<Integer> savingList = recordService.getSavingMoneyList(getMyMissionDataRequest);
+            log.info("회차별 절약 금액 목록 불러오기 성공");
+            return new ResponseEntity<List<Integer>>(savingList, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("회차별 절약 금액 목록 불러오기 실패 - 서버(DB)오류");
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }

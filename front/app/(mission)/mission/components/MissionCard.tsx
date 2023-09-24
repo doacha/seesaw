@@ -55,12 +55,14 @@ const MissionCard = ({ data }: { data: MissionCardProps }) => {
             bgColor="bg-background-fill"
             textColor="text-black"
             isSmall={true}
-          >{`${dummyMissionCard.missionPeriod}일당 하루`}</Capsule>
+            content={`${dummyMissionCard.missionPeriod}일당 하루`}/
+          >
           <Capsule
             bgColor="bg-background-fill"
             textColor="text-black"
             isSmall={true}
-          >{`${dummyMissionCard.missionCycle}회`}</Capsule>
+            content={`${dummyMissionCard.missionCycle}회`}
+          />
         </div>
         <div className="text-[10px] text-outline mb-2.5">{`${dummyMissionCard.missionLimit.toLocaleString(
           'ko-KR',

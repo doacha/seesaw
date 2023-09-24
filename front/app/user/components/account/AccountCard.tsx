@@ -1,3 +1,4 @@
+'use client'
 import { Account, Transaction } from '@/app/types'
 import AccountInfo from './AccountInfo'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -49,7 +50,14 @@ const AccountCard = () => {
       <input type="checkbox" onClick={() => setIsOpened(!isOpened)} />
       <div className="collapse-title text-xl font-medium p-5 pb-3 flex flex-col gap-2">
         <AccountInfo account={account} />
-        <div className="w-full h-[1px] bg-outline-container" />
+        <div
+          className={
+            isOpened
+              ? 'w-full h-[1px] bg-transparent transition-all'
+              : 'w-full h-[1px] bg-outline-container transition-all'
+          }
+        />
+
         <FontAwesomeIcon
           icon={faChevronDown}
           className={

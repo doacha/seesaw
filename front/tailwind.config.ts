@@ -20,7 +20,7 @@ const config: Config = {
         current: 'currentColor',
         black: '#001B2A',
         white: colors.white,
-        gray: colors.gray,
+        gray: '#C7C7C7',
         emerald: colors.emerald,
         indigo: colors.indigo,
         yellow: colors.yellow,
