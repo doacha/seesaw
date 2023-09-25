@@ -18,8 +18,9 @@ public interface AccountTransactionRepository extends JpaRepository<AccountTrans
     @Query("SELECT new com.doacha.seesawbank.model.dto.account.AccountTransactionListResponse(" +
             "a.accountTransactionName, a.accountTransactionTime, a.accountApprovalAmount) " +
             "FROM AccountTransaction a " +
-            "WHERE a.account = :account "+
-            "order by a.accountTransactionTime desc ")
+            "WHERE a.account = :account " +
+//            "AND DATE_FORMAT(a.accountTransactionTime, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 7 DAY), '%Y-%m-%d %H:%i:%s')  " +
+            "ORDER BY a.accountTransactionTime DESC limit 10")
     List<AccountTransactionListResponse> findAccountTransactionsByAccountTimeDesc(Account account);
 
 //    @Query("SELECT new com.doacha.seesawbank.model.dto.account.AccountListResponse(" +
