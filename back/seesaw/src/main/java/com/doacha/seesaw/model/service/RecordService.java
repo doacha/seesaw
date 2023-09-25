@@ -181,7 +181,7 @@ public class RecordService {
     }
 
     // 미션 상세 - 나의 현황 - 회차별 소비 내역 및 미션 성공 여부
-//    public List<Integer> getSpendingList(GetMyMissionDataRequest getMyMissionDataRequest) {
-//
-//    }
+    public List<Object[]> getSpendingList(GetMyMissionDataRequest getMyMissionDataRequest) {
+       return recordRepository.findRecordAndSpendingByMissionIdAndMemberEmail(getMyMissionDataRequest.getMissionId(), getMyMissionDataRequest.getMemberEmail());
+    }
 }

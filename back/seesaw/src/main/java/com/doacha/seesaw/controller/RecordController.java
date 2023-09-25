@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -187,23 +188,23 @@ public class RecordController {
     }
 
     // 미션 상세 - 나의 현황 - 회차별 소비 내역 및 미션 성공 여부
-//    @Operation( summary = "미션 상세 - 나의 현황 - 회차별 소비 내역 및 미션 성공 여부", description = "회차별 소비 내역 및 미션 성공 여부 목록 불러오는 API")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "회차별 소비 내역 및 미션 성공 여부 목록 불러오기 성공"),
-//            @ApiResponse(responseCode = "500", description = "회차별 소비 내역 및 미션 성공 여부 목록 불러오기 실패 - 서버 오류")
-//    })
-//    @PostMapping("/spending-list")
-//    public ResponseEntity<?> getSpendingList(@RequestBody GetMyMissionDataRequest getMyMissionDataRequest) {
-//        log.info("회차별 소비 내역 및 미션 성공 여부");
-//        try {
-//            List<Integer> spendingList = recordService.getSpendingList(getMyMissionDataRequest);
-//            log.info("회차별 소비 내역 및 미션 성공 여부");
-//            return new ResponseEntity<List<Integer>>(spendingList, HttpStatus.OK);
-//        } catch (Exception e) {
-//            log.info("회차별 절약 금액 목록 불러오기 실패 - 서버(DB)오류");
-//            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    @Operation( summary = "미션 상세 - 나의 현황 - 회차별 소비 내역 및 미션 성공 여부", description = "회차별 소비 내역 및 미션 성공 여부 목록 불러오는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회차별 소비 내역 및 미션 성공 여부 목록 불러오기 성공"),
+            @ApiResponse(responseCode = "500", description = "회차별 소비 내역 및 미션 성공 여부 목록 불러오기 실패 - 서버 오류")
+    })
+    @PostMapping("/spending-list")
+    public ResponseEntity<?> getSpendingList(@RequestBody GetMyMissionDataRequest getMyMissionDataRequest) {
+        log.info("회차별 소비 내역 및 미션 성공 여부 조회");
+        try {
+            List<Object[]> spendingList = recordService.getSpendingList(getMyMissionDataRequest);
+            log.info("회차별 소비 내역 및 미션 성공 여부 조회 성공");
+            return new ResponseEntity<List<Object[]>>(spendingList, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("회차별 소비 내역 및 미션 성공 여부 조회 실패 - 서버(DB)오류");
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }
