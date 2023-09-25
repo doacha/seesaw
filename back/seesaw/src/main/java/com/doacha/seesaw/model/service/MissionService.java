@@ -147,9 +147,24 @@ public class MissionService {
                     .dailyTopSpendingNum(dailyTopSpenderResult.getDailyTopSpendingNum())
                     .build();
             return missionRankingResponse;
-//        }
 //
-//        return null;
+    }
+    public MyMissionRankingResponse getMyMissionRanking(String missionId, String memberEmail){
+        List<MyMissionRankingResponse> missionRankingList = recordRepository.getMissionRanking(missionId);
+        MyMissionRankingResponse myMissionRankingResponse = null;
+        for(MyMissionRankingResponse missionRankingResponse : missionRankingList){
+            if(missionRankingResponse.getMemberEmail().equals(memberEmail)){
+               myMissionRankingResponse = missionRankingResponse;
+                break;
+            }
+
+        }
+        return myMissionRankingResponse;
+    }
+
+    public MyMissionAverageResponse getMyMissionAverage(String missionId, String memberEmail){
+        MyMissionAverageResponse myMissionAverageResponse = recordRepository.getMyMissionAverage(missionId,memberEmail);
+        return myMissionAverageResponse;
     }
 
 
