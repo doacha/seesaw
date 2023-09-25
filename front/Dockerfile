@@ -1,39 +1,49 @@
-# # build stage
-# #################################################
-# # docker로 빌드할 이미지를 설정
-FROM node as build
+FROM node:20-alpine AS base
 
-# # 작업 경로 및 디렉토리 설정
+# Install dependencies only when needed
+FROM base AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# # 디폴트 리스소 경로에 있는 package.json 파일을 /app/package.json로 복사
-COPY package.json /app/package.json
-COPY pnpm-lock.yaml /app/pnpm-lock.yaml
+# Install dependencies based on the preferred package manager
+COPY package.json pnpm-lock.yaml* ./
+RUN  npm install -g pnpm && pnpm install
 
-Run corepack enable
-Run corepack prepare pnpm@latest-8 --activate
-Run pnpm install
 
-# # 디폴트 리소스 경로에 있는 모든 파일을 /app 으로 복사한다.
-COPY . /app
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-# # 빌드 시작
-RUN pnpm run build
+RUN yarn build
 
-# # production stage
-# #################################################
-# # docker 기본 이미지 설정
-FROM nginx as production-stage
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
 
-# # nginx의 기본 설정을 삭제한다.
-RUN rm -rf /etc/nginx/conf.d
+ENV NODE_ENV production
 
-# # 디폴트 리소스 경로에 있는 conf 폴더를 도커의 /etc/nginx/conf.d로 복사한다.
-COPY ./nginx.conf /etc/nginx/conf.d
 
-# # 맨위의 as build 로부터 복사한다는 것을 선언한다. 
-# # 그리고 builder의 /app/build를 새로 생성된 컨테이너의 /usr/share/nginx/html로 복사한다.
-COPY --from=build /app/.next /usr/share/nginx/html
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# # 80포트 오픈하고 nginx 실행
-EXPOSE 80
+COPY --from=builder /app/public ./public
+
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+
+CMD ["node", "server.js"]
