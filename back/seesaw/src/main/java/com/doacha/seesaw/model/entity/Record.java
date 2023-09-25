@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 
@@ -26,8 +27,13 @@ public class Record {
     private String recordContent;
 
     @Column(name = "record_write_time")
-    @ColumnDefault("CURRENT_TIMESTAMP")
     private Timestamp recordWriteTime;
+
+    @Column(name = "record_start_date")
+    private Date recordStartDate;
+
+    @Column(name = "record_end_date")
+    private Date recordEndDate;
 
     @Column(name="record_total_cost" , nullable =false)
     @ColumnDefault("0")
