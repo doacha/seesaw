@@ -2,6 +2,7 @@ package com.doacha.seesaw.repository;
 
 import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.model.dto.record.*;
+import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.model.entity.Record;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -97,5 +98,5 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     @Query("SELECT r.recordTotalCost FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail ORDER BY r.recordNumber ASC ")
     List<Integer> findRecordTotalCostByMissionIdAndMemberEmail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
 
-
+    List<Record> findRecordByMemberMission(@Param("memberMission")MemberMission memberMission);
 }
