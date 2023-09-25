@@ -19,7 +19,7 @@ const ToggleCapsule = ({
   isHasBorder,
   isSmall,
   onClick,
-  content,
+  children,
   className,
   value,
   select,
@@ -30,7 +30,7 @@ const ToggleCapsule = ({
   isHasBorder?: boolean
   isSmall?: boolean
   onClick?: any
-  content?: string
+  children: string
   className?: string | string[]
   value: number
   select?: boolean
@@ -81,7 +81,7 @@ const ToggleCapsule = ({
       } ${tailwindBorder} ${tailwindFontSize} ${className}`}
       onClick={() => handleClick(value)}
     >
-      {content}
+      {children}
     </span>
   )
 }

@@ -4,6 +4,8 @@ export interface ImageFile {
   url: string
 }
 
+export type Tab = 'home' | 'mission' | 'user'
+
 export interface Account {
   accountImg: string
   accountName: string
