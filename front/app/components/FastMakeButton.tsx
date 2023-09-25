@@ -1,7 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
-const FaskMakeButton = ({ onClick }: { onClick: any }) => {
+const FaskMakeButton = ({
+  onClick,
+  customCSS,
+}: {
+  onClick: any
+  customCSS?: string
+}) => {
   // fast 버튼은 가계부에만 넣는건가?
   return (
     <div
@@ -11,7 +17,8 @@ const FaskMakeButton = ({ onClick }: { onClick: any }) => {
       <FontAwesomeIcon
         icon={faPlus}
         size="2xl"
-        className="text-background absolute m-auto"
+        className={`text-background absolute m-auto ${customCSS ?? ''}`}
+        onClick={onClick}
       />
     </div>
   )

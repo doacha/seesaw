@@ -1,83 +1,59 @@
 'use client'
-
-import MissionCard from './components/MissionCard'
-import { useState } from 'react'
-import SearchBar from './components/SearchBar'
+import { missionCardDummy } from '@/app/dummies'
+import SearchContainerSimple from '../components/SearchContainerSimple'
 import SearchContainer from './components/SearchContainer'
-import SearchContainerSimple from './components/SearchContainerSimple'
-import { dummyMissionCard } from './components/dummy'
-// mission detail
-import { missionDetail } from './dummys'
-import MissionDetailContainer from './detail/components/MissionDetailContainer'
+import Header from '@/app/components/Header'
 import type { SearchState } from '@/app/types'
-// todayMission
-import TodayMissionContainer from './detail/components/TodayMissionContainer'
-// groupMissionHistory
-import GroupMissionHistoryContainer from './detail/components/GroupMissionHistoryContainer'
-// myMissionHistory
-import MyMissionHistoryContainer from './detail/components/MyMissionHistoryContainer'
-// BoardContentContainer
-import BoardContentContainer from '../board/[boardId]/components/BoardContentContainer'
-import BoardCommentsContainer from '../board/[boardId]/components/BoardCommentsContainer'
-import CommentInput from '../board/[boardId]/components/CommentInput'
-import DepositStatusContainer from './detail/components/DepositeStatusContainer'
-import MySavingMoney from './detail/components/MySavingMoney'
-import CreatePostContainer from '../board/create/CreatePostContainer'
-import CreateMissionContainer from '../create-mission/components/CreateMissionContainer'
-const page = () => {
-  const [isSearchContainerFull, setIsSearchContainerFull] = useState(false)
-  const [selectedPeriod, setSelectedPeriod] = useState([])
-  const [selectedSearchState, setSelectedSearchState] = useState<SearchState>({
-    period: [],
-    cycle: [],
+import MissionCard from '../components/MissionCard'
+import { useState } from 'react'
+import { MissionCardProps } from '@/app/types'
+import { useRouter } from 'next/navigation'
+const MissionPage = () => {
+  const [isActiveSearch, setIsActiveSearch] = useState(true)
+  const [searchResult, setSearchResult] = useState<Array<MissionCardProps>>()
+  const [searchState, setSearchState] = useState<SearchState>({
     category: [],
+    cycle: [],
+    period: [],
   })
-  const handleContainerExpand = () => {
-    setIsSearchContainerFull(true)
+  const router = useRouter()
+
+  const handleActiveSearch = () => {
+    setIsActiveSearch(true)
   }
-  const handleContainerShrink = () => {
-    setIsSearchContainerFull(false)
+
+  const handleDeactiveSearch = () => {
+    setIsActiveSearch(false)
   }
+
+  // API 연결 후 더미 삭제
+  const searchedMissionList = Array(6).fill(missionCardDummy)
+
   return (
     <div className="bg-background-fill">
-      <CreateMissionContainer />
-      {/* <DepositStatusContainer /> */}
-      {/* <CreatePostContainer />
-      <MySavingMoney /> */}
-      {/* <MissionDetailContainer data={missionDetail} /> */}
-      {/* <TodayMissionContainer /> */}
-      {/* <GroupMissionHistoryContainer /> */}
-      {/* <MyMissionHistoryContainer /> */}
-      {/* {isSearchContainerFull && ( */}
-      {/* <SearchContainer
-        state={selectedSearchState}
-        setState={setSelectedSearchState}
-        onClick={handleContainerShrink}
-      /> */}
-      {/* {!isSearchContainerFull && (
-        <SearchContainerSimple
-          state={selectedSearchState}
-          onClick={handleContainerExpand}
-        />
-        // selected만 보내면 됨
-      )}
-      {isSearchContainerFull && (
-        <SearchContainer
-          state={selectedSearchState}
-          setState={setSelectedSearchState}
-          onClick={handleContainerShrink}
-        />
-        //set이랑 state 다 보내야함
-      )}
-      <div className="flex flex-wrap gap-5 mx-5">
-        <MissionCard data={dummyMissionCard} />
-        <MissionCard data={dummyMissionCard} />
-        <MissionCard data={dummyMissionCard} />
-        <MissionCard data={dummyMissionCard} />
-        <MissionCard data={dummyMissionCard} />
-      </div> */}
+      <Header title="미션 목록" plusButton backButton />
+      <div className="py-16 pt-[74px] overflow-scroll flex flex-col gap-5 px-5">
+        {isActiveSearch && (
+          <SearchContainer
+            onClick={handleDeactiveSearch}
+            state={searchState}
+            setState={setSearchState}
+          />
+        )}
+        {!isActiveSearch && (
+          <SearchContainerSimple
+            onClick={handleActiveSearch}
+            state={searchState}
+          />
+        )}
+        <div className="flex flex-wrap gap-5">
+          {searchedMissionList.map((element, idx) => (
+            <MissionCard data={element} key={idx} />
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
 
-export default page
+export default MissionPage
