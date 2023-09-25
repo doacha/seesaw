@@ -1,6 +1,5 @@
 import Input from '@/app/components/Input'
 import BankButton from './BankButton'
-import { useState } from 'react'
 
 interface Props {
   selectedBank: string

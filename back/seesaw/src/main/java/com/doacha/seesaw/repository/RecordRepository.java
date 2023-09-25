@@ -4,6 +4,8 @@ import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.model.dto.record.*;
 import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.model.entity.Record;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -38,6 +40,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "WHERE mm.mission.missionId = :missionId AND r.recordNumber < :currentCycle " +
             "ORDER BY r.recordTotalCost ASC")
     List<MemberHistory> getMemberHistoryByMissionId(@Param("missionId") String missionId, @Param("currentCycle") int currentCycle);
+
     @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionTopSpendingResponse(mm.member.memberNickname AS missionTopSpender, SUM(r.recordTotalCost) AS missionTopSpending) " +
             "FROM Record r " +
             "JOIN r.memberMission mm " +
@@ -45,11 +48,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "GROUP BY mm.member.memberNickname " +
             "ORDER BY SUM(r.recordTotalCost) DESC")
     MissionTopSpendingResponse getMissionTopSpender(@Param("missionId") String missionId);
-
-
-
-    @Query("SELECT COUNT(r) FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail AND r.recordStatus = 2")
-    int countFail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
 
     @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionFrugalSpendingResponse(mm.member.memberNickname AS missionFrugalSpender, SUM(r.recordTotalCost) AS missionFrugalSpending) " +
             "FROM Record r " +
@@ -70,6 +68,8 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "ORDER BY r.recordTotalCost DESC ")
     DailyTopSpendingResponse getDailyTopSpender(@Param("missionId") String missionId);
 
+    @Query("SELECT COUNT(r) FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail AND r.recordStatus = 2")
+    int countFail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
 
     // 미션 랭킹 가져오기
     @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MyMissionRankingResponse(" +

@@ -43,19 +43,19 @@ const UserPage = () => {
   //   )
   // }
 
-  const getUser = async () => {
-    const value = await fetch(
-      `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/mypage`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
-        },
-        body: 'jiwon@seesaw.com', // 데이터를 JSON 문자열로 변환하여 전송
-      },
-    )
-    console.log('응답왔다!', value)
-  }
+  // const getUser = async () => {
+  //   const value = await fetch(
+  //     `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/mypage`,
+  //     {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
+  //       },
+  //       body: 'jiwon@seesaw.com', // 데이터를 JSON 문자열로 변환하여 전송
+  //     },
+  //   )
+  //   console.log('응답왔다!', value)
+  // }
 
   // const { data } = useQuery<User>({
   //   queryKey: ['user'],
@@ -63,9 +63,10 @@ const UserPage = () => {
   //   suspense: true,
   //   staleTime: 5 * 1000,
   // })
+
   const memberEmail = 'jiwon@seesaw.com'
 
-  getUser()
+  // getUser()
   // signUp()
 
   return (
