@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Timestamp;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -15,6 +17,9 @@ public class Prediction {
     @JoinColumn(name = "member_email", nullable = false)
     @Schema(description = "사용자 이메일", example = "doacha@seesaw.com", required = true)
     private Member member;
+
+    @Column(name="prediction_date",nullable = false)
+    private Timestamp predictionDate;
 
     @Column(name = "prediction_unclassified", nullable = false)
     private int predictionUnclassified;

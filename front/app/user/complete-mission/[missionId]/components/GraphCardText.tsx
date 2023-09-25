@@ -1,6 +1,6 @@
 interface Props {
   textBefore: string
-  amount: number
+  amount?: number
   textAfter: string
   comment: string
   txtColor: string
@@ -11,10 +11,12 @@ const GraphCardText = (props: Props) => {
     <div className="flex flex-col">
       <div className="flex text-lg font-scDreamMedium">
         {props.textBefore}
-        <div className={props.txtColor}>{props.amount.toLocaleString()}</div>
+        <div className={props.txtColor}>{props.amount?.toLocaleString()}</div>
         {props.textAfter}
       </div>
-      <div className="text-sm text-outline">{props.comment}</div>
+      <div className="text-sm text-outline font-scDreamLight">
+        {props.comment}
+      </div>
     </div>
   )
 }

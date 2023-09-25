@@ -18,7 +18,7 @@ import java.util.Optional;
 @Tag(name = "Spending", description = "Spending API")
 @RequestMapping("/spending")
 @RequiredArgsConstructor
-@CrossOrigin("*")
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @Slf4j
 public class SpendingController {
     private final SpendingService spendingService;

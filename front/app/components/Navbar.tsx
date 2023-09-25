@@ -19,7 +19,10 @@ const Navbar = () => {
 
   return (
     <>
-      {pathname !== '/login' && pathname !== '/regist' ? (
+      {pathname !== '/login' &&
+      pathname !== '/regist' &&
+      pathname !== '/seesawbank' &&
+      pathname !== '/user/installment' ? (
         <div className="btm-nav bg-white">
           <NavbarButton
             icon="wallet"

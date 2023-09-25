@@ -44,7 +44,7 @@ const spendingList: Spending[] = [
     memberEmail: 'doacha@seesaw.com',
   },
 ]
-const Home = () => {
+const HomePage = () => {
   const [sort, setSort] = useState('최신순')
   // 카테고리 클릭 시 해당 캡슐 색상 변하고
   const clickReport = () => {
@@ -162,4 +162,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default HomePage
