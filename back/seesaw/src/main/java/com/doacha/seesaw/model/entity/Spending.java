@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Data
@@ -44,6 +42,8 @@ public class Spending {
     @JoinColumn(name="member_email",nullable = false)
     private Member member;
 
-
+    @ManyToOne
+    @JoinColumn(name="record_id")
+    private Record record;
 
 }

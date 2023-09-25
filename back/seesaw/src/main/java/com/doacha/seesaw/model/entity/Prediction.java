@@ -18,7 +18,7 @@ public class Prediction {
     @Schema(description = "사용자 이메일", example = "doacha@seesaw.com", required = true)
     private Member member;
 
-    @Column(name="prediction_date")
+    @Column(name="prediction_date",nullable = false)
     private Timestamp predictionDate;
 
     @Column(name = "prediction_unclassified", nullable = false)
@@ -47,7 +47,6 @@ public class Prediction {
 
     @Column(name = "prediction_transportation", nullable = false)
     private int predictionTransportation;
-
     @Column(name = "prediction_car", nullable = false)
     private int predictionCar;
 
@@ -80,6 +79,10 @@ public class Prediction {
 
     @Column(name="prediction_convenience",nullable = false)
     private int predictionConvenience;
+
+
+
+
 
 
 }

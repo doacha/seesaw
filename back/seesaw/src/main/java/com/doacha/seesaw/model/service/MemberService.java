@@ -8,6 +8,7 @@ import com.doacha.seesaw.redis.RedisDao;
 import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MemberRepository;
 //import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
@@ -75,6 +77,7 @@ public class MemberService {
     // 마이페이지 내 정보
     @Transactional
     public MyPageInfoResponse myPageInfo(String memberEmail) {
+        log.info("사용자 이메일 - ", memberEmail);
         Member member = memberRepository
                 .findByMemberEmail(memberEmail)
                 .orElseThrow(() -> new BadRequestException("유효하지 않은 사용자입니다."));

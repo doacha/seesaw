@@ -9,8 +9,6 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Entity
@@ -42,10 +40,6 @@ public class Record {
     @ColumnDefault("0")
     @Comment("0: 진행중 , 1: 성공, 2: 실패")
     private int recordStatus;
-
-    @ManyToOne
-    @JoinColumn(name="spending_id", referencedColumnName = "spending_id")
-    private Spending spending;
 
     @ManyToOne
     @JoinColumns({

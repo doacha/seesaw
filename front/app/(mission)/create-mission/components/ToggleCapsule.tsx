@@ -11,18 +11,19 @@
 // select : 선택된 상태인지 여부에 대한 초기값 설정
 // type : 캡슐에 저장되는 데이터의 종류, 미션 파트에서만 사용
 ////////////////////////////////////////////////////////////////////////////////////////////////
-import { capsuleColor } from '../lib/constants'
-import { useState } from 'react'
+import { capsuleColor } from '@/app/lib/constants'
+import type { MissionCreate } from '@/app/types'
 const ToggleCapsule = ({
   bgColor,
   textColor,
   isHasBorder,
   isSmall,
-  onClick,
-  content,
+  children,
   className,
   value,
-  select,
+  isSelected,
+  setState,
+  state,
   type,
 }: {
   bgColor: string
@@ -30,37 +31,39 @@ const ToggleCapsule = ({
   isHasBorder?: boolean
   isSmall?: boolean
   onClick?: any
-  content?: string
-  className?: string | string[]
+  children: string
+  className?: string
   value: number
   select?: boolean
-  type?: string
+  isSelected: boolean
+  setState: React.Dispatch<React.SetStateAction<MissionCreate>>
+  state: MissionCreate
+  type: string
 }) => {
-  const [backgroundColor, setBackgroundColor] = useState(bgColor)
-  const [fontColor, setFontColor] = useState(textColor)
-  const [isSelected, setIsSelected] = useState(select ?? false)
+  let backgroundColor
+  let fontColor
 
-  const handleClick = (id: number | undefined) => {
+  const handleClick = () => {
     if (isSelected) {
-      setBackgroundColor(bgColor)
-      setFontColor(textColor)
+      setState({ ...state, [type]: -1 })
     } else {
-      console.log('textColor is ', textColor)
-      if (textColor === 'black') {
-        setBackgroundColor('primary-container')
-        setFontColor('black')
-      } else {
-        setBackgroundColor(textColor)
-        setFontColor('background')
-      }
+      setState({ ...state, [type]: value })
     }
-
-    if (onClick) {
-      if (id === undefined) return
-      onClick(id, isSelected, type)
-    }
-    setIsSelected(!isSelected)
   }
+
+  if (!isSelected) {
+    backgroundColor = bgColor
+    fontColor = textColor
+  } else {
+    if (textColor === 'black') {
+      backgroundColor = 'primary-containar'
+      fontColor = 'black'
+    } else {
+      backgroundColor = textColor
+      fontColor = 'background'
+    }
+  }
+
   const tailwindBorder = isHasBorder ? 'border-[0.5px]' : 'border-0'
   const tailwindFontSize = isSmall
     ? 'text-[10px] h-4 py-[3px]'
@@ -79,9 +82,9 @@ const ToggleCapsule = ({
           ? capsuleColor.text['background']
           : capsuleColor.text[fontColor]
       } ${tailwindBorder} ${tailwindFontSize} ${className}`}
-      onClick={() => handleClick(value)}
+      onClick={handleClick}
     >
-      {content}
+      {children}
     </span>
   )
 }
