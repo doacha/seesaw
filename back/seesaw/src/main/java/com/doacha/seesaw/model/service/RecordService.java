@@ -3,7 +3,9 @@ package com.doacha.seesaw.model.service;
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.mission.GetMyMissionDataRequest;
 import com.doacha.seesaw.model.dto.record.*;
+import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.model.entity.Record;
+import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MissionRepository;
 import com.doacha.seesaw.repository.RecordRepository;
 import lombok.Builder;
@@ -12,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -24,6 +28,8 @@ public class RecordService {
 
     @Autowired
     RecordRepository recordRepository;
+    @Autowired
+    MemberMissionRepository memberMissionRepository;
 
     @Autowired
     MissionRepository missionRepository;
@@ -180,8 +186,22 @@ public class RecordService {
         return savingList;
     }
 
-    // 미션 상세 - 나의 현황 - 회차별 소비 내역 및 미션 성공 여부
-//    public List<Integer> getSpendingList(GetMyMissionDataRequest getMyMissionDataRequest) {
-//
-//    }
+    // 완료 미션 레코드 상세 리스트
+    public List<EndRecordListResponse> getEndRecordList(EndRecordListRequest endRecordListRequest){
+        MemberMission memberMission = memberMissionRepository.findByMissionIdAndMemberEmail(endRecordListRequest.getMissionId(), endRecordListRequest.getMemberEmail());
+        List<Record> recordList = recordRepository.findRecordByMemberMissionOrderByRecordStartDateDesc(memberMission);
+        List<EndRecordListResponse> endRecordListResponseList = new ArrayList<>();
+        for(Record record : recordList){
+            endRecordListResponseList.add(new EndRecordListResponse(
+                    record.getRecordNumber(),
+                    record.getRecordTotalCost(),
+                    record.getRecordStartDate(),
+                    record.getRecordEndDate(),
+                    record.getRecordContent(),
+                    record.getRecordStatus()
+            ));
+        }
+        return endRecordListResponseList;
+    }
+
 }
