@@ -32,7 +32,7 @@ const Navbar = () => {
           <NavbarButton
             icon="flag"
             activated={currentTab === 'mission' ? true : false}
-            onTabClick={() => onTabClick('mission')}
+            onTabClick={() => onTabClick('mission-landing')}
           />
           <NavbarButton
             icon="user"
