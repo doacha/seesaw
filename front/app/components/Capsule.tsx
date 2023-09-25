@@ -16,7 +16,7 @@ const Capsule = ({
   isHasBorder,
   isSmall,
   onClick,
-  content,
+  children,
   className,
 }: {
   bgColor: string
@@ -24,7 +24,7 @@ const Capsule = ({
   isHasBorder?: boolean
   isSmall?: boolean
   onClick?: any
-  content?: string
+  children: string
   className?: string
   value?: number
 }) => {
@@ -38,7 +38,7 @@ const Capsule = ({
       className={`badge px-[15px] ${capsuleColor.bg[bgColor]} ${capsuleColor.text[textColor]} ${tailwindBorder} ${tailwindFontSize} ${className}`}
       onClick={onClick}
     >
-      {content}
+      {children}
     </span>
   )
 }
