@@ -3,50 +3,34 @@ import ImageUpload from './ImageUpload'
 import { useState } from 'react'
 import Button from '@/app/components/Button'
 import Birth from '@/app/regist/components/Birth'
+import { profileEditInfoStore } from '@/stores/profileEditInfo'
 
 interface Props {
   setOpenEditPage: () => void
 }
 
 const ProfileEditCard = (props: Props) => {
-  const [newNickname, setNewNickname] = useState<string>('')
-  const [prevPassword, setPrevPassword] = useState<string>('')
-  const [newPassword, setNewPassword] = useState<string>('')
-  const [confirmPassword, setConfirmPassword] = useState<string>('')
-  const [phoneNumber, setPhoneNumber] = useState<string>('')
-  const [birth, setBirth] = useState<string[]>([])
+  const {
+    newNickname,
+    prevPassword,
+    newPassword,
+    confirmPassword,
+    phoneNumber,
+    birth,
+    setProfileEditInfo,
+    setBirthInfo,
+  } = profileEditInfoStore()
 
-  const onNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewNickname(e.target.value)
-  }
-
-  const onNicknameCheckClick = () => {}
-
-  const onPrevPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPrevPassword(e.target.value)
-  }
-
-  const onNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewPassword(e.target.value)
-  }
-
-  const onConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setConfirmPassword(e.target.value)
-  }
-
-  const onPhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumber(e.target.value)
+  const onInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.name, e.target.value)
+    setProfileEditInfo(e.target.name, e.target.value)
   }
 
   const onBirthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (e.target.name === 'year') {
-      birth.splice(0, 1, e.target.value)
-    } else if (e.target.name === 'month') {
-      birth.splice(1, 1, e.target.value)
-    } else {
-      birth.splice(2, 1, e.target.value)
-    }
+    setBirthInfo(e)
   }
+
+  const onNicknameCheckClick = () => {}
 
   const onSubmitButtonClick = () => {}
 
@@ -59,7 +43,8 @@ const ProfileEditCard = (props: Props) => {
         type="text"
         label="닉네임"
         value={newNickname}
-        onChange={onNicknameChange}
+        name="newNickname"
+        onChange={onInfoChange}
         submitButton={
           <Button
             color="primary"
@@ -76,7 +61,8 @@ const ProfileEditCard = (props: Props) => {
           type="password"
           label="비밀번호"
           value={prevPassword}
-          onChange={onPrevPasswordChange}
+          name="prevPassword"
+          onChange={onInfoChange}
         />
 
         <Input
@@ -84,7 +70,8 @@ const ProfileEditCard = (props: Props) => {
           placeholder="새 비밀번호"
           type="password"
           value={newPassword}
-          onChange={onNewPasswordChange}
+          name="newPassword"
+          onChange={onInfoChange}
         />
 
         <div>
@@ -93,7 +80,8 @@ const ProfileEditCard = (props: Props) => {
             placeholder="비밀번호 확인"
             type="password"
             value={confirmPassword}
-            onChange={onConfirmPasswordChange}
+            name="confirmPassword"
+            onChange={onInfoChange}
           />
           {confirmPassword === '' ? null : confirmPassword !== newPassword ? (
             <div className="relative ml-2 mt-1">
@@ -115,7 +103,8 @@ const ProfileEditCard = (props: Props) => {
           type="text"
           label="전화번호"
           value={phoneNumber}
-          onChange={onPhoneNumberChange}
+          name="phoneNumber"
+          onChange={onInfoChange}
         />
         <div>
           <Birth onChange={onBirthChange} />
