@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 
 import ReportVerticalGraphBar from './ReportVerticalGraphBar'
-import ReportTab from './ReportTab'
+import ReportTab from './ReportVerticalTab'
 import { Spending } from '@/app/types'
 import MonthSumGraphCard from './MonthSumGraphCard'
 
@@ -46,10 +46,6 @@ const SumGraphCard = ({
     setLengthList(tmpLengthList)
     // Todo ㅎㅎ 이거 계산 어떻게 해?
     // setMeanLength('top-[' + Math.round(mean / amountList.length) + 'px]')
-
-    console.log(tmpLengthList)
-    console.log(mean)
-    console.log(meanLenght)
   }, [])
 
   return (

@@ -5,8 +5,6 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
 import DoughnutChart from './DoughnutChart'
 
-import { Doughnut } from 'react-chartjs-2'
-
 // 가져오는 데이터
 import { categorySumList } from '@/app/dummies'
 
@@ -38,7 +36,7 @@ const DoughtnutChartCard = () => {
             {categorySumList
               .slice(0, isOpened ? categorySumList.length : 5)
               .map((element, idx) => (
-                <div className="flex justify-between">
+                <div key={idx} className="flex justify-between">
                   <div className="flex flex-row my-1">
                     <div className="flex w-8 mr-2">
                       <div className="flex mx-auto">

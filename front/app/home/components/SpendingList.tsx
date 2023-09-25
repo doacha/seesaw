@@ -1,12 +1,12 @@
 'use client'
 
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Card from '@/app/components/Card'
 import { iconColors } from '@/app/lib/constants'
 import { categoryIcon } from '@/app/lib/constants'
 import { Spending } from '@/app/types'
 
-import { useState } from 'react'
 import DetailModal from './DetailModal'
 
 interface SpendingListProps {
@@ -26,8 +26,6 @@ const SpendingList = ({
   formatDayTime,
   newSelected,
 }: SpendingListProps) => {
-  console.log('무한?')
-
   const [open, setOpen] = useState<boolean>(false)
   const [selectedSpendingId, setSelectedSpendingId] = useState<number>(0)
   const handleToggle = (spendingId: number) => {
@@ -52,6 +50,7 @@ const SpendingList = ({
                     {data.map((spending) => (
                       // 화살표 함수 쓴이유..? 안쓰면 어떻게 되는데?
                       <div
+                        key={spending.spendingId}
                         onClick={() =>
                           handleToggle(spending.spendingId as number)
                         }
@@ -99,6 +98,7 @@ const SpendingList = ({
           <div className="p-5">
             {spendingList.map((spending, idx) => (
               <div
+                key={idx}
                 onClick={() => handleToggle(spending.spendingId as number)}
                 className="h-9 flex w-full flex-row gap-5 mb-3"
               >

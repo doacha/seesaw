@@ -47,7 +47,7 @@ const DoughnutChart = () => {
     )
     return total as number
   }
-
+  // 도넛 part 별 퍼센트 비율 나타내기
   const options = {
     plugins: {
       legend: {
@@ -66,6 +66,7 @@ const DoughnutChart = () => {
       },
     },
   }
+  // 도넛 가운데에 가장 많이 사용한 카테고리 비율 텍스트 추가
   const textCenter = {
     id: 'textCenter',
     beforeDatasetsDraw(chart: any) {
