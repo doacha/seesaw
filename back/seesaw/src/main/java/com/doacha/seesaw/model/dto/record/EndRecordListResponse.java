@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,10 +20,10 @@ public class EndRecordListResponse {
     private int recordTotalCost;
 
     @Schema(description = "시작일", example = "1", required = true)
-    private String startDate;
+    private Date startDate;
 
     @Schema(description = "끝일", example = "9000", required = true)
-    private String EndDate;
+    private Date EndDate;
 
     @Schema(description = "글 내용", example = "오늘 봉준이형이 5000원을 뜯어갔다.", required = true)
     private String recordContent;

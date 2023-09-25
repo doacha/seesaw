@@ -28,6 +28,7 @@ public class RecordService {
 
     @Autowired
     RecordRepository recordRepository;
+    @Autowired
     MemberMissionRepository memberMissionRepository;
 
     @Autowired
@@ -188,15 +189,18 @@ public class RecordService {
     // 완료 미션 레코드 상세 리스트
     public List<EndRecordListResponse> getEndRecordList(EndRecordListRequest endRecordListRequest){
         MemberMission memberMission = memberMissionRepository.findByMissionIdAndMemberEmail(endRecordListRequest.getMissionId(), endRecordListRequest.getMemberEmail());
-        List<Record> recordList = recordRepository.findRecordByMemberMission(memberMission);
+        List<Record> recordList = recordRepository.findRecordByMemberMissionOrderByRecordStartDateDesc(memberMission);
         List<EndRecordListResponse> endRecordListResponseList = new ArrayList<>();
-//        for(Record record : recordList){
-//            endRecordListResponseList.add(new EndRecordListResponse(
-//                    record.getRecordNumber(),
-//                    record.getRecordTotalCost(),
-//
-//            ))
-//        }
+        for(Record record : recordList){
+            endRecordListResponseList.add(new EndRecordListResponse(
+                    record.getRecordNumber(),
+                    record.getRecordTotalCost(),
+                    record.getRecordStartDate(),
+                    record.getRecordEndDate(),
+                    record.getRecordContent(),
+                    record.getRecordStatus()
+            ));
+        }
         return endRecordListResponseList;
     }
 
