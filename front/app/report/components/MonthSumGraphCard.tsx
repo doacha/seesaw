@@ -36,7 +36,8 @@ const MonthSumGraphCard: React.FC<MonthSumGraphCardProps> = ({
     }
 
     setLengthList(tmpLengthList)
-    setMeanLength('h-[' + Math.round(mean / valuesArray.length) + 'px]')
+    // Todo 빨간줄 위치는 어디?
+    setMeanLength('t-[' + Math.round(mean / valuesArray.length) + 'px]')
 
     console.log(tmpLengthList)
     console.log(mean)
@@ -44,8 +45,8 @@ const MonthSumGraphCard: React.FC<MonthSumGraphCardProps> = ({
 
   return (
     <>
-      <div className="w-full">
-        <div className="flex justify-between h-fit bg-blue-100 m-5 px-5 pt-10 pb-5 rounded-lg">
+      <div className="w-full flex">
+        <div className="flex w-full h-[300px] justify-between bg-blue-100 m-5 px-5 pt-10 pb-5 rounded-lg overflow-auto">
           {valuesArray.map((amount, index) => (
             <>
               <div className="flex items-end justify-between">
@@ -73,8 +74,11 @@ const MonthSumGraphCard: React.FC<MonthSumGraphCardProps> = ({
         </div>
       </div>
       <div className="mx-5 mb-5 p-2 bg-slate-100 rounded-lg flex justify-between">
-        <div className="ml-1 my-auto font-scDreamRegular text-xs">
-          평균지출금액
+        <div className="flex flex-row">
+          <div className=" bg-error mx-auto my-auto w-[15px] h-[5px] rounded-md"></div>
+          <div className="ml-1 my-auto font-scDreamRegular text-xs">
+            평균지출금액
+          </div>
         </div>
         <div className="my-auto text-xs font-scDreamExBold">
           {Math.round(averageAmount()).toLocaleString('ko-KR')}원
