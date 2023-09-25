@@ -78,7 +78,10 @@ const ReportPage = () => {
         {/* reportHeader prop으로 spend만 보낼까..? spend도 보내지 말까? 뭐가 좋은 방법일까 이건 좀 고민... */}
         <div className="flex h-32 bg-white">
           {spend.map((spending, key) => (
-            <div className="h-full flex flex-col justify-between mx-5">
+            <div
+              key={key}
+              className="h-full flex flex-col justify-between mx-5"
+            >
               <div className="my-auto">
                 <div className="flex flex-row gap-3 mb-1">
                   <button

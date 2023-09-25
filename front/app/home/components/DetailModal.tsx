@@ -1,15 +1,14 @@
 'use client'
-
+import Swal from 'sweetalert2'
 import Button from '@/app/components/Button'
-import Card from '@/app/components/Card'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencil, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
-
 import { spendingList } from '@/app/dummies'
 
+import SpendingCostInput from './SpendingCostInput'
+import Input from './Input'
+import DateInput from './DateInput'
+
 type Props = {
-  children?: React.ReactNode
   open: boolean
   handleToggle: () => void
   selectedSpendingId: number
@@ -25,65 +24,82 @@ const formatDate = (date: Date): string => {
     hour: 'numeric',
     minute: 'numeric',
   }
-
   const formatter = new Intl.DateTimeFormat('ko-KR', options)
   return formatter.format(date)
 }
-
+// 백엔드 통신을 통한 데이터를 가져와서 바꿔줘야 함
 const formattedDate =
   spendingList[0].spendingDate &&
   formatDate(new Date(spendingList[0].spendingDate))
 
-const DetailModal = ({
-  children,
-  open,
-  handleToggle,
-  selectedSpendingId,
-}: Props) => {
+const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
   const [clickPen, setClickPen] = useState(false)
-  const [clickAcc, setClickAcc] = useState(false)
-  const [clickDa, setClickDa] = useState(false)
   const [clickCate, setClickCate] = useState(false)
-  const [spendingId, setSpendingId] = useState(0)
-  const [newData, setNewData] = useState('')
+
+  // 아 api로 받은 데이터를 넣으면 되는거야
+  const [userInput, setUserInput] = useState({
+    spendingId: { selectedSpendingId },
+    spendingTitle: '',
+    spendingCost: 0,
+    spendingDate: formattedDate,
+    spendingMemo: '',
+    spendingCategoryId: 0,
+    memberEmail: '',
+  })
+
+  const {
+    spendingId,
+    spendingTitle,
+    spendingCost,
+    spendingDate,
+    spendingMemo,
+    spendingCategoryId,
+    // 여기서 email은 redux에 저장된 이메일이겠죠?
+    memberEmail,
+  } = userInput
+
+  const handleInput = (e: any) => {
+    const { name, value } = e.target
+    setUserInput({ ...userInput, [name]: value })
+  }
 
   const clickPencil = () => {
     setClickPen(!clickPen)
     console.log('수정버튼 클릭')
   }
-  const clickAccount = () => {
-    setClickAcc(!clickAcc)
-    console.log('거래처 클릭')
-  }
 
   const clickCategory = () => {
     setClickCate(!clickCate)
-  }
-  const clickDate = () => {
-    setClickDa(!clickDa)
-  }
-  const handleUpdate = (e: any) => {
-    setNewData(e.target.value)
   }
 
   const clickDetele = () => {
     console.log('삭제 클릭')
   }
   const clickSave = () => {
-    console.log('저장클릭')
+    console.log(userInput)
+    if (spendingCost === 0) {
+      Swal.fire({
+        width: 300,
+        text: '금액을 입력해주세요!',
+        icon: 'error',
+      })
+    } else if (spendingTitle === '') {
+      Swal.fire({
+        width: 300,
+        text: '거래처를 입력해주세요!',
+        icon: 'error',
+      })
+    }
   }
-
   let modalClass = 'modal sm:modal-middle'
 
   // open 속성이 true인 경우 'modal-open' 클래스를 추가합니다.
   if (open) {
     modalClass += ' modal-open'
   }
-  console.log(selectedSpendingId)
 
   return (
     <div className={modalClass}>
-      {/* we want any content for this modal layout so we just pass the children */}
       <div className="modal-box bg-white">
         <button
           className="btn btn-lg btn-circle btn-ghost absolute right-2 top-2"
@@ -94,35 +110,21 @@ const DetailModal = ({
         <h3 className="font-bold text-lg font-scDreamRegular">거래처</h3>
         <div className="h-[1px] bg-outline rounded-full mt-2"></div>
         <div className="py-4">
+          {/* 그러면 spendingList가 필요없을 것 같은데? 백엔드 데이터를 가져와야해 */}
           {spendingList.map((spending, key) => (
             <>
               {spending.spendingId === selectedSpendingId && (
                 <>
-                  <div key={key} className="flex mb-14 flex-row gap-5">
-                    {clickPen ? (
-                      <input
-                        type="number"
-                        id="small-input"
-                        className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 "
-                        value={newData}
-                        onChange={handleUpdate}
-                      />
-                    ) : (
-                      <span className="font-envR text-3xl">
-                        {spending.spendingCost &&
-                          spending.spendingCost.toLocaleString('ko-KR')}
-                        원
-                      </span>
-                    )}
-                    <div className="flex my-auto" onClick={clickPencil}>
-                      <FontAwesomeIcon
-                        icon={faPencil}
-                        size="xl"
-                        style={{ color: '#001b2a' }}
-                      />
-                    </div>
-                  </div>
-                  <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
+                  <SpendingCostInput
+                    value={spending.spendingCost as number}
+                    onChange={handleInput}
+                  />
+
+                  {/* 카테고리 들어갈 곳 */}
+                  <div
+                    key={key}
+                    className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container"
+                  >
                     <div className="w-28">
                       <p className="font-scDreamExBold text-base">카테고리</p>
                     </div>
@@ -132,91 +134,27 @@ const DetailModal = ({
                     </div>
                   </div>
 
-                  <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
-                    <div className="w-28">
-                      <p className="font-scDreamExBold text-base">거래처</p>
-                    </div>
-                    <div className="flex my-auto w-full justify-between">
-                      {clickAcc ? (
-                        <p className="font-scDreamLight text-base">
-                          {spending.spendingTitle}
-                        </p>
-                      ) : (
-                        <input
-                          className="w-full mr-5"
-                          type="text"
-                          value={spending.spendingTitle}
-                          onChange={handleUpdate}
-                        ></input>
-                      )}
-                      <div onClick={clickAccount} className="ml-1">
-                        {clickAcc ? (
-                          <FontAwesomeIcon
-                            icon={faChevronRight}
-                            style={{ color: '#001b2a' }}
-                          />
-                        ) : (
-                          <FontAwesomeIcon
-                            icon={faChevronRight}
-                            style={{ color: '#001b2a' }}
-                            rotation={90}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  <Input
+                    title="거래처"
+                    type="text"
+                    name="spendingTitle"
+                    value={spending.spendingTitle as string}
+                    onChange={handleInput}
+                  />
 
-                  <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
-                    <div className="w-28">
-                      <p className="font-scDreamExBold text-base my-auto">
-                        날짜
-                      </p>
-                    </div>
-                    <div className="flex my-auto w-full justify-between">
-                      {clickDa ? (
-                        <p className="my-auto font-scDreamLight text-xs">
-                          {formattedDate}
-                        </p>
-                      ) : (
-                        <input
-                          className="w-full mr-5 font-scDreamLight text-xs"
-                          type="datetime-local"
-                          // value={formattedDate}
-                        ></input>
-                      )}
-                      <div onClick={clickDate} className="ml-1">
-                        {clickDa ? (
-                          <FontAwesomeIcon
-                            icon={faChevronRight}
-                            style={{ color: '#001b2a' }}
-                          />
-                        ) : (
-                          <FontAwesomeIcon
-                            icon={faChevronRight}
-                            style={{ color: '#001b2a' }}
-                            rotation={90}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  {/* 날짜 입력 */}
+                  <DateInput
+                    value={formattedDate as string}
+                    onChange={handleInput}
+                  />
 
-                  <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
-                    <div className="w-28">
-                      <p className="font-scDreamExBold text-base">메모</p>
-                    </div>
-                    <div className="flex my-auto w-full justify-between">
-                      <p className="font-scDreamLight text-sm">
-                        {spending.spendingMemo}
-                      </p>
-                      <div className="ml-1">
-                        <FontAwesomeIcon
-                          icon={faChevronRight}
-                          style={{ color: '#001b2a' }}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <Input
+                    title="메모"
+                    type="text"
+                    name="spendingMemo"
+                    value={spending.spendingMemo as string}
+                    onChange={handleInput}
+                  />
                 </>
               )}
             </>

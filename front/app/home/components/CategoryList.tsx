@@ -2,14 +2,13 @@
 
 import ToggleCapsule from '@/app/components/ToggleCapsule'
 import { categoryList } from '@/app/lib/constants'
-import styles from './Home.module.css'
-// interface CategoryListProps {
-//   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
-// }
+import styles from '../styles/Home.module.css'
+
+// Todo. category mapping이 전혀 안됨.
 interface CategoryListProps {
   onClick: any
 }
-const CategoryList = ({ onClick }: { onClick: any }) => {
+const CategoryList = ({ onClick }: CategoryListProps) => {
   // const onClick = (e: any) => {
   //   console.log(e.target.innerText)
   //   console.log('클릭')
