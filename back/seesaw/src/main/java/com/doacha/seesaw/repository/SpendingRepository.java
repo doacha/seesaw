@@ -1,4 +1,5 @@
 package com.doacha.seesaw.repository;
+import com.doacha.seesaw.model.dto.mission.MissionStatsResponse;
 import com.doacha.seesaw.model.dto.spending.DailySpendingSumResponse;
 import com.doacha.seesaw.model.dto.spending.MonthCategoryResponse;
 import com.doacha.seesaw.model.dto.spending.MonthSpendingResponse;
@@ -9,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
+
 
 public interface SpendingRepository extends JpaRepository<Spending, Long> {
     @Query("SELECT new com.doacha.seesaw.model.dto.spending.MonthSpendingResponse(s.spendingId, s.spendingTitle,s.spendingCost,s.spendingDate,s.spendingCategoryId,s.member.memberEmail)FROM Spending s WHERE s.member.memberEmail = :memberEmail AND YEAR(s.spendingDate) = :SpendingYear AND MONTH(s.spendingDate) = :SpendingMonth "+
@@ -34,5 +35,15 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
     @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MonthCategoryResponse(SUM(s.spendingCost) AS spendingCostSum, MONTH(s.spendingDate) AS spendingMonth,s.member.memberEmail,s.spendingCategoryId)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingMonth GROUP BY s.spendingCategoryId, s.member.memberEmail")
     List<MonthCategoryResponse> findMonthSumByCategory(@Param("memberEmail")String memberEmail, @Param("spendingYear") int spendingYear, @Param("spendingMonth")int spendingMonth);
 
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MissionStatsResponse(s.member.memberEmail, SUM(s.spendingCost) AS sum, " +
+            "(SELECT AVG(s2.spendingCost) FROM Spending s2 WHERE s2.spendingCategoryId = s.spendingCategoryId AND s2.record.memberMission.mission.missionId = :missionId ) AS missionAvg, " +
+            "s.spendingCategoryId AS categoryId) " +
+            "FROM Spending s " +
+            "WHERE s.member.memberEmail = :memberEmail " +
+            "  AND s.record.memberMission.mission.missionId = :missionId " +
+            "GROUP BY s.member.memberEmail, s.spendingCategoryId")
+    MissionStatsResponse getCategorySumAndAverageByMissionAndMember(@Param("memberEmail") String memberEmail, @Param("missionId") String missionId);
+
 
 }
+

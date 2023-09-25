@@ -42,6 +42,8 @@ public class Spending {
     @JoinColumn(name="member_email",nullable = false)
     private Member member;
 
-
+    @ManyToOne
+    @JoinColumn(name="record_id")
+    private Record record;
 
 }

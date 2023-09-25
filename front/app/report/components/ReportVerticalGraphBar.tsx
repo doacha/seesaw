@@ -16,7 +16,7 @@ const ReportVerticalGraphBar = (props: Props) => {
       case 'tab1':
         return (
           <div className="flex flex-col items-center">
-            {/* 월이면 w-10px, 일이면 5px, 주면 w-15 */}
+            {/* 월이면 w-20px, 일이면 10px, 주면 w-30 */}
             {props.amount && props.round === props.amountListLength - 1 && (
               <div
                 className="tooltip tooltip-open"
