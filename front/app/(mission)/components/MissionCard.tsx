@@ -55,18 +55,12 @@ const MissionCard = ({ data }: { data: MissionCardProps }) => {
           {dummyMissionCard.missionTitle}
         </div>
         <div className="flex gap-2.5 mb-2.5">
-          <Capsule
-            bgColor="background-fill"
-            textColor="black"
-            isSmall={true}
-            content={`${dummyMissionCard.missionPeriod}일당 하루`}/
-          >
-          <Capsule
-            bgColor="background-fill"
-            textColor="black"
-            isSmall={true}
-            content={`${dummyMissionCard.missionCycle}회`}
-          />
+          <Capsule bgColor="background-fill" textColor="black" isSmall={true}>
+            {`${dummyMissionCard.missionPeriod}일당 하루`}
+          </Capsule>
+          <Capsule bgColor="background-fill" textColor="black" isSmall={true}>
+            {`${dummyMissionCard.missionCycle}회`}
+          </Capsule>
         </div>
         <div className="text-[10px] text-outline mb-2.5">{`${dummyMissionCard.missionLimit.toLocaleString(
           'ko-KR',
