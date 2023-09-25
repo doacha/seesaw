@@ -9,7 +9,10 @@ import com.doacha.seesaw.repository.SpendingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -133,24 +136,26 @@ public class MissionService {
     }
 
     public MissionRankingResponse getMissionRanking(String missionId){
-        MissionTopSpendingResponse missionTopSpenderResult =  recordRepository.getMissionTopSpender(missionId);
-        MissionFrugalSpendingResponse missionFrugalSpenderResult = recordRepository.getMissionFrugalSpender(missionId);
-        DailyTopSpendingResponse dailyTopSpenderResult = recordRepository.getDailyTopSpender(missionId);
-//        if (!missionTopSpenderResult.isEmpty()&&!missionFrugalSpenderResult.isEmpty()&&!dailyTopSpenderResult.isEmpty()) {
+        Pageable pageable = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "missionTopSpending"));
+        Page<MissionTopSpendingResponse> missionTopSpenderResult =  recordRepository.getMissionTopSpender(missionId,pageable);
+        pageable = PageRequest.of(0, 1, Sort.by(Sort.Direction.ASC, "missionFrugalSpending"));
+        Page<MissionFrugalSpendingResponse> missionFrugalSpenderResult = recordRepository.getMissionFrugalSpender(missionId,pageable);
+        pageable = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "dailyTopSpending"));
+        Page<DailyTopSpendingResponse> dailyTopSpenderResult = recordRepository.getDailyTopSpender(missionId,pageable);
             MissionRankingResponse missionRankingResponse = MissionRankingResponse.builder()
-                    .missionTopSpender(missionTopSpenderResult.getMissionTopSpender())
-                    .missionTopSpending(missionTopSpenderResult.getMissionTopSpending())
-                    .missionFrugalSpender(missionFrugalSpenderResult.getMissionFrugalSpender())
-                    .missionFrugalSpending(missionFrugalSpenderResult.getMissionFrugalSpending())
-                    .dailyTopSpender(dailyTopSpenderResult.getDailyTopSpender())
-                    .dailyTopSpending(dailyTopSpenderResult.getDailyTopSpending())
-                    .dailyTopSpendingNum(dailyTopSpenderResult.getDailyTopSpendingNum())
+                    .missionTopSpender(missionTopSpenderResult.getContent().get(0).getMissionTopSpender())
+                    .missionTopSpending(missionTopSpenderResult.getContent().get(0).getMissionTopSpending())
+                    .missionFrugalSpender(missionFrugalSpenderResult.getContent().get(0).getMissionFrugalSpender())
+                    .missionFrugalSpending(missionFrugalSpenderResult.getContent().get(0).getMissionFrugalSpending())
+                    .dailyTopSpender(dailyTopSpenderResult.getContent().get(0).getDailyTopSpender())
+                    .dailyTopSpending(dailyTopSpenderResult.getContent().get(0).getDailyTopSpending())
+                    .dailyTopSpendingNum(dailyTopSpenderResult.getContent().get(0).getDailyTopSpendingNum())
                     .build();
             return missionRankingResponse;
-//
     }
+    // 미션 통계 내에 나의 순위
     public MyMissionRankingResponse getMyMissionRanking(String missionId, String memberEmail){
-        List<MyMissionRankingResponse> missionRankingList = recordRepository.getMissionRanking(missionId);
+        List<MyMissionRankingResponse> missionRankingList = recordRepository.getMyMissionRanking(missionId);
         MyMissionRankingResponse myMissionRankingResponse = null;
         for(MyMissionRankingResponse missionRankingResponse : missionRankingList){
             if(missionRankingResponse.getMemberEmail().equals(memberEmail)){
@@ -166,6 +171,27 @@ public class MissionService {
         MyMissionAverageResponse myMissionAverageResponse = recordRepository.getMyMissionAverage(missionId,memberEmail);
         return myMissionAverageResponse;
     }
+
+//    public CompareMissionResponse getCompareMissionAverage(String missionId){
+//        CompareMissionDto compareMissionResponse = recordRepository.getCompareMission(missionId);
+//        Optional<Mission> mission = missionRepository.findById(missionId);
+//        if(mission.isPresent()) {
+//            int categoryId = mission.get().getMissionCategoryId();
+//            int missionPeriod= mission.get().getMissionPeriod();
+//            Long count = recordRepository.countByCategoryIdAndDay(categoryId);
+//            Long sum = recordRepository.sumByCategoryId(categoryId);
+//            CompareMissionResponse realCompareMissionResponse = CompareMissionResponse.builder()
+//                    .missionId(compareMissionResponse.getMissionId())
+//                    .missionAverage(compareMissionResponse.getMissionAverage())
+//                    .entireAverage((double)sum/(double)count * (double)missionPeriod)
+//                    .build();
+//            return realCompareMissionResponse;
+//        }
+//        else{
+//            return null;
+//        }
+//    }
+
 
 
 }
