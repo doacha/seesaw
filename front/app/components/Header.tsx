@@ -7,7 +7,6 @@ interface Props {
   backButton?: boolean
   plusButton?: boolean
   route?: string
-  path?: string
 }
 
 const Header = (props: Props) => {
