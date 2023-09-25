@@ -1,5 +1,6 @@
 package com.doacha.seesaw.repository;
 import com.doacha.seesaw.model.dto.mission.MissionStatsResponse;
+import com.doacha.seesaw.model.dto.mission.MyMissionRankingResponse;
 import com.doacha.seesaw.model.dto.spending.DailySpendingSumResponse;
 import com.doacha.seesaw.model.dto.spending.MonthCategoryResponse;
 import com.doacha.seesaw.model.dto.spending.MonthSpendingResponse;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface SpendingRepository extends JpaRepository<Spending, Long> {
@@ -29,6 +31,9 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
     // 해당 월지출 합계
     @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MonthSpendingSumResponse(SUM(s.spendingCost) AS spendingCostSum, MONTH(s.spendingDate) AS spendingMonth,s.member.memberEmail)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingMonth GROUP BY MONTH(s.spendingDate),s.member.memberEmail")
     MonthSpendingSumResponse findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(@Param("memberEmail")String memberEmail, @Param("spendingYear") int spendingYear, @Param("spendingMonth")int spendingMonth);
+    // 전 달이 존재하지 않을 경우
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MonthSpendingSumResponse(SUM(s.spendingCost) AS spendingCostSum, MONTH(s.spendingDate) AS spendingMonth,s.member.memberEmail)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingMonth GROUP BY MONTH(s.spendingDate),s.member.memberEmail")
+    Optional<MonthSpendingSumResponse> findPastMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(@Param("memberEmail")String memberEmail, @Param("spendingYear") int spendingYear, @Param("spendingMonth")int spendingMonth);
 
 
     // 월간 카테고리별 합계
@@ -43,6 +48,11 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
             "  AND s.record.memberMission.mission.missionId = :missionId " +
             "GROUP BY s.member.memberEmail, s.spendingCategoryId")
     MissionStatsResponse getCategorySumAndAverageByMissionAndMember(@Param("memberEmail") String memberEmail, @Param("missionId") String missionId);
+
+
+
+
+
 
 
 }
