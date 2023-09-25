@@ -3,13 +3,17 @@ package com.doacha.seesaw.model.service;
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.mission.GetMyMissionDataRequest;
 import com.doacha.seesaw.model.dto.record.*;
+import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.model.entity.Record;
+import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MissionRepository;
 import com.doacha.seesaw.repository.RecordRepository;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -22,6 +26,7 @@ public class RecordService {
 
     @Autowired
     RecordRepository recordRepository;
+    MemberMissionRepository memberMissionRepository;
 
     @Autowired
     MissionRepository missionRepository;
@@ -155,4 +160,20 @@ public class RecordService {
         }
         return savingList;
     }
+
+    // 완료 미션 레코드 상세 리스트
+    public List<EndRecordListResponse> getEndRecordList(EndRecordListRequest endRecordListRequest){
+        MemberMission memberMission = memberMissionRepository.findByMissionIdAndMemberEmail(endRecordListRequest.getMissionId(), endRecordListRequest.getMemberEmail());
+        List<Record> recordList = recordRepository.findRecordByMemberMission(memberMission);
+        List<EndRecordListResponse> endRecordListResponseList = new ArrayList<>();
+//        for(Record record : recordList){
+//            endRecordListResponseList.add(new EndRecordListResponse(
+//                    record.getRecordNumber(),
+//                    record.getRecordTotalCost(),
+//
+//            ))
+//        }
+        return endRecordListResponseList;
+    }
+
 }

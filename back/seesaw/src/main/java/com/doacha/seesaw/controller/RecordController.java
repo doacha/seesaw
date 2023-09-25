@@ -181,5 +181,10 @@ public class RecordController {
         }
     }
 
+    // 완료 미션 레코드 상세 리스트
+    @PostMapping("/enddetail")
+    public List<EndRecordListResponse> getEndRecordList(@RequestBody EndRecordListRequest endRecordListRequest){
+        return recordService.getEndRecordList(endRecordListRequest);
+    }
 
 }
