@@ -1,6 +1,7 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.NoContentException;
+import com.doacha.seesaw.model.dto.mission.GetMyMissionDataRequest;
 import com.doacha.seesaw.model.dto.record.*;
 import com.doacha.seesaw.model.entity.Record;
 import com.doacha.seesaw.repository.MissionRepository;
@@ -143,5 +144,15 @@ public class RecordService {
         }
 
         return groupedMemberHistory;
+    }
+
+    // 회차별 절약 금액
+    public List<Integer> getSavingMoneyList(GetMyMissionDataRequest getMyMissionDataRequest) {
+        int targetPrice = missionRepository.findById(getMyMissionDataRequest.getMissionId()).get().getMissionTargetPrice();
+        List<Integer> savingList = recordRepository.findRecordTotalCostByMissionIdAndMemberEmail(getMyMissionDataRequest.getMissionId(), getMyMissionDataRequest.getMemberEmail());
+        for(int i=0; i<savingList.size(); i++){
+            savingList.set(i, targetPrice - savingList.get(i));
+        }
+        return savingList;
     }
 }

@@ -28,8 +28,12 @@ const SpendingList = ({
 }: SpendingListProps) => {
   console.log('무한?')
 
-  const [open, setOpen] = useState(false)
-  const handleToggle = () => setOpen((prev) => !prev)
+  const [open, setOpen] = useState<boolean>(false)
+  const [selectedSpendingId, setSelectedSpendingId] = useState<number>(0)
+  const handleToggle = (spendingId: number) => {
+    setOpen((prevOpen) => !prevOpen)
+    setSelectedSpendingId(spendingId)
+  }
 
   return (
     <>
@@ -46,8 +50,11 @@ const SpendingList = ({
                   // if works!
                   <>
                     {data.map((spending) => (
+                      // 화살표 함수 쓴이유..? 안쓰면 어떻게 되는데?
                       <div
-                        onClick={handleToggle}
+                        onClick={() =>
+                          handleToggle(spending.spendingId as number)
+                        }
                         className="h-9 flex w-full flex-row gap-5"
                       >
                         <div className="flex my-auto w-6 ml-1">
@@ -91,7 +98,10 @@ const SpendingList = ({
         <div className="w-full h-fit rounded-lg bg-background">
           <div className="p-5">
             {spendingList.map((spending, idx) => (
-              <div className="h-9 flex w-full flex-row gap-5 mb-3">
+              <div
+                onClick={() => handleToggle(spending.spendingId as number)}
+                className="h-9 flex w-full flex-row gap-5 mb-3"
+              >
                 <div className="flex my-auto ml-1 w-6 ">
                   {spending.spendingCategoryId && (
                     <FontAwesomeIcon
@@ -126,7 +136,11 @@ const SpendingList = ({
           </div>
         </div>
       )}
-      <DetailModal open={open} handleToggle={handleToggle} />
+      <DetailModal
+        open={open}
+        handleToggle={() => handleToggle(selectedSpendingId)}
+        selectedSpendingId={selectedSpendingId}
+      />
     </>
   )
 }

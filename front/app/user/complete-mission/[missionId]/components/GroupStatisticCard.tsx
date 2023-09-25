@@ -1,3 +1,4 @@
+import GroupGraphCard from './GroupGraphCard'
 import MyStatisticDetailCard from './MyStatisticDetailCard'
 
 const GroupStatisticCard = () => {
@@ -34,6 +35,7 @@ const GroupStatisticCard = () => {
         amount={1800}
         content="사랑해요 신한은행"
       />
+      <GroupGraphCard />
     </div>
   )
 }

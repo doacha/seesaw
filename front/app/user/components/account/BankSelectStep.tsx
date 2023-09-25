@@ -7,7 +7,7 @@ interface Props {
 }
 
 const bankList = [
-  { bankName: '시소은행', bankImg: './seesaw_logo.svg' },
+  { bankName: '시소뱅크', bankImg: './seesaw_logo.svg' },
   { bankName: '신한은행', bankImg: './seesaw_logo.svg' },
   { bankName: '국민은행', bankImg: './seesaw_logo.svg' },
   { bankName: '우리은행', bankImg: './seesaw_logo.svg' },

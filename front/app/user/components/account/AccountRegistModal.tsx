@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import RegistButton from './OpenModalButton'
+import OpenModalButton from './OpenModalButton'
 import Button from '@/app/components/Button'
 import BankSelectStep from './BankSelectStep'
 import AccountInputStep from './AccountInputStep'
@@ -43,7 +43,7 @@ const AccountRegistModal = () => {
 
   return (
     <div>
-      <RegistButton
+      <OpenModalButton
         onClickEvent={() => {
           ;(
             document.getElementById('modal') as HTMLDialogElement | null

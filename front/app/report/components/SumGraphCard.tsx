@@ -44,7 +44,8 @@ const SumGraphCard = ({
     }
 
     setLengthList(tmpLengthList)
-    setMeanLength('t-[' + Math.round(mean / amountList.length) + 'px]')
+    // Todo ㅎㅎ 이거 계산 어떻게 해?
+    // setMeanLength('top-[' + Math.round(mean / amountList.length) + 'px]')
 
     console.log(tmpLengthList)
     console.log(mean)
@@ -53,9 +54,9 @@ const SumGraphCard = ({
 
   return (
     // css가 아주 그냥 꼬였어
-    <div className="h-fit relative w-full bg-background rounded-lg">
+    <div className="h-[440px] relative w-full bg-background rounded-lg">
       <div
-        className={`absolute left-0 right-0 mx-auto w-[78%] h-[5px] bg-error ${meanLenght} rounded-full`}
+        className={`absolute left-0 right-0 mx-auto w-[78%] h-[5px] bg-error top-[150px] rounded-full`}
       ></div>
       <div className="flex flex-col w-full">
         <ReportTab
@@ -65,7 +66,7 @@ const SumGraphCard = ({
         {activeCalendarTab == 'tab1' ? (
           <>
             <div className="w-full flex">
-              <div className="flex w-full justify-between bg-blue-100 m-5 px-5 pt-10 pb-5 rounded-lg overflow-auto">
+              <div className="flex w-full h-[300px] justify-between bg-blue-100 m-5 px-5 pt-10 pb-5 rounded-lg overflow-auto">
                 {amountList.map((amount, index) => (
                   <>
                     <div className="flex items-end justify-between">
@@ -86,7 +87,7 @@ const SumGraphCard = ({
                         key={index}
                         amountListLength={amountList.length}
                         activeCalendarTab={activeCalendarTab}
-
+                        // meanLenght는 뭐지?
                         // meanLenght={meanLenght}
                       />
                     </div>
@@ -95,8 +96,11 @@ const SumGraphCard = ({
               </div>
             </div>
             <div className="mx-5 mb-5 p-2 bg-slate-100 rounded-lg  flex justify-between">
-              <div className="ml-1 my-auto font-scDreamRegular text-xs">
-                평균지출금액
+              <div className="flex flex-row">
+                <div className=" bg-error mx-auto my-auto w-[15px] h-[5px] rounded-md"></div>
+                <div className="ml-1 my-auto font-scDreamRegular text-xs">
+                  평균지출금액
+                </div>
               </div>
               <div className="my-auto text-xs font-scDreamExBold">
                 {Math.round(averageAmount()).toLocaleString('ko-KR')}원
@@ -112,7 +116,7 @@ const SumGraphCard = ({
         ) : (
           <>
             <div className="w-full flex">
-              <div className="flex w-full justify-between bg-blue-100 m-5 px-5 pt-10 pb-5 rounded-lg overflow-auto">
+              <div className="flex w-full h-[300px]  justify-between bg-blue-100 m-5 px-5 pt-10 pb-5 rounded-lg overflow-auto">
                 {amountList.map((amount, index) => (
                   <>
                     <div className="flex items-end justify-between">
@@ -142,14 +146,12 @@ const SumGraphCard = ({
               </div>
             </div>
             <div className="mx-5 mb-5 p-2 bg-slate-100 rounded-lg flex justify-between">
-              {/* <div className="flex flex-row"> */}
-              {/* Todo..평균지출금액 옆 아주 짧은 빨간 선 */}
-              {/* 왜 빨간줄 안나와.. */}
-              {/* <div className="w-[10px] h-[5px] bg-error my-auto top-3"></div> */}
-              <div className="my-auto font-scDreamRegular text-xs">
-                평균지출금액
+              <div className="flex flex-row">
+                <div className=" bg-error mx-auto my-auto w-[15px] h-[5px] rounded-md"></div>
+                <div className="ml-1 my-auto font-scDreamRegular text-xs">
+                  평균지출금액
+                </div>
               </div>
-              {/* </div> */}
               <div className="my-auto text-xs font-scDreamExBold">
                 {Math.round(averageAmount()).toLocaleString('ko-KR')}원
               </div>
