@@ -18,12 +18,12 @@ const ToggleCapsule = ({
   textColor,
   isHasBorder,
   isSmall,
-  onClick,
   children,
   className,
   value,
-  select,
+  isSelected,
   type,
+  onClick,
 }: {
   bgColor: string
   textColor: string
@@ -31,36 +31,54 @@ const ToggleCapsule = ({
   isSmall?: boolean
   onClick?: any
   children: string
-  className?: string | string[]
+  className?: string
   value: number
   select?: boolean
-  type?: string
+  isSelected: boolean
+  type: string
 }) => {
-  const [backgroundColor, setBackgroundColor] = useState(bgColor)
-  const [fontColor, setFontColor] = useState(textColor)
-  const [isSelected, setIsSelected] = useState(select ?? false)
+  let backgroundColor, fontColor
 
-  const handleClick = (id: number | undefined) => {
-    if (isSelected) {
-      setBackgroundColor(bgColor)
-      setFontColor(textColor)
+  // const handleClick = () => {
+  //   const newCategory = [...state.category]
+  //   newCategory[value] = !isSelected
+  //   setState({...state}, category:newCategory)
+  // }
+
+  if (!isSelected) {
+    backgroundColor = bgColor
+    fontColor = textColor
+  } else {
+    if (textColor === 'black') {
+      backgroundColor = 'primary-containar'
+      fontColor = 'black'
     } else {
-      console.log('textColor is ', textColor)
-      if (textColor === 'black') {
-        setBackgroundColor('primary-container')
-        setFontColor('black')
-      } else {
-        setBackgroundColor(textColor)
-        setFontColor('background')
-      }
+      backgroundColor = textColor
+      fontColor = 'background'
     }
-
-    if (onClick) {
-      if (id === undefined) return
-      onClick(id, isSelected, type)
-    }
-    setIsSelected(!isSelected)
   }
+  // const handleClick = (id: number | undefined) => {
+  //   if (isSelected) {
+  //     setBackgroundColor(bgColor)
+  //     setFontColor(textColor)
+  //   } else {
+  //     console.log('textColor is ', textColor)
+  //     if (textColor === 'black') {
+  //       setBackgroundColor('primary-container')
+  //       setFontColor('black')
+  //     } else {
+  //       setBackgroundColor(textColor)
+  //       setFontColor('background')
+  //     }
+  //   }
+
+  //   if (onClick) {
+  //     if (id === undefined) return
+  //     onClick(id, isSelected, type)
+  //   }
+  //   setIsSelected(!isSelected)
+  // }
+
   const tailwindBorder = isHasBorder ? 'border-[0.5px]' : 'border-0'
   const tailwindFontSize = isSmall
     ? 'text-[10px] h-4 py-[3px]'
@@ -79,7 +97,7 @@ const ToggleCapsule = ({
           ? capsuleColor.text['background']
           : capsuleColor.text[fontColor]
       } ${tailwindBorder} ${tailwindFontSize} ${className}`}
-      onClick={() => handleClick(value)}
+      onClick={onClick}
     >
       {children}
     </span>
