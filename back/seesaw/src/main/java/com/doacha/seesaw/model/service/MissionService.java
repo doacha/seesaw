@@ -28,6 +28,7 @@ public class MissionService {
 
     @Autowired
     RecordRepository recordRepository;
+
     @Autowired
     SpendingRepository spendingRepository;
 
@@ -56,7 +57,6 @@ public class MissionService {
                 .missionTargetPrice(mission.getMissionTargetPrice())
                 .missionPeriod(mission.getMissionPeriod())
                 .missionStatus(0)
-                .missionFailureCount(mission.getMissionFailureCount())
                 .missionTotalCycle(mission.getMissionTotalCycle())
                 .missionCurrentCycle(0)
                 .missionStartDate(Date.valueOf(mission.getMissionStartDate()))
@@ -66,7 +66,6 @@ public class MissionService {
 
         return missionRepository.save(createdMission);
     }
-
 
     // 미션 아이디 랜덤 생성
     private String createRandomId() {
@@ -127,7 +126,7 @@ public class MissionService {
         missionRepository.deleteById(missionId);
     }
 
-    // 미션에 해당하는 카테고리별 개인 금액 합계 및 총합
+//     미션에 해당하는 카테고리별 개인 금액 합계 및 총합
     public MissionStatsResponse getCategorySumAndAverageByMissionAndMember (String memberEmail, String missionId){
         MissionStatsResponse missionStatsRequestList =spendingRepository.getCategorySumAndAverageByMissionAndMember(memberEmail, missionId);
         return missionStatsRequestList;
