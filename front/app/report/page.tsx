@@ -69,19 +69,13 @@ const ReportPage = () => {
 
   const groupedSpending = groupSpendingByWeek(sumList)
 
-  const [openEditPage, setOpenEditPage] = useState<boolean>(false)
-
   return (
     <div className="w-screen h-screen bg-background-fill">
-      {openEditPage ? (
-        <div className="absolute w-full h-full bg-outline z-50 bg-opacity-50">
-          {/* <DaySpendingModal /> */}
-        </div>
-      ) : null}
       <div>
         <Header title="소비리포트" backButton route="/home" />
       </div>
       <div className="h-full py-16 overflow-auto">
+        {/* reportHeader prop으로 spend만 보낼까..? spend도 보내지 말까? 뭐가 좋은 방법일까 이건 좀 고민... */}
         <div className="flex h-32 bg-white">
           {spend.map((spending, key) => (
             <div className="h-full flex flex-col justify-between mx-5">

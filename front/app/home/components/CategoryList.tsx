@@ -16,7 +16,7 @@ const CategoryList = ({ onClick }: { onClick: any }) => {
   // }
   return (
     <div className="ml-3">
-      <div className={`mt-3 overflow-scroll ${styles.delScroll}`}>
+      <div className={`mt-5 overflow-scroll ${styles.delScroll}`}>
         <div className="carousel">
           {categoryList.map((element, idx) => (
             <ToggleCapsule
@@ -26,9 +26,8 @@ const CategoryList = ({ onClick }: { onClick: any }) => {
               textColor={`${idx}`}
               key={idx}
               value={idx}
-              content ={element}
-              /
-            >
+              content={element}
+            />
           ))}
         </div>
       </div>

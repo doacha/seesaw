@@ -10,6 +10,7 @@ import SortButtons from './components/SortButton'
 import SpendingList from './components/SpendingList'
 
 import CategoryList from './components/CategoryList'
+import AddPostModal from './components/AddPostModal'
 
 const spend: Spending[] = [
   {
@@ -111,10 +112,6 @@ const HomePage = () => {
   // 'spendingList'를 일자별로 그룹화합니다.
   const groupedSpending = groupSpendingByDay(spendingList)
 
-  const clickPlus = () => {
-    console.log('플버 클릭')
-  }
-
   const [state, setState] = useState<number[]>([])
   const clickCategory = (id: number, isSelected: boolean) => {
     const newSelected = [...state]
@@ -134,31 +131,39 @@ const HomePage = () => {
   //   router.push('/home/detail')
   // }
 
+  const [open, setOpen] = useState(false)
+  const handleToggle = () => {
+    setOpen((prev) => !prev)
+  }
+  console.log(open)
   return (
-    <div className="flex flex-col h-screen bg-background-fill">
-      <div className="w-full h-44 bg-background">
-        <HomeHeader
-          spend={spend}
-          clickArrow={clickArrow}
-          clickReport={clickReport}
-        />
-        <CategoryList onClick={clickCategory} />
+    <>
+      <div className="flex flex-col h-screen bg-background-fill">
+        <div className="w-full h-44 bg-background">
+          <HomeHeader
+            spend={spend}
+            clickArrow={clickArrow}
+            clickReport={clickReport}
+          />
+          <CategoryList onClick={clickCategory} />
+        </div>
+        <SortButtons clickText={clickText} sort={sort} />
+        <div className="mx-5 my-5">
+          <SpendingList
+            formatTime={formatTime}
+            sort={sort}
+            groupedSpending={groupedSpending}
+            formatDayTime={formatDayTime}
+            spendingList={spendingList}
+            // newSelected = {newSelected}
+          />
+        </div>
+        <div className="fixed top-[690px] right-[20px]">
+          <FaskMakeButton onClick={handleToggle} />
+        </div>
       </div>
-      <SortButtons clickText={clickText} sort={sort} />
-      <div className="mx-5 my-5">
-        <SpendingList
-          formatTime={formatTime}
-          sort={sort}
-          groupedSpending={groupedSpending}
-          formatDayTime={formatDayTime}
-          spendingList={spendingList}
-          // newSelected = {newSelected}
-        />
-      </div>
-      <div className="fixed top-[690px] right-[20px]">
-        <FaskMakeButton onClick={clickPlus} />
-      </div>
-    </div>
+      <AddPostModal open={open} handleToggle={handleToggle} />
+    </>
   )
 }
 
