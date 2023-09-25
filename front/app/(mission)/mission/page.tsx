@@ -31,7 +31,7 @@ const MissionPage = () => {
 
   return (
     <div className="bg-background-fill">
-      <Header title="미션 목록" plusButton backButton path="create" />
+      <Header title="미션 목록" plusButton backButton />
       <div className="py-16 pt-[74px] overflow-scroll flex flex-col gap-5 px-5">
         {isActiveSearch && (
           <SearchContainer

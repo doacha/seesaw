@@ -26,9 +26,9 @@ const CategoryList = ({ onClick }: { onClick: any }) => {
               textColor={`${idx}`}
               key={idx}
               value={idx}
-              content ={element}
-              /
             >
+              {element}
+            </ToggleCapsule>
           ))}
         </div>
       </div>
