@@ -50,8 +50,19 @@ const CreateMissionContainer = () => {
         return
       }
     }
-
     // 제출
+  }
+
+  const handleCapsuleClick = (
+    idx: number,
+    isSelected: boolean,
+    type: string,
+  ) => {
+    if (!isSelected) {
+      setInput({ ...input, [type]: idx })
+      return
+    }
+    setInput({ ...input, [type]: -1 })
   }
   return (
     <div className="bg-background rounded-lg flex flex-col gap-5 p-5 mx-5">
@@ -68,11 +79,11 @@ const CreateMissionContainer = () => {
       {/* 그룹 소개글  */}
       <GroupIntroInput state={input} setState={setInput} />
       {/* 미션 카테고리 */}
-      <CategoryInput state={input} setState={setInput} />
+      <CategoryInput state={input} handleClick={handleCapsuleClick} />
       {/* 미션 빈도 */}
-      <PeriodInput state={input} setState={setInput} />
+      <PeriodInput state={input} handleClick={handleCapsuleClick} />
       {/* 미션 횟수 */}
-      <CycleInput state={input} setState={setInput} />
+      <CycleInput state={input} handleClick={handleCapsuleClick} />
       {/* 시작 날짜 */}
       <StartDateInput state={input} setState={setInput} />
       {/* target price */}

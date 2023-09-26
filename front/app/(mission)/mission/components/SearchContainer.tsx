@@ -53,8 +53,6 @@ const SearchContainer = ({
               bgColor="background-fill"
               textColor={`${idx}`}
               key={idx}
-              value={idx}
-              type="category"
               isSelected={state['category'][idx]}
               onClick={() =>
                 handleCapsule(idx, state['category'][idx], 'category')
@@ -99,7 +97,7 @@ const SearchContainer = ({
             onClick={handlePeriodClick}
           >
             <div className="mb-5 w-full">인증 주기</div>
-            {/* <div className="w-full">
+            <div className="w-full">
               {missionPeriodArray.map(
                 (element, idx) =>
                   element && (
@@ -108,10 +106,10 @@ const SearchContainer = ({
                       textColor="black"
                       className="mr-[15px] mb-[15px]"
                       key={idx}
-                      value={idx}
-                      type="period"
-                      select={state['period'].includes(idx)}
-                      onClick={handleCapsuleClick}
+                      isSelected={state['period'][idx]}
+                      onClick={() =>
+                        handleCapsule(idx, state['period'][idx], 'period')
+                      }
                     >
                       {element}
                     </ToggleCapsule>
@@ -123,11 +121,11 @@ const SearchContainer = ({
                 onClick={handleDropDownOff}
                 size="xs"
               />
-            </div> */}
+            </div>
           </div>
         </div>
       )}
-      {/* {cycleDropDownOn && (
+      {cycleDropDownOn && (
         <div
           className="w-full h-screen fixed bg-black/30 left-0 z-10 bottom-16 open:transition-transform"
           onClick={handleDropDownOff}
@@ -147,10 +145,10 @@ const SearchContainer = ({
                       textColor="black"
                       className="mr-[15px] mb-[15px]"
                       key={idx}
-                      value={idx}
-                      type="cycle"
-                      select={state['cycle'].includes(idx)}
-                      onClick={handleCapsuleClick}
+                      isSelected={state['cycle'][idx]}
+                      onClick={() =>
+                        handleCapsule(idx, state['cycle'][idx], 'cycle')
+                      }
                     >
                       {element}
                     </ToggleCapsule>
@@ -165,7 +163,7 @@ const SearchContainer = ({
             </div>
           </div>
         </div>
-       )} */}
+      )}
     </div>
   )
 }

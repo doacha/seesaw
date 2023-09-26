@@ -38,7 +38,6 @@ const MissionPage = () => {
       newState[0] = true
     }
     setSearchState({ ...searchState, [type]: newState })
-    return
   }
   // API 연결 후 더미 삭제
   const searchedMissionList = Array(6).fill(missionCardDummy)

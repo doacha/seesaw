@@ -30,21 +30,25 @@ const DropdownCapsule = ({
   isList?: boolean
   type: number
 }) => {
-  const tailwindBorder = state.length === 0 ? 'border-[0.5px]' : 'border-0'
+  const tailwindBorder = !state.some((element) => element)
+    ? 'border-[0.5px]'
+    : 'border-0'
   const tailwindFontSize = isSmall
     ? 'text-[10px] h-4 py-[3px]'
     : 'text-sm h-[30px] py-2'
-  console.log('asdf', getDropdownTitle(state, title, type))
+
   return (
     <span
       className={`badge px-[15px] ${
         capsuleColor.bg[getBgColor(state, type, isList ?? false)]
       } ${
-        capsuleColor.text[state.length ? 'background' : 'black']
+        capsuleColor.text[
+          state.some((element) => element) ? 'background' : 'black'
+        ]
       } ${tailwindBorder} ${tailwindFontSize} ${className}`}
       onClick={onClick}
     >
-      {'ffs'}
+      {getDropdownTitle(state, title, type)}
     </span>
   )
 }
@@ -86,9 +90,7 @@ const getDropdownTitle = (
       selectedIdx = idx
     }
   })
-  console.log('???', title, numberOfSelect)
   if (numberOfSelect === 0) {
-    console.log('sibal')
     return title
   } else if (numberOfSelect === 1) {
     switch (type) {

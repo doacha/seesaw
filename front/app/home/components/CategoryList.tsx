@@ -25,7 +25,7 @@ const CategoryList = ({ onClick }: { onClick: any }) => {
               bgColor="background-fill"
               textColor={`${idx}`}
               key={idx}
-              value={idx}
+              isSelected={true}
             >
               {element}
             </ToggleCapsule>
