@@ -8,13 +8,23 @@ import Tab from '../components/Tab'
 import AccountCard from './components/account/AccountCard'
 import AccountRegistModal from './components/account/AccountRegistModal'
 import { QueryKey, useQuery } from '@tanstack/react-query'
+import PasswordConfirmCard from './components/edit/PasswordConfirmCard'
 
 const memberPage = () => {
   const [openEditPage, setOpenEditPage] = useState<boolean>(false)
+  const [confirmed, setConfirmed] = useState<boolean>(false)
   const [activeTab, setActiveTab] = useState<string>('tab1')
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
+  }
+
+  const handleConfirmed = () => {
+    setConfirmed(true)
+  }
+
+  const handleModalClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
   }
 
   const getProfileInfo = async () => {
@@ -42,8 +52,24 @@ const memberPage = () => {
       {isLoading ? null : (
         <div>
           {openEditPage ? (
-            <div className="absolute w-full h-full bg-outline z-50 bg-opacity-50">
-              <ProfileEditCard setOpenEditPage={() => setOpenEditPage(false)} />
+            <div
+              className="absolute w-full h-full bg-outline z-50 bg-opacity-50 flex items-center justify-center"
+              onClick={() => {
+                setOpenEditPage(false)
+                setConfirmed(false)
+              }}
+            >
+              {confirmed ? (
+                <ProfileEditCard
+                  setOpenEditPage={() => setOpenEditPage(false)}
+                  handleModalClick={handleModalClick}
+                />
+              ) : (
+                <PasswordConfirmCard
+                  handleConfirmed={handleConfirmed}
+                  handleModalClick={handleModalClick}
+                />
+              )}
             </div>
           ) : null}
 

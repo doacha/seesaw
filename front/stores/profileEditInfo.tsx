@@ -2,7 +2,6 @@ import { create } from 'zustand'
 
 interface profileEditInfo {
   newNickname: string
-  prevPassword: string
   newPassword: string
   confirmPassword: string
   phoneNumber: string
@@ -14,13 +13,23 @@ interface profileEditInfo {
 
 export const profileEditInfoStore = create<profileEditInfo>((set) => ({
   newNickname: '',
-  prevPassword: '',
   newPassword: '',
   confirmPassword: '',
   phoneNumber: '',
   birth: ['', '', ''],
   setProfileEditInfo: (key: string, value: string) =>
     set((prev) => ({ ...prev, [key]: value })),
+  setInitBirthInfo: (birth: string) =>
+    set((prev) => {
+      return {
+        ...prev,
+        birth: [
+          birth.substring(0, 4),
+          birth.substring(4, 6),
+          birth.substring(6),
+        ],
+      }
+    }),
   setBirthInfo: (e: React.ChangeEvent<HTMLSelectElement>) =>
     set((prev) => {
       if (e.target.name === 'year') {
