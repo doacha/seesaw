@@ -84,18 +84,26 @@ const HomePage = () => {
   const groupedSpending = groupSpendingByDay(spendingList)
 
   // category 관련
-  const [state, setState] = useState<number[]>([])
+  const [state, setState] = useState<boolean[]>(Array(21).fill(false))
+  // 미분류 포함하면 총 21개
   const clickCategory = (id: number, isSelected: boolean) => {
-    const newSelected = [...state]
-    if (isSelected) {
-      const idx = newSelected.indexOf(id)
-      newSelected.splice(idx, 1)
-      setState(newSelected)
-    } else {
-      newSelected.push(id)
-      setState(newSelected)
+    const newState = [...state]
+    newState[id] = !isSelected
+    newState[0] = false //전체 이외의 카테고리 클릭 시 전체 카테고리 해제
+    if (id === 0 && !isSelected) {
+      //전체 카테고리 활성화시, 이외 카테고리 해제
+      newState.fill(false)
+      newState[0] = true
     }
+    setState(newState)
   }
+
+  const newSelected: number[] = [] // state 기반으로 선택된 카테고리 값 배열 생성
+  state.forEach((element, idx) => {
+    if (element) {
+      newSelected.push(idx)
+    }
+  })
 
   const [open, setOpen] = useState(false)
   const handleToggle = () => {
@@ -122,8 +130,8 @@ const HomePage = () => {
             groupedSpending={groupedSpending}
             formatDayTime={formatDayTime}
             spendingList={spendingList}
-            // Todo 카테고리 선택 및 매핑 과정 필요
-            // newSelected = {newSelected}
+            // 카테고리 선택 관련
+            newSelected={newSelected}
           />
         </div>
         <div className="fixed top-[690px] right-[20px]">
