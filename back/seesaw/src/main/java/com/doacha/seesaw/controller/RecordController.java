@@ -154,7 +154,7 @@ public class RecordController {
             @ApiResponse(responseCode = "500", description = "과거 레코드 목록 불러오기 실패 - 서버 오류")
     })
     @PostMapping("/history")
-    public ResponseEntity<?> getRecordHistoryList(@RequestBody getRecordHistoryListRequest getRecordHistoryListRequest) {
+    public ResponseEntity<?> getRecordHistoryList(@RequestBody GetRecordHistoryListRequest getRecordHistoryListRequest) {
         String missionId = getRecordHistoryListRequest.getMissionId();
         int pageNumber = getRecordHistoryListRequest.getPageNumber();
         log.info(missionId+" 미션의 "+ pageNumber +"페이지의 과거 레코드 목록 불러오기");
@@ -194,12 +194,12 @@ public class RecordController {
             @ApiResponse(responseCode = "500", description = "회차별 소비 내역 및 미션 성공 여부 목록 불러오기 실패 - 서버 오류")
     })
     @PostMapping("/spending-list")
-    public ResponseEntity<?> getSpendingList(@RequestBody GetMyMissionDataRequest getMyMissionDataRequest) {
+    public ResponseEntity<?> getSpendingList(@RequestBody GetSpendingListRequest getSpendingListRequest) {
         log.info("회차별 소비 내역 및 미션 성공 여부 조회");
         try {
-            List<Object[]> spendingList = recordService.getSpendingList(getMyMissionDataRequest);
+            List<List<Object>> response = recordService.getSpendingList(getSpendingListRequest);
             log.info("회차별 소비 내역 및 미션 성공 여부 조회 성공");
-            return new ResponseEntity<List<Object[]>>(spendingList, HttpStatus.OK);
+            return new ResponseEntity<List<List<Object>>>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.info("회차별 소비 내역 및 미션 성공 여부 조회 실패 - 서버(DB)오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);

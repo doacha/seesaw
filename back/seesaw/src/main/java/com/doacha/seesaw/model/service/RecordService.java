@@ -6,11 +6,8 @@ import com.doacha.seesaw.model.dto.record.*;
 import com.doacha.seesaw.model.entity.Record;
 import com.doacha.seesaw.repository.MissionRepository;
 import com.doacha.seesaw.repository.RecordRepository;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -181,7 +178,56 @@ public class RecordService {
     }
 
     // 미션 상세 - 나의 현황 - 회차별 소비 내역 및 미션 성공 여부
-    public List<Object[]> getSpendingList(GetMyMissionDataRequest getMyMissionDataRequest) {
-       return recordRepository.findRecordAndSpendingByMissionIdAndMemberEmail(getMyMissionDataRequest.getMissionId(), getMyMissionDataRequest.getMemberEmail());
+    public List<List<Object>> getSpendingList(GetSpendingListRequest getSpendingListRequest) {
+        List<Object[]> list = recordRepository.findRecordAndSpendingByMissionIdAndMemberEmail(getSpendingListRequest.getMissionId(), getSpendingListRequest.getMemberEmail());
+
+        Map<Integer, List<Object>> recordGroupMap = new HashMap<>();
+
+        for (Object[] result : list) {
+            int recordNumber = (int) result[0];
+            Date recordStartDate = (Date) result[1];
+            Date recordEndDate = (Date) result[2];
+            int recordStatus = (int) result[3];
+            String spendingTitle = (String) result[4];
+            int spendingCost = (int) result[5];
+
+            // 레코드를 고유 식별자로 사용하여 그룹화
+            int recordKey = recordNumber;
+
+            // 그룹 맵에 결과 추가
+            if (!recordGroupMap.containsKey(recordKey)) {
+                recordGroupMap.put(recordKey, new ArrayList<>());
+                recordGroupMap.get(recordKey).add(recordNumber);
+                recordGroupMap.get(recordKey).add(recordStartDate);
+                recordGroupMap.get(recordKey).add(recordEndDate);
+                recordGroupMap.get(recordKey).add(recordStatus);
+            }
+
+            // spending 데이터를 그룹의 리스트에 추가
+            List<Object> spendingData = new ArrayList<>();
+            spendingData.add(spendingTitle);
+            spendingData.add(spendingCost);
+
+            recordGroupMap.get(recordKey).add(spendingData);
+        }
+
+        // 그룹화된 결과를 리스트로 변환
+        List<List<Object>> response = new ArrayList<>(recordGroupMap.values());
+
+        // recordNumber를 기준으로 내림차순으로 정렬
+        Collections.sort(response, Comparator.comparing(o -> (int) o.get(0), Collections.reverseOrder()));
+
+        // pageNumber에 따라 해당 페이지의 결과 반환
+        int pageSize = 5;
+        int pageNumber = getSpendingListRequest.getPageNumber();
+        int startIndex = pageNumber * pageSize;
+        int endIndex = Math.min((pageNumber + 1) * pageSize, response.size());
+
+        if (startIndex >= endIndex) {
+            return Collections.emptyList(); // 페이지에 결과가 없는 경우 빈 리스트 반환
+        }
+
+        // startIndex부터 endIndex까지의 결과를 모아서 반환
+        return response.subList(startIndex, endIndex);
     }
 }

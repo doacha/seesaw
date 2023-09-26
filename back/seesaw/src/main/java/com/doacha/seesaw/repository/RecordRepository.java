@@ -89,13 +89,13 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 //            @Param("memberEmail") String memberEmail
 //    );
 
-    @Query("SELECT r.recordNumber, r.recordStartDate, r.recordEndDate, r.recordStatus, s.spendingCost, s.spendingTitle " +
+    @Query("SELECT r.recordNumber, r.recordStartDate, r.recordEndDate, r.recordStatus, s.spendingTitle, s.spendingCost " +
             "FROM Record r " +
             "JOIN r.memberMission mm " +
             "JOIN mm.mission m " +
             "JOIN r.spendingList s " +
             "WHERE m.missionId = :missionId " +
-            "AND mm.member.memberEmail = :memberEmail")
+            "AND mm.member.memberEmail = :memberEmail ")
     List<Object[]> findRecordAndSpendingByMissionIdAndMemberEmail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
 
 }
