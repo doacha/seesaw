@@ -42,10 +42,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     List<MemberHistory> getMemberHistoryByMissionId(@Param("missionId") String missionId, @Param("currentCycle") int currentCycle);
 
 
-    @Query("SELECT COUNT(r) FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail AND r.recordStatus = 2")
-    int countFail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
-
-
     @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionTopSpendingResponse(mm.member.memberNickname AS missionTopSpender, SUM(r.recordTotalCost) AS missionTopSpending) " +
             "FROM Record r " +
             "JOIN r.memberMission mm " +
@@ -69,6 +65,9 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "GROUP BY mm.member.memberNickname " +
             "ORDER BY r.recordTotalCost DESC ")
     Page<DailyTopSpendingResponse> getDailyTopSpender(@Param("missionId") String missionId,Pageable pageable);
+
+    @Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.spendingCategoryId = :categoryId ")
+    Long sumByCategoryId(@Param("categoryId") int categoryId);
 
     @Query("SELECT COUNT(r) FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail AND r.recordStatus = 2")
     int countFail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
