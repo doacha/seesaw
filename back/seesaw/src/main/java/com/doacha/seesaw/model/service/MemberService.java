@@ -43,7 +43,8 @@ public class MemberService {
                 signUpRequest.getMemberBirth(),
                 signUpRequest.isMemberGender(),
                 false,
-                0 // 처음엔 미인증(0)으로
+                0, // 처음엔 미인증(0)으로
+                false
                 );
 
         member = memberRepository.save(member);
@@ -163,7 +164,9 @@ public class MemberService {
                 .memberNickname(member.get().getMemberNickname())
                 .memberImgUrl(member.get().getMemberImgUrl())
                 .memberPhoneNumber(member.get().getMemberPhoneNumber())
-                .memberIsWithdrawal(true)
+                .memberState(2) // 2가 탈퇴 상태
+                .memberMainAccount(member.get().getMemberMainAccount())
+                .memberAccountCertified(member.get().isMemberAccountCertified())
                 .build();
 
         memberRepository.save(update);
@@ -185,7 +188,5 @@ public class MemberService {
 
         return MyInfoResponse.of(member);
     }
-
-
 
 }
