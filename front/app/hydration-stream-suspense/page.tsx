@@ -1,5 +1,5 @@
 // import Counter from "./counter";
-import Listmembers from './list-members'
+import Listmembers from './list-users'
 import { Suspense } from 'react'
 
 export default async function Page() {

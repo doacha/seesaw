@@ -1,10 +1,10 @@
 import * as type from './types'
 
-export const member: type.member = {
+export const member: type.Member = {
   memberNickname: '차차아버님',
   memberImgUrl: './차차_군침이.jpg',
-  successCnt: 2,
-  failCnt: 3,
+  successMissionCnt: 2,
+  failMissionCnt: 3,
   savedMoney: 200000,
 }
 
