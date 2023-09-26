@@ -1,7 +1,7 @@
 'use client'
 import Button from '@/app/components/Button'
 import InstallmentInfo from './components/InstallmentInfo'
-import { useRouter } from 'next/router'
+import { memberouter } from 'next/router'
 import TextButton from '@/app/components/TextButton'
 import InstallmentDetail from './components/InstallmentDetail'
 

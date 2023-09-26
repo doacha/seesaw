@@ -15,7 +15,7 @@ const CommentCard = ({ data }: { data: Comment }) => {
     <div className="flex flex-row items-center gap-2.5 mb-5">
       <Image
         src={data.memberImgUrl}
-        alt="user profile image"
+        alt="member profile image"
         width={27}
         height={26}
         className="rounded-full"

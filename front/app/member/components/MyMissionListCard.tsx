@@ -1,12 +1,16 @@
 'use client'
 
-import { MissionCardProps } from '@/app/types'
+import { Mission, MissionCardProps } from '@/app/types'
 import MyMissionInfoCard from './MyMissionInfoCard'
 import Dropdown from '@/app/components/Dropdown'
 import { missionList } from '@/app/dummies'
 import { useState } from 'react'
 
-const MyMissionListCard = () => {
+interface Props {
+  missionList: Mission[]
+}
+
+const MyMissionListCard = (props: Props) => {
   const [sortType, setSortType] = useState<0 | 1 | 2>(0)
 
   const onSortTypeChange = (value: 0 | 1 | 2) => {
@@ -22,7 +26,7 @@ const MyMissionListCard = () => {
         </div>
       </div>
       <div className="flex flex-col gap-3 h-auto max-h-[480px] overflow-auto">
-        {missionList.map((mission) =>
+        {props.missionList.map((mission) =>
           sortType === 0 ? (
             <MyMissionInfoCard mission={mission} key={mission.missionId} />
           ) : sortType === mission.memberMissionStatus ? (

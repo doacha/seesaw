@@ -1,8 +1,8 @@
 import { todayMission } from '@/app/dummies'
 import GroupStatusTodayCard from './GroupStatusTodayCard'
-import { useRouter } from 'next/navigation'
+import { memberouter } from 'next/navigation'
 const GroupStatusTodayContainer = () => {
-  const router = useRouter()
+  const router = memberouter()
   return (
     <div className=" rounded-lg bg-background px-5 pt-5 m-5">
       <div className="font-scDreamMedium">

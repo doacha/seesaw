@@ -20,7 +20,7 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
 
   return (
     <div className="w-screen h-screen bg-background-fill">
-      <Header title={mission.missionTitle} backButton route="/user" />
+      <Header title={mission.missionTitle} backButton route="/member" />
 
       <div className="h-full py-16 overflow-auto ">
         <CompleteMissionDetailCard mission={mission} />

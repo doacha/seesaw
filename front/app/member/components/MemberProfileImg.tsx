@@ -2,7 +2,7 @@ interface Props {
   src: string
 }
 
-const UserProfileImg = (props: Props) => {
+const MemberProfileImg = (props: Props) => {
   return (
     <div className="avatar">
       <div className="w-20 rounded-full">
@@ -12,4 +12,4 @@ const UserProfileImg = (props: Props) => {
   )
 }
 
-export default UserProfileImg
+export default MemberProfileImg
