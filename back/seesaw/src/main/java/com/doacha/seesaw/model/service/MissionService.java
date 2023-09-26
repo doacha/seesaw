@@ -154,33 +154,64 @@ public class MissionService {
             return missionRankingResponse;
     }
     // 미션 통계 내에 나의 순위
-    public MyMissionRankingResponse getMyMissionRanking(String missionId, String memberEmail){
+//    public MyMissionRankingResponse getMyMissionRanking(String missionId, String memberEmail){
+//        List<MyMissionRankingResponse> missionRankingList = recordRepository.getMyMissionRanking(missionId);
+//        MyMissionRankingResponse myMissionRankingResponse = null;
+//        for(MyMissionRankingResponse missionRankingResponse : missionRankingList){
+//            if(missionRankingResponse.getMemberEmail().equals(memberEmail)){
+//               myMissionRankingResponse = missionRankingResponse;
+//                break;
+//            }
+//
+//        }
+//        return myMissionRankingResponse;
+//    }
+
+    // 미션 통계 내에 나의 순위 + 평균 소비 금액
+    public MyMissionStatResponse getMyMissionStats(String missionId, String memberEmail){
+        Optional<MyMissionAverageResponse> optionalResponse= recordRepository.getMyMissionAverage(missionId, memberEmail);
         List<MyMissionRankingResponse> missionRankingList = recordRepository.getMyMissionRanking(missionId);
         MyMissionRankingResponse myMissionRankingResponse = null;
         for(MyMissionRankingResponse missionRankingResponse : missionRankingList){
             if(missionRankingResponse.getMemberEmail().equals(memberEmail)){
-               myMissionRankingResponse = missionRankingResponse;
+                myMissionRankingResponse = missionRankingResponse;
                 break;
             }
-
         }
-        return myMissionRankingResponse;
+        if(optionalResponse.isPresent()){
+            MyMissionStatResponse myMissionStatsResponse = MyMissionStatResponse.builder()
+                    .missionId(myMissionRankingResponse.getMissionId())
+                    .sum(myMissionRankingResponse.getSum())
+                    .ranking(myMissionRankingResponse.getRanking())
+                    .memberEmail(myMissionRankingResponse.getMemberEmail())
+                    .average(optionalResponse.get().getAverage())
+                    .count(optionalResponse.get().getCount())
+                    .build();
+            return myMissionStatsResponse;
+        }
+        else{
+            throw new NoContentException();
+        }
     }
-
-    public MyMissionAverageResponse getMyMissionAverage(String missionId, String memberEmail){
-        Object[] myMissionAverage = recordRepository.getMyMissionAverage(missionId,memberEmail);
-        Long count = recordRepository.countMissionMember(missionId,memberEmail);
-        MyMissionAverageResponse myMissionAverageResponse = MyMissionAverageResponse.builder()
-                .missionId(missionId)
-                .average((Double)myMissionAverage[1])
-                .memberEmail((String)myMissionAverage[2])
-                .count(count)
-                .build();
-        return myMissionAverageResponse;
-    }
+//    public MyMissionAverageResponse getMyMissionAverage(String missionId, String memberEmail){
+//        Optional<MyMissionAverageResponse> optionalResponse= recordRepository.getMyMissionAverage(missionId, memberEmail);
+//        if(optionalResponse.isPresent()){
+//            MyMissionAverageResponse myMissionAverageResponse = MyMissionAverageResponse.builder()
+//                    .missionId(optionalResponse.get().getMissionId())
+//                    .average(optionalResponse.get().getAverage())
+//                    .memberEmail(optionalResponse.get().getMemberEmail())
+//                    .count(optionalResponse.get().getCount())
+//                    .build();
+//            return myMissionAverageResponse;
+//        }
+//        else{
+//            throw new NoContentException();
+//        }
+//
+//    }
 
     public CompareMissionResponse getCompareMissionAverage(String missionId){
-        CompareMissionDto compareMissionResponse = recordRepository.getCompareMission(missionId);
+        CompareMissionDto compareMissionResponse = recordRepository.getMissionAverage(missionId);
         Optional<Mission> mission = missionRepository.findById(missionId);
         if(mission.isPresent()) {
             int categoryId = mission.get().getMissionCategoryId();
