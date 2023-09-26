@@ -7,7 +7,7 @@ import type { SearchState } from '@/app/types'
 import MissionCard from '../components/MissionCard'
 import { useState } from 'react'
 import { MissionCardProps } from '@/app/types'
-import { memberouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 const MissionPage = () => {
   const [isActiveSearch, setIsActiveSearch] = useState(true)
   const [searchResult, setSearchResult] = useState<Array<MissionCardProps>>()
@@ -16,7 +16,7 @@ const MissionPage = () => {
     cycle: Array(8).fill(false),
     period: Array(13).fill(false),
   })
-  const router = memberouter()
+  const router = useRouter()
 
   const handleActiveSearch = () => {
     setIsActiveSearch(true)
