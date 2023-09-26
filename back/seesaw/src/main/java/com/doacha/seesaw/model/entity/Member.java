@@ -58,10 +58,10 @@ public class Member {
     @Column(name="member_main_account")
     private String memberMainAccount;
 
-    @Column(name="member_account_certified",nullable = false)
-    private boolean memberAccountCertified;
+    @Column(name="member_bank_id")
+    private String memberBankId;
 
-    public Member(String memberEmail, String memberPassword, String memberName, String memberNickname, String memberBirth, boolean memberGender, boolean memberIsSocial, int memberState, boolean memberAccountCertified) {
+    public Member(String memberEmail, String memberPassword, String memberName, String memberNickname, String memberBirth, boolean memberGender, boolean memberIsSocial, int memberState) {
         this.memberEmail = memberEmail;
         this.memberPassword = memberPassword;
         this.memberName = memberName;
@@ -70,6 +70,5 @@ public class Member {
         this.memberGender = memberGender;
         this.memberIsSocial = memberIsSocial;
         this.memberState = memberState;
-        this.memberAccountCertified = memberAccountCertified;
     }
 }
