@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.Month;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,9 +96,29 @@ public class SpendingServiceImpl implements SpendingService{
     }
     // 지출 상세
     @Override
-    public Optional<Spending> read(Long spendingId) {
+    public SpendingDetailResponse detailResponse(Long spendingId) {
         Optional<Spending> spending = spendingRepository.findById(spendingId);
-        return spending;
+        String memo = "";
+        if(spending.isPresent()){
+        if(spending.get().getSpendingMemo()==null){
+            memo="";
+        }
+        else{
+            memo=spending.get().getSpendingMemo();
+        }
+        SpendingDetailResponse spendingDetailResponse = SpendingDetailResponse.builder()
+                .spendingId(spending.get().getSpendingId())
+                .spendingTitle(spending.get().getSpendingTitle())
+                .spendingCost(spending.get().getSpendingCost())
+                .spendingDate(spending.get().getSpendingDate())
+                .spendingMemo(memo)
+                .spendingCategoryId(spending.get().getSpendingCategoryId())
+                .build();
+        return spendingDetailResponse;
+    }
+        else{
+            throw new NoContentException();
+        }
     }
 
     // 지출 일별 합계
