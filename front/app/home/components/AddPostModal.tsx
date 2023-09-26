@@ -56,6 +56,7 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
   const formattedDate = formatDate(new Date())
 
   // api 응답 데이터로 바꿔야함
+  // 왜 value 형태가 왜 저래....
   const [userInput, setUserInput] = useState({
     spendingTitle: '',
     spendingCost: 0,

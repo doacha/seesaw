@@ -112,7 +112,7 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
         <div className="py-4">
           {/* 그러면 spendingList가 필요없을 것 같은데? 백엔드 데이터를 가져와야해 */}
           {spendingList.map((spending, key) => (
-            <>
+            <div key={spending.spendingId}>
               {spending.spendingId === selectedSpendingId && (
                 <>
                   <SpendingCostInput
@@ -157,7 +157,7 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
                   />
                 </>
               )}
-            </>
+            </div>
           ))}
         </div>
         <div className="flex mt-6 justify-between">
