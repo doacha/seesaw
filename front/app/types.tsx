@@ -108,9 +108,10 @@ export interface Record {
 }
 
 export interface SearchState {
-  period: boolean[]
-  cycle: boolean[]
-  category: boolean[]
+  inputText: string
+  period: number
+  cycle: number
+  category: number
   [key: string]: any
 }
 
