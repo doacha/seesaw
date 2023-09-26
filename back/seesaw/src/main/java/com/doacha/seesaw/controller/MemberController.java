@@ -53,6 +53,18 @@ public class MemberController {
         return memberService.confirmPassword(loginRequest);
     }
 
+    // 이메일 중복확인
+    @PostMapping("/emailcheck")
+    public boolean checkEmail(@RequestBody String memberEmail) {
+        return memberService.checkEmail(memberEmail);
+    }
+
+    // 닉네임 중복확인
+    @PostMapping("/nicknamecheck")
+    public boolean checkNickname(@RequestBody String memberNickname) {
+        return memberService.checkNickname(memberNickname);
+    }
+
     // 회원 정보 수정
     @PutMapping("/modify")
     public MyInfoResponse changeInfo(@RequestBody ChangeInfoRequest changeInfoRequest) {

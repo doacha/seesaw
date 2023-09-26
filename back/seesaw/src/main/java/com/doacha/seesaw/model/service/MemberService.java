@@ -74,6 +74,28 @@ public class MemberService {
 
     }
 
+    // 이메일 체크
+    @Transactional
+    public boolean checkEmail(String memberEmail) {
+        boolean isExist = memberRepository
+                .existsByMemberEmail(memberEmail);
+        if (isExist) throw new BadRequestException("이미 존재하는 이메일입니다.");
+
+        return true;
+    }
+
+    // 닉네임 체크
+    // 이메일 체크
+    @Transactional
+    public boolean checkNickname(String memberNickname) {
+        boolean isExist = memberRepository
+                .existsByMemberNickname(memberNickname);
+        if (isExist) throw new BadRequestException("이미 존재하는 닉네임입니다.");
+
+        return true;
+    }
+
+
     // 마이페이지 내 정보
     @Transactional
     public MyPageInfoResponse myPageInfo(String memberEmail) {
