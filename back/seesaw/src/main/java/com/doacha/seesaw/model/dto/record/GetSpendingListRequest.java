@@ -8,12 +8,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "Record 글 목록 request")
-public class getRecordHistoryListRequest {
-
+@Schema(description = "미션 상세 회차별 소비내역 request")
+public class GetSpendingListRequest {
     @Schema(description = "미션 아이디", example = "abcd1234", required = true)
     private String missionId;
 
-    @Schema(description = "페이지 번호", example = "0", required = true)
+    @Schema(description = "사용자 이메일", example = "doacha@seesaw.com", required = true)
+    private String memberEmail;
+
+    @Schema(description = "페이지 번호", example = "doacha@seesaw.com", required = true)
     private int pageNumber;
 }

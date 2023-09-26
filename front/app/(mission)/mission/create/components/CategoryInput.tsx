@@ -1,13 +1,13 @@
 import { categoryList } from '@/app/lib/constants'
-import ToggleCapsule from './ToggleCapsule'
+import ToggleCapsule from '@/app/components/ToggleCapsule'
 import type { MissionCreate } from '@/app/types'
 import styles from '@/app/(mission)/mission/components/SearchContainer.module.css'
 const CategoryInput = ({
   state,
-  setState,
+  handleClick,
 }: {
   state: MissionCreate
-  setState: React.Dispatch<React.SetStateAction<MissionCreate>>
+  handleClick: any
 }) => {
   return (
     <div className={`overflow-auto ${styles.delScroll}`}>
@@ -23,11 +23,14 @@ const CategoryInput = ({
                 bgColor="background-fill"
                 textColor={`${idx}`}
                 key={idx}
-                value={idx}
                 isSelected={idx === state.missionCategoryId}
-                state={state}
-                setState={setState}
-                type="missionCategoryId"
+                onClick={() =>
+                  handleClick(
+                    idx,
+                    idx === state.missionCategoryId,
+                    'missionCategoryId',
+                  )
+                }
               >
                 {element}
               </ToggleCapsule>

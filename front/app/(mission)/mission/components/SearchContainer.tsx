@@ -6,7 +6,7 @@ import {
   missionPeriodArray,
   missionCycleArray,
 } from '@/app/lib/constants'
-import { memberef, useState } from 'react'
+import { useRef, useState } from 'react'
 import Button from '@/app/components/Button'
 import styles from './SearchContainer.module.css'
 import { faAnglesUp } from '@fortawesome/free-solid-svg-icons'
@@ -15,18 +15,18 @@ import ToggleCapsule from '@/app/components/ToggleCapsule'
 import DropdownCapsule from '@/app/(mission)/components/DropdownCapsule'
 import type { SearchState } from '@/app/types'
 const SearchContainer = ({
-  state,
-  setState,
   onClick,
+  handleCapsule,
+  state,
 }: {
-  state: SearchState
-  setState: any
   onClick: any
+  handleCapsule: any
+  state: SearchState
 }) => {
   const [periodDropDownOn, setPeriodDropDownOn] = useState(false)
   const [cycleDropDownOn, setCycleDropDownOn] = useState(false)
   // console.log('test etet', state['category'].includes(0), state)
-  const periodRef = memberef(null)
+  const periodRef = useRef(null)
   const handleOpenPeriod = () => {
     setPeriodDropDownOn(true)
   }
@@ -40,25 +40,7 @@ const SearchContainer = ({
   const handlePeriodClick = (e: React.MouseEvent) => {
     e.stopPropagation()
   }
-  const handleCapsuleClick = (
-    id: number,
-    isSelected: boolean,
-    type?: string,
-  ) => {
-    if (type == undefined) type = 'category'
-    const newSelected = { ...state }
-    if (isSelected) {
-      // 비활성화시킬 때
-      const idx = newSelected[type].indexOf(id)
-      newSelected[type].splice(idx, 1)
-      setState(newSelected)
-    } else {
-      // 활성화시킬 때
-      newSelected[type].push(id)
-      setState(newSelected)
-    }
-    console.log('aft', newSelected)
-  }
+
   return (
     <div className="rounded-lg bg-background px-5 py-2.5 w-full">
       <SearchBar />
@@ -71,10 +53,10 @@ const SearchContainer = ({
               bgColor="background-fill"
               textColor={`${idx}`}
               key={idx}
-              value={idx}
-              type="category"
-              select={state['category'].includes(idx)}
-              onClick={handleCapsuleClick}
+              isSelected={state['category'][idx]}
+              onClick={() =>
+                handleCapsule(idx, state['category'][idx], 'category')
+              }
             >
               {element}
             </ToggleCapsule>
@@ -124,10 +106,10 @@ const SearchContainer = ({
                       textColor="black"
                       className="mr-[15px] mb-[15px]"
                       key={idx}
-                      value={idx}
-                      type="period"
-                      select={state['period'].includes(idx)}
-                      onClick={handleCapsuleClick}
+                      isSelected={state['period'][idx]}
+                      onClick={() =>
+                        handleCapsule(idx, state['period'][idx], 'period')
+                      }
                     >
                       {element}
                     </ToggleCapsule>
@@ -163,10 +145,10 @@ const SearchContainer = ({
                       textColor="black"
                       className="mr-[15px] mb-[15px]"
                       key={idx}
-                      value={idx}
-                      type="cycle"
-                      select={state['cycle'].includes(idx)}
-                      onClick={handleCapsuleClick}
+                      isSelected={state['cycle'][idx]}
+                      onClick={() =>
+                        handleCapsule(idx, state['cycle'][idx], 'cycle')
+                      }
                     >
                       {element}
                     </ToggleCapsule>

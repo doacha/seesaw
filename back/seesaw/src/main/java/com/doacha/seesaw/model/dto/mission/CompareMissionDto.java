@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MyMissionAverageResponse {
+public class CompareMissionDto {
     private String missionId;
-    private Double average;
-    private String memberEmail;
-    private Long count;
+    private Double missionAverage;
 }

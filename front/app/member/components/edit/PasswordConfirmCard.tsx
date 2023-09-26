@@ -41,7 +41,9 @@ const PasswordConfirmCard = (props: Props) => {
       const memberInfo = await res.json()
       console.log(memberInfo)
       setProfileEditInfo('newNickname', memberInfo.memberNickname)
-      setProfileEditInfo('phoneNumber', memberInfo.memberPhoneNumber)
+      if (memberInfo.memberPhoneNumber) {
+        setProfileEditInfo('phoneNumber', memberInfo.memberPhoneNumber)
+      }
       setInitBirthInfo(memberInfo.memberBirth)
       props.handleConfirmed()
     } catch (err) {
