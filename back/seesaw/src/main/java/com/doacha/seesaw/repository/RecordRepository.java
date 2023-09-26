@@ -106,11 +106,13 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
     @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.CompareMissionDto(" +
             "mm.mission.missionId AS missionId, " +
-            "AVG(r.recordTotalCost) AS missionAverage) " +
+            "SUM(r.recordTotalCost) AS missionAverage) " +
             "FROM Record r " +
             "JOIN r.memberMission mm " +
-            "WHERE mm.mission.missionId = :missionId")
+            "WHERE mm.mission.missionId = :missionId "
+            )
     CompareMissionDto getMissionAverage(@Param("missionId") String missionId);
+
 
 
     @Query("SELECT COUNT(s) FROM Spending s WHERE s.spendingCategoryId = :categoryId GROUP BY DAY(s.spendingDate) ")

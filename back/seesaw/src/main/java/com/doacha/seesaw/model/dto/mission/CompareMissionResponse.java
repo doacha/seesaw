@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class CompareMissionResponse {
     private String missionId;
     private Double missionAverage;
-    private Long entireAverage;
+    private Double entireAverage;
+    private Double difference;
 }

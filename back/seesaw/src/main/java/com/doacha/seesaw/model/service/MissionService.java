@@ -210,25 +210,26 @@ public class MissionService {
 //
 //    }
 
-    public CompareMissionResponse getCompareMissionAverage(String missionId){
-        CompareMissionDto compareMissionResponse = recordRepository.getMissionAverage(missionId);
-        Optional<Mission> mission = missionRepository.findById(missionId);
-        if(mission.isPresent()) {
-            int categoryId = mission.get().getMissionCategoryId();
-            int missionPeriod= mission.get().getMissionPeriod();
-            Long count = recordRepository.countByCategoryIdAndDay(categoryId);
-            Long sum = recordRepository.sumByCategoryId(categoryId);
-            CompareMissionResponse realCompareMissionResponse = CompareMissionResponse.builder()
-                    .missionId(compareMissionResponse.getMissionId())
-                    .missionAverage(compareMissionResponse.getMissionAverage())
-                    .entireAverage(sum/count * missionPeriod)
-                    .build();
-            return realCompareMissionResponse;
-        }
-        else{
-            throw new NoContentException();
-        }
-    }
+//    public CompareMissionResponse getCompareMissionAverage(String missionId){
+//        CompareMissionDto compareMissionResponse = recordRepository.getMissionAverage(missionId);
+//        Optional<Mission> mission = missionRepository.findById(missionId);
+//        if(mission.isPresent()) {
+//            int categoryId = mission.get().getMissionCategoryId();
+//            int missionPeriod= mission.get().getMissionPeriod();
+//            Double entireAverage= spendingRepository.FindEntireAverageByCategoryIdAndDay(categoryId);
+//            Long count = recordRepository.countByCategoryIdAndDay(categoryId);
+//            CompareMissionResponse realCompareMissionResponse = CompareMissionResponse.builder()
+//                    .missionId(compareMissionResponse.getMissionId())
+//                    .missionAverage(compareMissionResponse.getMissionAverage())
+//                    .entireAverage(entireAverage)
+//                    .difference(compareMissionResponse.getMissionAverage()-entireAverage)
+//                    .build();
+//            return realCompareMissionResponse;
+//        }
+//        else{
+//            throw new NoContentException();
+//        }
+//    }
 
 
 

@@ -174,17 +174,17 @@ public class MissionController {
         }
     }
 
-    @Operation(summary="카테고리별 전체 평균과 그룹 평균 비교")
-    @GetMapping("/compare/{missionId}")
-    public ResponseEntity<?>CompareMission(@PathVariable String missionId){
-        try{
-            CompareMissionResponse compareMissionResponse = missionService.getCompareMissionAverage(missionId);
-            return new ResponseEntity<CompareMissionResponse>(compareMissionResponse,HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @Operation(summary="카테고리별 전체 평균과 그룹 평균 비교")
+//    @GetMapping("/compare/{missionId}")
+//    public ResponseEntity<?>CompareMission(@PathVariable String missionId){
+//        try{
+//            CompareMissionResponse compareMissionResponse = missionService.getCompareMissionAverage(missionId);
+//            return new ResponseEntity<CompareMissionResponse>(compareMissionResponse,HttpStatus.OK);
+//        }
+//        catch(Exception e){
+//            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 //    @Operation(summary="카테고리별 그룹 평균과 비교")
 //    @PostMapping("/category-compare")
