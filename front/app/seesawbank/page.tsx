@@ -1,5 +1,5 @@
 import Header from '../components/Header'
-import AccountCard from '../user/components/account/AccountCard'
+import AccountCard from '../member/components/account/AccountCard'
 
 const SeesawBankPage = () => {
   return (

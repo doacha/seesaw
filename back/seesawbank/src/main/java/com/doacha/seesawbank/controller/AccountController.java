@@ -1,9 +1,6 @@
 package com.doacha.seesawbank.controller;
 
-import com.doacha.seesawbank.model.dto.account.AccountListResponse;
-import com.doacha.seesawbank.model.dto.account.AccountResponse;
-import com.doacha.seesawbank.model.dto.account.CreateAccountRequest;
-import com.doacha.seesawbank.model.dto.account.DeleteAccountRequest;
+import com.doacha.seesawbank.model.dto.account.*;
 import com.doacha.seesawbank.model.service.AccountService;
 import com.doacha.seesawbank.model.service.AccountTransactionService;
 import lombok.RequiredArgsConstructor;
@@ -39,4 +36,10 @@ public class AccountController {
     public List<AccountListResponse> getAccountList(@RequestBody String memberId){
         return accountService.getAccountList(memberId);
     }
+
+    @PostMapping("/accountdetail")
+    public List<AccountTransactionListResponse> getAccountDetail(@RequestBody String accountNum){
+        return accountService.getAccountDetail(accountNum);
+    }
+
 }
