@@ -3,6 +3,8 @@ package com.doacha.seesaw.controller;
 import com.doacha.seesaw.jwt.JwtProvider;
 import com.doacha.seesaw.jwt.MemberDetail;
 import com.doacha.seesaw.jwt.TokenResponse;
+import com.doacha.seesaw.model.dto.account.AccountResponse;
+import com.doacha.seesaw.model.dto.account.CreateAccountToSeesawRequest;
 import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.service.MemberMissionService;
 import com.doacha.seesaw.model.service.MemberService;
@@ -14,9 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/member")
@@ -101,5 +101,12 @@ public class MemberController {
 //            Object response = memberService
         }
         return ResponseEntity.ok(false);
+    }
+
+    // 적금 계좌 개설
+    @PostMapping("/create-account")
+    public ResponseEntity<AccountResponse> createAccount(@RequestBody CreateAccountToSeesawRequest createAccountToSeesawRequest){
+        return memberService.createAccount(createAccountToSeesawRequest);
+//        return ResponseEntity.ok(false);
     }
 }
