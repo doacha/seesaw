@@ -2,7 +2,7 @@
 
 import Button from '../components/Button'
 import TextButton from '../components/TextButton'
-import { useRouter } from 'next/navigation'
+import { memberouter } from 'next/navigation'
 import Birth from './components/Birth'
 import Email from './components/Email'
 import Password from './components/Password'
@@ -13,7 +13,7 @@ import Swal from 'sweetalert2'
 import { useState } from 'react'
 
 const Regist = () => {
-  const [userInput, setUserInput] = useState({
+  const [memberInput, setmemberInput] = useState({
     email: '',
     pw: '',
     pwCheck: '',
@@ -26,14 +26,14 @@ const Regist = () => {
   })
 
   const { email, pw, pwCheck, name, nickname, gender, year, month, day } =
-    userInput
+    memberInput
 
   const handleInput = (e: any) => {
     const { name, value } = e.target
-    setUserInput({ ...userInput, [name]: value })
+    setmemberInput({ ...memberInput, [name]: value })
   }
 
-  const router = useRouter()
+  const router = memberouter()
 
   const checkEmail = () => {
     console.log('중복확인 클릭')
@@ -46,7 +46,7 @@ const Regist = () => {
   const checkGender = (e: any) => {
     const genderType = e.target.innerText
     // back에 어떻게 요청을 보내느냐에 따라 값을 다르게 넣어야해
-    setUserInput({ ...userInput, ['gender']: e.target.innerText })
+    setmemberInput({ ...memberInput, ['gender']: e.target.innerText })
   }
 
   const clickCancel = () => {
@@ -62,7 +62,7 @@ const Regist = () => {
           text: '입력칸을 모두 채워주세요!',
           icon: 'error',
         })
-      : console.log(userInput)
+      : console.log(memberInput)
   }
   const clickLogin = () => {
     router.push('/login')

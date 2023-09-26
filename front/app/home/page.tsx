@@ -4,7 +4,7 @@ import { useState } from 'react'
 import FaskMakeButton from '../components/FastMakeButton'
 import { Spending } from '@/app/types'
 
-import { useRouter } from 'next/navigation'
+import { memberouter } from 'next/navigation'
 import HomeHeader from './components/HomeHeader'
 import SortButtons from './components/SortButton'
 import SpendingList from './components/SpendingList'

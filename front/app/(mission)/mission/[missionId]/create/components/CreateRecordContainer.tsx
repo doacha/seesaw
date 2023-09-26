@@ -59,7 +59,7 @@ const CreateRecordContainer = (/*{ data }: { data: CreatePostProps }*/) => {
               src={data.memberImgUrl}
               width={35}
               height={35}
-              alt="user profile image"
+              alt="member profile image"
               className="rounded-full inline-block mr-[15px]"
             />
             <span>{data.memberNickname}</span>
