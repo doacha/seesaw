@@ -1,5 +1,6 @@
 package com.doacha.seesaw.repository;
 
+import com.doacha.seesaw.model.dto.SavingList;
 import com.doacha.seesaw.model.dto.mission.MissionListResponse;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.Mission;

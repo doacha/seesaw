@@ -1,5 +1,7 @@
 package com.doacha.seesaw.model.service;
 
+import com.doacha.seesaw.model.dto.SavingList;
+import com.doacha.seesaw.model.dto.SavingRequest;
 import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.exception.BadRequestException;
 import com.doacha.seesaw.model.entity.Member;
@@ -11,7 +13,10 @@ import com.doacha.seesaw.repository.MissionRepository;
 import com.doacha.seesaw.repository.RecordRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -136,6 +141,45 @@ public class MemberMissionService {
         return df.format(cal.getTime());
     }
 
+
+    // 적금 계좌 이체 (매일 오전 3시마다 실행)
+    @Scheduled(cron = "0 0 3 * * *")
+    public void requestTransfer(){
+        List<SavingList> list = getSavingList();
+
+        for(SavingList saving: list){
+            // 각각의 적금건에 대해 이체 요청 하기
+            SavingRequest request = SavingRequest.builder()
+                    .mainAccount(saving.getMemberMainAccount())
+                    .savingAccount(saving.getMemberSavingAccount())
+                    .accountApprovalAmount(saving.getMemberMissionSavingMoney())
+                    .build();
+
+            Mono<String> mono = WebClient.create()
+                    .post()
+                    .uri("http://j9a409.p.ssafy.io:8081/seesawbank/account-transactional/saving")
+//                    .uri("http://localhost:8081/seesawbank/account-transactional/saving")
+                    .bodyValue(request)
+                    .retrieve()
+                    .bodyToMono(String.class);
+
+            mono.subscribe(response -> {
+                if (!response.equals("fail")) {
+                    // 적금 이체 완료 되었으면 DB에서 memberMissionIsSaving false로 바꿔주기
+                    memberMissionRepository.updateMemberMissionIsSaving(saving.getMemberEmail(), saving.getMissionId());
+                } else {
+                    // 적금 이체 실패하면 어떻게 할지는 나중에 생각하자
+                    System.out.println("Request failed or returned a different response: " + response);
+                }
+            });
+        }
+    }
+
+
+    // 적금 이체해야할 목록 불러오기
+    public List<SavingList> getSavingList(){
+        return memberMissionRepository.findSavingListByMemberMissionIsSaving();
+    }
 
     // 카카오페이 결제 번호 반환
 //    public String getMemberMissionTnum(GetMemberMissionTnumRequest getMemberMissionTnumRequest) {
