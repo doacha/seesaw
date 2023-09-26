@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChevronLeft,
@@ -6,190 +7,33 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import Header from '../components/Header'
 import Tab from '../components/Tab'
-import { useState } from 'react'
 
-import CalendarCard from './components/CalendarCard'
+import CalendarCard from './components/calendar/CalendarCard'
 import TextCard from './components/TextCard'
+import DoughtnutChartCard from './components/DoughnutChartCard'
 import SumGraphCard from './components/SumGraphCard'
+
 import { Spending } from '@/app/types'
 
+import { sumList, spend } from '../dummies'
+
 // 내가 데이터 호출을 할 때 1부터 현재 해당하는 달 -1 까지 호출해야해
-// monthSumList에 호출한 객체를 추가..?
-const monthSumList: Spending[] = [
-  {
-    spendingCostSum: 224000,
-    spendingMonth: 1,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 324000,
-    spendingMonth: 2,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 440000,
-    spendingMonth: 3,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 143000,
-    spendingMonth: 4,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 530000,
-    spendingMonth: 5,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 233400,
-    spendingMonth: 6,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 358000,
-    spendingMonth: 7,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 8,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 8,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 8,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 9,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 10,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 11,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 12,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 13,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 14,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 15,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 16,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 17,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 18,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 19,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 20,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 21,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 22,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 23,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 24,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 25,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 26,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 27,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 28,
-    memberEmail: 'doacha@seesaw.com',
-  },
-  {
-    spendingCostSum: 150000,
-    spendingMonth: 29,
-    memberEmail: 'doacha@seesaw.com',
-  },
-]
+// monthSumList에 호출한 객체 append해주기
 
-const spend: Spending[] = [
-  {
-    spendingCostSum: 2240000,
-    spendingMonth: 9,
-    memberEmail: 'doacha@seesaw.com',
-  },
-]
+// 여기의 spendingMonth는 뭐지?
+// 일단 백으로 요청보낼때 spendingMonth는 무조건 전해줘야해
 
-const Report = () => {
+const ReportPage = () => {
   const clickArrow = () => {
     console.log('화살표 클릭')
   }
 
+  // 통계 / 캘린더
+  const [activeTab, setActiveTab] = useState<string>('tab1')
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
   }
-  const [activeTab, setActiveTab] = useState<string>('tab1')
 
   const spendMonth = spend[0].spendingMonth
 
@@ -197,15 +41,47 @@ const Report = () => {
   const handleCalendarTabChange = (tab: string) => {
     setActiveCalendarTab(tab)
   }
+
+  // 해당 date가 몇주차인지 알기위한 함수
+  const formatWeek = (date: Date): string => {
+    const currentDate = date.getDate()
+    const firstDay = new Date(date.setDate(1)).getDay()
+    return Math.ceil((currentDate + firstDay) / 7) + '주차'
+  }
+
+  // 주차 추출
+  const groupSpendingByWeek = (sumList: Spending[]): Record<string, number> => {
+    const groupedData: Record<string, number> = {}
+
+    sumList.forEach((spending: Spending) => {
+      const week = formatWeek(new Date(spending.spendingDate as string))
+      const spendingCost = spending.spendingCostSum as number
+      // 해당주차에 값있어? 누적해
+      if (groupedData[week]) {
+        groupedData[week] += spendingCost
+      } else {
+        //해당주차에 값없어? 초기화
+        groupedData[week] = spendingCost
+      }
+    })
+    return groupedData
+  }
+
+  const groupedSpending = groupSpendingByWeek(sumList)
+
   return (
     <div className="w-screen h-screen bg-background-fill">
       <div>
         <Header title="소비리포트" backButton route="/home" />
       </div>
       <div className="h-full py-16 overflow-auto">
+        {/* reportHeader prop으로 spend만 보낼까..? spend도 보내지 말까? 뭐가 좋은 방법일까 이건 좀 고민... */}
         <div className="flex h-32 bg-white">
           {spend.map((spending, key) => (
-            <div className="h-full flex flex-col justify-between mx-5">
+            <div
+              key={key}
+              className="h-full flex flex-col justify-between mx-5"
+            >
               <div className="my-auto">
                 <div className="flex flex-row gap-3 mb-1">
                   <button
@@ -248,19 +124,30 @@ const Report = () => {
           activeTab={activeTab}
           handleTabChange={handleTabChange}
         />
-        {activeTab == 'tab2' && <CalendarCard />}
-        <div className="flex p-5">
-          <TextCard />
-        </div>
-        <div className="flex p-5">
-          <SumGraphCard
-            handleCalendarTabChange={handleCalendarTabChange}
-            activeCalendarTab={activeCalendarTab}
-            monthSumList={monthSumList}
-          />
-        </div>
+        {activeTab == 'tab2' ? (
+          <div className="flex w-full p-5">
+            <CalendarCard />
+          </div>
+        ) : (
+          <>
+            <div className="flex p-5">
+              <TextCard />
+            </div>
+            <div className="flex px-5 pb-5">
+              <DoughtnutChartCard />
+            </div>
+            <div className="flex px-5 pb-5">
+              <SumGraphCard
+                handleCalendarTabChange={handleCalendarTabChange}
+                activeCalendarTab={activeCalendarTab}
+                sumList={sumList}
+                groupedSpending={groupedSpending}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
 }
-export default Report
+export default ReportPage

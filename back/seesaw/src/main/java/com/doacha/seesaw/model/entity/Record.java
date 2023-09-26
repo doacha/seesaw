@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 
 @Entity
@@ -26,8 +28,13 @@ public class Record {
     private String recordContent;
 
     @Column(name = "record_write_time")
-    @ColumnDefault("CURRENT_TIMESTAMP")
     private Timestamp recordWriteTime;
+
+    @Column(name = "record_start_date")
+    private Date recordStartDate;
+
+    @Column(name = "record_end_date")
+    private Date recordEndDate;
 
     @Column(name="record_total_cost" , nullable =false)
     @ColumnDefault("0")
@@ -46,4 +53,7 @@ public class Record {
     @JoinColumn(name="mission_id",referencedColumnName = "mission_id",nullable = false),
     @JoinColumn(name="member_email", referencedColumnName = "member_email",nullable = false)})
     private MemberMission memberMission;
+
+    @OneToMany(mappedBy = "record")
+    private List<Spending> spendingList;
 }

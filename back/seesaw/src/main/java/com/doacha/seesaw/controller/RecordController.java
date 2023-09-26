@@ -10,10 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -143,17 +147,19 @@ public class RecordController {
     }
 
 
-    // 과거 레코드 목록
+    // 미션 상세 - 그룹 현황 - 과거 레코드 목록
     @Operation( summary = "미션 상세 - 그룹 현황 - 과거 레코드 목록", description = "과거 레코드 목록 불러오는 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "과거 레코드 목록 불러오기 성공"),
             @ApiResponse(responseCode = "500", description = "과거 레코드 목록 불러오기 실패 - 서버 오류")
     })
     @PostMapping("/history")
-    public ResponseEntity<?> getRecordHistoryList(@RequestBody String missionId) {
-        log.info(missionId+"의 과거 레코드 목록 불러오기");
+    public ResponseEntity<?> getRecordHistoryList(@RequestBody GetRecordHistoryListRequest getRecordHistoryListRequest) {
+        String missionId = getRecordHistoryListRequest.getMissionId();
+        int pageNumber = getRecordHistoryListRequest.getPageNumber();
+        log.info(missionId+" 미션의 "+ pageNumber +"페이지의 과거 레코드 목록 불러오기");
         try {
-            List<List<MemberHistory>> list = recordService.getRecordHistoryResponse(missionId);
+            List<List<MemberHistory>> list = recordService.getRecordHistoryResponse(missionId, pageNumber);
             log.info("과거 레코드 목록 불러오기 성공");
             return new ResponseEntity<List<List<MemberHistory>>>(list, HttpStatus.OK);
         } catch (Exception e) {
@@ -162,7 +168,7 @@ public class RecordController {
         }
     }
 
-    // 회차별 절약 금액
+    // 미션 상세 - 나의 현황 - 회차별 절약 금액
     @Operation( summary = "미션 상세 - 나의 현황 - 회차별 절약 금액", description = "회차별 절약 금액 목록 불러오는 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회차별 절약 금액 목록 불러오기 성공"),
@@ -177,6 +183,30 @@ public class RecordController {
             return new ResponseEntity<List<Integer>>(savingList, HttpStatus.OK);
         } catch (Exception e) {
             log.info("회차별 절약 금액 목록 불러오기 실패 - 서버(DB)오류");
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 완료 미션 레코드 상세 리스트
+    @PostMapping("/enddetail")
+    public List<EndRecordListResponse> getEndRecordList(@RequestBody EndRecordListRequest endRecordListRequest){
+        return recordService.getEndRecordList(endRecordListRequest);
+    }
+    // 미션 상세 - 나의 현황 - 회차별 소비 내역 및 미션 성공 여부
+    @Operation( summary = "미션 상세 - 나의 현황 - 회차별 소비 내역 및 미션 성공 여부", description = "회차별 소비 내역 및 미션 성공 여부 목록 불러오는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회차별 소비 내역 및 미션 성공 여부 목록 불러오기 성공"),
+            @ApiResponse(responseCode = "500", description = "회차별 소비 내역 및 미션 성공 여부 목록 불러오기 실패 - 서버 오류")
+    })
+    @PostMapping("/spending-list")
+    public ResponseEntity<?> getSpendingList(@RequestBody GetSpendingListRequest getSpendingListRequest) {
+        log.info("회차별 소비 내역 및 미션 성공 여부 조회");
+        try {
+            List<List<Object>> response = recordService.getSpendingList(getSpendingListRequest);
+            log.info("회차별 소비 내역 및 미션 성공 여부 조회 성공");
+            return new ResponseEntity<List<List<Object>>>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("회차별 소비 내역 및 미션 성공 여부 조회 실패 - 서버(DB)오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

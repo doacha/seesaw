@@ -2,6 +2,7 @@ package com.doacha.seesaw.repository;
 
 import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.model.dto.record.*;
+import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.model.entity.Record;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,6 +70,8 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "ORDER BY r.recordTotalCost DESC ")
     Page<DailyTopSpendingResponse> getDailyTopSpender(@Param("missionId") String missionId,Pageable pageable);
 
+    @Query("SELECT COUNT(r) FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail AND r.recordStatus = 2")
+    int countFail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
 
     // 미션 랭킹 가져오기
     @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MyMissionRankingResponse(" +
@@ -110,6 +113,15 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     @Query("SELECT COUNT(s) FROM Spending s WHERE s.spendingCategoryId = :categoryId GROUP BY DAY(s.spendingDate) ")
     Long countByCategoryIdAndDay(@Param("categoryId") int categoryId);
 
-    @Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.spendingCategoryId = :categoryId ")
-    Long sumByCategoryId(@Param("categoryId") int categoryId);
+    @Query("SELECT r.recordNumber, r.recordStartDate, r.recordEndDate, r.recordStatus, s.spendingTitle, s.spendingCost " +
+            "FROM Record r " +
+            "JOIN r.memberMission mm " +
+            "JOIN mm.mission m " +
+            "JOIN r.spendingList s " +
+            "WHERE m.missionId = :missionId " +
+            "AND mm.member.memberEmail = :memberEmail ")
+    List<Object[]> findRecordAndSpendingByMissionIdAndMemberEmail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
+
+
+    List<Record> findRecordByMemberMissionOrderByRecordStartDateDesc(@Param("memberMission")MemberMission memberMission);
 }
