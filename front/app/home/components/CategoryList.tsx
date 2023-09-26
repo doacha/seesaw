@@ -19,12 +19,11 @@ const CategoryList = ({ onClick }: CategoryListProps) => {
         <div className="carousel">
           {categoryList.map((element, idx) => (
             <ToggleCapsule
-              onClick={onClick}
+              onClick={() => {}}
               className="carousel-item mr-[15px] h-[14px]"
               bgColor="background-fill"
               textColor={`${idx}`}
-              key={idx}
-              value={idx}
+              isSelected={true}
             >
               {element}
             </ToggleCapsule>

@@ -1,13 +1,13 @@
 import { missionCycleArray } from '@/app/lib/constants'
-import ToggleCapsule from './ToggleCapsule'
+import ToggleCapsule from '@/app/components/ToggleCapsule'
 import { MissionCreate } from '@/app/types'
 import styles from '@/app/(mission)/mission/components/SearchContainer.module.css'
 const CycleInput = ({
   state,
-  setState,
+  handleClick,
 }: {
   state: MissionCreate
-  setState: React.Dispatch<React.SetStateAction<MissionCreate>>
+  handleClick: any
 }) => {
   return (
     <div className={`overflow-auto ${styles.delScroll}`}>
@@ -29,11 +29,14 @@ const CycleInput = ({
                 bgColor="background-fill"
                 textColor="black"
                 key={idx}
-                value={idx}
-                state={state}
-                setState={setState}
                 isSelected={idx === state.missionTotalCycle}
-                type="missionTotalCycle"
+                onClick={() =>
+                  handleClick(
+                    idx,
+                    idx === state.missionTotalCycle,
+                    'missionTotalCycle',
+                  )
+                }
               >
                 {element}
               </ToggleCapsule>
