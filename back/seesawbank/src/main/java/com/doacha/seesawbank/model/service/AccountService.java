@@ -1,10 +1,7 @@
 package com.doacha.seesawbank.model.service;
 
 import com.doacha.seesawbank.exception.BadRequestException;
-import com.doacha.seesawbank.model.dto.account.AccountListResponse;
-import com.doacha.seesawbank.model.dto.account.AccountResponse;
-import com.doacha.seesawbank.model.dto.account.CreateAccountRequest;
-import com.doacha.seesawbank.model.dto.account.DeleteAccountRequest;
+import com.doacha.seesawbank.model.dto.account.*;
 import com.doacha.seesawbank.model.entity.Account;
 import com.doacha.seesawbank.model.entity.AccountTransaction;
 import com.doacha.seesawbank.model.entity.Member;
@@ -19,8 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,6 +71,39 @@ public class AccountService {
     public List<AccountListResponse> getAccountList(String memberId) {
         List<AccountListResponse> list = accountRepository.findAccountListResponseByMemberId(memberId);
         return list;
+    }
+
+    // 계좌 내역 가져오기
+    @Transactional
+    public List<AccountTransactionListResponse> getAccountDetail(String accountNum) {
+        Optional<Account> account = accountRepository.findAccountByAccountNum(accountNum);
+        List<AccountTransactionListResponse> list = accountTransactionRepository.findAccountTransactionsByAccountTimeDesc(account.get());
+// TODO: 알ㄴ아ㅣ;ㅓ라ㅣㅓㄹ란어ㅣ; 일주일 자르자
+        //        for(AccountTransactionListResponse atlr : list){
+//            if(!dateDiff(atlr.getAccountTransactionTime(), -7){
+//                list.remove(atlr);
+//            }
+////            if(atlr.getAccountTransactionTime().before(dateAdd(LocalDateTime.now(), -7))){
+////                list.remove(atlr);
+////            }
+//        }
+        return list;
+    }
+
+    // 날짜 더하는 함수
+    public boolean dateDiff(Timestamp date, int plus){
+        if(date == null) return false;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+        cal.add(Calendar.DATE, plus);
+        java.sql.Timestamp t = java.sql.Timestamp.valueOf(df.format(cal.getTime()));
+        int compare = date.compareTo(cal.getTime());
+        if(compare > 0) {
+            return true;
+        }else {
+            return false;
+        }
     }
 
     // 계좌 해지
