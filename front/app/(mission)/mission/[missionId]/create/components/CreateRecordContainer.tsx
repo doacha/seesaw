@@ -1,4 +1,4 @@
-import { getCycleTerm, getTimeBefore } from '../../util'
+import { getCycleTerm, getTimeBefore } from '../../../../util'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Image from 'next/image'
 import RecordSpendingHistory from './RecordSpendingHistory'

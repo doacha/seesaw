@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleDown, faEllipsis } from '@fortawesome/free-solid-svg-icons'
-import { getCycleTerm, getTimeBefore } from '../../util'
+import { getCycleTerm, getTimeBefore } from '../../../../util'
 import { text } from 'stream/consumers'
 import SpendingHistory from './SpendingHistory'
 const boardDetailDummy = {
