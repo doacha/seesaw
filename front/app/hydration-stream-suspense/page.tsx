@@ -1,5 +1,4 @@
 // import Counter from "./counter";
-import Listmembers from './list-users'
 import { Suspense } from 'react'
 
 export default async function Page() {
@@ -10,9 +9,7 @@ export default async function Page() {
         fallback={
           <p style={{ textAlign: 'center' }}>loading... on initial request</p>
         }
-      >
-        <Listmembers />
-      </Suspense>
+      ></Suspense>
     </main>
   )
 }
