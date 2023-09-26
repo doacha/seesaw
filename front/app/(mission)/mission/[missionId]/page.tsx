@@ -7,10 +7,10 @@ import MissionDetailContents from './components/MissionDetailContents'
 import MissionWaitingList from './components/MissionWaitingList'
 import Tab from '@/app/components/Tab'
 import FaskMakeButton from '@/app/components/FastMakeButton'
-import { useRouter } from 'next/navigation'
+import { memberouter } from 'next/navigation'
 // API 연결 이후 params를 통해 데이터를 가져와야 한다.
 const MissionDetailpage = () => {
-  const router = useRouter()
+  const router = memberouter()
   const data = missionDetailDummy
   const contentsProps = {
     missionPeriod: 7,

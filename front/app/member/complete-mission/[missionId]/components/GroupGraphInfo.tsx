@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import CategorizedGraph from './CategorizedGraph'
 import GraphCardText from './GraphCardText'
-import { user } from '@/app/dummies'
+import { member } from '@/app/dummies'
 
 const statisticList: Array<{ category: number; group: number; me: number }> = [
   { category: 7, group: 10, me: 15 },
@@ -18,7 +18,7 @@ const GroupGraphInfo = () => {
   return (
     <div className="w-full flex flex-col gap-5">
       <GraphCardText
-        comment={`${user.userNickname}님은 ${
+        comment={`${member.memberNickname}님은 ${
           categoryList[statisticList[0].category]
         } 에서 동료보다 많은 소비를 하셨어요. 새로운 미션을 시작해볼까요?`}
         textBefore="멤버들은 이런 곳에 "

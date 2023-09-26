@@ -1,8 +1,8 @@
 import Image from 'next/image'
 
 interface TodayStatus {
-  userImgUrl: string
-  userName: string
+  memberImgUrl: string
+  memberName: string
   successCount: number
   spending: number
   balance: number
@@ -31,13 +31,13 @@ const GroupStatusTodayCard = ({
         } rounded-t-[25px] pt-[25px] pb-2 h-[140px]"`}
       >
         <Image
-          src={data.userImgUrl}
+          src={data.memberImgUrl}
           width={65}
           height={65}
-          alt="user profile image"
+          alt="member profile image"
           className="rounded-full m-auto"
         />
-        <div className="text-sm text-center mt-[7px]">{data.userName}</div>
+        <div className="text-sm text-center mt-[7px]">{data.memberName}</div>
         <div className="text-[10px] text-outline text-center m-auto">
           성공 {data.successCount} 회
         </div>

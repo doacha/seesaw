@@ -26,7 +26,7 @@ const Navbar = () => {
       {pathname !== '/login' &&
       pathname !== '/regist' &&
       pathname !== '/seesawbank' &&
-      pathname !== '/user/installment' ? (
+      pathname !== '/member/installment' ? (
         <div className="btm-nav bg-white">
           <NavbarButton
             icon="wallet"
@@ -39,9 +39,9 @@ const Navbar = () => {
             onTabClick={() => onTabClick('mission')}
           />
           <NavbarButton
-            icon="user"
-            activated={currentTab === 'user' ? true : false}
-            onTabClick={() => onTabClick('user')}
+            icon="member"
+            activated={currentTab === 'member' ? true : false}
+            onTabClick={() => onTabClick('member')}
           />
         </div>
       ) : null}

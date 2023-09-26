@@ -4,8 +4,8 @@ import PersonalCard from './PersonalCard'
 import { getCycleTerm } from '../util'
 
 interface missionResult {
-  userImgUrl: string
-  userName: string
+  memberImgUrl: string
+  memberName: string
   status: boolean
   spending: number
   boardId: number

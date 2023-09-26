@@ -1,8 +1,8 @@
 import { error } from 'console'
 import Image from 'next/image'
 interface missionResult {
-  userImgUrl: string
-  userName: string
+  memberImgUrl: string
+  memberName: string
   status: boolean
   spending: number
   boardId: number
@@ -12,14 +12,14 @@ const PersonalCard = ({ data }: { data: missionResult }) => {
   return (
     <div className="flex flex-row gap-2 bg-background mb-2.5">
       <Image
-        src={data.userImgUrl}
-        alt="user profile image"
+        src={data.memberImgUrl}
+        alt="member profile image"
         width={38}
         height={38}
         className="rounded-full m-auto"
       />
       <div className="w-full flex-[2_1_0%]">
-        <div className="text-sm mb-1">{data.userName}</div>
+        <div className="text-sm mb-1">{data.memberName}</div>
         <div
           className={`${data.status ? 'text-primary' : 'text-error'} text-xs`}
         >

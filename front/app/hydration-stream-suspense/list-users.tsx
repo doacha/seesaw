@@ -1,20 +1,20 @@
 'use client'
 
-import { User } from '../types'
+import { member } from '../types'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 
-async function getUsers() {
-  return (await fetch('https://jsonplaceholder.typicode.com/users').then(
+async function getmembers() {
+  return (await fetch('https://jsonplaceholder.typicode.com/members').then(
     (res) => res.json(),
-  )) as User[]
+  )) as member[]
 }
 
-export default function ListUsers() {
+export default function Listmembers() {
   const [count, setCount] = React.useState(0)
-  const { data } = useQuery<User[]>({
-    queryKey: ['stream-hydrate-users'],
-    queryFn: () => getUsers(),
+  const { data } = useQuery<member[]>({
+    queryKey: ['stream-hydrate-members'],
+    queryFn: () => getmembers(),
     suspense: true,
     staleTime: 5 * 1000,
   })
@@ -40,17 +40,17 @@ export default function ListUsers() {
             gap: 20,
           }}
         >
-          {data?.map((user) => (
+          {data?.map((member) => (
             <div
-              key={user.userEmail}
+              key={member.memberEmail}
               style={{ border: '1px solid #ccc', textAlign: 'center' }}
             >
               <img
-                src={`https://robohash.org/${user.userEmail}?set=set2&size=180x180`}
-                alt={user.userName}
+                src={`https://robohash.org/${member.memberEmail}?set=set2&size=180x180`}
+                alt={member.memberName}
                 style={{ width: 180, height: 180 }}
               />
-              <h3>{user.userName}</h3>
+              <h3>{member.memberName}</h3>
             </div>
           ))}
         </div>
