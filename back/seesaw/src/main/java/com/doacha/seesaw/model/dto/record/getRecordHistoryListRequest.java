@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "Record 글 목록 request")
-public class git aGetRecordHistoryListRequest {
+public class GetRecordHistoryListRequest {
 
     @Schema(description = "미션 아이디", example = "abcd1234", required = true)
     private String missionId;
