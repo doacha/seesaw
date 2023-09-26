@@ -1,23 +1,27 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import FaskMakeButton from '../components/FastMakeButton'
-import { Spending } from '@/app/types'
-
-import { memberouter } from 'next/navigation'
 import HomeHeader from './components/HomeHeader'
 import SortButtons from './components/SortButton'
 import SpendingList from './components/SpendingList'
-
-import CategoryList from './components/CategoryList'
 import AddPostModal from './components/AddPostModal'
 
+import { Spending } from '@/app/types'
 import { spend, spendingList } from '../dummies'
 
+import { memberEmailStore } from '@/stores/memberEmail'
+
+import CategoryList from './components/CategoryList'
+
 const HomePage = () => {
+  const router = useRouter()
+  const { memberEmail, setMemberEmail } = memberEmailStore()
+  // zustand에 저장된 email 가져오기
+  console.log(memberEmail)
   const [sort, setSort] = useState('최신순')
 
-  const router = useRouter()
   const clickReport = () => {
     router.push('/report')
   }
@@ -25,7 +29,6 @@ const HomePage = () => {
     console.log('arrow 클릭')
   }
   const clickText = (e: any) => {
-    console.log('최신순, 고액순 클릭')
     setSort(e.target.innerText)
   }
 
@@ -96,7 +99,7 @@ const HomePage = () => {
 
   const [open, setOpen] = useState(false)
   const handleToggle = () => {
-    // setOpen((prev) => !prev)
+    // setOpen((prev) => !prev) 이거 왜 안됨?
     setOpen(!open)
   }
 
@@ -119,7 +122,7 @@ const HomePage = () => {
             groupedSpending={groupedSpending}
             formatDayTime={formatDayTime}
             spendingList={spendingList}
-            // 카테고리 선택 관련
+            // Todo 카테고리 선택 및 매핑 과정 필요
             // newSelected = {newSelected}
           />
         </div>
