@@ -30,8 +30,7 @@ const ToggleCapsule = ({
   onClick?: any
   children: string
   className?: string
-  select?: boolean
-  isSelected: boolean
+  isSelected?: boolean
 }) => {
   let backgroundColor, fontColor
 
