@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import FaskMakeButton from '../components/FastMakeButton'
 import HomeHeader from './components/HomeHeader'
@@ -9,7 +9,7 @@ import SpendingList from './components/SpendingList'
 import AddPostModal from './components/AddPostModal'
 
 import { Spending } from '@/app/types'
-import { spend, spendingList } from '../dummies'
+import { spend } from '../dummies'
 
 import { memberEmailStore } from '@/stores/memberEmail'
 
@@ -18,9 +18,46 @@ import CategoryList from './components/CategoryList'
 const HomePage = () => {
   const router = useRouter()
   const { memberEmail, setMemberEmail } = memberEmailStore()
+
   // zustand에 저장된 email 가져오기
-  console.log(memberEmail)
+  // console.log(memberEmail)
+
   const [sort, setSort] = useState('최신순')
+  const [spendingList, setSpendingList] = useState<Spending[]>([])
+
+  const data: {
+    memberEmail: string
+    spendingYear: number
+    spendingMonth: number
+    condition: 'spendingDate' | 'spendingCost'
+  } = {
+    // 변경이 필요함 email은 zustand에 있는 것
+    memberEmail: 'doacha@seesaw.com',
+    // spendingYear은 어케하징?
+    spendingYear: 2023,
+    // spendingMonth는 어케하징?
+    spendingMonth: 9,
+    condition: sort === '최신순' ? 'spendingDate' : 'spendingCost',
+  }
+  const fetchSpendingList = () => {
+    fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/list`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
+      },
+      body: JSON.stringify(data), // 데이터를 JSON 문자열로 변환하여 전송
+    })
+      .then((res) => {
+        return res.json()
+      })
+      .then((data) => {
+        // console.log(data)
+        setSpendingList(data)
+      })
+  }
+  useEffect(() => {
+    fetchSpendingList()
+  }, [data.condition])
 
   const clickReport = () => {
     router.push('/report')

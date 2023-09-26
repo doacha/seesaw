@@ -21,8 +21,85 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     modalClass += ' modal-open'
   }
 
+  const today = new Date()
+
+  const [postInput, setPostInput] = useState({
+    spendingTitle: '',
+    spendingCost: 0,
+    spendingDate: today,
+    spendingMemo: '',
+    spendingCategory: '2',
+    memberEmail: 'doacha@seesaw.com',
+  })
+
+  const {
+    spendingTitle,
+    spendingCost,
+    spendingDate,
+    spendingMemo,
+    spendingCategory,
+    // 여기서 email은 zustend 저장된 이메일이겠죠?
+    memberEmail,
+  } = postInput
+
+  // 백엔드로 보내기 위한 date 설정
+  const stringToDate = spendingDate.toISOString()
+
+  const data: {
+    spendingTitle: string
+    spendingCost: number
+    spendingDate: string
+    spendingMemo: string
+    spendingCategory: string
+    memberEmail: string
+  } = {
+    spendingTitle: spendingTitle,
+    spendingCost: spendingCost,
+    spendingDate: stringToDate,
+    spendingMemo: spendingMemo,
+    spendingCategory: '2',
+    memberEmail: 'doacha@seesaw.com',
+  }
+
+  const handleInput = (e: any) => {
+    const { name, value } = e.target
+    setPostInput({ ...postInput, [name]: value })
+  }
+
+  const fetchAddPost = (data: object) => {
+    fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
+      },
+      body: JSON.stringify(data), // 데이터를 JSON 문자열로 변환하여 전송
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          Swal.fire({
+            title: '등록완료 성공',
+            width: 300,
+            icon: 'success',
+          })
+        }
+        return res.json()
+      })
+      .then((data) => {
+        // 모달창 닫기
+        handleToggle()
+        setPostInput({
+          spendingTitle: '',
+          spendingCost: 0,
+          spendingDate: today,
+          spendingMemo: '',
+          // 여기 수정이 필요합니다.
+          spendingCategory: '2',
+          memberEmail: 'doacha@seesaw.com',
+        })
+        console.log(data)
+      })
+  }
   const clickSave = () => {
-    console.log(userInput)
     if (spendingCost === 0) {
       Swal.fire({
         width: 300,
@@ -35,52 +112,10 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
         text: '거래처를 입력해주세요!',
         icon: 'error',
       })
+    } else {
+      fetchAddPost(data)
     }
   }
-  // 요일을 2023년 9월 14일 목요일 오후 1:22로 변경해준다.
-  const formatDate = (date: Date): string => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      weekday: 'long',
-      hour: 'numeric',
-      minute: 'numeric',
-    }
-
-    const formatter = new Intl.DateTimeFormat('ko-KR', options)
-    return formatter.format(date)
-  }
-
-  // 현재 날짜 데이터
-  const formattedDate = formatDate(new Date())
-
-  // api 응답 데이터로 바꿔야함
-  // 왜 value 형태가 왜 저래....
-  const [userInput, setUserInput] = useState({
-    spendingTitle: '',
-    spendingCost: 0,
-    spendingDate: formattedDate,
-    spendingMemo: '',
-    spendingCategoryId: 0,
-    memberEmail: '',
-  })
-
-  const {
-    spendingTitle,
-    spendingCost,
-    spendingDate,
-    spendingMemo,
-    spendingCategoryId,
-    // 여기서 email은 redux에 저장된 이메일이겠죠?
-    memberEmail,
-  } = userInput
-
-  const handleInput = (e: any) => {
-    const { name, value } = e.target
-    setUserInput({ ...userInput, [name]: value })
-  }
-
   return (
     <div className={modalClass}>
       {/* we want any content for this modal layout so we just pass the children */}
@@ -95,7 +130,7 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
         <h3 className="font-bold text-lg font-scDreamRegular">거래처</h3>
         <div className="h-[1px] bg-outline rounded-full mt-2"></div>
 
-        <div className="py-4">
+        <form id="addPostForm" className="py-4">
           <SpendingCostInput value={spendingCost} onChange={handleInput} />
           {/* 카테고리 들어갈 곳 */}
           <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
@@ -128,7 +163,7 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
             onChange={handleInput}
             placeholder="메모를 입력하세요"
           />
-        </div>
+        </form>
         <div className="mt-5">
           <Button color="primary" label="저장" size="sm" onClick={clickSave} />
         </div>
