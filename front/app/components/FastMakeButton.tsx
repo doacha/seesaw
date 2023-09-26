@@ -1,13 +1,17 @@
+'use client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-
+import { useRouter } from 'next/navigation'
 const FaskMakeButton = ({
   onClick,
   customCSS,
+  path,
 }: {
-  onClick: any
+  onClick?: any
   customCSS?: string
+  path?: string
 }) => {
+  const router = useRouter()
   // fast 버튼은 가계부에만 넣는건가?
   return (
     <div
@@ -18,7 +22,7 @@ const FaskMakeButton = ({
         icon={faPlus}
         size="2xl"
         className={`text-background absolute m-auto ${customCSS ?? ''}`}
-        onClick={onClick}
+        onClick={() => router.push(path ?? '/home')}
       />
     </div>
   )

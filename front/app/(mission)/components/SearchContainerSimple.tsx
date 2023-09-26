@@ -21,7 +21,7 @@ const SearchContainerSimple = ({
       className="rounded-lg bg-background px-5 py-2.5 w-full"
       onClick={onClick}
     >
-      <SearchBar />
+      <SearchBar state={state} onChange={() => {}} />
       <div className="mt-2.5 flex flex-wrap gap-y-2.5">
         <DropdownCapsule
           className="mr-2.5"
