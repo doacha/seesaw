@@ -1,0 +1,81 @@
+'use client'
+import { useEffect, useState } from 'react'
+import Header from '../components/Header'
+import MyMissionListCard from './components/MyMissionListCard'
+import MemberInfoCard from './components/MemberInfoCard'
+import ProfileEditCard from './components/edit/ProfileEditCard'
+import Tab from '../components/Tab'
+import AccountCard from './components/account/AccountCard'
+import AccountRegistModal from './components/account/AccountRegistModal'
+import { QueryKey, useQuery } from '@tanstack/react-query'
+
+const memberPage = () => {
+  const [openEditPage, setOpenEditPage] = useState<boolean>(false)
+  const [activeTab, setActiveTab] = useState<string>('tab1')
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab)
+  }
+
+  const getProfileInfo = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/mypage`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: 'doacha@seesaw.com',
+        },
+      )
+      return await res.json()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const { isLoading, data, error } = useQuery(['profileInfo'], getProfileInfo)
+
+  return (
+    <div className="bg-background-fill flex flex-col h-screen w-screen">
+      {isLoading ? null : (
+        <div>
+          {openEditPage ? (
+            <div className="absolute w-full h-full bg-outline z-50 bg-opacity-50">
+              <ProfileEditCard setOpenEditPage={() => setOpenEditPage(false)} />
+            </div>
+          ) : null}
+
+          <Header title="마이페이지" />
+
+          <div className="flex flex-col h-full py-16 overflow-scroll">
+            <Tab
+              labels={['내 정보', '내 계좌']}
+              activeTab={activeTab}
+              handleTabChange={handleTabChange}
+            />
+            {activeTab === 'tab1' ? (
+              <div className="flex flex-col h-full p-5 gap-5">
+                <MemberInfoCard
+                  setOpenEditPage={() => setOpenEditPage(true)}
+                  member={data.info}
+                />
+                <MyMissionListCard missionList={data.missionList} />
+              </div>
+            ) : (
+              <div className="flex flex-col h-min-full p-5 gap-5">
+                <AccountCard />
+                <AccountCard />
+                <AccountCard />
+                <AccountRegistModal />
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default memberPage

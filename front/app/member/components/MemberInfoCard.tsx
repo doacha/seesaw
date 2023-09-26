@@ -1,15 +1,16 @@
 'use client'
 import { useState } from 'react'
-import UserDetailInfo from './UserDetailInfo'
+import MemberDetailInfo from './MemberDetailInfo'
 import TextButton from '@/app/components/TextButton'
-import { User } from '@/app/types'
-import { user } from '@/app/dummies'
+import { Member } from '@/app/types'
+import { member } from '@/app/dummies'
 
 interface Props {
+  member: Member
   setOpenEditPage: () => void
 }
 
-const UserInfoCard = (props: Props) => {
+const memberInfoCard = (props: Props) => {
   return (
     <div className="card shadow-none bg-white rounded-lg">
       <div className="card-body relative p-5 gap-5">
@@ -20,11 +21,11 @@ const UserInfoCard = (props: Props) => {
             onButtonClick={props.setOpenEditPage}
           ></TextButton>
         </div>
-        <UserDetailInfo user={user} />
+        <MemberDetailInfo member={props.member} />
         <div className="flex self-center text-xl font-scDreamLight">
           현재까지&nbsp;
           <div className="font-scDreamExBold text-primary">
-            {user.savedMoney.toLocaleString()}
+            {member.savedMoney.toLocaleString()}
           </div>
           원 절약하셨습니다.
         </div>
@@ -33,4 +34,4 @@ const UserInfoCard = (props: Props) => {
   )
 }
 
-export default UserInfoCard
+export default memberInfoCard

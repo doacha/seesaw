@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import '../user/styles/style.css'
+import '../member/styles/style.css'
 
 interface Props {
   sortType: 0 | 1 | 2

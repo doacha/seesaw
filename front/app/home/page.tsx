@@ -4,7 +4,7 @@ import { useState } from 'react'
 import FaskMakeButton from '../components/FastMakeButton'
 import { Spending } from '@/app/types'
 
-import { useRouter } from 'next/navigation'
+import { memberouter } from 'next/navigation'
 import HomeHeader from './components/HomeHeader'
 import SortButtons from './components/SortButton'
 import SpendingList from './components/SpendingList'
@@ -57,7 +57,7 @@ const HomePage = () => {
     console.log('최신순, 고액순 클릭')
     setSort(e.target.innerText)
   }
-  const router = useRouter()
+  const router = memberouter()
 
   const clickDetail = () => {
     // 해당 내역의 번호를 가지고 페이지 이동해야해

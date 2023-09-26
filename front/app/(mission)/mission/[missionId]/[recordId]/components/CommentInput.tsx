@@ -1,12 +1,12 @@
 import Image from 'next/image'
 
-interface User {
+interface member {
   memberNickname: string
   memberEmail: string
   memberImgUrl: string
 }
 
-const CommentInput = (/*{ data }: { data: User }*/) => {
+const CommentInput = (/*{ data }: { data: member }*/) => {
   const data = {
     memberNickname: '도아차차',
     memberEmail: 'doacha@seesaw.com',
@@ -16,7 +16,7 @@ const CommentInput = (/*{ data }: { data: User }*/) => {
     <div className="flex flex-row items-center gap-2.5 mb-5 bg-background rounded-lg h-12 p-5 m-5">
       <Image
         src={data.memberImgUrl}
-        alt="user profile image"
+        alt="member profile image"
         width={27}
         height={26}
         className="rounded-full"

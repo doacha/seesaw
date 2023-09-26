@@ -21,10 +21,10 @@ interface MissionCardProps {
 import { missionCardDummy as dummyMissionCard } from '@/app/dummies'
 import Capsule from '@/app/components/Capsule'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'next/navigation'
+import { famember } from '@fortawesome/free-solid-svg-icons'
+import { memberouter } from 'next/navigation'
 const MissionCard = ({ data }: { data: MissionCardProps }) => {
-  const router = useRouter()
+  const router = memberouter()
   return (
     <div
       onClick={() => router.push('/mission/' + data.missionId)}
@@ -42,7 +42,7 @@ const MissionCard = ({ data }: { data: MissionCardProps }) => {
         {/* 듀데이트 */}
         <div className="flex absolute top-3 right-3 bg-primary-container/80 rounded text-[10px] px-1">
           <FontAwesomeIcon
-            icon={faUser}
+            icon={famember}
             size="xs"
             className="text-primary mr-1 mt-1 mb-1"
           />
