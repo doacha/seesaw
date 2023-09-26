@@ -14,7 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.Optional;
 
 @Service
@@ -26,6 +30,7 @@ public class MemberService {
     // TODO: 나중에 PasswordEncoder 다시 설정 해주기
     private final PasswordEncoder passwordEncoder;
     private final RedisDao redisDao;
+
 
     // 회원가입
     @Transactional
@@ -43,7 +48,7 @@ public class MemberService {
                 signUpRequest.getMemberBirth(),
                 signUpRequest.isMemberGender(),
                 false,
-                0// 처음엔 미인증(0)으로
+                0 // 처음엔 미인증(0)으로
                 );
 
         member = memberRepository.save(member);
@@ -65,6 +70,46 @@ public class MemberService {
 
         return MemberResponse.of(member);
     }
+
+    // 계좌 체크
+    @Transactional(readOnly = true)
+    public boolean checkCertifiedAccount(String memberEmail) {
+        Member member = memberRepository
+                .findByMemberEmail(memberEmail)
+                .orElseThrow(() -> new BadRequestException("아이디 혹은 비밀번호를 확인하세요."));
+
+        if(member.getMemberBankId()!=null) return true;
+        else return false;
+    }
+
+    // 백에 계좌 리스트 api 요청
+    //1.get방식 요청
+//    public Object seesawbankAccounts (String memberEmail){
+//
+//
+//        //URI를 빌드한다
+//        URI uri = UriComponentsBuilder
+//                .fromUriString("http://localhost:8081")
+//                .path("/api/server/hello")
+//                .encode(Charset.defaultCharset())
+//                .build()
+//                .toUri();
+//        System.out.println(uri.toString());
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        //String result = restTemplate.getForObject(uri, String.class);
+//        //getForEntity는 응답을 ResponseEntity로 받을 수 있도록 해준다 .
+//        //파라미터 첫번째는 요청 URI 이며 , 2번째는 받을 타입
+//        ResponseEntity<UserResponse> result = restTemplate.getForEntity(uri,UserResponse.class);
+//
+//        System.out.println(result.getStatusCode());
+//        System.out.println(result.getBody());
+//
+//        return result.getBody();
+//    }
+
+
 
     // 로그아웃
     @Transactional
@@ -165,6 +210,7 @@ public class MemberService {
                 .memberPhoneNumber(member.get().getMemberPhoneNumber())
                 .memberState(2) // 2가 탈퇴 상태
                 .memberMainAccount(member.get().getMemberMainAccount())
+                .memberBankId(member.get().getMemberBankId())
                 .build();
 
         memberRepository.save(update);
