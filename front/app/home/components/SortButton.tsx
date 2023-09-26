@@ -6,9 +6,9 @@ interface SortButtonsProps {
 
 const SortButtons = ({ sort, clickText }: SortButtonsProps) => {
   return (
-    <div className="flex justify-between h-12 border-t-2 border-outline-container bg-background">
-      <div className="mx-2 my-auto">
-        {/* 메모있음을.. 버려.. */}
+    <div className="flex h-12 border-t-2 border-outline-container bg-background">
+      {/* 메모있음을.. 버려.. */}
+      {/* <div className="mx-2 my-auto">
         <label className="label cursor-pointer">
           <input
             type="checkbox"
@@ -19,8 +19,8 @@ const SortButtons = ({ sort, clickText }: SortButtonsProps) => {
             메모 있음
           </span>
         </label>
-      </div>
-      <div className="flex justify-between gap-1 mx-2">
+      </div> */}
+      <div className="flex w-full justify-end gap-1 mx-2">
         <button
           className={
             sort === '최신순'
