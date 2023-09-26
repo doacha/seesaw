@@ -84,30 +84,32 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "GROUP BY m.missionId, mm.member.memberEmail " +
             "ORDER BY SUM(r.recordTotalCost) ASC")
     List<MyMissionRankingResponse> getMyMissionRanking(@Param("missionId") String missionId);
-    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MyMissionAverageResponse(" +
-            "m.missionId, "+
-            "AVG(r.recordTotalCost) AS average, " +
-            "mm.member.memberEmail, " +
-            "(SELECT COUNT(r2) FROM Record r2 WHERE r2.memberMission.member.memberEmail=:memberEmail AND r2.memberMission.mission.missionId= :missionId) AS count) " +
+    @Query("SELECT m.missionId, AVG(r.recordTotalCost), mm.member.memberEmail " +
             "FROM Record r " +
             "JOIN r.memberMission mm " +
             "JOIN mm.mission m " +
             "WHERE m.missionId = :missionId AND mm.member.memberEmail = :memberEmail")
-    MyMissionAverageResponse getMyMissionAverage(@Param("missionId") String missionId, @Param("memberEmail")String memberEmail);
+    Object[] getMyMissionAverage(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
+
+
+    @Query("SELECT COUNT(r) FROM Record r WHERE r.memberMission.member.memberEmail = :memberEmail AND r.memberMission.mission.missionId = :missionId")
+    Long countMissionMember(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
+
     @Query("SELECT r.recordTotalCost FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail ORDER BY r.recordNumber ASC ")
     List<Integer> findRecordTotalCostByMissionIdAndMemberEmail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
 
-//    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.CompareMissionDto(" +
-//            "r.memberMission.mission.missionId AS missionId, "+
-//            "AVG(r.recordTotalCost) AS missionAverage " +
-//            "FROM Record r "+
-//            "WHERE r.memberMission.mission.missionId = :missionId ")
-//    CompareMissionDto getCompareMission(@Param("missionId") String missionId);
-//
-//
-//    @Query("SELECT COUNT(s) FROM Spending s WHERE s.spendingCategoryId = :categoryId GROUP BY DAY(s.spendingDate) ")
-//    Long countByCategoryIdAndDay(@Param("categoryId") int categoryId);
-//
-//    @Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.spendingCategoryId = :categoryId ")
-//    Long sumByCategoryId(@Param("categoryId") int categoryId);
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.CompareMissionDto(" +
+            "mm.mission.missionId AS missionId, " +
+            "AVG(r.recordTotalCost) AS missionAverage) " +
+            "FROM Record r " +
+            "JOIN r.memberMission mm " +
+            "WHERE mm.mission.missionId = :missionId")
+    CompareMissionDto getCompareMission(@Param("missionId") String missionId);
+
+
+    @Query("SELECT COUNT(s) FROM Spending s WHERE s.spendingCategoryId = :categoryId GROUP BY DAY(s.spendingDate) ")
+    Long countByCategoryIdAndDay(@Param("categoryId") int categoryId);
+
+    @Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.spendingCategoryId = :categoryId ")
+    Long sumByCategoryId(@Param("categoryId") int categoryId);
 }
