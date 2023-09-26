@@ -187,6 +187,11 @@ public class RecordController {
         }
     }
 
+    // 완료 미션 레코드 상세 리스트
+    @PostMapping("/enddetail")
+    public List<EndRecordListResponse> getEndRecordList(@RequestBody EndRecordListRequest endRecordListRequest){
+        return recordService.getEndRecordList(endRecordListRequest);
+    }
     // 미션 상세 - 나의 현황 - 회차별 소비 내역 및 미션 성공 여부
     @Operation( summary = "미션 상세 - 나의 현황 - 회차별 소비 내역 및 미션 성공 여부", description = "회차별 소비 내역 및 미션 성공 여부 목록 불러오는 API")
     @ApiResponses(value = {

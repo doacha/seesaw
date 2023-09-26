@@ -18,49 +18,35 @@ const ToggleCapsule = ({
   textColor,
   isHasBorder,
   isSmall,
-  onClick,
-  content,
+  children,
   className,
-  value,
-  select,
-  type,
+  isSelected,
+  onClick,
 }: {
   bgColor: string
   textColor: string
   isHasBorder?: boolean
   isSmall?: boolean
   onClick?: any
-  content?: string
-  className?: string | string[]
-  value: number
-  select?: boolean
-  type?: string
+  children: string
+  className?: string
+  isSelected?: boolean
 }) => {
-  const [backgroundColor, setBackgroundColor] = useState(bgColor)
-  const [fontColor, setFontColor] = useState(textColor)
-  const [isSelected, setIsSelected] = useState(select ?? false)
+  let backgroundColor, fontColor
 
-  const handleClick = (id: number | undefined) => {
-    if (isSelected) {
-      setBackgroundColor(bgColor)
-      setFontColor(textColor)
+  if (!isSelected) {
+    backgroundColor = bgColor
+    fontColor = textColor
+  } else {
+    if (textColor === 'black') {
+      backgroundColor = 'primary-containar'
+      fontColor = 'black'
     } else {
-      console.log('textColor is ', textColor)
-      if (textColor === 'black') {
-        setBackgroundColor('primary-container')
-        setFontColor('black')
-      } else {
-        setBackgroundColor(textColor)
-        setFontColor('background')
-      }
+      backgroundColor = textColor
+      fontColor = 'background'
     }
-
-    if (onClick) {
-      if (id === undefined) return
-      onClick(id, isSelected, type)
-    }
-    setIsSelected(!isSelected)
   }
+
   const tailwindBorder = isHasBorder ? 'border-[0.5px]' : 'border-0'
   const tailwindFontSize = isSmall
     ? 'text-[10px] h-4 py-[3px]'
@@ -79,9 +65,9 @@ const ToggleCapsule = ({
           ? capsuleColor.text['background']
           : capsuleColor.text[fontColor]
       } ${tailwindBorder} ${tailwindFontSize} ${className}`}
-      onClick={() => handleClick(value)}
+      onClick={onClick}
     >
-      {content}
+      {children}
     </span>
   )
 }

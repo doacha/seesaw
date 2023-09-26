@@ -3,23 +3,23 @@ import Input from '../components/Input'
 import TextButton from '../components/TextButton'
 import Button from '../components/Button'
 import GoogleBtn from './components/googleBtn'
-import { useRouter } from 'next/navigation'
+import { memberouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal from 'sweetalert2'
 
 const Login = () => {
-  const [userInput, setUserInput] = useState({
+  const [memberInput, setmemberInput] = useState({
     email: '',
     pw: '',
   })
 
-  const { email, pw } = userInput
+  const { email, pw } = memberInput
 
   const handleInput = (e: any) => {
     const { name, value } = e.target
-    setUserInput({ ...userInput, [name]: value })
+    setmemberInput({ ...memberInput, [name]: value })
   }
-  const router = useRouter()
+  const router = memberouter()
 
   const clickLogin = () => {
     !email || !pw
@@ -29,7 +29,7 @@ const Login = () => {
           text: '아이디 또는 비밀번호를 잘못 입력했습니다.',
           icon: 'error',
         })
-      : console.log(userInput)
+      : console.log(memberInput)
   }
   const forgetPw = () => {
     console.log('패스워드 까먹')
