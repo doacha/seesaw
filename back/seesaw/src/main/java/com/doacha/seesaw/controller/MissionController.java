@@ -139,27 +139,38 @@ public class MissionController {
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @Operation(summary="미션 통계 등수")
-    @PostMapping("/myranking")
-    public ResponseEntity<?>getMyMissionRanking(@RequestBody QuitMissionRequest quitMissionRequest){
-        try{
-            MyMissionRankingResponse myMissionRankingResponse = missionService.getMyMissionRanking(quitMissionRequest.getMissionId(),quitMissionRequest.getMemberEmail());
-            return new ResponseEntity<MyMissionRankingResponse>(myMissionRankingResponse,HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @Operation(summary="미션 통계 등수")
+//    @PostMapping("/myranking")
+//    public ResponseEntity<?>getMyMissionRanking(@RequestBody QuitMissionRequest quitMissionRequest){
+//        try{
+//            MyMissionRankingResponse myMissionRankingResponse = missionService.getMyMissionRanking(quitMissionRequest.getMissionId(),quitMissionRequest.getMemberEmail());
+//            return new ResponseEntity<MyMissionRankingResponse>(myMissionRankingResponse,HttpStatus.OK);
+//        }
+//        catch(Exception e){
+//            return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
-    @Operation(summary="미션 평균 사용 금액")
-    @PostMapping("/average")
-    public ResponseEntity<?>getMyMissionAverage(@RequestBody QuitMissionRequest quitMissionRequest){
-        try{
-            MyMissionAverageResponse myMissionAverageResponse = missionService.getMyMissionAverage(quitMissionRequest.getMissionId(),quitMissionRequest.getMemberEmail());
-            return new ResponseEntity<MyMissionAverageResponse>(myMissionAverageResponse,HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+//    @Operation(summary="미션 평균 사용 금액")
+//    @PostMapping("/average")
+//    public ResponseEntity<?>getMyMissionAverage(@RequestBody QuitMissionRequest quitMissionRequest) {
+//        MyMissionAverageResponse myMissionAverageResponse = missionService.getMyMissionAverage(quitMissionRequest.getMissionId(), quitMissionRequest.getMemberEmail());
+//        if (myMissionAverageResponse != null) {
+//            return new ResponseEntity<>(myMissionAverageResponse, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//    }
+
+
+    @Operation(summary="내 미션 통계")
+    @PostMapping("/mystats")
+    public ResponseEntity<?>MyMissionStatResponse(@RequestBody QuitMissionRequest quitMissionRequest) {
+        MyMissionStatResponse myMissionStatResponse = missionService.getMyMissionStats(quitMissionRequest.getMissionId(), quitMissionRequest.getMemberEmail());
+        if (myMissionStatResponse != null) {
+            return new ResponseEntity<>(myMissionStatResponse, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
