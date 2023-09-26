@@ -55,5 +55,6 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
 
 
 
+
 }
 
