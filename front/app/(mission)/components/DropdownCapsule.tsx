@@ -25,12 +25,14 @@ const DropdownCapsule = ({
   onClick?: any
   className?: string
   changeable?: boolean
-  state: Array<number>
+  state: Array<boolean>
   title: string
   isList?: boolean
   type: number
 }) => {
-  const tailwindBorder = state.length === 0 ? 'border-[0.5px]' : 'border-0'
+  const tailwindBorder = !state.some((element) => element)
+    ? 'border-[0.5px]'
+    : 'border-0'
   const tailwindFontSize = isSmall
     ? 'text-[10px] h-4 py-[3px]'
     : 'text-sm h-[30px] py-2'
@@ -40,7 +42,9 @@ const DropdownCapsule = ({
       className={`badge px-[15px] ${
         capsuleColor.bg[getBgColor(state, type, isList ?? false)]
       } ${
-        capsuleColor.text[state.length ? 'background' : 'black']
+        capsuleColor.text[
+          state.some((element) => element) ? 'background' : 'black'
+        ]
       } ${tailwindBorder} ${tailwindFontSize} ${className}`}
       onClick={onClick}
     >
@@ -53,12 +57,20 @@ enum SearchType {
   Period,
   Cycle,
 }
-const getBgColor = (state: Array<number>, type: number, isList: boolean) => {
-  if (state.length === 0) {
+const getBgColor = (state: Array<boolean>, type: number, isList: boolean) => {
+  let numberOfSelect = 0
+  let selectedIdx = -1
+  state.forEach((element, idx) => {
+    if (element) {
+      numberOfSelect++
+      selectedIdx = idx
+    }
+  })
+  if (numberOfSelect === 0) {
     return 'background'
   }
-  if (state.length === 1 && type === SearchType.Category) {
-    return String(state[0])
+  if (numberOfSelect === 1 && type === SearchType.Category) {
+    return String(selectedIdx)
   }
   if (isList) {
     return 'primary-container'
@@ -66,23 +78,31 @@ const getBgColor = (state: Array<number>, type: number, isList: boolean) => {
   return 'primary'
 }
 const getDropdownTitle = (
-  state: Array<number>,
+  state: Array<boolean>,
   title: string,
   type: number,
 ) => {
-  if (state.length === 0) {
+  let numberOfSelect = 0
+  let selectedIdx = -1
+  state.forEach((element, idx) => {
+    if (element) {
+      numberOfSelect++
+      selectedIdx = idx
+    }
+  })
+  if (numberOfSelect === 0) {
     return title
-  } else if (state.length === 1) {
+  } else if (numberOfSelect === 1) {
     switch (type) {
       case SearchType.Category:
-        return categoryList[state[0]]
+        return categoryList[selectedIdx]
       case SearchType.Period:
-        return missionPeriodArray[state[0]]
+        return missionPeriodArray[selectedIdx]
       default:
-        return missionCycleArray[state[0]]
+        return missionCycleArray[selectedIdx]
     }
   } else {
-    return `${title} ${state.length}개`
+    return `${title} ${numberOfSelect}개`
   }
 }
 export default DropdownCapsule
