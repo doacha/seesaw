@@ -15,8 +15,8 @@ interface HomeHeaderProps {
 const HomeHeader = ({ spend, clickArrow, clickReport }: HomeHeaderProps) => {
   return (
     <div className="flex justify-between mx-5 mt-4">
-      {spend.map((spending, key) => (
-        <div className="my-auto" key={spending.spendingId}>
+      {spend.map((spending, idx) => (
+        <div className="my-auto" key={idx}>
           <div className="flex flex-row gap-3 mb-1">
             <button
               className="my-auto w-6 h-6"
@@ -50,7 +50,7 @@ const HomeHeader = ({ spend, clickArrow, clickReport }: HomeHeaderProps) => {
         </div>
       ))}
       <div className="mx-2 my-auto flex-col">
-        <div className="mb-2">
+        <div className="mb-3">
           <Button
             color="primary"
             label="소비 예측"
