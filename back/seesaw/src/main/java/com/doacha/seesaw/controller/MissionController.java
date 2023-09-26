@@ -255,7 +255,6 @@ public class MissionController {
         }
     }
 
-    // 미션 상세 - 나의 현황 - 예치금 현황
     @Operation( summary = "미션 상세 - 나의 현황 - 예치금 현황", description = "미션 총 인원 / 미션 실패 인원 / 내가 받을 수 있는 예치금 / 미션 실패 가능 기회 / 현재 미션 실패 횟수 반환하는 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "나의 현황 불러오기 성공"),
@@ -274,7 +273,8 @@ public class MissionController {
         }
     }
 
-    
+    // 미션 상세 - 나의 현황 - 예치금 현황
+
 
     // 카카오페이 결제 번호 반환
 //    @Operation( summary = "결제 번호 불러오기", description = "카카오페이 결제번호 불러오는 API")
@@ -294,6 +294,19 @@ public class MissionController {
 //            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
 //    }
-    
+
+    @Operation( summary = "적금 계좌이체 테스트", description = "적금 계좌이체 테스트용")
+    @GetMapping("/test")
+    public ResponseEntity<String> test(){
+        log.info("적금 계좌 이체 테스트");
+        try{
+            memberMissionService.requestTransfer();
+            log.info("테스트 성공");
+            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        }catch (Exception e) {
+            log.info("테스트 실패");
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
