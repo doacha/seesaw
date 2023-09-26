@@ -41,13 +41,13 @@ const SpendingList = ({
         <>
           {/* Object.entries가 그룹화된 데이터를 배열로 변환하는 과정 */}
           {Object.entries(groupedSpending).map(([day, data]) => (
-            <div className="mb-2">
+            <div className="mb-2" key={day}>
               <Card
                 title={day}
                 content={
                   // if works!
                   <>
-                    {data.map((spending) => (
+                    {data.map((spending, key) => (
                       // 화살표 함수 쓴이유..? 안쓰면 어떻게 되는데?
                       <div
                         key={spending.spendingId}
