@@ -32,11 +32,13 @@ const Header = (props: Props) => {
         </div>
       </div>
       {props.plusButton ? (
-        <div className="flex-none">
-          <button className="btn btn-square btn-ghost">
-            <FontAwesomeIcon icon={faPlus} size="lg" />
-          </button>
-        </div>
+        <Link href="mission/create">
+          <div className="flex-none">
+            <button className="btn btn-square btn-ghost">
+              <FontAwesomeIcon icon={faPlus} size="lg" />
+            </button>
+          </div>
+        </Link>
       ) : null}
     </div>
   )

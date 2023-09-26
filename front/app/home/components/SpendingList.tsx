@@ -1,14 +1,18 @@
+'use client'
+
+import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Card from '@/app/components/Card'
 import { iconColors } from '@/app/lib/constants'
 import { categoryIcon } from '@/app/lib/constants'
 import { Spending } from '@/app/types'
 
+import DetailModal from './DetailModal'
+
 interface SpendingListProps {
   sort: string
   groupedSpending: Record<string, Spending[]>
   formatTime: (date: Date) => string
-  clickDetail: () => void
   spendingList: Spending[]
   formatDayTime: (date: Date) => string
   newSelected?: Number[]
@@ -18,11 +22,17 @@ const SpendingList = ({
   sort,
   groupedSpending,
   formatTime,
-  clickDetail,
   spendingList,
   formatDayTime,
   newSelected,
 }: SpendingListProps) => {
+  const [open, setOpen] = useState<boolean>(false)
+  const [selectedSpendingId, setSelectedSpendingId] = useState<number>(0)
+  const handleToggle = (spendingId: number) => {
+    setOpen((prevOpen) => !prevOpen)
+    setSelectedSpendingId(spendingId)
+  }
+
   return (
     <>
       {/* 맞는 카테고리 매핑 */}
@@ -31,16 +41,20 @@ const SpendingList = ({
         <>
           {/* Object.entries가 그룹화된 데이터를 배열로 변환하는 과정 */}
           {Object.entries(groupedSpending).map(([day, data]) => (
-            <div className="mb-2">
+            <div className="mb-2" key={day}>
               <Card
                 title={day}
                 content={
                   // if works!
                   <>
-                    {data.map((spending) => (
+                    {data.map((spending, key) => (
+                      // 화살표 함수 쓴이유..? 안쓰면 어떻게 되는데?
                       <div
-                        onClick={clickDetail}
-                        className="h-9 mb-5 flex w-full flex-row gap-5"
+                        key={spending.spendingId}
+                        onClick={() =>
+                          handleToggle(spending.spendingId as number)
+                        }
+                        className="h-9 flex w-full flex-row gap-5"
                       >
                         <div className="flex my-auto w-6 ml-1">
                           {spending.spendingCategoryId && (
@@ -83,7 +97,11 @@ const SpendingList = ({
         <div className="w-full h-fit rounded-lg bg-background">
           <div className="p-5">
             {spendingList.map((spending, idx) => (
-              <div className="h-9 flex w-full flex-row gap-5 mb-3">
+              <div
+                key={idx}
+                onClick={() => handleToggle(spending.spendingId as number)}
+                className="h-9 flex w-full flex-row gap-5 mb-3"
+              >
                 <div className="flex my-auto ml-1 w-6 ">
                   {spending.spendingCategoryId && (
                     <FontAwesomeIcon
@@ -118,6 +136,11 @@ const SpendingList = ({
           </div>
         </div>
       )}
+      <DetailModal
+        open={open}
+        handleToggle={() => handleToggle(selectedSpendingId)}
+        selectedSpendingId={selectedSpendingId}
+      />
     </>
   )
 }

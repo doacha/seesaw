@@ -4,6 +4,8 @@ export interface ImageFile {
   url: string
 }
 
+export type Tab = 'home' | 'mission' | 'member'
+
 export interface Account {
   accountImg: string
   accountName: string
@@ -23,17 +25,18 @@ export interface Transaction {
   accountTransactionName: string
 }
 
-export interface User {
-  userEmail?: string
-  userPassword?: string
-  userName?: string
-  userNickname: string
-  userBirth?: string
-  userGender?: boolean
-  userPhoneNumber?: string
-  userImgUrl: string
-  successCnt: number
-  failCnt: number
+export interface Member {
+  memberEmail?: string
+  memberPassword?: string
+  memberName?: string
+  memberNickname: string
+  memberBirth?: string
+  memberGender?: boolean
+  memberPhoneNumber?: string
+  memberImgUrl: string
+  successMissionCnt?: number
+  failMissionCnt?: number
+  ingMissionCnt?: number
   savedMoney: number
 }
 
@@ -105,9 +108,9 @@ export interface Record {
 }
 
 export interface SearchState {
-  period: Array<number>
-  cycle: Array<number>
-  category: Array<number>
+  period: boolean[]
+  cycle: boolean[]
+  category: boolean[]
   [key: string]: any
 }
 

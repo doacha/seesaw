@@ -1,16 +1,14 @@
 package com.doacha.seesaw.repository;
 
-import com.doacha.seesaw.model.dto.mission.DailyTopSpendingResponse;
-import com.doacha.seesaw.model.dto.mission.MissionFrugalSpendingResponse;
-import com.doacha.seesaw.model.dto.mission.MissionTopSpendingResponse;
+import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.model.dto.record.*;
+import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.model.entity.Record;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -60,6 +58,8 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     MissionFrugalSpendingResponse getMissionFrugalSpender(@Param("missionId") String missionId);
 
 
+
+
     @Query("SELECT new com.doacha.seesaw.model.dto.mission.DailyTopSpendingResponse (mm.member.memberNickname AS dailyTopSpender, MAX(r.recordTotalCost) AS dailyTopSpending,r.recordNumber AS dailyTopSpendingNum) " +
             "FROM Record r " +
             "JOIN r.memberMission mm " +
@@ -71,23 +71,33 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     @Query("SELECT COUNT(r) FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail AND r.recordStatus = 2")
     int countFail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
 
+    // 미션 랭킹 가져오기
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MyMissionRankingResponse(" +
+            "m.missionId, " +
+            "SUM(r.recordTotalCost) AS sum, " +
+            "ROW_NUMBER() OVER (ORDER BY SUM(r.recordTotalCost) ASC) AS ranking, " +
+            "mm.member.memberEmail, " +
+            "m.missionMemberCount) " +
+            "FROM Record r " +
+            "JOIN r.memberMission mm " +
+            "JOIN mm.mission m " +
+            "WHERE m.missionId = :missionId " +
+            "GROUP BY m.missionId, mm.member.memberEmail " +
+            "ORDER BY SUM(r.recordTotalCost) ASC")
+    List<MyMissionRankingResponse> getMissionRanking(@Param("missionId") String missionId);
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MyMissionAverageResponse(" +
+            "m.missionId, "+
+            "AVG(r.recordTotalCost) AS average, " +
+            "mm.member.memberEmail, " +
+            "(SELECT COUNT(r2) FROM Record r2 WHERE r2.memberMission.member.memberEmail=:memberEmail AND r2.memberMission.mission.missionId= :missionId) AS count) " +
+            "FROM Record r " +
+            "JOIN r.memberMission mm " +
+            "JOIN mm.mission m " +
+            "WHERE m.missionId = :missionId AND mm.member.memberEmail = :memberEmail")
+    MyMissionAverageResponse getMyMissionAverage(@Param("missionId") String missionId, @Param("memberEmail")String memberEmail);
     @Query("SELECT r.recordTotalCost FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail ORDER BY r.recordNumber ASC ")
     List<Integer> findRecordTotalCostByMissionIdAndMemberEmail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
 
-//    @Query("SELECT NEW com.doacha.seesaw.model.dto.record.RecordWithSpendings(r.recordNumber, r.recordStartDate, r.recordEndDate, r.recordStatus, " +
-//            "    COLLECT_LIST(ARRAY(s.spendingCost, s.spendingTitle))" +
-//            ") " +
-//            "FROM Record r " +
-//            "JOIN r.memberMission mm " +
-//            "JOIN mm.mission m " +
-//            "JOIN r.spendingList s " +
-//            "WHERE m.missionId = :missionId " +
-//            "AND mm.member.memberEmail = :memberEmail " +
-//            "GROUP BY r.recordNumber, r.recordStartDate, r.recordEndDate, r.recordStatus")
-//    List<RecordWithSpendings> findRecordWithSpendingsByMissionIdAndMemberEmail(
-//            @Param("missionId") String missionId,
-//            @Param("memberEmail") String memberEmail
-//    );
 
     @Query("SELECT r.recordNumber, r.recordStartDate, r.recordEndDate, r.recordStatus, s.spendingTitle, s.spendingCost " +
             "FROM Record r " +
@@ -98,4 +108,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "AND mm.member.memberEmail = :memberEmail ")
     List<Object[]> findRecordAndSpendingByMissionIdAndMemberEmail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
 
+
+    List<Record> findRecordByMemberMissionOrderByRecordStartDateDesc(@Param("memberMission")MemberMission memberMission);
 }
