@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MyMissionAverageResponse {
     private String missionId;
-    private Long average;
+    private Double average;
     private String memberEmail;
     private Long count;
 }

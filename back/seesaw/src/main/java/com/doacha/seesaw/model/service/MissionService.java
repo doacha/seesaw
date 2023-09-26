@@ -168,29 +168,36 @@ public class MissionService {
     }
 
     public MyMissionAverageResponse getMyMissionAverage(String missionId, String memberEmail){
-        MyMissionAverageResponse myMissionAverageResponse = recordRepository.getMyMissionAverage(missionId,memberEmail);
+        Object[] myMissionAverage = recordRepository.getMyMissionAverage(missionId,memberEmail);
+        Long count = recordRepository.countMissionMember(missionId,memberEmail);
+        MyMissionAverageResponse myMissionAverageResponse = MyMissionAverageResponse.builder()
+                .missionId(missionId)
+                .average((Double)myMissionAverage[1])
+                .memberEmail((String)myMissionAverage[2])
+                .count(count)
+                .build();
         return myMissionAverageResponse;
     }
 
-//    public CompareMissionResponse getCompareMissionAverage(String missionId){
-//        CompareMissionDto compareMissionResponse = recordRepository.getCompareMission(missionId);
-//        Optional<Mission> mission = missionRepository.findById(missionId);
-//        if(mission.isPresent()) {
-//            int categoryId = mission.get().getMissionCategoryId();
-//            int missionPeriod= mission.get().getMissionPeriod();
-//            Long count = recordRepository.countByCategoryIdAndDay(categoryId);
-//            Long sum = recordRepository.sumByCategoryId(categoryId);
-//            CompareMissionResponse realCompareMissionResponse = CompareMissionResponse.builder()
-//                    .missionId(compareMissionResponse.getMissionId())
-//                    .missionAverage(compareMissionResponse.getMissionAverage())
-//                    .entireAverage((double)sum/(double)count * (double)missionPeriod)
-//                    .build();
-//            return realCompareMissionResponse;
-//        }
-//        else{
-//            return null;
-//        }
-//    }
+    public CompareMissionResponse getCompareMissionAverage(String missionId){
+        CompareMissionDto compareMissionResponse = recordRepository.getCompareMission(missionId);
+        Optional<Mission> mission = missionRepository.findById(missionId);
+        if(mission.isPresent()) {
+            int categoryId = mission.get().getMissionCategoryId();
+            int missionPeriod= mission.get().getMissionPeriod();
+            Long count = recordRepository.countByCategoryIdAndDay(categoryId);
+            Long sum = recordRepository.sumByCategoryId(categoryId);
+            CompareMissionResponse realCompareMissionResponse = CompareMissionResponse.builder()
+                    .missionId(compareMissionResponse.getMissionId())
+                    .missionAverage(compareMissionResponse.getMissionAverage())
+                    .entireAverage(sum/count * missionPeriod)
+                    .build();
+            return realCompareMissionResponse;
+        }
+        else{
+            throw new NoContentException();
+        }
+    }
 
 
 
