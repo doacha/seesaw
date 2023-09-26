@@ -1,32 +1,32 @@
 'use client'
 import Capsule from '@/app/components/Capsule'
-import SearchBar from './SearchBar'
+import SearchBar from '@/app/(mission)/components/SearchBar'
 import {
   categoryList,
   missionPeriodArray,
   missionCycleArray,
 } from '@/app/lib/constants'
-import { useRef, useState } from 'react'
+import { memberef, useState } from 'react'
 import Button from '@/app/components/Button'
 import styles from './SearchContainer.module.css'
 import { faAnglesUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ToggleCapsule from '@/app/components/ToggleCapsule'
-import DropdownCapsule from './DropdownCapsule'
+import DropdownCapsule from '@/app/(mission)/components/DropdownCapsule'
 import type { SearchState } from '@/app/types'
 const SearchContainer = ({
-  state,
-  setState,
   onClick,
+  handleCapsule,
+  state,
 }: {
-  state: SearchState
-  setState: any
   onClick: any
+  handleCapsule: any
+  state: SearchState
 }) => {
   const [periodDropDownOn, setPeriodDropDownOn] = useState(false)
   const [cycleDropDownOn, setCycleDropDownOn] = useState(false)
   // console.log('test etet', state['category'].includes(0), state)
-  const periodRef = useRef(null)
+  const periodRef = memberef(null)
   const handleOpenPeriod = () => {
     setPeriodDropDownOn(true)
   }
@@ -40,25 +40,7 @@ const SearchContainer = ({
   const handlePeriodClick = (e: React.MouseEvent) => {
     e.stopPropagation()
   }
-  const handleCapsuleClick = (
-    id: number,
-    isSelected: boolean,
-    type?: string,
-  ) => {
-    if (type == undefined) type = 'category'
-    const newSelected = { ...state }
-    if (isSelected) {
-      // 비활성화시킬 때
-      const idx = newSelected[type].indexOf(id)
-      newSelected[type].splice(idx, 1)
-      setState(newSelected)
-    } else {
-      // 활성화시킬 때
-      newSelected[type].push(id)
-      setState(newSelected)
-    }
-    console.log('aft', newSelected)
-  }
+
   return (
     <div className="rounded-lg bg-background px-5 py-2.5 w-full">
       <SearchBar />
@@ -71,14 +53,13 @@ const SearchContainer = ({
               bgColor="background-fill"
               textColor={`${idx}`}
               key={idx}
-              value={idx}
-              type="category"
-              select={state['category'].includes(idx)}
-              onClick={handleCapsuleClick}
-              content={element}
-              /
+              isSelected={state['category'][idx]}
+              onClick={() =>
+                handleCapsule(idx, state['category'][idx], 'category')
+              }
             >
-              
+              {element}
+            </ToggleCapsule>
           ))}
         </div>
       </div>
@@ -117,16 +98,23 @@ const SearchContainer = ({
           >
             <div className="mb-5 w-full">인증 주기</div>
             <div className="w-full">
-              {missionPeriodArray.map((element, idx) => (
-                <ToggleCapsule bgColor="background-fill"
-                  textColor="black"
-                  className="mr-[15px] mb-[15px]"
-                  key={idx}
-                  value={idx}
-                  type="period"
-                  select={state['period'].includes(idx)}
-                  onClick={handleCapsuleClick} content={element}/>
-              ))}
+              {missionPeriodArray.map(
+                (element, idx) =>
+                  element && (
+                    <ToggleCapsule
+                      bgColor="background-fill"
+                      textColor="black"
+                      className="mr-[15px] mb-[15px]"
+                      key={idx}
+                      isSelected={state['period'][idx]}
+                      onClick={() =>
+                        handleCapsule(idx, state['period'][idx], 'period')
+                      }
+                    >
+                      {element}
+                    </ToggleCapsule>
+                  ),
+              )}
               <Button
                 color="primary"
                 label="확인"
@@ -149,20 +137,23 @@ const SearchContainer = ({
           >
             <div className="mb-5 w-full">미션 기간</div>
             <div className="w-full">
-              {missionCycleArray.map((element, idx) => (
-                <ToggleCapsule
-                  bgColor="background-fill"
-                  textColor="black"
-                  className="mr-[15px] mb-[15px]"
-                  key={idx}
-                  value={idx}
-                  type="cycle"
-                  select={state['cycle'].includes(idx)}
-                  onClick={handleCapsuleClick}
-                  content={element}
-                  /
-                >
-              ))}
+              {missionCycleArray.map(
+                (element, idx) =>
+                  element && (
+                    <ToggleCapsule
+                      bgColor="background-fill"
+                      textColor="black"
+                      className="mr-[15px] mb-[15px]"
+                      key={idx}
+                      isSelected={state['cycle'][idx]}
+                      onClick={() =>
+                        handleCapsule(idx, state['cycle'][idx], 'cycle')
+                      }
+                    >
+                      {element}
+                    </ToggleCapsule>
+                  ),
+              )}
               <Button
                 color="primary"
                 label="확인"
