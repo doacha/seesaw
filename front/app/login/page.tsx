@@ -1,11 +1,14 @@
 'use client'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import Swal from 'sweetalert2'
+
 import Input from '../components/Input'
 import TextButton from '../components/TextButton'
 import Button from '../components/Button'
 import GoogleBtn from './components/googleBtn'
-import { memberouter } from 'next/navigation'
-import { useState } from 'react'
-import Swal from 'sweetalert2'
+
+import { memberEmailStore } from '@/stores/memberEmail'
 
 const Login = () => {
   const [memberInput, setmemberInput] = useState({
@@ -14,14 +17,22 @@ const Login = () => {
   })
 
   const { email, pw } = memberInput
+  const { memberEmail, setMemberEmail } = memberEmailStore()
 
   const handleInput = (e: any) => {
     const { name, value } = e.target
     setmemberInput({ ...memberInput, [name]: value })
   }
-  const router = memberouter()
+  const router = useRouter()
 
   const clickLogin = () => {
+    const data: {
+      memberEmail: string
+      memberPassword: string
+    } = {
+      memberEmail: email,
+      memberPassword: pw,
+    }
     !email || !pw
       ? Swal.fire({
           title: '로그인 실패',
@@ -29,12 +40,44 @@ const Login = () => {
           text: '아이디 또는 비밀번호를 잘못 입력했습니다.',
           icon: 'error',
         })
-      : console.log(memberInput)
+      : // 이메일 입력창과 패스워드 입력창이 채워졌다면 fetch 수행
+        fetchLogin(data)
+  }
+
+  const fetchLogin = (data: object) => {
+    fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          Swal.fire({
+            title: '로그인 성공',
+            width: 300,
+            icon: 'success',
+          })
+          // 홈으로 이동하기 전에 loading이 필요하려나?
+          setMemberEmail(email)
+          router.push('/home')
+        }
+        return res.json()
+      })
+      .then((data) =>
+        // Todo 여기에서 백에서 받은 accessToken 저장해야
+        console.log(data),
+      )
+      // 이 catch의 사용성을 솔직히 모르게썽
+      .catch((err) => Swal.showValidationMessage(`Request failed: ${err}`))
   }
   const forgetPw = () => {
+    // Todo 패스워드 까먹었을 경우 처리
     console.log('패스워드 까먹')
   }
   const googleLogin = () => {
+    // Todo 구글 로그인 처리
     console.log('구글 로그인')
   }
   const clickRegist = () => {

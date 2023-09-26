@@ -9,8 +9,11 @@ import AccountCard from './components/account/AccountCard'
 import AccountRegistModal from './components/account/AccountRegistModal'
 import { QueryKey, useQuery } from '@tanstack/react-query'
 import PasswordConfirmCard from './components/edit/PasswordConfirmCard'
+import InstallmentCreateButton from './installment/components/InstallmentCreateButton'
+import { useRouter } from 'next/navigation'
 
 const memberPage = () => {
+  const router = useRouter()
   const [openEditPage, setOpenEditPage] = useState<boolean>(false)
   const [confirmed, setConfirmed] = useState<boolean>(false)
   const [activeTab, setActiveTab] = useState<string>('tab1')
@@ -91,9 +94,12 @@ const memberPage = () => {
               </div>
             ) : (
               <div className="flex flex-col h-min-full p-5 gap-5">
+                {/* <AccountCard />
                 <AccountCard />
-                <AccountCard />
-                <AccountCard />
+                <AccountCard /> */}
+                <InstallmentCreateButton
+                  onClickEvent={() => router.push('member/installment')}
+                />
                 <AccountRegistModal />
               </div>
             )}

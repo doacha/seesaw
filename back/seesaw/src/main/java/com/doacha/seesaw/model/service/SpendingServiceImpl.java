@@ -118,7 +118,14 @@ public class SpendingServiceImpl implements SpendingService{
     @Override
     public MonthCompareResponse findMonthDifferenceByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth){
         MonthSpendingSumResponse currentSum = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
-        Optional<MonthSpendingSumResponse> pastSum = spendingRepository.findPastMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth-1);
+        Optional<MonthSpendingSumResponse> pastSum = null;
+
+        if(spendingMonth==1) {
+            pastSum = spendingRepository.findPastMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail, spendingYear, 12);
+        }
+        else{
+            pastSum = spendingRepository.findPastMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail, spendingYear, spendingMonth - 1);
+        }
         if(pastSum.isPresent()){
         MonthCompareResponse monthCompareResponse = MonthCompareResponse.builder()
                 .memberEmail(memberEmail)

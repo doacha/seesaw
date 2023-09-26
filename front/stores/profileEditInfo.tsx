@@ -1,6 +1,8 @@
+import { ImageFile } from '@/app/types'
 import { create } from 'zustand'
 
 interface profileEditInfo {
+  newImgUrl: ImageFile
   newNickname: string
   newPassword: string
   confirmPassword: string
@@ -12,6 +14,7 @@ interface profileEditInfo {
 }
 
 export const profileEditInfoStore = create<profileEditInfo>((set) => ({
+  newImgUrl: { id: '', url: '' },
   newNickname: '',
   newPassword: '',
   confirmPassword: '',

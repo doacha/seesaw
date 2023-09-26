@@ -1,16 +1,20 @@
 package com.doacha.seesaw.repository;
 
 import com.doacha.seesaw.model.dto.mission.MissionListResponse;
+import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.Mission;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MissionRepository extends JpaRepository<Mission, String>, JpaSpecificationExecutor<Mission> { //JpaRepository<Entity클래스, PK타입>
 
+    Optional<Mission> findById(@Param("missionId") String missionId);
     @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionListResponse(" +
             "m.missionId, m.missionTitle, m.missionMemberCount, m.missionMaxCount, m.missionImgUrl, " +
             "m.missionTargetPrice, m.missionPeriod, m.missionTotalCycle, m.missionStartDate) " +

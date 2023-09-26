@@ -22,7 +22,7 @@ const memberInfoCard = (props: Props) => {
           ></TextButton>
         </div>
         <MemberDetailInfo member={props.member} />
-        <div className="flex self-center text-xl font-scDreamLight">
+        <div className="flex self-center text-xl font-scDreamLight whitespace-nowrap">
           현재까지&nbsp;
           <div className="font-scDreamExBold text-primary">
             {member.savedMoney.toLocaleString()}
