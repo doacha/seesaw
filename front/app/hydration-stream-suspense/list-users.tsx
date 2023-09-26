@@ -1,18 +1,18 @@
 'use client'
 
-import { member } from '../types'
+import { Member } from '../types'
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 
 async function getmembers() {
   return (await fetch('https://jsonplaceholder.typicode.com/members').then(
     (res) => res.json(),
-  )) as member[]
+  )) as Member[]
 }
 
 export default function Listmembers() {
   const [count, setCount] = React.useState(0)
-  const { data } = useQuery<member[]>({
+  const { data } = useQuery<Member[]>({
     queryKey: ['stream-hydrate-members'],
     queryFn: () => getmembers(),
     suspense: true,

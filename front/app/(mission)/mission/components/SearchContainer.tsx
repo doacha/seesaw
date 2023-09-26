@@ -6,7 +6,7 @@ import {
   missionPeriodArray,
   missionCycleArray,
 } from '@/app/lib/constants'
-import { memberef, useState } from 'react'
+import { useRef, useState } from 'react'
 import Button from '@/app/components/Button'
 import styles from './SearchContainer.module.css'
 import { faAnglesUp } from '@fortawesome/free-solid-svg-icons'
@@ -26,7 +26,7 @@ const SearchContainer = ({
   const [periodDropDownOn, setPeriodDropDownOn] = useState(false)
   const [cycleDropDownOn, setCycleDropDownOn] = useState(false)
   // console.log('test etet', state['category'].includes(0), state)
-  const periodRef = memberef(null)
+  const periodRef = useRef(null)
   const handleOpenPeriod = () => {
     setPeriodDropDownOn(true)
   }

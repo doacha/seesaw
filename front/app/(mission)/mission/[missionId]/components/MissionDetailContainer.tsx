@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faMoneyBillWave,
   faCalendarCheck,
-  famember,
+  faUser,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   categoryList,
@@ -33,7 +33,7 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
             {data.missionTitle}
           </div>
           <div className="text-sm">
-            <FontAwesomeIcon icon={famember} className="text-primary mr-2" />
+            <FontAwesomeIcon icon={faUser} className="text-primary mr-2" />
             {`${data.missionMemberCount} / ${data.missionMaxCount}`}
           </div>
         </div>
