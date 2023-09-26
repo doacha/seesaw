@@ -98,5 +98,16 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
     @Query("SELECT r.recordTotalCost FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail ORDER BY r.recordNumber ASC ")
     List<Integer> findRecordTotalCostByMissionIdAndMemberEmail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
 
+
+    @Query("SELECT r.recordNumber, r.recordStartDate, r.recordEndDate, r.recordStatus, s.spendingTitle, s.spendingCost " +
+            "FROM Record r " +
+            "JOIN r.memberMission mm " +
+            "JOIN mm.mission m " +
+            "JOIN r.spendingList s " +
+            "WHERE m.missionId = :missionId " +
+            "AND mm.member.memberEmail = :memberEmail ")
+    List<Object[]> findRecordAndSpendingByMissionIdAndMemberEmail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
+
+
     List<Record> findRecordByMemberMissionOrderByRecordStartDateDesc(@Param("memberMission")MemberMission memberMission);
 }
