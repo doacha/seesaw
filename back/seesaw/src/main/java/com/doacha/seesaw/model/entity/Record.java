@@ -10,6 +10,7 @@ import org.hibernate.annotations.Comment;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 
 @Entity
@@ -52,4 +53,7 @@ public class Record {
     @JoinColumn(name="mission_id",referencedColumnName = "mission_id",nullable = false),
     @JoinColumn(name="member_email", referencedColumnName = "member_email",nullable = false)})
     private MemberMission memberMission;
+
+    @OneToMany(mappedBy = "record")
+    private List<Spending> spendingList;
 }
