@@ -7,7 +7,6 @@ import HomeHeader from './components/HomeHeader'
 import SortButtons from './components/SortButton'
 import SpendingList from './components/SpendingList'
 import AddPostModal from './components/AddPostModal'
-
 import { Spending } from '@/app/types'
 import { spend, spendingList } from '../dummies'
 
