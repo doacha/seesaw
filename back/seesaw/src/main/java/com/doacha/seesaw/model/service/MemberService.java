@@ -129,8 +129,8 @@ public class MemberService {
                 .orElseThrow(() -> new BadRequestException("아이디를 확인하세요."));
 
         URI uri = UriComponentsBuilder
-                .fromUriString("http://localhost:8081")
-//                .fromUriString("http://j9a409.p.ssafy.io:8081")
+//                .fromUriString("http://localhost:8081")
+                .fromUriString("http://j9a409.p.ssafy.io:8081")
                 .path("/seesawbank/account/accounts")
                 .build()
                 .toUri();
