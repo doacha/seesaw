@@ -1,23 +1,52 @@
 'use client'
-import { missionCardDummy } from '@/app/dummies'
 import SearchContainerSimple from '../components/SearchContainerSimple'
 import SearchContainer from './components/SearchContainer'
 import Header from '@/app/components/Header'
-import type { SearchState } from '@/app/types'
+import type { SearchState, MissionList } from '@/app/types'
 import MissionCard from '../components/MissionCard'
 import { useState } from 'react'
-import { MissionCardProps } from '@/app/types'
-import { useRouter } from 'next/navigation'
+import { useQuery } from '@tanstack/react-query'
+
+const getSearchList = async (input: SearchState) => {
+  console.log('input', input)
+  console.log('asdf', convertStateToRequest(input))
+  return (await fetch(
+    `${
+      process.env.NEXT_PUBLIC_SEESAW_API_URL
+    }/mission/search?${new URLSearchParams(
+      convertStateToRequest(input),
+    ).toString()}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  ).then((res) => {
+    console.log('환료')
+    return res.json()
+  })) as MissionList[]
+}
+
 const MissionPage = () => {
   const [isActiveSearch, setIsActiveSearch] = useState(true)
-  const [searchResult, setSearchResult] = useState<Array<MissionCardProps>>()
+  const [isEnabled, setIsEnabled] = useState(false)
   const [searchState, setSearchState] = useState<SearchState>({
     inputText: '',
     category: 0,
     cycle: -1,
     period: -1,
   })
-  const router = useRouter()
+  const { data, refetch, isSuccess } = useQuery<MissionList[]>({
+    queryKey: ['mission-card', searchState],
+    queryFn: () => getSearchList(searchState),
+    staleTime: 50000,
+    cacheTime: 50000,
+    enabled: isEnabled,
+  })
+
+  if (isSuccess && isEnabled) {
+    setIsEnabled(false)
+  }
 
   const handleActiveSearch = () => {
     setIsActiveSearch(true)
@@ -41,8 +70,6 @@ const MissionPage = () => {
     }
     setSearchState({ ...searchState, [type]: idx })
   }
-  // API 연결 후 더미 삭제
-  const searchedMissionList = Array(6).fill(missionCardDummy)
 
   return (
     <div className="bg-background-fill">
@@ -53,7 +80,8 @@ const MissionPage = () => {
             onClick={handleDeactiveSearch}
             handleCapsule={handleCapsuleClick}
             state={searchState}
-            handleTextInput={handleTextInputChange}
+            setState={setSearchState}
+            setIsEnabled={setIsEnabled}
           />
         )}
         {!isActiveSearch && (
@@ -62,14 +90,31 @@ const MissionPage = () => {
             state={searchState}
           />
         )}
-        <div className="flex flex-wrap gap-5">
-          {searchedMissionList.map((element, idx) => (
-            <MissionCard data={element} key={idx} />
-          ))}
-        </div>
+        {isSuccess && (
+          <div className="flex flex-wrap gap-5">
+            {data?.map((element, idx) => (
+              <MissionCard data={element} key={idx} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
+}
+
+const convertStateToRequest = (input: SearchState) => {
+  const request: { [key: string]: any } = {}
+  if (input.inputText.length > 0) {
+    request.keyword = input.inputText
+  }
+  if (input.category > 0) {
+    request.missionCategoryId = input.category
+  }
+  if (input.period > 0 && input.cycle > 0) {
+    request.missionPeriod = input.period
+    request.missionCycle = (input.cycle * 7) / input.period
+  }
+  return request
 }
 
 export default MissionPage

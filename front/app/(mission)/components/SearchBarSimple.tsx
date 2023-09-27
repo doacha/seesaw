@@ -3,22 +3,10 @@
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type { SearchState } from '@/app/types'
-import { missionListStore } from '@/stores/missionList'
 import { useRef } from 'react'
 
-const SearchBar = ({
-  state,
-  setState,
-  setIsEnabled,
-}: {
-  state: SearchState
-  setState: React.Dispatch<React.SetStateAction<SearchState>>
-  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
-}) => {
-  const handleSubmit = () => {
-    setState({ ...state, inputText: inputRef.current?.value ?? '' })
-    setIsEnabled(true)
-  }
+const SearchBarSimple = ({ state }: { state: SearchState }) => {
+  const handleSubmit = () => {}
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -38,4 +26,4 @@ const SearchBar = ({
   )
 }
 
-export default SearchBar
+export default SearchBarSimple
