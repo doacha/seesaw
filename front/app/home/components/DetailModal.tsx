@@ -5,11 +5,10 @@ import Button from '@/app/components/Button'
 
 import SpendingCostInput from './SpendingCostInput'
 import Input from './Input'
-import DateInput from './DateInput'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
 import { Spending } from '@/app/types'
-
-import { spend } from '@/app/dummies'
 
 type Props = {
   open: boolean
@@ -17,16 +16,18 @@ type Props = {
   selectedSpendingId: number
 }
 
-// 백엔드 통신을 통한 데이터를 가져와서 바꿔줘야 함
-
 const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
-  const [clickPen, setClickPen] = useState(false)
+  console.log('여기는 디테일')
   const [clickCate, setClickCate] = useState(false)
-  const [spend, setSpend] = useState<Spending>()
+  const [spend, setSpend] = useState<Spending>({
+    spendingTitle: '',
+    spendingCost: 0,
+    spendingDate: '',
+    spendingCategoryId: 2,
+    // memberEmail은 zustand에서 가져오기
+    memberEmail: '',
+  })
 
-  // const formattedDate = new Date(
-  //   spend.spendingDate as string,
-  //   )
   const fetchDetailSpending = (selectedSpendingId: number) => {
     fetch(
       `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/${selectedSpendingId}`,
@@ -42,65 +43,119 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
         setSpend(data)
       })
   }
-  console.log(spend)
-  // const formattedDate = new Date(
-  // spend.spendingDate as string,
-  // )
+
   useEffect(() => {
     fetchDetailSpending(selectedSpendingId)
   }, [selectedSpendingId])
 
-  const [postDetailInput, setPostDetailInput] = useState({
-    spendingId: '',
-    spendingTitle: '',
-    spendingCost: '',
-    spendingDate: '',
-    spendingMemo: '',
-    spendingCategoryId: '',
-  })
-
-  const {
-    spendingId,
-    spendingTitle,
-    spendingCost,
-    spendingDate,
-    spendingMemo,
-    spendingCategoryId,
-  } = postDetailInput
-
   const handleInput = (e: any) => {
     const { name, value } = e.target
-    setPostDetailInput({ ...postDetailInput, [name]: value })
-  }
-
-  const clickPencil = () => {
-    setClickPen(!clickPen)
-    console.log('수정버튼 클릭')
+    // 0으로 시작못하게 처리
+    let newValue = value
+    if (name === 'spendingCost' && /^0/.test(value)) {
+      newValue = value.substring(1)
+    }
+    // 소수점 입력 불가
+    if (name === 'spendingCost') {
+      newValue = parseInt(value, 10)
+    }
+    setSpend({ ...spend, [name]: newValue })
   }
 
   const clickCategory = () => {
     setClickCate(!clickCate)
   }
-
+  const fetchDelete = (selectedSpendingId: number) => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/delete/${selectedSpendingId}`,
+      {
+        method: 'DELETE',
+      },
+    ).then((res) => {
+      if (res.status === 200) {
+        Swal.fire({
+          title: '삭제 성공',
+          width: 300,
+          icon: 'success',
+        })
+      }
+      handleToggle()
+    })
+  }
   const clickDetele = () => {
-    console.log('삭제 클릭')
+    fetchDelete(selectedSpendingId)
+  }
+  const data: {
+    spendingId: number
+    spendingTitle: string
+    spendingCost: number
+    spendingDate: string
+    spendingMemo: string
+    spendingCategoryId: number
+    memberEmail: string
+  } = {
+    spendingId: selectedSpendingId,
+    spendingTitle: spend.spendingTitle as string,
+    spendingCost: spend.spendingCost as number,
+    spendingDate: spend.spendingDate as string,
+    spendingMemo: spend.spendingMemo as string,
+    spendingCategoryId: 2,
+    memberEmail: 'doacha@seesaw.com',
+  }
+  const fetchUpdate = (data: object) => {
+    fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/update`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          Swal.fire({
+            title: '수정 성공',
+            width: 300,
+            icon: 'success',
+          })
+        }
+        return res.json()
+      })
+      .then((data) => {
+        // 모달창 닫기
+        handleToggle()
+        setSpend({
+          spendingTitle: '',
+          spendingCost: 0,
+          spendingDate: '',
+          spendingMemo: '',
+          // 여기 수정이 필요합니다.
+          spendingCategoryId: 2,
+          memberEmail: 'doacha@seesaw.com',
+        })
+        // console.log(data)
+      })
   }
   const clickSave = () => {
-    // if (spendingCost === 0) {
-    //   Swal.fire({
-    //     width: 300,
-    //     text: '금액을 입력해주세요!',
-    //     icon: 'error',
-    //   })
-    // } else if (spendingTitle === '') {
-    //   Swal.fire({
-    //     width: 300,
-    //     text: '거래처를 입력해주세요!',
-    //     icon: 'error',
-    //   })
-    // } else {
-    //   fetchAddPost(data)
-    // }
+    if (
+      spend.spendingCost === 0 ||
+      spend.spendingCost?.toString() === '' ||
+      Number.isNaN(spend.spendingCost)
+    ) {
+      Swal.fire({
+        width: 300,
+        text: '금액을 입력해주세요!',
+        icon: 'error',
+      })
+    } else if (spend.spendingTitle === '') {
+      Swal.fire({
+        width: 300,
+        text: '거래처를 입력해주세요!',
+        icon: 'error',
+      })
+    } else {
+      // console.log(data)
+      fetchUpdate(data)
+    }
   }
 
   let modalClass = 'modal sm:modal-middle'
@@ -108,6 +163,22 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
   // open 속성이 true인 경우 'modal-open' 클래스를 추가합니다.
   if (open) {
     modalClass += ' modal-open'
+  }
+  const [clickDa, setClickDa] = useState(false)
+  const clickDate = () => {
+    setClickDa(!clickDa)
+  }
+  const formatDate = (date: Date): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+      hour: 'numeric',
+      minute: 'numeric',
+    }
+    const formatter = new Intl.DateTimeFormat('ko-KR', options)
+    return formatter.format(date)
   }
 
   return (
@@ -122,7 +193,6 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
         <h3 className="font-bold text-lg font-scDreamRegular">거래처</h3>
         <div className="h-[1px] bg-outline rounded-full mt-2"></div>
         <div className="py-4">
-          {/* 그러면 spendingList가 필요없을 것 같은데? 백엔드 데이터를 가져와야해 */}
           <div>
             <>
               <SpendingCostInput
@@ -149,11 +219,40 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
                 onChange={handleInput}
               />
 
-              {/* 날짜 입력 */}
-              {/* <DateInput
-                value={new Date(spend?.spendingDate as string) as Date}
-                onChange={handleInput}
-              /> */}
+              <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
+                <div className="w-28">
+                  <p className="font-scDreamExBold text-base">날짜</p>
+                </div>
+                <div className="flex my-auto w-full justify-between">
+                  {!clickDa ? (
+                    <p className="my-auto font-scDreamLight text-xs">
+                      {spend.spendingDate &&
+                        formatDate(new Date(spend.spendingDate as string))}
+                    </p>
+                  ) : (
+                    <input
+                      className="w-full mr-5 font-scDreamLight text-xs"
+                      type="datetime-local"
+                      name="spendingDate"
+                      onChange={handleInput}
+                    />
+                  )}
+                  <div onClick={clickDate} className="ml-1">
+                    {!clickDa ? (
+                      <FontAwesomeIcon
+                        icon={faChevronRight}
+                        style={{ color: '#001b2a' }}
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faChevronRight}
+                        style={{ color: '#001b2a' }}
+                        rotation={90}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
 
               <Input
                 title="메모"

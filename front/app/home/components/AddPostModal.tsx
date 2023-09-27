@@ -7,6 +7,10 @@ import SpendingCostInput from './SpendingCostInput'
 import Swal from 'sweetalert2'
 import DateInput from './DateInput'
 
+import ToggleCapsule from '@/app/components/ToggleCapsule'
+import styles from '../styles/Home.module.css'
+import { categoryList } from '@/app/lib/constants'
+
 // categoryToggle 수정 및 처리 필요
 type Props = {
   open: boolean
@@ -14,6 +18,7 @@ type Props = {
 }
 
 const AddPostModal = ({ open, handleToggle }: Props) => {
+  console.log('여기는 디테일')
   let modalClass = 'modal sm:modal-middle'
 
   // open 속성이 true인 경우 'modal-open' 클래스를 추가합니다.
@@ -28,7 +33,8 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     spendingCost: 0,
     spendingDate: today,
     spendingMemo: '',
-    spendingCategory: '2',
+    spendingCategoryId: -1,
+    // email은 수정이 필요해요
     memberEmail: 'doacha@seesaw.com',
   })
 
@@ -37,7 +43,7 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     spendingCost,
     spendingDate,
     spendingMemo,
-    spendingCategory,
+    spendingCategoryId,
     // 여기서 email은 zustend 저장된 이메일이겠죠?
     memberEmail,
   } = postInput
@@ -50,20 +56,26 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     spendingCost: number
     spendingDate: string
     spendingMemo: string
-    spendingCategory: string
+    spendingCategoryId: number
     memberEmail: string
   } = {
     spendingTitle: spendingTitle,
     spendingCost: spendingCost,
     spendingDate: stringToDate,
     spendingMemo: spendingMemo,
-    spendingCategory: '2',
+    spendingCategoryId: spendingCategoryId,
+    // email 수정 필요
     memberEmail: 'doacha@seesaw.com',
   }
 
   const handleInput = (e: any) => {
     const { name, value } = e.target
-    setPostInput({ ...postInput, [name]: value })
+    // 0으로 시작못하게 처리
+    let newValue = value
+    if (name === 'spendingCost' && /^0/.test(value)) {
+      newValue = value.substring(1)
+    }
+    setPostInput({ ...postInput, [name]: newValue })
   }
 
   const fetchAddPost = (data: object) => {
@@ -92,15 +104,14 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
           spendingCost: 0,
           spendingDate: today,
           spendingMemo: '',
-          // 여기 수정이 필요합니다.
-          spendingCategory: '2',
+          spendingCategoryId: -1,
           memberEmail: 'doacha@seesaw.com',
         })
         console.log(data)
       })
   }
   const clickSave = () => {
-    if (spendingCost === 0) {
+    if (data.spendingCost === 0 || data.spendingCost?.toString() === '') {
       Swal.fire({
         width: 300,
         text: '금액을 입력해주세요!',
@@ -115,6 +126,18 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     } else {
       fetchAddPost(data)
     }
+  }
+
+  const handleCapsuleClick = (
+    idx: number,
+    isSelected: boolean,
+    type: string,
+  ) => {
+    if (!isSelected) {
+      setPostInput({ ...postInput, [type]: idx })
+      return
+    }
+    setPostInput({ ...postInput, [type]: -1 })
   }
   return (
     <div className={modalClass}>
@@ -132,17 +155,43 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
 
         <form id="addPostForm" className="py-4">
           <SpendingCostInput value={spendingCost} onChange={handleInput} />
-          {/* 카테고리 들어갈 곳 */}
-          <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
-            <div className="w-28">
-              <p className="font-scDreamExBold text-base">카테고리</p>
-            </div>
 
-            {/* <div className="flex my-auto w-full justify-between">
-              <p className="font-scDreamLight text-base"></p>
-              <div onClick={clickCategory} className="ml-1"></div>
-            </div> */}
+          {/* 카테고리 들어갈 곳 */}
+          <div className={`overflow-auto ${styles.delScroll}`}>
+            <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
+              <div className=" w-20 my-auto">
+                <div className="w-20">
+                  <p className="font-scDreamExBold text-base">카테고리</p>
+                </div>
+              </div>
+              <div className="flex my-auto w-full justify-between">
+                <div className="carousel">
+                  {categoryList.map(
+                    (element, idx) =>
+                      idx > 0 && (
+                        <ToggleCapsule
+                          className="carousel-item mr-[15px] h-[14px]"
+                          bgColor="background-fill"
+                          textColor={`${idx}`}
+                          key={idx}
+                          isSelected={idx === spendingCategoryId}
+                          onClick={() =>
+                            handleCapsuleClick(
+                              idx,
+                              idx === spendingCategoryId,
+                              'spendingCategoryId',
+                            )
+                          }
+                        >
+                          {element}
+                        </ToggleCapsule>
+                      ),
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
+
           <Input
             title="거래처"
             type="text"

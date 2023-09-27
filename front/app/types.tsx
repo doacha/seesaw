@@ -66,7 +66,7 @@ export interface Spending {
   spendingId?: number
   spendingTitle?: string
   spendingCost?: number
-  spendingDate?: string | undefined
+  spendingDate?: string
   spendingCategoryId?: number
   memberEmail: string
   spendingMemo?: string
