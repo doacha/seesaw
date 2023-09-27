@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class MonthSpendingSumResponse {
     private long spendingCostSum;
+    private int spendingYear;
     private int spendingMonth;
     private String memberEmail;
 
