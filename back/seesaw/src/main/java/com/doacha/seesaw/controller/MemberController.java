@@ -3,6 +3,8 @@ package com.doacha.seesaw.controller;
 import com.doacha.seesaw.jwt.JwtProvider;
 import com.doacha.seesaw.jwt.MemberDetail;
 import com.doacha.seesaw.jwt.TokenResponse;
+import com.doacha.seesaw.model.dto.account.AccountResponse;
+import com.doacha.seesaw.model.dto.account.CreateAccountToSeesawRequest;
 import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.service.MemberMissionService;
 import com.doacha.seesaw.model.service.MemberService;
@@ -12,11 +14,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/member")
@@ -67,8 +69,8 @@ public class MemberController {
 
     // 회원 정보 수정
     @PutMapping("/modify")
-    public MyInfoResponse changeInfo(@RequestBody ChangeInfoRequest changeInfoRequest) {
-        return memberService.changeInfo(changeInfoRequest);
+    public MyInfoResponse changeInfo(@RequestParam(value="image") MultipartFile image, @RequestBody ChangeInfoRequest changeInfoRequest) throws IOException {
+        return memberService.changeInfo(image, changeInfoRequest);
     }
 
     // 회원 탈퇴
@@ -98,7 +100,16 @@ public class MemberController {
     public ResponseEntity<?> getAccountList(@RequestBody String memberEmail){
         if(memberService.checkCertifiedAccount(memberEmail)) {
             // 시소뱅크에 계좌 리스트 불러오는 api 호출하고 담아서 리턴
-//            Object response = memberService
+            return memberService.getAccountList(memberEmail);
+        }
+        return ResponseEntity.ok(false);
+    }
+
+    // 적금 계좌 개설
+    @PostMapping("/create-account")
+    public ResponseEntity<?> createAccount(@RequestBody CreateAccountToSeesawRequest createAccountToSeesawRequest){
+        if(memberService.checkCertifiedAccount(createAccountToSeesawRequest.getMemberEmail())) {
+            return memberService.createAccount(createAccountToSeesawRequest);
         }
         return ResponseEntity.ok(false);
     }

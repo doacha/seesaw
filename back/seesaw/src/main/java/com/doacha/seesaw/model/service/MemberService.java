@@ -1,25 +1,38 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.BadRequestException;
+import com.doacha.seesaw.model.dto.SavingRequest;
+import com.doacha.seesaw.model.dto.account.AccountResponse;
+import com.doacha.seesaw.model.dto.account.AccountTransactionListResponse;
+import com.doacha.seesaw.model.dto.account.CreateAccountRequest;
+import com.doacha.seesaw.model.dto.account.CreateAccountToSeesawRequest;
 import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.entity.Member;
-import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.redis.RedisDao;
 import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MemberRepository;
 //import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Optional;
+
+import static org.hibernate.sql.ast.SqlTreeCreationLogger.LOGGER;
 
 @Service
 @Slf4j
@@ -31,6 +44,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final RedisDao redisDao;
 
+    @Autowired
+    private S3Uploader s3Uploader;
 
     // 회원가입
     @Transactional
@@ -78,36 +93,61 @@ public class MemberService {
                 .findByMemberEmail(memberEmail)
                 .orElseThrow(() -> new BadRequestException("아이디 혹은 비밀번호를 확인하세요."));
 
-        if(member.getMemberBankId()!=null) return true;
+        if(!"".equals(member.getMemberMainAccount()) || member.getMemberMainAccount()!=null) return true;
         else return false;
     }
 
-    // 백에 계좌 리스트 api 요청
-    //1.get방식 요청
-//    public Object seesawbankAccounts (String memberEmail){
-//
-//
-//        //URI를 빌드한다
-//        URI uri = UriComponentsBuilder
+    // 계좌 개설
+    @Transactional
+    public ResponseEntity<AccountResponse> createAccount(CreateAccountToSeesawRequest createAccountToSeesawRequest) {
+        Member member = memberRepository
+                .findByMemberEmail(createAccountToSeesawRequest.getMemberEmail())
+                .orElseThrow(() -> new BadRequestException("아이디를 확인하세요."));
+
+        CreateAccountRequest request = CreateAccountRequest.builder()
+                .accountName(createAccountToSeesawRequest.getAccountName())
+                .memberId(member.getMemberBankId())
+                .accountPassword(createAccountToSeesawRequest.getAccountPassword())
+                .build();
+
+        URI uri = UriComponentsBuilder
 //                .fromUriString("http://localhost:8081")
-//                .path("/api/server/hello")
-//                .encode(Charset.defaultCharset())
-//                .build()
-//                .toUri();
-//        System.out.println(uri.toString());
-//
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        //String result = restTemplate.getForObject(uri, String.class);
-//        //getForEntity는 응답을 ResponseEntity로 받을 수 있도록 해준다 .
-//        //파라미터 첫번째는 요청 URI 이며 , 2번째는 받을 타입
-//        ResponseEntity<UserResponse> result = restTemplate.getForEntity(uri,UserResponse.class);
-//
-//        System.out.println(result.getStatusCode());
-//        System.out.println(result.getBody());
-//
-//        return result.getBody();
-//    }
+                .fromUriString("http://j9a409.p.ssafy.io:8081")
+                .path("/seesawbank/account/create")
+                .build()
+                .toUri();
+
+        RequestEntity<CreateAccountRequest> requestEntity = RequestEntity
+                .post(uri)
+                .body(request);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<AccountResponse> result = restTemplate.exchange(requestEntity, AccountResponse.class);
+        return result;
+    }
+
+    // 백에 계좌 리스트 api 요청
+    public ResponseEntity<?> getAccountList (String memberEmail){
+
+        Member member = memberRepository
+                .findByMemberEmail(memberEmail)
+                .orElseThrow(() -> new BadRequestException("아이디를 확인하세요."));
+
+        URI uri = UriComponentsBuilder
+//                .fromUriString("http://localhost:8081")
+                .fromUriString("http://j9a409.p.ssafy.io:8081")
+                .path("/seesawbank/account/accounts")
+                .build()
+                .toUri();
+
+        RequestEntity<String> requestEntity = RequestEntity
+                .post(uri)
+                .body(member.getMemberBankId());
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List> result = restTemplate.exchange(requestEntity, List.class);
+        return result;
+    }
 
 
 
@@ -161,17 +201,24 @@ public class MemberService {
 
     // 회원 정보 수정
     @Transactional
-    public MyInfoResponse changeInfo(ChangeInfoRequest changeInfoRequest) {
+    public MyInfoResponse changeInfo(MultipartFile image, ChangeInfoRequest changeInfoRequest) throws IOException {
 
         Optional<Member> member = memberRepository.findByMemberEmail(changeInfoRequest.getMemberEmail());
 
         Member update;
+
 
         if(changeInfoRequest.getMemberNewPassword()!=null || !"".equals(changeInfoRequest.getMemberNewPassword())){ // 비번 새로 바꾸려고 하면
             if(!passwordEncoder.matches( changeInfoRequest.getMemberPassword(), member.get().getMemberPassword())){ // 비번 확인
                 throw new BadRequestException("비밀번호를 확인하세요."); // 비번 다르면 익셉션
             }
             member.get().builder().memberPassword(changeInfoRequest.getMemberNewPassword()).build();
+        }
+        // 이미지 처리
+        String storedFileName = changeInfoRequest.getMemberImgUrl(); // 일단 기존 것으로 초기화
+        // 이미
+        if(!image.isEmpty()) {
+            storedFileName = s3Uploader.upload(image,"profile");
         }
 
         update = Member.builder()
@@ -181,7 +228,7 @@ public class MemberService {
                 .memberName(changeInfoRequest.getMemberName())
                 .memberGender(changeInfoRequest.isMemberGender())
                 .memberNickname(changeInfoRequest.getMemberNickname())
-                .memberImgUrl(changeInfoRequest.getMemberImgUrl())
+                .memberImgUrl(storedFileName)
                 .memberPhoneNumber(changeInfoRequest.getMemberPhoneNumber())
                 .build();
 
