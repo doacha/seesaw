@@ -135,7 +135,7 @@ public class MemberMissionService {
 
     public String dateAdd(Date date, int plus){
         Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
+        cal.setTime(date);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         cal.add(Calendar.DATE, plus);
         return df.format(cal.getTime());
