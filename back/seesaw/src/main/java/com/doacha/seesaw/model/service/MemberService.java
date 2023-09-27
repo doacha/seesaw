@@ -3,6 +3,7 @@ package com.doacha.seesaw.model.service;
 import com.doacha.seesaw.exception.BadRequestException;
 import com.doacha.seesaw.model.dto.SavingRequest;
 import com.doacha.seesaw.model.dto.account.AccountResponse;
+import com.doacha.seesaw.model.dto.account.AccountTransactionListResponse;
 import com.doacha.seesaw.model.dto.account.CreateAccountRequest;
 import com.doacha.seesaw.model.dto.account.CreateAccountToSeesawRequest;
 import com.doacha.seesaw.model.dto.user.*;
@@ -25,6 +26,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hibernate.sql.ast.SqlTreeCreationLogger.LOGGER;
@@ -95,9 +97,8 @@ public class MemberService {
     public ResponseEntity<AccountResponse> createAccount(CreateAccountToSeesawRequest createAccountToSeesawRequest) {
         Member member = memberRepository
                 .findByMemberEmail(createAccountToSeesawRequest.getMemberEmail())
-                .orElseThrow(() -> new BadRequestException("아이디 혹은 비밀번호를 확인하세요."));
+                .orElseThrow(() -> new BadRequestException("아이디를 확인하세요."));
 
-        // 각각의 적금건에 대해 이체 요청 하기
         CreateAccountRequest request = CreateAccountRequest.builder()
                 .accountName(createAccountToSeesawRequest.getAccountName())
                 .memberId(member.getMemberBankId())
@@ -121,31 +122,27 @@ public class MemberService {
     }
 
     // 백에 계좌 리스트 api 요청
-    //1.get방식 요청
-//    public Object seesawbankAccounts (String memberEmail){
-//
-//
-//        //URI를 빌드한다
-//        URI uri = UriComponentsBuilder
-//                .fromUriString("http://localhost:8081")
-//                .path("/api/server/hello")
-//                .encode(Charset.defaultCharset())
-//                .build()
-//                .toUri();
-//        System.out.println(uri.toString());
-//
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        //String result = restTemplate.getForObject(uri, String.class);
-//        //getForEntity는 응답을 ResponseEntity로 받을 수 있도록 해준다 .
-//        //파라미터 첫번째는 요청 URI 이며 , 2번째는 받을 타입
-//        ResponseEntity<UserResponse> result = restTemplate.getForEntity(uri,UserResponse.class);
-//
-//        System.out.println(result.getStatusCode());
-//        System.out.println(result.getBody());
-//
-//        return result.getBody();
-//    }
+    public ResponseEntity<?> getAccountList (String memberEmail){
+
+        Member member = memberRepository
+                .findByMemberEmail(memberEmail)
+                .orElseThrow(() -> new BadRequestException("아이디를 확인하세요."));
+
+        URI uri = UriComponentsBuilder
+                .fromUriString("http://localhost:8081")
+//                .fromUriString("http://j9a409.p.ssafy.io:8081")
+                .path("/seesawbank/account/accounts")
+                .build()
+                .toUri();
+
+        RequestEntity<String> requestEntity = RequestEntity
+                .post(uri)
+                .body(member.getMemberBankId());
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<List> result = restTemplate.exchange(requestEntity, List.class);
+        return result;
+    }
 
 
 
