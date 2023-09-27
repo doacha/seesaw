@@ -12,9 +12,10 @@ const MissionPage = () => {
   const [isActiveSearch, setIsActiveSearch] = useState(true)
   const [searchResult, setSearchResult] = useState<Array<MissionCardProps>>()
   const [searchState, setSearchState] = useState<SearchState>({
-    category: Array(20).fill(false),
-    cycle: Array(8).fill(false),
-    period: Array(13).fill(false),
+    inputText: '',
+    category: 0,
+    cycle: -1,
+    period: -1,
   })
   const router = useRouter()
 
@@ -25,19 +26,20 @@ const MissionPage = () => {
   const handleDeactiveSearch = () => {
     setIsActiveSearch(false)
   }
+
+  const handleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchState({ ...searchState, inputText: e.target.value })
+  }
   const handleCapsuleClick = (
     idx: number,
     isSelected: boolean,
     type: string,
   ) => {
-    const newState = [...searchState[type]]
-    newState[idx] = !isSelected
-    newState[0] = false
-    if (idx === 0 && !isSelected) {
-      newState.fill(false)
-      newState[0] = true
+    if (isSelected) {
+      setSearchState({ ...searchState, [type]: -1 })
+      return
     }
-    setSearchState({ ...searchState, [type]: newState })
+    setSearchState({ ...searchState, [type]: idx })
   }
   // API 연결 후 더미 삭제
   const searchedMissionList = Array(6).fill(missionCardDummy)
@@ -51,6 +53,7 @@ const MissionPage = () => {
             onClick={handleDeactiveSearch}
             handleCapsule={handleCapsuleClick}
             state={searchState}
+            handleTextInput={handleTextInputChange}
           />
         )}
         {!isActiveSearch && (

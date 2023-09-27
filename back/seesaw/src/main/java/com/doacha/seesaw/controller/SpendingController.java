@@ -37,8 +37,8 @@ public class SpendingController {
     @Operation(summary="지출 상세보기")
     public ResponseEntity<?> detailSpending(@PathVariable Long spendingId){
         try{
-            Optional<Spending> spending = spendingService.read(spendingId);
-            return new ResponseEntity<Spending>(spending.get(),HttpStatus.OK);}
+            SpendingDetailResponse spendingDetailResponse = spendingService.detailResponse(spendingId);
+            return new ResponseEntity<SpendingDetailResponse>(spendingDetailResponse,HttpStatus.OK);}
         catch(Exception e ){
             return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
         }

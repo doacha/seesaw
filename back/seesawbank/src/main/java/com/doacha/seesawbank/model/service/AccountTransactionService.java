@@ -205,4 +205,53 @@ public class AccountTransactionService {
         log.info("입력한 번호: {}", authenticationNum);
         if(!accountTransactionName.equals(authenticationNum)) throw new BadRequestException("인증번호 불일치");
     }
+
+    // 적금 계좌 이체
+    public void savingAccountTransfer(SavingAccountTransferRequest savingAccountTransferRequest) {
+        String mainAccount = savingAccountTransferRequest.getMainAccount();
+        String savingAccount = savingAccountTransferRequest.getSavingAccount();
+        int amount = savingAccountTransferRequest.getAccountApprovalAmount();
+
+        //보내는 계좌(일반 계좌)
+        Optional<Account> mAccount = accountRepository.findAccountByAccountNum(mainAccount);
+        //받는 계좌(적금 계좌)
+        Optional<Account> sAccount = accountRepository.findAccountByAccountNum(savingAccount);
+
+        // 잔액 부족일 경우 예외처리
+        if(mAccount.get().getAccountRecentBalance()<amount) throw new BadRequestException("잔액이 부족합니다.");
+
+        String accountDealNum = createAccountDealNum();//계좌 거래 번호 생성
+
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        // 일반 계좌 출금
+        AccountTransaction accountTransaction = AccountTransaction.builder()
+                .account(mAccount.get())
+                .accountDealNum(accountDealNum)
+                .accountTransactionName("시소 미션 연계 적금")
+                .accountBalance(mAccount.get().getAccountRecentBalance()-amount)
+                .accountTransactionTime(Timestamp.valueOf(now))
+                .accountApprovalAmount(amount*(-1))
+                .accountIsDeposit(false)
+                .accountTransactionNum(savingAccount)
+                .build();
+
+        accountTransactionRepository.save(accountTransaction); // 계좌 거래 내역 생성
+        updateRecentBalance(accountTransaction); // 계좌 잔액 업데이트
+
+
+        // 적금 계좌 입금
+        AccountTransaction accountTransferTransaction = AccountTransaction.builder()
+                .account(sAccount.get())
+                .accountDealNum(accountDealNum)
+                .accountTransactionName("시소 미션 연계 적금")
+                .accountBalance(sAccount.get().getAccountRecentBalance()+amount)
+                .accountTransactionTime(Timestamp.valueOf(now))
+                .accountApprovalAmount(amount)
+                .accountIsDeposit(true)
+                .build();
+
+        accountTransactionRepository.save(accountTransferTransaction); // 적금 계좌 거래 내역 생성
+        updateRecentBalance(accountTransferTransaction); // 적금 계좌 잔액 업데이트
+    }
 }

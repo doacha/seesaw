@@ -2,10 +2,7 @@ package com.doacha.seesawbank.controller;
 
 import com.doacha.seesawbank.exception.BadRequestException;
 import com.doacha.seesawbank.exception.NoContentException;
-import com.doacha.seesawbank.model.dto.account.AccountTransferRequest;
-import com.doacha.seesawbank.model.dto.account.AccountTransferResponse;
-import com.doacha.seesawbank.model.dto.account.CheckAccountTransactionRequest;
-import com.doacha.seesawbank.model.dto.account.CheckAuthenticationRequest;
+import com.doacha.seesawbank.model.dto.account.*;
 import com.doacha.seesawbank.model.service.AccountTransactionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -83,6 +80,28 @@ public class AccountTransactionController {
             return new ResponseEntity<String>(FAIL, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
             log.info("1원 인증 실패 - 서버 오류");
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 적금 계좌 이체
+    @Operation( summary = "적금 계좌 이체", description = "일반계좌에서 적금계좌로 이체하는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "적금 계좌 이체 성공"),
+            @ApiResponse(responseCode = "500", description = "적금 계좌 이체 - 서버 오류")
+    })
+    @PostMapping ("/saving")
+    public ResponseEntity<?> savingAccountTransfer(@RequestBody SavingAccountTransferRequest savingAccountTransferRequest) {
+        log.info("적금 계좌 이체");
+        try {
+            accountTransactionService.savingAccountTransfer(savingAccountTransferRequest);
+            log.info("적금 계좌 이체 성공");
+            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        } catch (BadRequestException e) {
+            log.info("적금 계좌 이체 실패 - 잔액 부족");
+            return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            log.info("적금 계좌 이체 실패 - 서버 오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

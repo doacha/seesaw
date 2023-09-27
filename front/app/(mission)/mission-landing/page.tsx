@@ -1,28 +1,28 @@
 'use client'
-import { missionCardDummy } from '@/app/dummies'
 import SearchContainerSimple from '../components/SearchContainerSimple'
 import Header from '@/app/components/Header'
 import type { SearchState } from '@/app/types'
 import OngoingMissionList from './components/OngoingMissionList'
-import RecommendMissionList from './components/RecommendMissionList'
 import Link from 'next/link'
+import { Suspense } from 'react'
 const MissionLandingPage = () => {
   const dummyState: SearchState = {
-    category: [],
-    cycle: [],
-    period: [],
+    inputText: '',
+    category: -1,
+    cycle: -1,
+    period: -1,
   }
-  const onGoingMissionList = Array(4).fill(missionCardDummy)
-  const recommendMissionList = Array(4).fill(missionCardDummy)
+
   return (
-    <div className="bg-background-fill">
+    <div className="bg-background-fill min-h-[840px]">
       <Header title="미션 목록" plusButton />
       <div className="py-16 pt-[74px] overflow-scroll flex flex-col gap-5 px-5">
         <Link href="/mission">
           <SearchContainerSimple onClick={() => {}} state={dummyState} />
         </Link>
-        <OngoingMissionList data={onGoingMissionList} />
-        <RecommendMissionList data={recommendMissionList} />
+        <Suspense fallback={<p>loading onGoingMission</p>}>
+          <OngoingMissionList />
+        </Suspense>
       </div>
     </div>
   )
