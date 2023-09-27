@@ -8,62 +8,69 @@ import SortButtons from './components/SortButton'
 import SpendingList from './components/SpendingList'
 import AddPostModal from './components/AddPostModal'
 
-import { Spending } from '@/app/types'
-import { spend } from '../dummies'
-
 import { memberEmailStore } from '@/stores/memberEmail'
 
 import CategoryList from './components/CategoryList'
+import { Spending } from '../types'
 
 const HomePage = () => {
   const router = useRouter()
   const { memberEmail, setMemberEmail } = memberEmailStore()
+  const [spendData, setSpendData] = useState<Spending>({
+    memberEmail: '',
+    spendingYear: 0,
+    spendingMonth: 0,
+  })
 
+  // 화살표 클릭 감지
+  const [clickEvent, setClickEvent] = useState<boolean>(false)
   // zustand에 저장된 email 가져오기
   // console.log(memberEmail)
 
   const [sort, setSort] = useState('최신순')
-  const [spendingList, setSpendingList] = useState<Spending[]>([])
 
-  const data: {
-    memberEmail: string
-    spendingYear: number
-    spendingMonth: number
-    condition: 'spendingDate' | 'spendingCost'
-  } = {
-    // 변경이 필요함 email은 zustand에 있는 것
-    memberEmail: 'doacha@seesaw.com',
-    // spendingYear은 어케하징?
-    spendingYear: 2023,
-    // spendingMonth는 어케하징?
-    spendingMonth: 9,
-    condition: sort === '최신순' ? 'spendingDate' : 'spendingCost',
-  }
-  const fetchSpendingList = () => {
-    fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/list`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
-      },
-      body: JSON.stringify(data), // 데이터를 JSON 문자열로 변환하여 전송
-    })
-      .then((res) => {
-        return res.json()
-      })
-      .then((data) => {
-        // console.log(data)
-        setSpendingList(data)
-      })
-  }
-  useEffect(() => {
-    fetchSpendingList()
-  }, [data.condition])
+  const [open, setOpen] = useState(false)
 
   const clickReport = () => {
     router.push('/report')
   }
-  const clickArrow = () => {
-    console.log('arrow 클릭')
+  const clickArrowRight = () => {
+    const newMonth = (spendData.spendingMonth as number) + 1
+    const newYear = (spendData.spendingYear as number) + 1
+    if (newMonth <= 12) {
+      setSpendData({
+        ...spendData,
+        spendingMonth: newMonth,
+      })
+    } else {
+      setSpendData({
+        ...spendData,
+        spendingMonth: 1,
+        spendingYear: newYear,
+      })
+    }
+    console.log('arrow 오른쪽 클릭')
+    console.log(spendData)
+    setClickEvent((prev) => !prev)
+  }
+
+  const clickArrowLeft = () => {
+    const newMonth = (spendData.spendingMonth as number) - 1
+    const newYear = (spendData.spendingYear as number) - 1
+    if (newMonth >= 1) {
+      setSpendData({
+        ...spendData,
+        spendingMonth: newMonth,
+      })
+    } else {
+      setSpendData({
+        ...spendData,
+        spendingMonth: 12,
+        spendingYear: newYear,
+      })
+    }
+    console.log(spendData)
+    setClickEvent((prev) => !prev)
   }
   const clickText = (e: any) => {
     setSort(e.target.innerText)
@@ -73,16 +80,6 @@ const HomePage = () => {
     const options: Intl.DateTimeFormatOptions = {
       hour: 'numeric',
       minute: 'numeric',
-    }
-
-    const formatter = new Intl.DateTimeFormat('ko-KR', options)
-    return formatter.format(date)
-  }
-
-  const formatDay = (date: Date): string => {
-    const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      weekday: 'long',
     }
     const formatter = new Intl.DateTimeFormat('ko-KR', options)
     return formatter.format(date)
@@ -99,26 +96,36 @@ const HomePage = () => {
     return formatter.format(date)
   }
 
-  // 'spendingList'를 일자별로 그룹화하기 위한 함수
-  const groupSpendingByDay = (
-    spendingList: Spending[],
-  ): Record<string, Spending[]> => {
-    const groupedData: Record<string, Spending[]> = {}
+  const toDayYearMonth = new Date()
 
-    spendingList.forEach((spending: Spending) => {
-      const day = formatDay(new Date(spending.spendingDate as string))
-
-      if (!groupedData[day]) {
-        groupedData[day] = []
-      }
-      groupedData[day].push(spending)
-    })
-
-    return groupedData
+  const dailySumData: {
+    memberEmail: string
+    spendingYear: number
+    spendingMonth: number
+  } = {
+    // zustand에 들어있는 친구를 들고와야해
+    memberEmail: 'doacha@seesaw.com',
+    spendingYear: toDayYearMonth.getFullYear(),
+    spendingMonth: toDayYearMonth.getMonth() + 1,
   }
-
-  // 'spendingList'를 일자별로 그룹화!
-  const groupedSpending = groupSpendingByDay(spendingList)
+  const fetchMonthSum = () => {
+    fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/monthsum`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
+      },
+      body: JSON.stringify(dailySumData), // 데이터를 JSON 문자열로 변환하여 전송
+    })
+      .then((res) => {
+        return res.json()
+      })
+      .then((data) => {
+        setSpendData(data)
+      })
+  }
+  useEffect(() => {
+    fetchMonthSum()
+  }, [clickEvent])
 
   // category 관련
   const [state, setState] = useState<boolean[]>(Array(21).fill(false))
@@ -135,6 +142,7 @@ const HomePage = () => {
     setState(newState)
   }
 
+  console.log(state)
   const newSelected: number[] = [] // state 기반으로 선택된 카테고리 값 배열 생성
   state.forEach((element, idx) => {
     if (element) {
@@ -142,7 +150,6 @@ const HomePage = () => {
     }
   })
 
-  const [open, setOpen] = useState(false)
   const handleToggle = () => {
     // setOpen((prev) => !prev) 이거 왜 안됨?
     setOpen(!open)
@@ -153,23 +160,30 @@ const HomePage = () => {
       <div className="flex flex-col h-screen bg-background-fill">
         <div className="w-full h-44 bg-background">
           <HomeHeader
-            spend={spend}
-            clickArrow={clickArrow}
+            spendingYear={toDayYearMonth.getFullYear()}
+            spend={spendData}
+            clickArrowRight={clickArrowRight}
+            clickArrowLeft={clickArrowLeft}
             clickReport={clickReport}
           />
-          <CategoryList onClick={clickCategory} />
+          <CategoryList onClick={clickCategory} state={state} />
         </div>
-        <SortButtons clickText={clickText} sort={sort} />
-        <div className="mx-5 my-5">
-          <SpendingList
-            formatTime={formatTime}
-            sort={sort}
-            groupedSpending={groupedSpending}
-            formatDayTime={formatDayTime}
-            spendingList={spendingList}
-            // 카테고리 선택 관련
-            newSelected={newSelected}
-          />
+        <div className="h-[48px]">
+          <SortButtons clickText={clickText} sort={sort} />
+        </div>
+        <div className="overflow-auto">
+          <div className="mx-5 mt-5 pb-20">
+            <SpendingList
+              spendData={spendData}
+              formatTime={formatTime}
+              sort={sort}
+              formatDayTime={formatDayTime}
+              openBoolean={open}
+              clickEvent={clickEvent}
+              // 카테고리 선택 관련
+              newSelected={newSelected}
+            />
+          </div>
         </div>
         <div className="fixed top-[690px] right-[20px]">
           <FaskMakeButton onClick={handleToggle} />

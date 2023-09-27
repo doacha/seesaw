@@ -8,6 +8,7 @@ interface Props {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 const DateInput = ({ value, onChange }: Props) => {
+  console.log('여기는 날짜 인풋받기')
   const [clickDa, setClickDa] = useState(false)
   const clickDate = () => {
     setClickDa(!clickDa)
@@ -24,6 +25,7 @@ const DateInput = ({ value, onChange }: Props) => {
     const formatter = new Intl.DateTimeFormat('ko-KR', options)
     return formatter.format(date)
   }
+
   return (
     <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
       <div className="w-28">
