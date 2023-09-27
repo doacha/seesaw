@@ -116,9 +116,8 @@ public class MemberService {
                 .body(request);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<AccountResponse> responseEntity = restTemplate.exchange(requestEntity, AccountResponse.class);
-
-        return responseEntity;
+        ResponseEntity<AccountResponse> result = restTemplate.exchange(requestEntity, AccountResponse.class);
+        return result;
     }
 
     // 백에 계좌 리스트 api 요청
