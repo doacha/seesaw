@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation'
 const InstallmentPage = () => {
   const [currentStep, setCurrentStep] = useState<number>(1)
   const [accountName, setAccountName] = useState<string>('')
+  const [termsAgreed, setTermsAgreed] = useState<boolean>(false)
   const [password, setPassword] = useState<string[]>(['', '', '', ''])
   const { memberEmail } = memberEmailStore()
   const { setInstallmentAccount } = accountListStore()
@@ -73,7 +74,7 @@ const InstallmentPage = () => {
       {currentStep === 1 ? (
         <InstallmentInfoStep />
       ) : currentStep === 2 ? (
-        <TermsAgreeStep />
+        <TermsAgreeStep setTermsAgreed={() => setTermsAgreed(!termsAgreed)} />
       ) : (
         <InstallmentCreateStep
           accountName={accountName}
@@ -94,6 +95,12 @@ const InstallmentPage = () => {
           }
           onClick={() => onNextButtonClick()}
           size="xl"
+          disabled={
+            (currentStep === 2 && !termsAgreed) ||
+            (currentStep === 3 && (accountName === '' || password.includes('')))
+              ? true
+              : false
+          }
         />
       </div>
     </div>

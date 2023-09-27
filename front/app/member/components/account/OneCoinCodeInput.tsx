@@ -2,14 +2,11 @@
 import { useState } from 'react'
 
 interface Props {
-  password: string[]
-  onPasswordChange: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => void
+  code: string[]
+  onCodeChange: (e: React.ChangeEvent<HTMLInputElement>, index: number) => void
 }
 import { useRef } from 'react'
-const PasswordInput = (props: Props) => {
+const OneCoinCodeInput = (props: Props) => {
   const inputRefs = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -26,9 +23,8 @@ const PasswordInput = (props: Props) => {
   }
   return (
     <div className="flex flex-col w-full gap-2">
-      <label className="ml-2 text-xl font-scDreamExBold">비밀번호</label>
       <div className="flex w-full justify-between">
-        {props.password.map((digit, index) => (
+        {props.code.map((digit, index) => (
           <input
             key={index}
             type="password"
@@ -36,7 +32,7 @@ const PasswordInput = (props: Props) => {
             maxLength={1}
             ref={inputRefs[index]}
             onChange={(e) => {
-              props.onPasswordChange(e, index)
+              props.onCodeChange(e, index)
               onInputFilled(e, index)
             }}
             className="input w-[64px]  bg-background-fill input-lg font-scDreamExBold focus:outline-primary focus:outline-[3px] "
@@ -47,4 +43,4 @@ const PasswordInput = (props: Props) => {
   )
 }
 
-export default PasswordInput
+export default OneCoinCodeInput
