@@ -1,6 +1,10 @@
 import InstallmentOpeningTerm from './InstallmentOpeningTerm'
 
-const TermsAgreeStep = () => {
+interface Props {
+  setTermsAgreed: () => void
+}
+
+const TermsAgreeStep = (props: Props) => {
   return (
     <div className="flex flex-col p-5 pt-10 items-center gap-10 bg-background">
       <div className="text-2xl font-scDreamMedium">상품 이용약관</div>
@@ -11,6 +15,7 @@ const TermsAgreeStep = () => {
           <input
             type="checkbox"
             className="checkbox checkbox-primary checkbox-lg"
+            onClick={props.setTermsAgreed}
           />
         </label>
       </div>

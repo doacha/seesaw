@@ -1,8 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Header from '../components/Header'
-import MyMissionListCard from './components/MyMissionListCard'
-import MemberInfoCard from './components/MemberInfoCard'
+import MyMissionListCard from './components/mission/MyMissionListCard'
+import MemberInfoCard from './components/profile/MemberInfoCard'
 import ProfileEditCard from './components/edit/ProfileEditCard'
 import Tab from '../components/Tab'
 import AccountCard from './components/account/AccountCard'
@@ -40,6 +40,24 @@ const memberPage = () => {
             'Content-Type': 'application/json',
           },
           body: 'doacha@seesaw.com',
+        },
+      )
+      return await res.json()
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const getAccountInfo = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SEESAW_BANK_API_URL}/account/accounts`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: 'jiwon',
         },
       )
       return await res.json()
