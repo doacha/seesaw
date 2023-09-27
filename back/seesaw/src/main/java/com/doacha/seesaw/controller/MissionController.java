@@ -174,17 +174,17 @@ public class MissionController {
         }
     }
 
-//    @Operation(summary="카테고리별 전체 평균과 그룹 평균 비교")
-//    @GetMapping("/compare/{missionId}")
-//    public ResponseEntity<?>CompareMission(@PathVariable String missionId){
-//        try{
-//            CompareMissionResponse compareMissionResponse = missionService.getCompareMissionAverage(missionId);
-//            return new ResponseEntity<CompareMissionResponse>(compareMissionResponse,HttpStatus.OK);
-//        }
-//        catch(Exception e){
-//            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    @Operation(summary="카테고리별 전체 평균과 그룹 평균 비교")
+    @GetMapping("/compare/{missionId}")
+    public ResponseEntity<?>compareMission(@PathVariable String missionId){
+        try{
+            CompareMissionResponse compareMissionResponse = missionService.getCompareMissionAverage(missionId);
+            return new ResponseEntity<CompareMissionResponse>(compareMissionResponse,HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 //    @Operation(summary="카테고리별 그룹 평균과 비교")
 //    @PostMapping("/category-compare")
@@ -307,11 +307,25 @@ public class MissionController {
 //    }
 
     @Operation( summary = "적금 계좌이체 테스트", description = "적금 계좌이체 테스트용")
-    @GetMapping("/test")
-    public ResponseEntity<String> test(){
+    @GetMapping("/test1")
+    public ResponseEntity<String> test1(){
         log.info("적금 계좌 이체 테스트");
         try{
             memberMissionService.requestTransfer();
+            log.info("테스트 성공");
+            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        }catch (Exception e) {
+            log.info("테스트 실패");
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation( summary = "예치금 계좌이체 테스트", description = "예치금 계좌이체 테스트용")
+    @GetMapping("/test2")
+    public ResponseEntity<String> test2(){
+        log.info("예치금 계좌 이체 테스트");
+        try{
+            memberMissionService.returnDeposit();
             log.info("테스트 성공");
             return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         }catch (Exception e) {
