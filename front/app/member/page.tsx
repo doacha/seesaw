@@ -11,12 +11,14 @@ import { QueryKey, useQuery } from '@tanstack/react-query'
 import PasswordConfirmCard from './components/edit/PasswordConfirmCard'
 import InstallmentCreateButton from './installment/components/InstallmentCreateButton'
 import { useRouter } from 'next/navigation'
+import { accountListStore } from '@/stores/accountList'
 
 const memberPage = () => {
   const router = useRouter()
   const [openEditPage, setOpenEditPage] = useState<boolean>(false)
   const [confirmed, setConfirmed] = useState<boolean>(false)
   const [activeTab, setActiveTab] = useState<string>('tab1')
+  const { accountList, setAccountList } = accountListStore()
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
@@ -48,25 +50,36 @@ const memberPage = () => {
     }
   }
 
-  const getAccountInfo = async () => {
+  const getAccountListInfo = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SEESAW_BANK_API_URL}/account/accounts`,
+        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/mypage-account`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: 'jiwon',
+          body: 'jiwon@seesaw.com',
         },
       )
-      return await res.json()
+      const data = await res.json()
+      setAccountList(data)
+      return data
     } catch (err) {
       console.log(err)
     }
   }
 
-  const { isLoading, data, error } = useQuery(['profileInfo'], getProfileInfo)
+  const {
+    isLoading,
+    data: profileData,
+    error,
+  } = useQuery(['profileInfo'], getProfileInfo)
+
+  const { data: accountListData } = useQuery(
+    ['accountListInfo'],
+    getAccountListInfo,
+  )
 
   return (
     <div className="bg-background-fill flex flex-col h-screen w-screen">
@@ -106,19 +119,19 @@ const memberPage = () => {
               <div className="flex flex-col h-full p-5 gap-5">
                 <MemberInfoCard
                   setOpenEditPage={() => setOpenEditPage(true)}
-                  member={data.info}
+                  member={profileData.info}
                 />
-                <MyMissionListCard missionList={data.missionList} />
+                <MyMissionListCard missionList={profileData.missionList} />
               </div>
             ) : (
               <div className="flex flex-col h-min-full p-5 gap-5">
-                {/* <AccountCard />
-                <AccountCard />
-                <AccountCard /> */}
                 <InstallmentCreateButton
                   onClickEvent={() => router.push('member/installment')}
                 />
-                <AccountRegistModal />
+                {accountList.map((account, index) => (
+                  <AccountCard account={account} key={index} />
+                ))}
+                {accountList.length < 1 ? <AccountRegistModal /> : null}
               </div>
             )}
           </div>
