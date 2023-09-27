@@ -53,6 +53,18 @@ public class MemberController {
         return memberService.confirmPassword(loginRequest);
     }
 
+    // 이메일 중복확인
+    @PostMapping("/emailcheck")
+    public boolean checkEmail(@RequestBody String memberEmail) {
+        return memberService.checkEmail(memberEmail);
+    }
+
+    // 닉네임 중복확인
+    @PostMapping("/nicknamecheck")
+    public boolean checkNickname(@RequestBody String memberNickname) {
+        return memberService.checkNickname(memberNickname);
+    }
+
     // 회원 정보 수정
     @PutMapping("/modify")
     public MyInfoResponse changeInfo(@RequestBody ChangeInfoRequest changeInfoRequest) {
@@ -72,11 +84,22 @@ public class MemberController {
         return jwtProvider.reissueAtk(memberResponse);
     }
 
+    // 마이 페이지 내 정보
     @PostMapping("/mypage")
-    public Map<String, Object> getAccountList(@RequestBody String memberEmail){
+    public Map<String, Object> getMyInfoAndMissionList(@RequestBody String memberEmail){
         Map<String, Object> result = new HashMap<>();
         result.put("info", memberService.myPageInfo(memberEmail));
         result.put("missionList", memberMissionService.getMyPageMissionList(memberEmail));
         return result;
+    }
+
+    // 마이페이지 내 계좌
+    @PostMapping("/mypage-account")
+    public ResponseEntity<?> getAccountList(@RequestBody String memberEmail){
+        if(memberService.checkCertifiedAccount(memberEmail)) {
+            // 시소뱅크에 계좌 리스트 불러오는 api 호출하고 담아서 리턴
+//            Object response = memberService
+        }
+        return ResponseEntity.ok(false);
     }
 }

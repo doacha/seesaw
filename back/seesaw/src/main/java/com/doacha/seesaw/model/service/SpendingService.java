@@ -15,12 +15,15 @@ public interface SpendingService {
     void delete(Long spendingId);
     // 로그인되어 있는 유저의 이메일에 일치하는 Spending 목록 가져오기
     List<MonthSpendingResponse> findAllByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth, String condition);
-    // Spending 상세보기
-    Optional<Spending> read(Long spendingId);
+
+    // 지출 상세
+    SpendingDetailResponse detailResponse(Long spendingId);
+
     List<DailySpendingSumResponse> findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth);
 
     MonthSpendingSumResponse findAllMonthSumByMemberEmailAndSpendingYear(String memberEmail, int spendingYear,int spendingMonth);
     List<MonthCategoryResponse> findMonthSumByCategory(String memberEmail, int spendingYear, int spendingMonth);
 
     MonthCompareResponse findMonthDifferenceByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth);
+
 }
