@@ -1,25 +1,33 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.BadRequestException;
+import com.doacha.seesaw.model.dto.SavingRequest;
+import com.doacha.seesaw.model.dto.account.AccountResponse;
+import com.doacha.seesaw.model.dto.account.CreateAccountRequest;
+import com.doacha.seesaw.model.dto.account.CreateAccountToSeesawRequest;
 import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.entity.Member;
-import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.redis.RedisDao;
 import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MemberRepository;
 //import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.util.Optional;
+
+import static org.hibernate.sql.ast.SqlTreeCreationLogger.LOGGER;
 
 @Service
 @Slf4j
@@ -80,6 +88,36 @@ public class MemberService {
 
         if(member.getMemberBankId()!=null) return true;
         else return false;
+    }
+
+    // 계좌 개설
+    @Transactional
+    public ResponseEntity<AccountResponse> createAccount(CreateAccountToSeesawRequest createAccountToSeesawRequest) {
+        Member member = memberRepository
+                .findByMemberEmail(createAccountToSeesawRequest.getMemberEmail())
+                .orElseThrow(() -> new BadRequestException("아이디 혹은 비밀번호를 확인하세요."));
+
+        // 각각의 적금건에 대해 이체 요청 하기
+        CreateAccountRequest request = CreateAccountRequest.builder()
+                .accountName(createAccountToSeesawRequest.getAccountName())
+                .memberId(member.getMemberBankId())
+                .accountPassword(createAccountToSeesawRequest.getAccountPassword())
+                .build();
+
+        URI uri = UriComponentsBuilder
+//                .fromUriString("http://localhost:8081")
+                .fromUriString("http://j9a409.p.ssafy.io:8081")
+                .path("/seesawbank/account/create")
+                .build()
+                .toUri();
+
+        RequestEntity<CreateAccountRequest> requestEntity = RequestEntity
+                .post(uri)
+                .body(request);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<AccountResponse> result = restTemplate.exchange(requestEntity, AccountResponse.class);
+        return result;
     }
 
     // 백에 계좌 리스트 api 요청
