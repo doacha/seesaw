@@ -23,6 +23,8 @@ public interface AccountTransactionRepository extends JpaRepository<AccountTrans
             "ORDER BY a.accountTransactionTime DESC limit 10")
     List<AccountTransactionListResponse> findAccountTransactionsByAccountTimeDesc(Account account);
 
+    AccountTransaction findByAccountDealNum(String accountDealNum);
+
 //    @Query("SELECT new com.doacha.seesawbank.model.dto.account.AccountListResponse(" +
 //            "a.accountName, a.accountNum, a.accountName, (select at.accountBalance from at where at.account.accountNum = a.accountNum order by at.accountTransactionTime desc limit 1)) " +
 //            "FROM AccountTransaction at " +
