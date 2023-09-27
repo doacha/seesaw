@@ -105,8 +105,10 @@ public class MemberController {
 
     // 적금 계좌 개설
     @PostMapping("/create-account")
-    public ResponseEntity<AccountResponse> createAccount(@RequestBody CreateAccountToSeesawRequest createAccountToSeesawRequest){
-        return memberService.createAccount(createAccountToSeesawRequest);
-//        return ResponseEntity.ok(false);
+    public ResponseEntity<?> createAccount(@RequestBody CreateAccountToSeesawRequest createAccountToSeesawRequest){
+        if(memberService.checkCertifiedAccount(createAccountToSeesawRequest.getMemberEmail())) {
+            return memberService.createAccount(createAccountToSeesawRequest);
+        }
+        return ResponseEntity.ok(false);
     }
 }
