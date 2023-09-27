@@ -14,6 +14,6 @@ public class CheckAuthenticationRequest {
     @Schema(description = "거래 번호", example = "abcd1234", required = true)
     private String accountDealNum;
 
-    @Schema(description = "인증 번호", example = "1", required = true)
+    @Schema(description = "인증 번호", example = "1234", required = true)
     private String authenticationNum;
 }
