@@ -14,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,8 +69,8 @@ public class MemberController {
 
     // 회원 정보 수정
     @PutMapping("/modify")
-    public MyInfoResponse changeInfo(@RequestBody ChangeInfoRequest changeInfoRequest) {
-        return memberService.changeInfo(changeInfoRequest);
+    public MyInfoResponse changeInfo(@RequestParam(value="image") MultipartFile image, @RequestBody ChangeInfoRequest changeInfoRequest) throws IOException {
+        return memberService.changeInfo(image, changeInfoRequest);
     }
 
     // 회원 탈퇴

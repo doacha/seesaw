@@ -13,6 +13,7 @@ import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MemberRepository;
 //import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,10 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +44,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final RedisDao redisDao;
 
+    @Autowired
+    private S3Uploader s3Uploader;
 
     // 회원가입
     @Transactional
@@ -196,17 +201,24 @@ public class MemberService {
 
     // 회원 정보 수정
     @Transactional
-    public MyInfoResponse changeInfo(ChangeInfoRequest changeInfoRequest) {
+    public MyInfoResponse changeInfo(MultipartFile image, ChangeInfoRequest changeInfoRequest) throws IOException {
 
         Optional<Member> member = memberRepository.findByMemberEmail(changeInfoRequest.getMemberEmail());
 
         Member update;
+
 
         if(changeInfoRequest.getMemberNewPassword()!=null || !"".equals(changeInfoRequest.getMemberNewPassword())){ // 비번 새로 바꾸려고 하면
             if(!passwordEncoder.matches( changeInfoRequest.getMemberPassword(), member.get().getMemberPassword())){ // 비번 확인
                 throw new BadRequestException("비밀번호를 확인하세요."); // 비번 다르면 익셉션
             }
             member.get().builder().memberPassword(changeInfoRequest.getMemberNewPassword()).build();
+        }
+        // 이미지 처리
+        String storedFileName = changeInfoRequest.getMemberImgUrl(); // 일단 기존 것으로 초기화
+        // 이미
+        if(!image.isEmpty()) {
+            storedFileName = s3Uploader.upload(image,"profile");
         }
 
         update = Member.builder()
@@ -216,7 +228,7 @@ public class MemberService {
                 .memberName(changeInfoRequest.getMemberName())
                 .memberGender(changeInfoRequest.isMemberGender())
                 .memberNickname(changeInfoRequest.getMemberNickname())
-                .memberImgUrl(changeInfoRequest.getMemberImgUrl())
+                .memberImgUrl(storedFileName)
                 .memberPhoneNumber(changeInfoRequest.getMemberPhoneNumber())
                 .build();
 
