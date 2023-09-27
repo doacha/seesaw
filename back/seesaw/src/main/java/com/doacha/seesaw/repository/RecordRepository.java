@@ -67,8 +67,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "ORDER BY r.recordTotalCost DESC ")
     Page<DailyTopSpendingResponse> getDailyTopSpender(@Param("missionId") String missionId,Pageable pageable);
 
-    @Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.spendingCategoryId = :categoryId ")
-    Long sumByCategoryId(@Param("categoryId") int categoryId);
 
     @Query("SELECT COUNT(r) FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail AND r.recordStatus = 2")
     int countFail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
@@ -106,17 +104,32 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
     @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.CompareMissionDto(" +
             "mm.mission.missionId AS missionId, " +
-            "SUM(r.recordTotalCost) AS missionAverage) " +
+            "AVG(r.recordTotalCost) AS missionAverage) " +
             "FROM Record r " +
             "JOIN r.memberMission mm " +
-            "WHERE mm.mission.missionId = :missionId "
-            )
-    CompareMissionDto getMissionAverage(@Param("missionId") String missionId);
+            "WHERE mm.mission.missionId = :missionId " +
+            "GROUP BY r.recordStartDate ")
+    List<CompareMissionDto> getCompareMission(@Param("missionId") String missionId);
+
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.EntireMissionDto(" +
+            "mm.mission.missionId AS missionId, " +
+            "SUM(r.recordTotalCost) AS sum, " +
+            "mm.mission.missionPeriod AS missionPeriod, " +
+            "mm.mission.missionTotalCycle AS missionCurrentCycle , " +
+            "mm.mission.missionMemberCount AS missionMemberCount ) " +
+            "FROM Record r " +
+            "JOIN r.memberMission mm " +
+            "WHERE mm.mission.missionId != :missionId AND mm.mission.missionCategoryId = :categoryId " +
+            "GROUP BY mm.mission.missionId ")
+    List<EntireMissionDto> getEntireMissionByCategoryId(@Param("missionId")String missionId,@Param("categoryId") int categoryId);
 
 
+    @Query("SELECT AVG(s.spendingCost) FROM Spending s WHERE s.spendingCategoryId = :categoryId GROUP BY DAY(s.spendingDate)")
+    Double averageByCategoryId(@Param("categoryId") int categoryId);
 
     @Query("SELECT COUNT(s) FROM Spending s WHERE s.spendingCategoryId = :categoryId GROUP BY DAY(s.spendingDate) ")
     Long countByCategoryIdAndDay(@Param("categoryId") int categoryId);
+
 
     @Query("SELECT r.recordNumber, r.recordStartDate, r.recordEndDate, r.recordStatus, s.spendingTitle, s.spendingCost " +
             "FROM Record r " +
