@@ -98,7 +98,7 @@ public class MemberController {
     public ResponseEntity<?> getAccountList(@RequestBody String memberEmail){
         if(memberService.checkCertifiedAccount(memberEmail)) {
             // 시소뱅크에 계좌 리스트 불러오는 api 호출하고 담아서 리턴
-//            Object response = memberService
+            return memberService.getAccountList(memberEmail);
         }
         return ResponseEntity.ok(false);
     }
