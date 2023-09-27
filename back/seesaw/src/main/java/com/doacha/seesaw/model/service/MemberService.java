@@ -86,7 +86,7 @@ public class MemberService {
                 .findByMemberEmail(memberEmail)
                 .orElseThrow(() -> new BadRequestException("아이디 혹은 비밀번호를 확인하세요."));
 
-        if(member.getMemberBankId()!=null) return true;
+        if(!"".equals(member.getMemberMainAccount()) || member.getMemberMainAccount()!=null) return true;
         else return false;
     }
 
