@@ -1,3 +1,5 @@
+'use client'
+
 import { accountListStore } from '@/stores/accountList'
 import Header from '../components/Header'
 import AccountCard from '../member/components/account/AccountCard'
