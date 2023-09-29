@@ -16,5 +16,5 @@ public class MissionRankingResponse {
     private Long missionFrugalSpending;
     private String dailyTopSpender;
     private Long dailyTopSpending;
-    private int dailyTopSpendingNum;
+    private Long dailyTopSpendingNum;
 }

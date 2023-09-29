@@ -197,17 +197,17 @@ public class MissionController {
 //        }
 //    }
 
-    @Operation(summary="미션 최고 금액, 최저 금액", description = "미션내에 최고 금액, 최저 금액 사용자와 금액 불러오는 API")
-    @GetMapping("/ranking/{missionId}")
-    public ResponseEntity<?>getMissionRanking(@PathVariable String missionId){
-        try{
-            MissionRankingResponse missionRankingResponse = missionService.getMissionRanking(missionId);
-            return new ResponseEntity<>(missionRankingResponse,HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @Operation(summary="미션 최고 금액, 최저 금액", description = "미션내에 최고 금액, 최저 금액 사용자와 금액 불러오는 API")
+//    @GetMapping("/ranking/{missionId}")
+//    public ResponseEntity<?>getMissionRanking(@PathVariable String missionId){
+//        try{
+//            MissionRankingResponse missionRankingResponse = missionService.getMissionRanking(missionId);
+//            return new ResponseEntity<>(missionRankingResponse,HttpStatus.OK);
+//        }
+//        catch(Exception e){
+//            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
     // 미션 상세
     @Operation(summary = "미션 상세", description = "미션 상세 정보 가져오는 API")
     @ApiResponses(value = {

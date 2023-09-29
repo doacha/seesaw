@@ -134,25 +134,22 @@ public class MissionService {
         MissionStatsResponse missionStatsRequestList =spendingRepository.getCategorySumAndAverageByMissionAndMember(memberEmail, missionId);
         return missionStatsRequestList;
     }
-
-    public MissionRankingResponse getMissionRanking(String missionId){
-        Pageable pageable = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "missionTopSpending"));
-        Page<MissionTopSpendingResponse> missionTopSpenderResult =  recordRepository.getMissionTopSpender(missionId,pageable);
-        pageable = PageRequest.of(0, 1, Sort.by(Sort.Direction.ASC, "missionFrugalSpending"));
-        Page<MissionFrugalSpendingResponse> missionFrugalSpenderResult = recordRepository.getMissionFrugalSpender(missionId,pageable);
-        pageable = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "dailyTopSpending"));
-        Page<DailyTopSpendingResponse> dailyTopSpenderResult = recordRepository.getDailyTopSpender(missionId,pageable);
-            MissionRankingResponse missionRankingResponse = MissionRankingResponse.builder()
-                    .missionTopSpender(missionTopSpenderResult.getContent().get(0).getMissionTopSpender())
-                    .missionTopSpending(missionTopSpenderResult.getContent().get(0).getMissionTopSpending())
-                    .missionFrugalSpender(missionFrugalSpenderResult.getContent().get(0).getMissionFrugalSpender())
-                    .missionFrugalSpending(missionFrugalSpenderResult.getContent().get(0).getMissionFrugalSpending())
-                    .dailyTopSpender(dailyTopSpenderResult.getContent().get(0).getDailyTopSpender())
-                    .dailyTopSpending(dailyTopSpenderResult.getContent().get(0).getDailyTopSpending())
-                    .dailyTopSpendingNum(dailyTopSpenderResult.getContent().get(0).getDailyTopSpendingNum())
-                    .build();
-            return missionRankingResponse;
-    }
+    // 미션 내 랭킹
+//    public MissionRankingResponse getMissionRanking (String missionId){
+//        MissionTopSpendingResponse missionTopSpendingResponse = recordRepository.getMissionTopSpender(missionId);
+//        MissionFrugalSpendingResponse missionFrugalSpendingResponse = recordRepository.getMissionFrugalSpender(missionId);
+//        DailyTopSpendingResponse dailyTopSpendingResponse = recordRepository.getDailyTopSpender(missionId);
+//        MissionRankingResponse missionRankingResponse = MissionRankingResponse.builder()
+//                .missionTopSpender(missionTopSpendingResponse.getMissionTopSpender())
+//                .missionTopSpending(missionTopSpendingResponse.getMissionTopSpending())
+//                .missionFrugalSpender(missionFrugalSpendingResponse.getMissionFrugalSpender())
+//                .missionFrugalSpending(missionFrugalSpendingResponse.getMissionFrugalSpending())
+//                .dailyTopSpender(dailyTopSpendingResponse.getDailyTopSpender())
+//                .dailyTopSpending(dailyTopSpendingResponse.getDailyTopSpending())
+//                .dailyTopSpendingNum(dailyTopSpendingResponse.getDailyTopSpendingNum())
+//                .build();
+//        return missionRankingResponse;
+//    }
     // 미션 통계 내에 나의 순위
 //    public MyMissionRankingResponse getMyMissionRanking(String missionId, String memberEmail){
 //        List<MyMissionRankingResponse> missionRankingList = recordRepository.getMyMissionRanking(missionId);
