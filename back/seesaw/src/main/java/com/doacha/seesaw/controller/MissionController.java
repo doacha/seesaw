@@ -197,17 +197,17 @@ public class MissionController {
 //        }
 //    }
 
-    @Operation(summary="미션 최고 금액, 최저 금액", description = "미션내에 최고 금액, 최저 금액 사용자와 금액 불러오는 API")
-    @GetMapping("/ranking/{missionId}")
-    public ResponseEntity<?>getMissionRanking(@PathVariable String missionId){
-        try{
-            MissionRankingResponse missionRankingResponse = missionService.getMissionRanking(missionId);
-            return new ResponseEntity<>(missionRankingResponse,HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @Operation(summary="미션 최고 금액, 최저 금액", description = "미션내에 최고 금액, 최저 금액 사용자와 금액 불러오는 API")
+//    @GetMapping("/ranking/{missionId}")
+//    public ResponseEntity<?>getMissionRanking(@PathVariable String missionId){
+//        try{
+//            MissionRankingResponse missionRankingResponse = missionService.getMissionRanking(missionId);
+//            return new ResponseEntity<>(missionRankingResponse,HttpStatus.OK);
+//        }
+//        catch(Exception e){
+//            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
     // 미션 상세
     @Operation(summary = "미션 상세", description = "미션 상세 정보 가져오는 API")
     @ApiResponses(value = {
@@ -330,6 +330,25 @@ public class MissionController {
             return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
         }catch (Exception e) {
             log.info("테스트 실패");
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Operation(summary = "미션 참여자 목록", description = "미션 참여자의 프사&닉네임 목록 조회 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "미션 참여자 목록 불러오기 성공"),
+            @ApiResponse(responseCode = "204", description = "미션 참여자 목록 불러오기 실패 - 존재하지 않는 그룹"),
+            @ApiResponse(responseCode = "500", description = "미션 참여자 목록 불러오기 실패 - 서버 오류")
+    })
+    @GetMapping("members/{missionId}")
+    public ResponseEntity<?> getMissionMemberList(@PathVariable String missionId) {
+        log.info("미션 참여자 목록 가져오기");
+        try {
+            List<MissionMemberResponse> missionMemberResponseList = memberMissionService.getMissionMemberList(missionId);
+            log.info("미션 참여자 목록 가져오기 성공");
+            return new ResponseEntity<List<MissionMemberResponse>>(missionMemberResponseList, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("미션 참여자 목록 가져오기 실패 - 서버 오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
