@@ -97,12 +97,14 @@ public class MemberController {
 
     // 마이페이지 내 계좌
     @PostMapping("/mypage-account")
-    public ResponseEntity<?> getAccountList(@RequestBody String memberEmail){
-        if(memberService.checkCertifiedAccount(memberEmail)) {
-            // 시소뱅크에 계좌 리스트 불러오는 api 호출하고 담아서 리턴
-            return memberService.getAccountList(memberEmail);
-        }
-        return ResponseEntity.ok(false);
+    public Map<String, Object> getAccountList(@RequestBody String memberEmail){
+        return memberService.getAccountList(memberEmail);
+//        if(memberService.checkCertifiedAccount(memberEmail)) {
+//            // 시소뱅크에 계좌 리스트 불러오는 api 호출하고 담아서 리턴
+//
+//        }else{
+//            return
+//        }
     }
 
     // 적금 계좌 개설
