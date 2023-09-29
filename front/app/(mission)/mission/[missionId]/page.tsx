@@ -20,10 +20,12 @@ const MissionDetailpage = () => {
     <div className="bg-background-fill">
       {/* <Header title={data.missionTitle} backButton /> */}
       <MissionDetailContainer data={data} />
-      {isStart ? (
+      {data.missionStatus !== 0 ? (
         <MissionDetailContents data={contentsProps} />
       ) : (
-        <MissionWaitingList />
+        <>
+          <MissionWaitingList />
+        </>
       )}
       <FaskMakeButton path="ndU1ZQjkV8/create" />
     </div>
