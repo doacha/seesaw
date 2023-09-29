@@ -6,42 +6,47 @@ import { getCycleTerm } from '../../../util'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { useRef } from 'react'
-interface missionResult {
-  memberImgUrl: string
-  memberName: string
-  status: boolean
-  spending: number
-  boardId: number
-}
+import { GroupStatusProps } from '@/app/types'
+import { RecordDetail } from '@/app/types'
 
 interface groupMissionHistoryProps {
   cycleCount: number
   successCount: number
   failCount: number
   missionPeriod: number
-  individualResult: Array<missionResult>
+  individualResult: Array<RecordDetail>
 }
 
 const GroupMissionHistoryCard = ({
   data,
   startDate,
+  missionData,
 }: {
-  data: groupMissionHistoryProps
+  data: RecordDetail[]
   startDate: string
+  missionData: GroupStatusProps
 }) => {
   const dialogRef = useRef<HTMLDialogElement>(null)
+  const cycleCount = data[0].recordNumber
+  let successCount = 0,
+    failCount = 0
+  data.forEach((record) => {
+    if (record.recordStatus === 1) {
+      successCount++
+    } else if (record.recordStatus === 2) {
+      failCount++
+    }
+  })
   return (
     <div className="rounded-lg p-2.5 my-2.5 shadow-md">
       {/* 회차 타이틀 */}
       <div className="flex flex-row justify-between">
         <div>
-          <span className="font-scDreamMedium mr-2.5">
-            {data.cycleCount} 회차
-          </span>
+          <span className="font-scDreamMedium mr-2.5">{cycleCount} 회차</span>
           <span className="text-[10px] text-outline">{`${getCycleTerm(
             startDate,
-            data.cycleCount,
-            data.missionPeriod,
+            cycleCount,
+            missionData.missionPeriod,
           )}`}</span>
         </div>
         <div
@@ -52,18 +57,18 @@ const GroupMissionHistoryCard = ({
         </div>
       </div>
       {/* 현황 바 */}
-      <StatusBar success={data.successCount} fail={data.failCount} />
+      <StatusBar success={successCount} fail={failCount} />
       {/* 개인별 결과 */}
-      {data.individualResult.map((element, idx) => (
+      {data.map((element, idx) => (
         <PersonalCard data={element} key={idx} />
       ))}
       <dialog id="my_modal_2" className="modal" ref={dialogRef}>
         <div className="modal-box bg-background">
           <div className="font-scDreamMedium mb-2.5">
-            {data.cycleCount}회차 전체 명단
+            {cycleCount}회차 전체 명단
           </div>
           <hr className="mb-5" />
-          {data.individualResult.map((element, idx) => (
+          {data.map((element, idx) => (
             <PersonalCard data={element} key={idx} />
           ))}
         </div>
