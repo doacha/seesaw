@@ -1,14 +1,7 @@
 import { error } from 'console'
 import Image from 'next/image'
-interface missionResult {
-  memberImgUrl: string
-  memberName: string
-  status: boolean
-  spending: number
-  boardId: number
-}
-
-const PersonalCard = ({ data }: { data: missionResult }) => {
+import { RecordDetail } from '@/app/types'
+const PersonalCard = ({ data }: { data: RecordDetail }) => {
   return (
     <div className="flex flex-row gap-2 bg-background mb-2.5">
       <Image
@@ -19,19 +12,21 @@ const PersonalCard = ({ data }: { data: missionResult }) => {
         className="rounded-full m-auto"
       />
       <div className="w-full flex-[2_1_0%]">
-        <div className="text-sm mb-1">{data.memberName}</div>
+        <div className="text-sm mb-1">{data.memberNickname}</div>
         <div
-          className={`${data.status ? 'text-primary' : 'text-error'} text-xs`}
+          className={`${
+            data.recordStatus === 1 ? 'text-primary' : 'text-error'
+          } text-xs`}
         >
-          {data.status ? '성공' : '실패'}
+          {data.recordStatus === 1 ? '성공' : '실패'}
         </div>
       </div>
       <div
         className={`${
-          data.status ? 'text-primary' : 'text-error'
+          data.recordStatus === 1 ? 'text-primary' : 'text-error'
         } font-scDreamMedium w-full text-right m-auto flex-[1_1_0%]`}
       >
-        {data.spending.toLocaleString('ko-KR')}원
+        {data.recordTotalCost.toLocaleString('ko-KR')}원
       </div>
     </div>
   )
