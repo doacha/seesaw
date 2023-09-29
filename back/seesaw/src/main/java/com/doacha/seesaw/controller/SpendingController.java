@@ -1,7 +1,6 @@
 package com.doacha.seesaw.controller;
 
 import com.doacha.seesaw.model.dto.spending.*;
-import com.doacha.seesaw.model.entity.Spending;
 import com.doacha.seesaw.model.service.SpendingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @Tag(name = "Spending", description = "Spending API")
