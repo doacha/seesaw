@@ -3,12 +3,12 @@ package com.doacha.seesawbank.model.service;
 import com.doacha.seesawbank.exception.BadRequestException;
 import com.doacha.seesawbank.model.dto.account.*;
 import com.doacha.seesawbank.model.entity.Account;
-import com.doacha.seesawbank.model.entity.AccountTransaction;
 import com.doacha.seesawbank.model.entity.Member;
 import com.doacha.seesawbank.repository.AccountRepository;
 import com.doacha.seesawbank.repository.AccountTransactionRepository;
 import com.doacha.seesawbank.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +27,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AccountService {
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
@@ -75,18 +76,12 @@ public class AccountService {
 
     // 계좌 내역 가져오기
     @Transactional
-    public List<AccountTransactionListResponse> getAccountDetail(String accountNum) {
-        Optional<Account> account = accountRepository.findAccountByAccountNum(accountNum);
-        List<AccountTransactionListResponse> list = accountTransactionRepository.findAccountTransactionsByAccountTimeDesc(account.get());
-// TODO: 알ㄴ아ㅣ;ㅓ라ㅣㅓㄹ란어ㅣ; 일주일 자르자
-        //        for(AccountTransactionListResponse atlr : list){
-//            if(!dateDiff(atlr.getAccountTransactionTime(), -7){
-//                list.remove(atlr);
-//            }
-////            if(atlr.getAccountTransactionTime().before(dateAdd(LocalDateTime.now(), -7))){
-////                list.remove(atlr);
-////            }
-//        }
+    public List<AccountTransactionListResponse> getAccountDetail(AccountNumRequest accountNumRequest, Pageable pageable) {
+        log.info("계좌번호: " + accountNumRequest.getAccountNum());
+        Optional<Account> account = accountRepository.findAccountByAccountNum(accountNumRequest.getAccountNum());
+        if(account.isEmpty()) throw new BadRequestException("계좌번호...로 계좌가 안들어옴");
+        List<AccountTransactionListResponse> list = accountTransactionRepository.findAccountTransactions(account.get(), pageable);
+
         return list;
     }
 
