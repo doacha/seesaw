@@ -16,7 +16,7 @@ memberListdummy[0].isHost = true
 
 const WaitingMemberCard = ({ data }: { data: MemberList }) => {
   return (
-    <div className="flex flex-row bg-primary-container items-center relative">
+    <div className="flex flex-row items-center relative">
       <Image
         alt="member profile image"
         src={data.memberImgUrl}
