@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +22,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -76,13 +75,21 @@ public class AccountService {
 
     // 계좌 내역 가져오기
     @Transactional
-    public List<AccountTransactionListResponse> getAccountDetail(AccountNumRequest accountNumRequest, Pageable pageable) {
+    public List<AccountTransactionListResponse> getAccountDetail(AccountNumRequest accountNumRequest) {
         log.info("계좌번호: " + accountNumRequest.getAccountNum());
         Optional<Account> account = accountRepository.findAccountByAccountNum(accountNumRequest.getAccountNum());
         if(account.isEmpty()) throw new BadRequestException("계좌번호...로 계좌가 안들어옴");
-        List<AccountTransactionListResponse> list = accountTransactionRepository.findAccountTransactions(account.get(), pageable);
 
-        return list;
+        List<AccountTransactionListResponse> list = accountTransactionRepository.findAccountTransactions(account.get());
+
+        // pageNumber에 따라 해당 페이지의 결과 반환
+        int startIndex = accountNumRequest.getPageNum() * 10;
+        int endIndex = Math.min((accountNumRequest.getPageNum() + 1) * 10, list.size());
+
+        if (startIndex >= endIndex) {
+            return Collections.emptyList(); // 페이지에 결과가 없는 경우 빈 리스트 반환
+        }
+        return list.subList(startIndex, endIndex);
     }
 
     // 날짜 더하는 함수
