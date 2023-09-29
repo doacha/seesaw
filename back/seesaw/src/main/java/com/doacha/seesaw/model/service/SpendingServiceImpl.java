@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.Month;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,39 +26,53 @@ public class SpendingServiceImpl implements SpendingService{
     @Override
     public void save(SpendingDto spendingdto){
         Optional<Member> member = memberRepository.findById(spendingdto.getMemberEmail());
-        int category = 0;
-        switch(spendingdto.getSpendingCategory()){
-            case "일반음식점","일반한식점","일반양식점","일반중식점","일반일식점"-> category = 1;
-            case "카페","제과점"-> category=2;
-            case "주점"-> category = 3;
-            case "마트","슈퍼마켓","시장","문구점"-> category=4;
-            case "백화점","쇼핑몰","아울렛"-> category =5;
-            case "의류가게","신발가게","모자가게"-> category = 6;
-            case "화장품가게","미용실","드럭스토어","네일아트","피부샵"-> category = 7;
-            case "버스","택시","지하철","기차","비행기","배"->category=8;
-            case "주유소","주차","톨게이트"->category=9;
-            case "인터넷","텔레콤","TV","인테리어","수도세","전기세","가스"-> category = 10;
-            case "병원","약국","헬스장","필라테스/요가","운동"-> category = 11;
-            case "은행","증권사","저축은행","카드사","캐피탈","가상화폐 거래소"-> category = 12;
-            case "영화관","극장","매표소","문화/여가 기타"-> category = 13;
-            case "콘도","펜션","호텔","모텔","숙박공유업"-> category = 14;
-            case "외국어 학원","컴퓨터 학원","요리 학원","자격증 학원","입시 학원","기타 학원"-> category = 15;
-            case "애완 동물"-> category = 16;
-            case "자녀/육아"-> category=17;
-            case "경조/선물"-> category = 18;
-            case "편의점"-> category = 19;
-        }
         Spending spending = Spending.builder()
                 .spendingTitle(spendingdto.getSpendingTitle())
                 .spendingCost(spendingdto.getSpendingCost())
                 .spendingDate(spendingdto.getSpendingDate())
                 .spendingMemo(spendingdto.getSpendingMemo())
-                .spendingCategoryId(category)
+                .spendingCategoryId(spendingdto.getSpendingCategoryId())
                 .member(member.get())
                 .build();
         spendingRepository.save(spending);
     }
 
+    // seesawBank에서 받아와서 저장할 것
+//    @Override
+//    public void save(SpendingDto spendingdto){
+//        Optional<Member> member = memberRepository.findById(spendingdto.getMemberEmail());
+//        int category = 0;
+//        switch(spendingdto.getSpendingCategory()){
+//            case "일반음식점","일반한식점","일반양식점","일반중식점","일반일식점"-> category = 1;
+//            case "카페","제과점"-> category=2;
+//            case "주점"-> category = 3;
+//            case "마트","슈퍼마켓","시장","문구점"-> category=4;
+//            case "백화점","쇼핑몰","아울렛"-> category =5;
+//            case "의류가게","신발가게","모자가게"-> category = 6;
+//            case "화장품가게","미용실","드럭스토어","네일아트","피부샵"-> category = 7;
+//            case "버스","택시","지하철","기차","비행기","배"->category=8;
+//            case "주유소","주차","톨게이트"->category=9;
+//            case "인터넷","텔레콤","TV","인테리어","수도세","전기세","가스"-> category = 10;
+//            case "병원","약국","헬스장","필라테스/요가","운동"-> category = 11;
+//            case "은행","증권사","저축은행","카드사","캐피탈","가상화폐 거래소"-> category = 12;
+//            case "영화관","극장","매표소","문화/여가 기타"-> category = 13;
+//            case "콘도","펜션","호텔","모텔","숙박공유업"-> category = 14;
+//            case "외국어 학원","컴퓨터 학원","요리 학원","자격증 학원","입시 학원","기타 학원"-> category = 15;
+//            case "애완 동물"-> category = 16;
+//            case "자녀/육아"-> category=17;
+//            case "경조/선물"-> category = 18;
+//            case "편의점"-> category = 19;
+//        }
+//        Spending spending = Spending.builder()
+//                .spendingTitle(spendingdto.getSpendingTitle())
+//                .spendingCost(spendingdto.getSpendingCost())
+//                .spendingDate(spendingdto.getSpendingDate())
+//                .spendingMemo(spendingdto.getSpendingMemo())
+//                .spendingCategoryId(category)
+//                .member(member.get())
+//                .build();
+//        spendingRepository.save(spending);
+//    }
     // 지출 수정
     @Override
     public void update(SpendingUpdateRequest spendingUpdateRequest){
@@ -96,9 +110,29 @@ public class SpendingServiceImpl implements SpendingService{
     }
     // 지출 상세
     @Override
-    public Optional<Spending> read(Long spendingId) {
+    public SpendingDetailResponse detailResponse(Long spendingId) {
         Optional<Spending> spending = spendingRepository.findById(spendingId);
-        return spending;
+        String memo = "";
+        if(spending.isPresent()){
+        if(spending.get().getSpendingMemo()==null){
+            memo="";
+        }
+        else{
+            memo=spending.get().getSpendingMemo();
+        }
+        SpendingDetailResponse spendingDetailResponse = SpendingDetailResponse.builder()
+                .spendingId(spending.get().getSpendingId())
+                .spendingTitle(spending.get().getSpendingTitle())
+                .spendingCost(spending.get().getSpendingCost())
+                .spendingDate(spending.get().getSpendingDate())
+                .spendingMemo(memo)
+                .spendingCategoryId(spending.get().getSpendingCategoryId())
+                .build();
+        return spendingDetailResponse;
+    }
+        else{
+            throw new NoContentException();
+        }
     }
 
     // 지출 일별 합계

@@ -16,6 +16,6 @@ public class SpendingDto {
     private int spendingCost;
     private Timestamp spendingDate;
     private String spendingMemo;
-    private String spendingCategory;
+    private int spendingCategoryId;
     private String memberEmail;
 }
