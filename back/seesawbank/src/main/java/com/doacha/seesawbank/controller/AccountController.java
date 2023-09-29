@@ -43,8 +43,8 @@ public class AccountController {
     }
 
     @PostMapping("/accountdetail")
-    public List<AccountTransactionListResponse> getAccountDetail(@RequestBody AccountNumRequest accountNumRequest, @Parameter(hidden = true)@PageableDefault(size=10, sort="accountTransactionTime",direction = Sort.Direction.DESC) Pageable pageable){
-        return accountService.getAccountDetail(accountNumRequest, pageable);
+    public List<AccountTransactionListResponse> getAccountDetail(@RequestBody AccountNumRequest accountNumRequest){
+        return accountService.getAccountDetail(accountNumRequest);
     }
 
 }
