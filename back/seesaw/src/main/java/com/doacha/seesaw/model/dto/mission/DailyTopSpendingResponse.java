@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class DailyTopSpendingResponse {
     private String dailyTopSpender;
     private Long dailyTopSpending;
-    private int dailyTopSpendingNum;
+    private Long dailyTopSpendingNum;
 
 }
