@@ -3,8 +3,10 @@ import MissionDetailContainer from './components/MissionDetailContainer'
 import { mission, missionDetailDummy } from '@/app/dummies'
 import MissionDetailContents from './components/MissionDetailContents'
 import MissionWaitingList from './components/MissionWaitingList'
-import Tab from '@/app/components/Tab'
 import FaskMakeButton from '@/app/components/FastMakeButton'
+import CategoryList from '@/app/home/components/CategoryList'
+import MissionJoinButton from './components/MissionJoinButton'
+import { categoryList } from '@/app/lib/constants'
 // API 연결 이후 params를 통해 데이터를 가져와야 한다.
 const MissionDetailpage = () => {
   const data = missionDetailDummy
@@ -21,13 +23,19 @@ const MissionDetailpage = () => {
       {/* <Header title={data.missionTitle} backButton /> */}
       <MissionDetailContainer data={data} />
       {data.missionStatus !== 0 ? (
-        <MissionDetailContents data={contentsProps} />
+        <>
+          <MissionDetailContents data={contentsProps} />
+          ß <FaskMakeButton path="ndU1ZQjkV8/create" />
+        </>
       ) : (
         <>
           <MissionWaitingList />
+          <MissionJoinButton
+            isSaveMission
+            missionCategory={categoryList[data.missionCategoryId]}
+          />
         </>
       )}
-      <FaskMakeButton path="ndU1ZQjkV8/create" />
     </div>
   )
 }
