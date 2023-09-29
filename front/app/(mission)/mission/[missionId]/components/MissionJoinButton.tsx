@@ -17,14 +17,32 @@ const MissionJoinButton = ({
 }) => {
   const [processLevel, setProcessLevel] = useState(isSaveMission ? 0 : 1)
   const [savingMoney, setSavingMoney] = useState(dummyCategorySaveMoney)
-  const [refModal1, refModal2, refModal3] = [
+  const refList = [
     useRef<HTMLDialogElement>(null),
     useRef<HTMLDialogElement>(null),
     useRef<HTMLDialogElement>(null),
   ]
-  const handleJoinButton = () => {
-    refModal1.current?.showModal()
+  const handleJoinButton = (processLevel: number) => {
+    if (processLevel === 2) {
+      return
+    }
+    refList[processLevel + 1].current?.showModal()
   }
+  const modalList = [
+    <SetSaveMoneyModal
+      setState={setProcessLevel}
+      modalRef={refList[0]}
+      setSavingMoney={setSavingMoney}
+      savingMoney={savingMoney}
+      missionCategory={missionCategory}
+      changeModal={handleJoinButton}
+    />,
+    <ConfirmDepositModal
+      changeModal={handleJoinButton}
+      modalRef={refList[1]}
+    />,
+    <MoneyTransferModal changeModal={handleJoinButton} modalRef={refList[2]} />,
+  ]
   // 버튼 누르면
   // 적금 미션이면 적금 금액 세팅
   // 세팅 끝나고 나서 n회 실패부터 반환되는 예치금이 줄어듭니다. 예치금 입금 및 미션 참가하 하시겠습니까?
@@ -37,20 +55,26 @@ const MissionJoinButton = ({
         <Button
           color="primary"
           label="미션 참여하기"
-          onClick={handleJoinButton}
+          onClick={() => handleJoinButton(processLevel - 1)}
         />
       </div>
       {/* {modalList[processLevel]} */}
       <SetSaveMoneyModal
         setState={setProcessLevel}
-        modalRef={refModal1}
+        modalRef={refList[0]}
         setSavingMoney={setSavingMoney}
         savingMoney={savingMoney}
         missionCategory={missionCategory}
-        nextModal={refModal2}
+        changeModal={handleJoinButton}
       />
-      <ConfirmDepositModal />
-      <MoneyTransferModal />
+      <ConfirmDepositModal
+        changeModal={handleJoinButton}
+        modalRef={refList[1]}
+      />
+      <MoneyTransferModal
+        changeModal={handleJoinButton}
+        modalRef={refList[2]}
+      />
     </div>
   )
 }

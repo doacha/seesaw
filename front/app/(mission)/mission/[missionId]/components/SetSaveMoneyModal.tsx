@@ -1,7 +1,7 @@
 import { ChangeEvent, SetStateAction } from 'react'
 import Button from '@/app/components/Button'
 import Input from '@/app/components/Input'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 import Capsule from '@/app/components/Capsule'
@@ -11,15 +11,16 @@ const SetSaveMoneyModal = ({
   setSavingMoney,
   savingMoney,
   missionCategory,
-  nextModal,
+  changeModal,
 }: {
   setState: React.Dispatch<SetStateAction<number>>
   modalRef: React.RefObject<HTMLDialogElement>
   setSavingMoney: React.Dispatch<SetStateAction<number>>
   savingMoney: number
   missionCategory: string
-  nextModal: React.RefObject<HTMLDialogElement>
+  changeModal: (processLivel: number) => void
 }) => {
+  const cancelButtonRef = useRef<HTMLButtonElement>(null)
   const handleSavingMoneyByButton = (unit: number, sign?: string) => {
     let money = unit
     if (sign === '-') {
@@ -91,6 +92,7 @@ const SetSaveMoneyModal = ({
               </div>
               <button
                 // onClick={() => handleMonthClick(-2)}
+                ref={cancelButtonRef}
                 className="font-scDreamExBold text-[18px] text-gray leading-10 outline-transparent text-center"
               >
                 취소
@@ -98,7 +100,10 @@ const SetSaveMoneyModal = ({
               <Button
                 color="primary"
                 label="확인"
-                onClick={() => setState((prev) => prev + 1)}
+                onClick={() => {
+                  changeModal(0)
+                  cancelButtonRef.current?.click()
+                }}
                 size="lg"
                 // disabled={selectedMonth === -1 ? true : false}
               />
