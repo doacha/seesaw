@@ -197,9 +197,9 @@ public class AccountTransactionService {
 
     // 1원 인증 확인
     public void checkAuthentication (CheckAuthenticationRequest request){
-        Optional<AccountTransaction> accountTransaction = accountTransactionRepository.findById(request.getAccountDealNum());
+        AccountTransaction accountTransaction = accountTransactionRepository.findByAccountDealNum(request.getAccountDealNum());
 
-        String accountTransactionName = accountTransaction.get().getAccountTransactionName();
+        String accountTransactionName = accountTransaction.getAccountTransactionName();
         log.info("인증 번호: {}", accountTransactionName);
         String authenticationNum = request.getAuthenticationNum();
         log.info("입력한 번호: {}", authenticationNum);

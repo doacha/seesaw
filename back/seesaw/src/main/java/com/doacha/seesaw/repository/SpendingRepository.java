@@ -1,4 +1,5 @@
 package com.doacha.seesaw.repository;
+import com.doacha.seesaw.model.dto.mission.CompareMissionDto;
 import com.doacha.seesaw.model.dto.mission.MissionStatsResponse;
 import com.doacha.seesaw.model.dto.mission.MyMissionRankingResponse;
 import com.doacha.seesaw.model.dto.spending.DailySpendingSumResponse;
@@ -29,13 +30,22 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
     // List<MonthSpendingSumResponse> findAllMonthSumByMemberEmailAndSpendingYear(@Param("memberEmail")String memberEmail, @Param("spendingYear") int spendingYear);
 
     // 해당 월지출 합계
-    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MonthSpendingSumResponse(SUM(s.spendingCost) AS spendingCostSum, MONTH(s.spendingDate) AS spendingMonth,s.member.memberEmail)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingMonth GROUP BY MONTH(s.spendingDate),s.member.memberEmail")
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MonthSpendingSumResponse(SUM(s.spendingCost) AS spendingCostSum, YEAR(s.spendingDate), MONTH(s.spendingDate) AS spendingMonth,s.member.memberEmail)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingMonth GROUP BY MONTH(s.spendingDate),s.member.memberEmail")
     MonthSpendingSumResponse findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(@Param("memberEmail")String memberEmail, @Param("spendingYear") int spendingYear, @Param("spendingMonth")int spendingMonth);
     // 전 달이 존재하지 않을 경우
-    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MonthSpendingSumResponse(SUM(s.spendingCost) AS spendingCostSum, MONTH(s.spendingDate) AS spendingMonth,s.member.memberEmail)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingMonth GROUP BY MONTH(s.spendingDate),s.member.memberEmail")
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MonthSpendingSumResponse(SUM(s.spendingCost) AS spendingCostSum, YEAR(s.spendingDate), MONTH(s.spendingDate) AS spendingMonth,s.member.memberEmail)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingMonth GROUP BY MONTH(s.spendingDate),s.member.memberEmail")
     Optional<MonthSpendingSumResponse> findPastMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(@Param("memberEmail")String memberEmail, @Param("spendingYear") int spendingYear, @Param("spendingMonth")int spendingMonth);
 
-
+//    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.CompareMissionDto(" +
+//            "mm.mission.missionId AS missionId, " +
+//            "AVG(r.recordTotalCost) AS missionAverage) " +
+//            "FROM Record r " +
+//            "JOIN r.memberMission mm " +
+//            "WHERE mm.mission.missionId = :missionId")
+//    CompareMissionDto getMissionAverage(@Param("missionId") String missionId);
+//
+//    @Query("SELECT AVG(s.SpendingCost) FROM Spending s WHERE spendingCategoryId= :categoryId GROUP BY DAY(s.SpendingDate")
+//    Double FindEntireAverageByCategoryIdAndDay(@Param("categoryId")int categoryId);
     // 월간 카테고리별 합계
     @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MonthCategoryResponse(SUM(s.spendingCost) AS spendingCostSum, MONTH(s.spendingDate) AS spendingMonth,s.member.memberEmail,s.spendingCategoryId)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingMonth GROUP BY s.spendingCategoryId, s.member.memberEmail")
     List<MonthCategoryResponse> findMonthSumByCategory(@Param("memberEmail")String memberEmail, @Param("spendingYear") int spendingYear, @Param("spendingMonth")int spendingMonth);

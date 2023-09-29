@@ -14,26 +14,40 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ToggleCapsule from '@/app/components/ToggleCapsule'
 import DropdownCapsule from '@/app/(mission)/components/DropdownCapsule'
 import type { SearchState } from '@/app/types'
+
 const SearchContainer = ({
   onClick,
   handleCapsule,
   state,
+  setState,
+  setIsEnabled,
 }: {
   onClick: any
   handleCapsule: any
   state: SearchState
+  setState: React.Dispatch<React.SetStateAction<SearchState>>
+  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const [periodDropDownOn, setPeriodDropDownOn] = useState(false)
   const [cycleDropDownOn, setCycleDropDownOn] = useState(false)
-  // console.log('test etet', state['category'].includes(0), state)
+  const [errorTextOpen, setErrorTextOpen] = useState(false)
   const periodRef = useRef(null)
+
   const handleOpenPeriod = () => {
     setPeriodDropDownOn(true)
   }
   const handleOpenCycle = () => {
+    if (state.period < 1) {
+      setErrorTextOpen(true)
+      setPeriodDropDownOn(true)
+      return
+    }
     setCycleDropDownOn(true)
   }
   const handleDropDownOff = () => {
+    if (state.period > 0) {
+      setErrorTextOpen(false)
+    }
     setPeriodDropDownOn(false)
     setCycleDropDownOn(false)
   }
@@ -43,7 +57,11 @@ const SearchContainer = ({
 
   return (
     <div className="rounded-lg bg-background px-5 py-2.5 w-full">
-      <SearchBar />
+      <SearchBar
+        state={state}
+        setState={setState}
+        setIsEnabled={setIsEnabled}
+      />
       <div className="mt-5">카테고리</div>
       <div className={`mt-2.5 overflow-scroll ${styles.delScroll}`}>
         <div className="carousel">
@@ -53,9 +71,9 @@ const SearchContainer = ({
               bgColor="background-fill"
               textColor={`${idx}`}
               key={idx}
-              isSelected={state['category'][idx]}
+              isSelected={idx === state['category']}
               onClick={() =>
-                handleCapsule(idx, state['category'][idx], 'category')
+                handleCapsule(idx, idx === state['category'], 'category')
               }
             >
               {element}
@@ -96,7 +114,14 @@ const SearchContainer = ({
             ref={periodRef}
             onClick={handlePeriodClick}
           >
-            <div className="mb-5 w-full">인증 주기</div>
+            <div className="mb-5 w-full flex justify-between">
+              <span>인증 주기</span>
+              {errorTextOpen && (
+                <span className="text-base text-error">
+                  인증 주기를 먼저 선택해주세요
+                </span>
+              )}
+            </div>
             <div className="w-full">
               {missionPeriodArray.map(
                 (element, idx) =>
@@ -106,9 +131,9 @@ const SearchContainer = ({
                       textColor="black"
                       className="mr-[15px] mb-[15px]"
                       key={idx}
-                      isSelected={state['period'][idx]}
+                      isSelected={idx === state['period']}
                       onClick={() =>
-                        handleCapsule(idx, state['period'][idx], 'period')
+                        handleCapsule(idx, idx === state['period'], 'period')
                       }
                     >
                       {element}
@@ -145,9 +170,9 @@ const SearchContainer = ({
                       textColor="black"
                       className="mr-[15px] mb-[15px]"
                       key={idx}
-                      isSelected={state['cycle'][idx]}
+                      isSelected={idx === state['cycle']}
                       onClick={() =>
-                        handleCapsule(idx, state['cycle'][idx], 'cycle')
+                        handleCapsule(idx, idx === state['cycle'], 'cycle')
                       }
                     >
                       {element}

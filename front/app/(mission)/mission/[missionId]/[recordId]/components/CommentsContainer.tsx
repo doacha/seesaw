@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { getTimeBefore } from '../../util'
+import { getTimeBefore } from '../../../../util'
 import CommentCard from './CommentCard'
 interface Comment {
   commentId: number
