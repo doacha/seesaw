@@ -42,30 +42,41 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "ORDER BY r.recordTotalCost ASC")
     List<MemberHistory> getMemberHistoryByMissionId(@Param("missionId") String missionId, @Param("currentCycle") int currentCycle);
 
+//    @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionTopSpendingResponse(mm.member.memberNickname AS missionTopSpender, SUM(r.recordTotalCost) AS missionTopSpending) " +
+//            "FROM Record r " +
+//            "JOIN r.memberMission mm " +
+//            "WHERE mm.mission.missionId = :missionId " +
+//            "GROUP BY mm.member.memberNickname " +
+//            "HAVING SUM(r.recordTotalCost) = (SELECT MAX(totalCost) FROM (SELECT SUM(r2.recordTotalCost) AS totalCost " +
+//            "FROM Record r2 " +
+//            "JOIN r2.memberMission mm2 " +
+//            "WHERE mm2.mission.missionId = :missionId " +
+//            "GROUP BY mm2.member.memberNickname))")
+//    MissionTopSpendingResponse getMissionTopSpender(@Param("missionId") String missionId);
 
-    @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionTopSpendingResponse(mm.member.memberNickname AS missionTopSpender, SUM(r.recordTotalCost) AS missionTopSpending) " +
-            "FROM Record r " +
-            "JOIN r.memberMission mm " +
-            "WHERE mm.mission.missionId = :missionId " +
-            "GROUP BY mm.member.memberNickname " +
-            "ORDER BY SUM(r.recordTotalCost) DESC")
-    Page<MissionTopSpendingResponse> getMissionTopSpender(@Param("missionId") String missionId, Pageable pageable);
+//    @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionFrugalSpendingResponse(mm.member.memberNickname AS missionTopSpender, SUM(r.recordTotalCost) AS missionTopSpending) " +
+//            "FROM Record r " +
+//            "JOIN r.memberMission mm " +
+//            "WHERE mm.mission.missionId = :missionId " +
+//            "GROUP BY mm.member.memberNickname " +
+//            "HAVING SUM(r.recordTotalCost) = (SELECT MIN(totalCost) FROM (SELECT SUM(r2.recordTotalCost) AS totalCost " +
+//            "FROM Record r2 " +
+//            "JOIN r2.memberMission mm2 " +
+//            "WHERE mm2.mission.missionId = :missionId " +
+//            "GROUP BY mm2.member.memberNickname))")
+//    MissionFrugalSpendingResponse getMissionFrugalSpender(@Param("missionId") String missionId);
 
-    @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionFrugalSpendingResponse(mm.member.memberNickname AS missionFrugalSpender, SUM(r.recordTotalCost) AS missionFrugalSpending) " +
-            "FROM Record r " +
-            "JOIN r.memberMission mm " +
-            "WHERE mm.mission.missionId = :missionId " +
-            "GROUP BY mm.member.memberNickname " +
-            "ORDER BY SUM(r.recordTotalCost) ASC")
-    Page<MissionFrugalSpendingResponse> getMissionFrugalSpender(@Param("missionId") String missionId, Pageable pageable);
 
-    @Query("SELECT new com.doacha.seesaw.model.dto.mission.DailyTopSpendingResponse (mm.member.memberNickname AS dailyTopSpender, MAX(r.recordTotalCost) AS dailyTopSpending, r.recordNumber AS dailyTopSpendingNum) " +
-            "FROM Record r " +
-            "JOIN r.memberMission mm " +
-            "WHERE mm.mission.missionId = :missionId " +
-            "GROUP BY mm.member.memberNickname " +
-            "ORDER BY r.recordTotalCost DESC ")
-    Page<DailyTopSpendingResponse> getDailyTopSpender(@Param("missionId") String missionId,Pageable pageable);
+//    @Query("SELECT new com.doacha.seesaw.model.dto.mission.DailyTopSpendingResponse(mm.member.memberNickname AS dailyTopSpender, MAX(s.spendingCost) AS dailyTopSpending, r.recordNumber AS dailyTopSpendingNum) " +
+//            "FROM Spending s " +
+//            "JOIN Record r " +
+//            "JOIN r.memberMission mm " +
+//            "WHERE mm.mission.missionId = :missionId " )
+//    DailyTopSpendingResponse getDailyTopSpender(@Param("missionId") String missionId);
+
+
+
+
 
 
     @Query("SELECT COUNT(r) FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail AND r.recordStatus = 2")
