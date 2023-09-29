@@ -334,4 +334,23 @@ public class MissionController {
         }
     }
 
+    @Operation(summary = "미션 참여자 목록", description = "미션 참여자의 프사&닉네임 목록 조회 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "미션 참여자 목록 불러오기 성공"),
+            @ApiResponse(responseCode = "204", description = "미션 참여자 목록 불러오기 실패 - 존재하지 않는 그룹"),
+            @ApiResponse(responseCode = "500", description = "미션 참여자 목록 불러오기 실패 - 서버 오류")
+    })
+    @GetMapping("members/{missionId}")
+    public ResponseEntity<?> getMissionMemberList(@PathVariable String missionId) {
+        log.info("미션 참여자 목록 가져오기");
+        try {
+            List<MissionMemberResponse> missionMemberResponseList = memberMissionService.getMissionMemberList(missionId);
+            log.info("미션 참여자 목록 가져오기 성공");
+            return new ResponseEntity<List<MissionMemberResponse>>(missionMemberResponseList, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("미션 참여자 목록 가져오기 실패 - 서버 오류");
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
