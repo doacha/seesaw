@@ -2,6 +2,7 @@ package com.doacha.seesaw.repository;
 
 import com.doacha.seesaw.model.dto.MemberMissionId;
 import com.doacha.seesaw.model.dto.SavingList;
+import com.doacha.seesaw.model.dto.mission.MissionMemberResponse;
 import com.doacha.seesaw.model.dto.mission.MyPageMissionListResponse;
 import com.doacha.seesaw.model.dto.mission.ReturnDepositList;
 import com.doacha.seesaw.model.entity.Member;
@@ -62,4 +63,10 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Me
             "WHERE DATE_ADD(msn.mission_start_date, INTERVAL msn.mission_total_cycle * msn.mission_period DAY) = CURRENT_DATE", nativeQuery = true)
     List<ReturnDepositList> findReturnDepositList();
 
+    @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionMemberResponse( " +
+            "mm.member.memberNickname, " +
+            "mm.member.memberImgUrl) " +
+            "FROM MemberMission mm " +
+            "WHERE mm.mission.missionId = :missionId " )
+    List<MissionMemberResponse> findMissionMemberResponseByMissionId(@Param("missionId") String missionId);
 }
