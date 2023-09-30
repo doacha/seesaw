@@ -24,7 +24,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
-@CrossOrigin(origins="*", allowedHeaders = "*")
+@CrossOrigin(origins="*", allowedHeaders = "*", methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.HEAD, RequestMethod.OPTIONS, RequestMethod.POST, RequestMethod.PUT})
 public class MemberController {
     private final MemberService memberService;
     private final MemberMissionService memberMissionService;
@@ -72,7 +72,8 @@ public class MemberController {
 //    @PostMapping(value = "/modify",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)//,  produces = "application/json; charset=utf-8")
 //    public MyInfoResponse changeInfo(HttpServletRequest request, @RequestPart (value="image") MultipartFile image, @RequestPart (value="changeInfoRequest") ChangeInfoRequest changeInfoRequest) throws IOException
     @PostMapping(value = "/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public MyInfoResponse changeInfo(@RequestPart(value = "image") MultipartFile image, @RequestPart(value = "changeInfoRequest") ChangeInfoRequest changeInfoRequest) throws IOException{
+    public MyInfoResponse changeInfo(@RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "changeInfoRequest") ChangeInfoRequest changeInfoRequest) throws IOException{
+
         return memberService.changeInfo(image, changeInfoRequest);
     }
 
