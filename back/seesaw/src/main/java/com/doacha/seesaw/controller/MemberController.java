@@ -69,9 +69,10 @@ public class MemberController {
     }
 
     // 회원 정보 수정
-    @ResponseBody
-    @PostMapping(value = "/modify",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public MyInfoResponse changeInfo(HttpServletRequest request, @RequestParam(value="image") MultipartFile image, ChangeInfoRequest changeInfoRequest) throws IOException {
+//    @PostMapping(value = "/modify",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)//,  produces = "application/json; charset=utf-8")
+//    public MyInfoResponse changeInfo(HttpServletRequest request, @RequestPart (value="image") MultipartFile image, @RequestPart (value="changeInfoRequest") ChangeInfoRequest changeInfoRequest) throws IOException
+    @PostMapping(value = "/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public MyInfoResponse changeInfo(@RequestPart(value = "image") MultipartFile image, @RequestPart(value = "changeInfoRequest") ChangeInfoRequest changeInfoRequest) throws IOException{
         return memberService.changeInfo(image, changeInfoRequest);
     }
 
