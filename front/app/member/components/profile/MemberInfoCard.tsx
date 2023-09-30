@@ -12,7 +12,7 @@ interface Props {
 
 const memberInfoCard = (props: Props) => {
   return (
-    <div className="card shadow-none bg-white rounded-lg">
+    <div className="card shadow-none bg-background rounded-lg">
       <div className="card-body relative p-5 gap-5">
         <div className="absolute top-3 right-3">
           <TextButton

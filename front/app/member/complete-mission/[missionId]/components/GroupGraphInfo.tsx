@@ -38,6 +38,7 @@ const GroupGraphInfo = () => {
                 ? 'least'
                 : ''
             }
+            key={index}
           />
         ))}
       </div>

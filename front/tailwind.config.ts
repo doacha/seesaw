@@ -2,7 +2,11 @@ import type { Config } from 'tailwindcss'
 import { categoryColors } from './app/lib/constants'
 const colors = require('tailwindcss/colors')
 
+
+
 const config: Config = {
+  mode: "jit",
+
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
