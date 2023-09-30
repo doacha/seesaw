@@ -7,6 +7,7 @@ import ProfileEditCard from './components/edit/ProfileEditCard'
 import Tab from '../components/Tab'
 import AccountCard from './components/account/AccountCard'
 import AccountRegistModal from './components/account/AccountRegistModal'
+import Loading from '../components/loading'
 import { QueryKey, useQuery } from '@tanstack/react-query'
 import PasswordConfirmCard from './components/edit/PasswordConfirmCard'
 import InstallmentCreateButton from './installment/components/InstallmentCreateButton'
@@ -83,7 +84,9 @@ const memberPage = () => {
 
   return (
     <div className="bg-background-fill flex flex-col h-screen w-screen">
-      {isLoading ? null : (
+      {isLoading ? (
+        <Loading />
+      ) : (
         <div>
           {openEditPage ? (
             <div
