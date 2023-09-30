@@ -134,25 +134,22 @@ public class MissionService {
         MissionStatsResponse missionStatsRequestList =spendingRepository.getCategorySumAndAverageByMissionAndMember(memberEmail, missionId);
         return missionStatsRequestList;
     }
-
-    public MissionRankingResponse getMissionRanking(String missionId){
-        Pageable pageable = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "missionTopSpending"));
-        Page<MissionTopSpendingResponse> missionTopSpenderResult =  recordRepository.getMissionTopSpender(missionId,pageable);
-        pageable = PageRequest.of(0, 1, Sort.by(Sort.Direction.ASC, "missionFrugalSpending"));
-        Page<MissionFrugalSpendingResponse> missionFrugalSpenderResult = recordRepository.getMissionFrugalSpender(missionId,pageable);
-        pageable = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "dailyTopSpending"));
-        Page<DailyTopSpendingResponse> dailyTopSpenderResult = recordRepository.getDailyTopSpender(missionId,pageable);
-            MissionRankingResponse missionRankingResponse = MissionRankingResponse.builder()
-                    .missionTopSpender(missionTopSpenderResult.getContent().get(0).getMissionTopSpender())
-                    .missionTopSpending(missionTopSpenderResult.getContent().get(0).getMissionTopSpending())
-                    .missionFrugalSpender(missionFrugalSpenderResult.getContent().get(0).getMissionFrugalSpender())
-                    .missionFrugalSpending(missionFrugalSpenderResult.getContent().get(0).getMissionFrugalSpending())
-                    .dailyTopSpender(dailyTopSpenderResult.getContent().get(0).getDailyTopSpender())
-                    .dailyTopSpending(dailyTopSpenderResult.getContent().get(0).getDailyTopSpending())
-                    .dailyTopSpendingNum(dailyTopSpenderResult.getContent().get(0).getDailyTopSpendingNum())
-                    .build();
-            return missionRankingResponse;
-    }
+    // 미션 내 랭킹
+//    public MissionRankingResponse getMissionRanking (String missionId){
+//        MissionTopSpendingResponse missionTopSpendingResponse = recordRepository.getMissionTopSpender(missionId);
+//        MissionFrugalSpendingResponse missionFrugalSpendingResponse = recordRepository.getMissionFrugalSpender(missionId);
+//        DailyTopSpendingResponse dailyTopSpendingResponse = recordRepository.getDailyTopSpender(missionId);
+//        MissionRankingResponse missionRankingResponse = MissionRankingResponse.builder()
+//                .missionTopSpender(missionTopSpendingResponse.getMissionTopSpender())
+//                .missionTopSpending(missionTopSpendingResponse.getMissionTopSpending())
+//                .missionFrugalSpender(missionFrugalSpendingResponse.getMissionFrugalSpender())
+//                .missionFrugalSpending(missionFrugalSpendingResponse.getMissionFrugalSpending())
+//                .dailyTopSpender(dailyTopSpendingResponse.getDailyTopSpender())
+//                .dailyTopSpending(dailyTopSpendingResponse.getDailyTopSpending())
+//                .dailyTopSpendingNum(dailyTopSpendingResponse.getDailyTopSpendingNum())
+//                .build();
+//        return missionRankingResponse;
+//    }
     // 미션 통계 내에 나의 순위
 //    public MyMissionRankingResponse getMyMissionRanking(String missionId, String memberEmail){
 //        List<MyMissionRankingResponse> missionRankingList = recordRepository.getMyMissionRanking(missionId);
@@ -210,27 +207,43 @@ public class MissionService {
 //
 //    }
 
-//    public CompareMissionResponse getCompareMissionAverage(String missionId){
-//        CompareMissionDto compareMissionResponse = recordRepository.getMissionAverage(missionId);
-//        Optional<Mission> mission = missionRepository.findById(missionId);
-//        if(mission.isPresent()) {
-//            int categoryId = mission.get().getMissionCategoryId();
-//            int missionPeriod= mission.get().getMissionPeriod();
-//            Double entireAverage= spendingRepository.FindEntireAverageByCategoryIdAndDay(categoryId);
-//            Long count = recordRepository.countByCategoryIdAndDay(categoryId);
-//            CompareMissionResponse realCompareMissionResponse = CompareMissionResponse.builder()
-//                    .missionId(compareMissionResponse.getMissionId())
-//                    .missionAverage(compareMissionResponse.getMissionAverage())
-//                    .entireAverage(entireAverage)
-//                    .difference(compareMissionResponse.getMissionAverage()-entireAverage)
-//                    .build();
-//            return realCompareMissionResponse;
-//        }
-//        else{
-//            throw new NoContentException();
-//        }
-//    }
-
+    public CompareMissionResponse getCompareMissionAverage(String missionId){
+        List<CompareMissionDto> compareMissionResponse = recordRepository.getCompareMission(missionId);
+        Optional<Mission> mission = missionRepository.findById(missionId);
+        Double myAverageSum =0.0; // 내가 속한 미션
+        for(CompareMissionDto dto : compareMissionResponse ){
+            myAverageSum+= dto.getMissionAverage();
+        }
+        if(mission.isPresent()) {
+            int categoryId = mission.get().getMissionCategoryId();
+            int missionPeriod= mission.get().getMissionPeriod();
+            List<EntireMissionDto> entireMissionDtos = recordRepository.getEntireMissionByCategoryId(missionId,categoryId);
+            Double entireAverageSum=0.0;
+            log.info("CategoryId : {}",categoryId);
+            log.info("My MissionPeriod : {}",missionPeriod);
+            for(EntireMissionDto entireMissionDto : entireMissionDtos){
+                Double entireSum =0.0;
+                log.info("Entire MissionSum : {}",entireMissionDto.getSum());
+                entireSum+=entireMissionDto.getSum()/(entireMissionDto.getMissionPeriod()*entireMissionDto.getMissionTotalCycle()*entireMissionDto.getMissionMemberCount());
+                log.info("Entire MissionId : {}",entireMissionDto.getMissionId());
+                log.info("EntireMissionPeriod : {}",entireMissionDto.getMissionPeriod());
+                log.info("EntireMissionTotalCycle : {}",entireMissionDto.getMissionTotalCycle());
+                entireAverageSum+=entireSum;
+            }
+            double entireAverage = entireAverageSum/(double)entireMissionDtos.size();
+            double missionAverage = myAverageSum/(compareMissionResponse.size()*missionPeriod);
+            CompareMissionResponse realCompareMissionResponse = CompareMissionResponse.builder()
+                    .missionId(missionId)
+                    .missionAverage(missionAverage)
+                    .entireAverage(entireAverage)
+                    .difference(entireAverage-missionAverage)
+                    .build();
+            return realCompareMissionResponse;
+        }
+        else{
+            throw new NoContentException();
+        }
+    }
 
 
 }

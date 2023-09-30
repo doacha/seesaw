@@ -135,7 +135,7 @@ export interface MissionDetail extends MissionList {
   missionIsPublic: boolean
   missionCurrentCycle: number
   missionStatus: number
-  missionFailureCount: number
+  missionPenaltyPrice: number
   missionCreationTime: string
   missionHostEmail: string
   missionCategoryId: number
@@ -156,4 +156,22 @@ export interface MissionCreate {
   missionCategoryId: number
   memberMissionIsSaving: boolean
   [key: string]: any
+}
+
+export interface GroupStatusProps {
+  missionId: string
+  missionPeriod: number
+  missionTargetPrice: number
+  missionStartDate: string
+  missionCurrentCycle: number
+  missionDeposit: number
+}
+
+export interface RecordDetail {
+  memberImgUrl: string
+  memberNickname: string
+  recordNumber: number
+  recordId: number
+  recordTotalCost: number
+  recordStatus: number
 }
