@@ -17,7 +17,7 @@ public interface AccountTransactionRepository extends JpaRepository<AccountTrans
     Optional<AccountTransaction> findTopByAccountOrderByAccountTransactionTimeDesc(Account account);
 
     @Query("SELECT new com.doacha.seesawbank.model.dto.account.AccountTransactionListResponse(" +
-            "a.accountTransactionName, a.accountTransactionTime, a.accountApprovalAmount) " +
+            "a.accountTransactionName, a.accountTransactionTime, a.accountApprovalAmount, a.accountBalance) " +
             "FROM AccountTransaction a " +
             "WHERE a.account = :account " +
             "ORDER BY a.accountTransactionTime DESC")
