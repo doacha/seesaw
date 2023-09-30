@@ -30,7 +30,7 @@ public class ChangeInfoRequest {
     @Schema(description = "성별", example = "true", required = true)
     private final boolean memberGender;
 
-    @Schema(description = "이미지url", example = "s3://seesawawsbucket/profile/logo_black.png", required = true)
+    @Schema(description = "이미지url", example = "s3://seesawawsbucket/profile/logo_black.png")
     private final String memberImgUrl;
 
     @Schema(description = "전화번호", example = "01012345678", required = true)
