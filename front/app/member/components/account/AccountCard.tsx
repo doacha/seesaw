@@ -7,10 +7,6 @@ import { useState } from 'react'
 import TransactionInfo from './TransactionInfo'
 import { account, transactionList } from '@/app/dummies'
 
-interface Props {
-  account: Account
-}
-
 const formatDay = (date: Date): string => {
   const options: Intl.DateTimeFormatOptions = {
     day: 'numeric',
@@ -46,14 +42,14 @@ const groupedTransaction = groupTransactionByDay(transactionList)
   /* Object.entries가 그룹화된 데이터를 배열로 변환하는 과정 */
 }
 
-const AccountCard = (props: Props) => {
+const AccountCard = () => {
   const [isOpened, setIsOpened] = useState<Boolean>(false)
 
   return (
-    <div className="collapse bg-background rounded-lg">
+    <div className="collapse bg-white rounded-lg">
       <input type="checkbox" onClick={() => setIsOpened(!isOpened)} />
       <div className="collapse-title text-xl font-medium p-5 pb-3 flex flex-col gap-2">
-        <AccountInfo account={props.account} />
+        <AccountInfo account={account} />
         <div
           className={
             isOpened

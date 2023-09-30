@@ -3,8 +3,18 @@ import Tab from '@/app/components/Tab'
 import { useState } from 'react'
 import GroupStatus from './GroupStatus'
 import MyStatus from './MyStatus'
-import { GroupStatusProps } from '@/app/types'
-const MissionDetailContents = ({ data }: { data: GroupStatusProps }) => {
+
+const MissionDetailContents = ({
+  data,
+}: {
+  data: {
+    missionPeriod: number
+    missionTargetPrice: number
+    missionStartDate: string
+    missionCurrentCycle: number
+    missionDeposit: number
+  }
+}) => {
   const [activeTab, setActiveTab] = useState('tab1')
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)

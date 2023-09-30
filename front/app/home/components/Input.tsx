@@ -18,7 +18,7 @@ const Input = ({ title, type, name, value, onChange, placeholder }: Props) => {
           id="small-input"
           type={type}
           name={name}
-          value={value || ''}
+          value={value}
           onChange={onChange}
           className="w-full mr-5"
           placeholder={placeholder}

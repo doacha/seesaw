@@ -26,11 +26,10 @@ const ShieldGroup = ({
   myFailureCount: number
 }) => {
   const isSmall = failureCount > 8 ? true : false
-  const [shieldSize, margin, shileUnit] = isSmall
+  const [shieldSize, margin, emptyCount] = isSmall
     ? ['text-[25px]', 'mr-[3px] mb-[3px]', 10]
     : ['text-[60px]', 'mr-2 mb-2', 4]
-  const numberOfEmpty = shileUnit - (failureCount % shileUnit)
-  console.log('asdfasdfadsasfasfsdfs', failureCount)
+  const numberOfEmpty = emptyCount - (failureCount % emptyCount)
   return (
     <div className="flex w-full flex-wrap flex-row justify-center my-5 content-end mx-auto">
       {Array(myFailureCount)
@@ -47,16 +46,15 @@ const ShieldGroup = ({
             key={idx}
           />
         ))}
-      {failureCount / shileUnit >= 1 &&
-        Array(numberOfEmpty)
-          .fill(0)
-          .map((element, idx) => (
-            <FontAwesomeIcon
-              icon={faShieldHalved}
-              className={`${shieldSize} ${margin} text-seesaw-purple-600 opacity-0`}
-              key={idx}
-            />
-          ))}
+      {Array(numberOfEmpty % emptyCount)
+        .fill(0)
+        .map((element, idx) => (
+          <FontAwesomeIcon
+            icon={faShieldHalved}
+            className={`${shieldSize} ${margin} text-seesaw-purple-600 opacity-0`}
+            key={idx}
+          />
+        ))}
     </div>
   )
 }

@@ -9,8 +9,7 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetCardTransactionResponse {
-
+public class SpendingResponse {
     private String memberId;
     private String cardApprovalNum;
     private String cardStoreName;
@@ -18,5 +17,4 @@ public class GetCardTransactionResponse {
     private String cardCompany;
     private String cardStoreCategory;
     private Timestamp cardTransactionTime;
-
 }

@@ -4,9 +4,9 @@ import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.model.dto.record.*;
 import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.model.entity.Record;
-import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -153,13 +153,4 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
 
     List<Record> findRecordByMemberMissionOrderByRecordStartDateDesc(@Param("memberMission")MemberMission memberMission);
-
-    @Query("SELECT r " +
-            "FROM Record r " +
-            "JOIN r.memberMission mm " +
-            "WHERE mm.member.memberEmail = :memberEmail " +
-            "AND mm.mission.missionStatus = 1 " +
-            "AND mm.mission.missionCategoryId = :categoryId " +
-            "AND mm.mission.missionCurrentCycle = r.recordNumber ")
-    Record findRecordByMemberEmailAndCategoryId(@Param("memberEmail") String memberEmail, @Param("categoryId") int categoryId);
 }
