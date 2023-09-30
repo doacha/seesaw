@@ -14,7 +14,7 @@ const MemberDetailInfo = (props: Props) => {
           {props.member.memberNickname}
         </div>
         <div className="text-surface font-scDreamMedium">챌린지 정보</div>
-        <div className="text-outline text-sm flex">
+        <div className="text-outline flex">
           <div className="text-surface">진행중&nbsp;</div>
           {props.member.ingMissionCnt}회&nbsp;
           <div className="text-primary">성공&nbsp;</div>

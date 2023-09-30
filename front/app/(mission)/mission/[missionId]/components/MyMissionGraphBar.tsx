@@ -37,9 +37,12 @@ const MyMissionGraphBar = (props: Props) => {
           className={`${
             props.isToday ? bgPrimaryColor : bgColor
           } rounded-md absolute w-[30px]`}
+          // className={`${
+          //   props.isToday ? bgPrimaryColor : bgColor
+          // } rounded-md absolute ${position} w-[30px]`}
           style={{
-            height: `${props.amount < 0 ? props.length : props.length}px`,
-            bottom: `${props.amount < 0 ? 0 : props.length}px`,
+            height: `${props.amount < 0 ? props.length / 2 : props.length}px`,
+            bottom: `${props.amount < 0 ? props.length / 2 : props.length}px`,
           }}
         >
           <div

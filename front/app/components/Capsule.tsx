@@ -24,7 +24,7 @@ const Capsule = ({
   isHasBorder?: boolean
   isSmall?: boolean
   onClick?: any
-  children: string | JSX.Element
+  children: string
   className?: string
   value?: number
 }) => {

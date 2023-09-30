@@ -1,6 +1,6 @@
 'use client'
 import Capsule from '@/app/components/Capsule'
-import SearchBarSimple from './SearchBarSimple'
+import SearchBar from './SearchBar'
 import DropdownCapsule from './DropdownCapsule'
 import ToggleCapsule from '@/app/components/ToggleCapsule'
 import {
@@ -21,7 +21,7 @@ const SearchContainerSimple = ({
       className="rounded-lg bg-background px-5 py-2.5 w-full"
       onClick={onClick}
     >
-      <SearchBarSimple state={state} />
+      <SearchBar state={state} onChange={() => {}} />
       <div className="mt-2.5 flex flex-wrap gap-y-2.5">
         <DropdownCapsule
           className="mr-2.5"

@@ -3,12 +3,9 @@ package com.doacha.seesawbank.controller;
 import com.doacha.seesawbank.model.dto.account.*;
 import com.doacha.seesawbank.model.service.AccountService;
 import com.doacha.seesawbank.model.service.AccountTransactionService;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,8 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/account")
 @RequiredArgsConstructor
-@CrossOrigin(origins="*", allowedHeaders = "*")
-@Slf4j
 public class AccountController {
     private final AccountService accountService;
     private final AccountTransactionService accountTransactionService;
@@ -43,8 +38,8 @@ public class AccountController {
     }
 
     @PostMapping("/accountdetail")
-    public List<AccountTransactionListResponse> getAccountDetail(@RequestBody AccountNumRequest accountNumRequest){
-        return accountService.getAccountDetail(accountNumRequest);
+    public List<AccountTransactionListResponse> getAccountDetail(@RequestBody String accountNum){
+        return accountService.getAccountDetail(accountNum);
     }
 
 }

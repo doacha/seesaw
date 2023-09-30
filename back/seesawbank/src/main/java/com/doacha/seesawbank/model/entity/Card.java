@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -28,7 +29,7 @@ public class Card {
     private Member member;
 
     @Column(name = "card_payment_date")
-    private int cardPaymentDate;
+    private Timestamp cardPaymentDate;
 
     @Column(name = "card_type")
     private String cardType;

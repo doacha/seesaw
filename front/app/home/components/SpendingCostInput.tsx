@@ -22,7 +22,7 @@ const SpendingCostInput = ({ value, onChange }: Props) => {
           id="small-input"
           type="number"
           name="spendingCost"
-          value={value || ''}
+          value={value}
           onChange={onChange}
           className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 "
         />

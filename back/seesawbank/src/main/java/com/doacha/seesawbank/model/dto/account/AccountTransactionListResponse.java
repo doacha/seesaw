@@ -21,7 +21,4 @@ public class AccountTransactionListResponse {
 
     @Schema(description = "계좌 거래 금액", example = "10000", required = true)
     private int accountApprovalAmount;
-
-    @Schema(description = "거래 후 잔액", example = "20000", required = true)
-    private int accountBalance;
 }

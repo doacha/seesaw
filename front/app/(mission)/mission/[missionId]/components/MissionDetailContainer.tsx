@@ -5,10 +5,6 @@ import {
   faMoneyBillWave,
   faCalendarCheck,
   faUser,
-  faFlag,
-  faLock,
-  faArrowUpRightFromSquare,
-  faA,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   categoryList,
@@ -17,10 +13,9 @@ import {
 } from '@/app/lib/constants'
 import type { MissionDetail } from '@/app/types'
 const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
-  const totalTerm =
-    Math.trunc((data.missionPeriod * data.missionTotalCycle) / 7) + 1
+  const totalTerm = (data.missionPeriod * data.missionTotalCycle) / 7 + 1
   return (
-    <div className=" bg-background">
+    <div className="mt-[50px] bg-background">
       <div className="w-full h-[210px] overflow-hidden relative">
         <Image
           src={`${data.missionImgUrl}`}
@@ -38,9 +33,6 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
             {data.missionTitle}
           </div>
           <div className="text-sm">
-            {!data.missionIsPublic && (
-              <FontAwesomeIcon icon={faLock} className="text-red-700 mr-2" />
-            )}
             <FontAwesomeIcon icon={faUser} className="text-primary mr-2" />
             {`${data.missionMemberCount} / ${data.missionMaxCount}`}
           </div>
@@ -48,48 +40,26 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
         {/* 내용 */}
         <div className="text-sm mb-[15px] h-[70px]">{data.missionPurpose}</div>
         {/* 카테고리 */}
-        <div className="flex flex-row gap-[15px]">
-          <Capsule
-            bgColor={`${data.missionCategoryId}`}
-            textColor="background"
-            className="mb-2.5"
-          >{`${categoryList[data.missionCategoryId]}`}</Capsule>
-          <Capsule bgColor="background-fill" textColor="black">
-            <span>
-              <FontAwesomeIcon icon={faFlag} className="mr-2.5" />
-              {`${data.missionTargetPrice.toLocaleString()}`}
-            </span>
-          </Capsule>
-          <Capsule bgColor="background-fill" textColor="black">
-            <span>
-              <FontAwesomeIcon icon={faMoneyBillWave} className="mr-2.5" />
-              {`${data.missionDeposit.toLocaleString()}`}
-            </span>
-          </Capsule>
+        <Capsule
+          bgColor={`${data.missionCategoryId}`}
+          textColor="background"
+          className="mb-2.5"
+        >{`${categoryList[data.missionCategoryId]}`}</Capsule>
+        {/* 금액 */}
+        <div className="mb-2.5">
+          <FontAwesomeIcon icon={faMoneyBillWave} className="mr-[15px]" />
+          {`${data.missionTargetPrice}`}
         </div>
         {/* 일정 */}
         <div className="mb-2.5 flex gap-[15px] items-center">
           <FontAwesomeIcon icon={faCalendarCheck} />
           <Capsule bgColor="background-fill" textColor="black">
-            {missionPeriodArray[data.missionPeriod] ?? ''}
-          </Capsule>
-          <Capsule bgColor="background-fill" textColor="black">
             {missionCycleArray[totalTerm] ?? ' '}
           </Capsule>
-          <span className="text-outline text-xs">{`(${data.missionTotalCycle}회)`}</span>
+          <span className="text-outline text-xs">{`(${data.missionTotalCycle} 회)`}</span>
         </div>
         {/* 실패 한도 */}
-        <div className="mb-2.5 flex flex-row justify-between items-center">
-          <div>{`실패 한도 : ${Math.trunc(data.missionTotalCycle / 5)}회`}</div>
-          {!data.missionIsPublic && data.missionStatus === 0 && (
-            <div className="bg-primary rounded-full px-2 py-1">
-              <FontAwesomeIcon
-                icon={faArrowUpRightFromSquare}
-                className="text-background"
-              />
-            </div>
-          )}
-        </div>
+        <div className="mb-2.5">{`실패 한도 : ${data.missionFailureCount}회`}</div>
       </div>
     </div>
   )

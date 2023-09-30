@@ -2,20 +2,18 @@ package com.doacha.seesaw.repository;
 
 import com.doacha.seesaw.model.dto.MemberMissionId;
 import com.doacha.seesaw.model.dto.SavingList;
-import com.doacha.seesaw.model.dto.mission.MissionMemberResponse;
 import com.doacha.seesaw.model.dto.mission.MyPageMissionListResponse;
-import com.doacha.seesaw.model.dto.mission.ReturnDepositList;
-import com.doacha.seesaw.model.dto.spending.GetCardTransactionDto;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.MemberMission;
-import com.doacha.seesaw.model.entity.Mission;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MemberMissionRepository extends JpaRepository<MemberMission, MemberMissionId> {
 
@@ -54,29 +52,4 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Me
     @Transactional
     @Query("UPDATE MemberMission mm SET mm.memberMissionIsSaving = false WHERE mm.member.memberEmail = :memberEmail AND mm.mission.missionId = :missionId")
     void updateMemberMissionIsSaving(@Param("memberEmail") String memberEmail, @Param("missionId") String missionId);
-
-    @Query(value = "SELECT mm.member_email as memberEmail, " +
-            "mm.mission_id as missionId, " +
-            "m.member_main_account as memberMainAccount, " +
-            "mm.member_mission_refund as memberMissionRefund " +
-            "FROM member_mission mm " +
-            "INNER JOIN member m ON mm.member_email = m.member_email " +
-            "INNER JOIN mission msn ON mm.mission_id = msn.mission_id " +
-            "WHERE DATE_ADD(msn.mission_start_date, INTERVAL msn.mission_total_cycle * msn.mission_period DAY) = CURRENT_DATE", nativeQuery = true)
-    List<ReturnDepositList> findReturnDepositList();
-
-    @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionMemberResponse( " +
-            "mm.member.memberNickname, " +
-            "mm.member.memberImgUrl) " +
-            "FROM MemberMission mm " +
-            "WHERE mm.mission.missionId = :missionId " )
-    List<MissionMemberResponse> findMissionMemberResponseByMissionId(@Param("missionId") String missionId);
-
-    @Query("SELECT DISTINCT new com.doacha.seesaw.model.dto.spending.GetCardTransactionDto( " +
-            "mm.member.memberEmail, " +
-            "mm.member.memberBankId, " +
-            "(SELECT MAX(s.spendingDate) FROM Spending s WHERE s.member.memberEmail = mm.member.memberEmail)) " +
-            "FROM MemberMission mm " +
-            "WHERE mm.mission.missionStatus = 1")
-    List<GetCardTransactionDto> findGetCardTransactionDto();
 }

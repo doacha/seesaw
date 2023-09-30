@@ -66,7 +66,7 @@ export interface Spending {
   spendingId?: number
   spendingTitle?: string
   spendingCost?: number
-  spendingDate?: string
+  spendingDate?: string | undefined
   spendingCategoryId?: number
   memberEmail: string
   spendingMemo?: string
@@ -74,7 +74,6 @@ export interface Spending {
   spendingMonth?: number
   spendingYear?: number
   spendingDay?: number
-  condition?: string
 }
 
 export interface MissionCardProps {
@@ -136,14 +135,13 @@ export interface MissionDetail extends MissionList {
   missionIsPublic: boolean
   missionCurrentCycle: number
   missionStatus: number
-  missionPenaltyPrice: number
+  missionFailureCount: number
   missionCreationTime: string
   missionHostEmail: string
   missionCategoryId: number
 }
 
 export interface MissionCreate {
-  imgFile: ImageFile
   missionTitle: string
   missionMaxCount: number
   missionImgUrl: string
@@ -158,22 +156,4 @@ export interface MissionCreate {
   missionCategoryId: number
   memberMissionIsSaving: boolean
   [key: string]: any
-}
-
-export interface GroupStatusProps {
-  missionId: string
-  missionPeriod: number
-  missionTargetPrice: number
-  missionStartDate: string
-  missionCurrentCycle: number
-  missionDeposit: number
-}
-
-export interface RecordDetail {
-  memberImgUrl: string
-  memberNickname: string
-  recordNumber: number
-  recordId: number
-  recordTotalCost: number
-  recordStatus: number
 }

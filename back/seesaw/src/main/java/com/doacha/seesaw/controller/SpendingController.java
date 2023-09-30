@@ -1,12 +1,8 @@
 package com.doacha.seesaw.controller;
 
-import com.doacha.seesaw.model.dto.mission.QuitMissionRequest;
 import com.doacha.seesaw.model.dto.spending.*;
-import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.model.service.SpendingService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -26,9 +21,6 @@ import java.util.List;
 public class SpendingController {
     private final SpendingService spendingService;
 
-    private static final String SUCCESS = "success";
-    private static final String FAIL = "fail";
-
     @PostMapping()
     @Operation(summary="지출 등록")
     public ResponseEntity<?> postSpending(@RequestBody SpendingDto spendingdto){
@@ -36,7 +28,7 @@ public class SpendingController {
             return new ResponseEntity<>(spendingdto, HttpStatus.OK);
         }
         catch(Exception e){
-            return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("/{spendingId}")
@@ -46,7 +38,7 @@ public class SpendingController {
             SpendingDetailResponse spendingDetailResponse = spendingService.detailResponse(spendingId);
             return new ResponseEntity<SpendingDetailResponse>(spendingDetailResponse,HttpStatus.OK);}
         catch(Exception e ){
-            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<String>("fail", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -57,7 +49,7 @@ public class SpendingController {
             spendingService.update(spendingUpdateRequest);
             return new ResponseEntity<>(spendingUpdateRequest,HttpStatus.OK);}
         catch(Exception e){
-            return new ResponseEntity<>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @DeleteMapping("/delete/{spendingId}")
@@ -65,24 +57,20 @@ public class SpendingController {
     public ResponseEntity<?> deleteSpending(@PathVariable Long spendingId){
         try{
             spendingService.delete(spendingId);
-            return new ResponseEntity<>(SUCCESS,HttpStatus.OK);
+            return new ResponseEntity<>("success",HttpStatus.OK);
         }
         catch(Exception e){
-            return new ResponseEntity<>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/list")
     @Operation(summary="최신, 금액순 정렬")
     public ResponseEntity<?> getSpendingList(@RequestBody MonthSpendingRequest monthSpendingRequest){
-        log.info("가계부 목록 불러오기");
-        try{
-            List<MonthSpendingResponse> spendingList =spendingService.findAllByMemberEmailAndSpendingYearAndSpendingMonth(monthSpendingRequest.getMemberEmail(), monthSpendingRequest.getSpendingYear(), monthSpendingRequest.getSpendingMonth(),monthSpendingRequest.getCondition());
-            log.info("가계부 목록 불러오기 성공");
+        try{List<MonthSpendingResponse> spendingList =spendingService.findAllByMemberEmailAndSpendingYearAndSpendingMonth(monthSpendingRequest.getMemberEmail(), monthSpendingRequest.getSpendingYear(), monthSpendingRequest.getSpendingMonth(),monthSpendingRequest.getCondition());
             return new ResponseEntity<>(spendingList, HttpStatus.OK);
         } catch (Exception e) {
-            log.info("가계부 목록 불러오기 실패");
-            return new ResponseEntity<>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -92,7 +80,7 @@ public class SpendingController {
         try{List<DailySpendingSumResponse> dailySpendingSumList=spendingService.findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(spendingSumRequest.getMemberEmail(), spendingSumRequest.getSpendingYear(), spendingSumRequest.getSpendingMonth());
             return new ResponseEntity<>(dailySpendingSumList,HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -102,7 +90,7 @@ public class SpendingController {
         try {MonthSpendingSumResponse monthSpendingSum = spendingService.findAllMonthSumByMemberEmailAndSpendingYear(spendingSumRequest.getMemberEmail(), spendingSumRequest.getSpendingYear(), spendingSumRequest.getSpendingMonth());
             return new ResponseEntity<>(monthSpendingSum, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -120,25 +108,7 @@ public class SpendingController {
             MonthCompareResponse monthCompareResponse = spendingService.findMonthDifferenceByMemberEmailAndSpendingYearAndSpendingMonth(spendingSumRequest.getMemberEmail(), spendingSumRequest.getSpendingYear(), spendingSumRequest.getSpendingMonth());
             return new ResponseEntity<>(monthCompareResponse, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @Operation( summary = "가계부에 카드내역 불러오기", description = "가계부에 카드내역 불러오기 API")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "가계부에 카드내역 불러오기 성공"),
-            @ApiResponse(responseCode = "500", description = "가계부에 카드내역 불러오기 실패 - 서버 오류")
-    })
-    @PostMapping("/refresh")
-    public ResponseEntity<?> refreshSpending(@RequestBody String memberEmail) {
-        log.info("가계부에 카드내역 불러오기");
-        try {
-            spendingService.refreshSpending(memberEmail);
-            log.info("가계부에 카드내역 불러오기 성공");
-            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-        } catch (Exception e) {
-            log.info("가계부에 카드내역 불러오기 실패 - 서버 오류");
-            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("fail",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
