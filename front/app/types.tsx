@@ -142,6 +142,7 @@ export interface MissionDetail extends MissionList {
 }
 
 export interface MissionCreate {
+  imgFile: ImageFile
   missionTitle: string
   missionMaxCount: number
   missionImgUrl: string
