@@ -6,8 +6,8 @@ import { GroupStatusProps } from '@/app/types'
 const GroupStatus = ({ data }: { data: GroupStatusProps }) => {
   return (
     <div>
-      <GroupStatusTodayContainer data={data} />
-      <GroupMissionHistoryContainer data={data} />
+      {/* <GroupStatusTodayContainer data={data} />
+      <GroupMissionHistoryContainer data={data} /> */}
     </div>
   )
 }
