@@ -11,6 +11,7 @@ import com.doacha.seesaw.model.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -68,8 +69,9 @@ public class MemberController {
     }
 
     // 회원 정보 수정
-    @PutMapping("/modify")
-    public MyInfoResponse changeInfo(@RequestParam(value="image") MultipartFile image, @RequestBody ChangeInfoRequest changeInfoRequest) throws IOException {
+    @ResponseBody
+    @PostMapping(value = "/modify",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public MyInfoResponse changeInfo(HttpServletRequest request, @RequestParam(value="image") MultipartFile image, ChangeInfoRequest changeInfoRequest) throws IOException {
         return memberService.changeInfo(image, changeInfoRequest);
     }
 

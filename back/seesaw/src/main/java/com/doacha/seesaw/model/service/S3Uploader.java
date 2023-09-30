@@ -26,7 +26,6 @@ import java.util.Optional;
 @Service
 public class S3Uploader {
 
-    @Autowired
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")

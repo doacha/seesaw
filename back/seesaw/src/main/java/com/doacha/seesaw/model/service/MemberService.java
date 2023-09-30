@@ -44,7 +44,6 @@ import static org.hibernate.sql.ast.SqlTreeCreationLogger.LOGGER;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMissionRepository memberMissionRepository;
-    // TODO: 나중에 PasswordEncoder 다시 설정 해주기
     private final PasswordEncoder passwordEncoder;
     private final RedisDao redisDao;
 
@@ -216,7 +215,6 @@ public class MemberService {
 
         Member update;
 
-
         if(changeInfoRequest.getMemberNewPassword()!=null || !"".equals(changeInfoRequest.getMemberNewPassword())){ // 비번 새로 바꾸려고 하면
             if(!passwordEncoder.matches( changeInfoRequest.getMemberPassword(), member.get().getMemberPassword())){ // 비번 확인
                 throw new BadRequestException("비밀번호를 확인하세요."); // 비번 다르면 익셉션
@@ -225,7 +223,7 @@ public class MemberService {
         }
         // 이미지 처리
         String storedFileName = changeInfoRequest.getMemberImgUrl(); // 일단 기존 것으로 초기화
-        // 이미
+        // 이미지를 변경하려고 한다면 s3에 업로드하고 바꿔주기
         if(!image.isEmpty()) {
             storedFileName = s3Uploader.upload(image,"profile");
         }
