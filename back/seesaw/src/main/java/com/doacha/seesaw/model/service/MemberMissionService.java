@@ -60,6 +60,7 @@ public class MemberMissionService {
                 .member(member)
                 .mission(mission)
                 .memberMissionSavingMoney(savingMoney)
+                .memberMissionRefund(mission.getMissionDeposit())
                 .memberMissionIsSaving(false)
                 .memberMissionStatus(0)
                 .build();
@@ -71,10 +72,15 @@ public class MemberMissionService {
         Member member = memberRepository.findById(participateMissionRequest.getMemberEmail()).get();
         Mission mission = missionRepository.findById(participateMissionRequest.getMissionId()).get();
 
+        if(mission.getMissionMemberCount() == mission.getMissionMaxCount()){
+            throw new BadRequestException("모집 인원 초과");
+        }
+        
         MemberMission memberMission = MemberMission.builder()
                 .member(member)
                 .mission(mission)
                 .memberMissionSavingMoney(participateMissionRequest.getMemberMissionSavingMoney())
+                .memberMissionRefund(mission.getMissionDeposit())
                 .memberMissionIsSaving(false)
                 .memberMissionStatus(0)
                 .build();
