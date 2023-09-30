@@ -169,6 +169,7 @@ public class MissionService {
         Optional<MyMissionAverageResponse> optionalResponse= recordRepository.getMyMissionAverage(missionId, memberEmail);
         List<MyMissionRankingResponse> missionRankingList = recordRepository.getMyMissionRanking(missionId);
         MyMissionRankingResponse myMissionRankingResponse = null;
+        int size=0;
         for(MyMissionRankingResponse missionRankingResponse : missionRankingList){
             if(missionRankingResponse.getMemberEmail().equals(memberEmail)){
                 myMissionRankingResponse = missionRankingResponse;
@@ -180,6 +181,7 @@ public class MissionService {
                     .missionId(myMissionRankingResponse.getMissionId())
                     .sum(myMissionRankingResponse.getSum())
                     .ranking(myMissionRankingResponse.getRanking())
+                    .missionMemberCount(myMissionRankingResponse.getMissionMemberCount())
                     .memberEmail(myMissionRankingResponse.getMemberEmail())
                     .average(optionalResponse.get().getAverage())
                     .count(optionalResponse.get().getCount())
