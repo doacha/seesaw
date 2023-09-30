@@ -72,7 +72,7 @@ const ReportPage = () => {
   return (
     <div className="w-screen h-screen bg-background-fill">
       <div>
-        <Header title="소비리포트" backButton route="/home" />
+        <Header title="소비리포트" backButton />
       </div>
       <div className="h-full py-16 overflow-auto">
         {/* reportHeader prop으로 spend만 보낼까..? spend도 보내지 말까? 뭐가 좋은 방법일까 이건 좀 고민... */}

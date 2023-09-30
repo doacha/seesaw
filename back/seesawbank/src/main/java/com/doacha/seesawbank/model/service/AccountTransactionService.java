@@ -192,18 +192,20 @@ public class AccountTransactionService {
     private String createAuthenticationNum() {
         log.info("1원 인증 인증번호 생성");
         String randomNum = RandomStringUtils.random(4, false, true);
-        return randomNum;
+        return "시소뱅크 "+randomNum;
     }
 
     // 1원 인증 확인
     public void checkAuthentication (CheckAuthenticationRequest request){
-        Optional<AccountTransaction> accountTransaction = accountTransactionRepository.findById(request.getAccountDealNum());
+        AccountTransaction accountTransaction = accountTransactionRepository.findByAccountDealNum(request.getAccountDealNum());
 
-        String accountTransactionName = accountTransaction.get().getAccountTransactionName();
-        log.info("인증 번호: {}", accountTransactionName);
+        String accountTransactionName = accountTransaction.getAccountTransactionName();
+        String number = accountTransactionName.split(" ")[1];
+
+        log.info("인증 번호: {}", number);
         String authenticationNum = request.getAuthenticationNum();
         log.info("입력한 번호: {}", authenticationNum);
-        if(!accountTransactionName.equals(authenticationNum)) throw new BadRequestException("인증번호 불일치");
+        if(!number.equals(authenticationNum)) throw new BadRequestException("인증번호 불일치");
     }
 
     // 적금 계좌 이체
