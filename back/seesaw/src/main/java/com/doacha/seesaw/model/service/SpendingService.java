@@ -287,41 +287,45 @@ public class SpendingService{
 
     // 지출 일별 합계
     public List<DailySpendingSumResponse> findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth) {
-        List<DailySpendingSumResponse> dailySpendingSumResponses= spendingRepository.findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
-        List<DailySpendingSumResponse> entireDailySpendingSumResponses = new ArrayList<>();
-        int day=0;
-        if(spendingMonth==2&&(spendingYear % 4 == 0 && (spendingYear % 100 != 0 || spendingYear % 400 == 0))){
-            day=29;
-        }
-        else if(spendingMonth==2){
-            day=28;
-        }
-        else if(spendingMonth==1||spendingMonth==3||spendingMonth==5||spendingMonth==7||spendingMonth==8||spendingMonth==10||spendingMonth==12){
-            day=31;
-        }
-        else{
-            day=30;
-        }
-        for(int i=1; i<=day; i++){
-            boolean visit=false;
-            for(DailySpendingSumResponse d : dailySpendingSumResponses){
-                if(d.getSpendingDay()==i){
-                    entireDailySpendingSumResponses.add(d);
-                    visit=true;
-                    break;
-                }}
-            if(!visit) {
-                DailySpendingSumResponse emptySpendingSumResponse = DailySpendingSumResponse.builder()
-                        .spendingCostSum(0)
-                        .spendingDay(i)
-                        .memberEmail(memberEmail)
-                        .build();
-                entireDailySpendingSumResponses.add(emptySpendingSumResponse);
-            }
-        }
-        Collections.sort(entireDailySpendingSumResponses, Comparator.comparingInt(DailySpendingSumResponse::getSpendingDay));
-        return entireDailySpendingSumResponses;
+        List<DailySpendingSumResponse> dailySpendingSumResponses = spendingRepository.findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail, spendingYear, spendingMonth);
+        return dailySpendingSumResponses;
     }
+//    public List<DailySpendingSumResponse> findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth) {
+//        List<DailySpendingSumResponse> dailySpendingSumResponses= spendingRepository.findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
+//        List<DailySpendingSumResponse> entireDailySpendingSumResponses = new ArrayList<>();
+//        int day=0;
+//        if(spendingMonth==2&&(spendingYear % 4 == 0 && (spendingYear % 100 != 0 || spendingYear % 400 == 0))){
+//            day=29;
+//        }
+//        else if(spendingMonth==2){
+//            day=28;
+//        }
+//        else if(spendingMonth==1||spendingMonth==3||spendingMonth==5||spendingMonth==7||spendingMonth==8||spendingMonth==10||spendingMonth==12){
+//            day=31;
+//        }
+//        else{
+//            day=30;
+//        }
+//        for(int i=1; i<=day; i++){
+//            boolean visit=false;
+//            for(DailySpendingSumResponse d : dailySpendingSumResponses){
+//                if(d.getSpendingDay()==i){
+//                    entireDailySpendingSumResponses.add(d);
+//                    visit=true;
+//                    break;
+//                }}
+//            if(!visit) {
+//                DailySpendingSumResponse emptySpendingSumResponse = DailySpendingSumResponse.builder()
+//                        .spendingCostSum(0)
+//                        .spendingDay(i)
+//                        .memberEmail(memberEmail)
+//                        .build();
+//                entireDailySpendingSumResponses.add(emptySpendingSumResponse);
+//            }
+//        }
+//        Collections.sort(entireDailySpendingSumResponses, Comparator.comparingInt(DailySpendingSumResponse::getSpendingDay));
+//        return entireDailySpendingSumResponses;
+//    }
     // 지출 월별 합계
     public MonthSpendingSumResponse findAllMonthSumByMemberEmailAndSpendingYear(String memberEmail, int spendingYear,int spendingMonth){
         MonthSpendingSumResponse monthSpendingSumResponses = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
