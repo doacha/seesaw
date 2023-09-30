@@ -14,9 +14,6 @@ const PasswordConfirmCard = (props: Props) => {
   const { memberEmail } = memberEmailStore()
   const [memberPassword, setMemberPassword] = useState<string>('')
   const {
-    birth,
-    phoneNumber,
-    newNickname,
     setProfileEditInfo,
     setInitBirthInfo,
   } = profileEditInfoStore()
@@ -36,11 +33,16 @@ const PasswordConfirmCard = (props: Props) => {
             memberEmail: memberEmail,
             memberPassword: memberPassword,
           }),
-        },
+        },  
       )
       const memberInfo = await res.json()
       console.log(memberInfo)
+      setProfileEditInfo('prevPassword', memberPassword)
+      setProfileEditInfo('prevNickname', memberInfo.memberNickname)
       setProfileEditInfo('newNickname', memberInfo.memberNickname)
+      setProfileEditInfo('memberName', memberInfo.memberName)
+      setProfileEditInfo('memberGender', memberInfo.memberGender)
+      setProfileEditInfo('newImg', {id:'profileImg', url: memberInfo.memberImgUrl})
       if (memberInfo.memberPhoneNumber) {
         setProfileEditInfo('phoneNumber', memberInfo.memberPhoneNumber)
       }

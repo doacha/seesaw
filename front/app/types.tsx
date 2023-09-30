@@ -18,10 +18,10 @@ export interface Account {
 
 export interface Transaction {
   accountApprovalAmount: number
-  amountBalance: number
+  accountBalance: number
   accountTransactionTime: string
   accountNum: string
-  accountIsDeposit: boolean
+  // accountIsDeposit: boolean
   accountTransactionName: string
 }
 

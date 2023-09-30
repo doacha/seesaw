@@ -10,13 +10,35 @@ import GroupStatisticCard from './components/GroupStatisticCard'
 import Card from '@/app/components/Card'
 import RecordCard from './components/RecordCard'
 import { recordList, mission } from '@/app/dummies'
+import { useQuery } from '@tanstack/react-query'
 
 const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1')
-
+  console.log(params.missionId)
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
   }
+
+  const getCompleteMissionDetailInfo = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/`,
+        {
+          method: 'POST', 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: params.missionId,
+        },
+      )
+      const data = await res.json()
+      return data
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  // const {isLoading, data, error} = useQuery(['completeMissionDetailInfo'], getCompleteMissionDetailInfo)
 
   return (
     <div className="w-screen h-screen bg-background-fill">
@@ -32,7 +54,7 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
 
         {activeTab === 'tab1' ? (
           <div className="flex flex-col p-5 gap-5">
-            <MystatisticCard />
+            <MystatisticCard missionId={params.missionId}/>
             <GroupStatisticCard />
           </div>
         ) : (
