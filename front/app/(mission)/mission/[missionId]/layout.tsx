@@ -1,9 +1,16 @@
 import Header from '@/app/components/Header'
 import { missionDetailDummy } from '@/app/dummies'
-const layout = ({ children }: { children: React.ReactNode }) => {
+import { useRouter } from 'next/router'
+const layout = ({
+  children,
+  params,
+}: {
+  children: React.ReactNode
+  params: any
+}) => {
   return (
-    <div>
-      <Header title={missionDetailDummy.missionTitle} backButton />
+    <div className="relative h-screen">
+      <Header title={'asdf'} backButton />
       {children}
     </div>
   )

@@ -11,8 +11,10 @@ import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MemberRepository;
 import com.doacha.seesaw.repository.MissionRepository;
 import com.doacha.seesaw.repository.RecordRepository;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -41,6 +43,16 @@ public class MemberMissionService {
     @Autowired
     MissionRepository missionRepository;
 
+
+    @Value("${seesaw_account_number}")
+    private String accountNumber;
+
+    @Value("${seesaw_account_password}")
+    private String password;
+
+    @Value("${seesawBank_api}")
+    private String seesawBank_api;
+
     // 미션 생성한 멤버 정보 저장
     public void registCreateMemberMission(Mission mission, int savingMoney) {
         Member member = memberRepository.findById(mission.getMissionHostEmail()).get();
@@ -48,6 +60,7 @@ public class MemberMissionService {
                 .member(member)
                 .mission(mission)
                 .memberMissionSavingMoney(savingMoney)
+                .memberMissionRefund(mission.getMissionDeposit())
                 .memberMissionIsSaving(false)
                 .memberMissionStatus(0)
                 .build();
@@ -59,10 +72,15 @@ public class MemberMissionService {
         Member member = memberRepository.findById(participateMissionRequest.getMemberEmail()).get();
         Mission mission = missionRepository.findById(participateMissionRequest.getMissionId()).get();
 
+        if(mission.getMissionMemberCount() == mission.getMissionMaxCount()){
+            throw new BadRequestException("모집 인원 초과");
+        }
+        
         MemberMission memberMission = MemberMission.builder()
                 .member(member)
                 .mission(mission)
                 .memberMissionSavingMoney(participateMissionRequest.getMemberMissionSavingMoney())
+                .memberMissionRefund(mission.getMissionDeposit())
                 .memberMissionIsSaving(false)
                 .memberMissionStatus(0)
                 .build();
@@ -91,10 +109,10 @@ public class MemberMissionService {
         int deposit = mission.getMissionDeposit(); // 미션 예치금
         int failCnt = (int)(totalCycle*0.2); // 실패 기준 횟수
         int myFailCnt = recordRepository.countFail(missionId, memberEmail); // 나의 실패 횟수
-        int minusDeposit = (int)(deposit*(totalCycle-failCnt)*0.01); // failCnt 이후로 1회 실패 시 차감 금액
+        int minusDeposit = (int)(deposit*(totalCycle-failCnt)*0.01); // failCnt 이후로 1회 실패 시 차감 비율
 
         int changedDeposit = 0;
-        if(mm.getMemberMissionStatus() == 3) { // 실패한 사람은 예치금 얼마 잃을지 계산
+        if(mm.getMemberMissionRefund() < 0) { // 실패한 사람은 예치금 얼마 잃을지 계산
             if(myFailCnt == totalCycle) changedDeposit = -deposit; // 다 실패한 사람은 예치금 다 잃음
             else changedDeposit = -(myFailCnt-failCnt)*minusDeposit; // 아니면 실패한 퍼센트만큼 잃음
         }else{// 성공인 사람은 상금 얼마 받을지 계산
@@ -135,7 +153,7 @@ public class MemberMissionService {
 
     public String dateAdd(Date date, int plus){
         Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
+        cal.setTime(date);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         cal.add(Calendar.DATE, plus);
         return df.format(cal.getTime());
@@ -157,8 +175,7 @@ public class MemberMissionService {
 
             Mono<String> mono = WebClient.create()
                     .post()
-                    .uri("http://j9a409.p.ssafy.io:8081/seesawbank/account-transactional/saving")
-//                    .uri("http://localhost:8081/seesawbank/account-transactional/saving")
+                    .uri(seesawBank_api+"/account-transactional/saving")
                     .bodyValue(request)
                     .retrieve()
                     .bodyToMono(String.class);
@@ -179,6 +196,36 @@ public class MemberMissionService {
     // 적금 이체해야할 목록 불러오기
     public List<SavingList> getSavingList(){
         return memberMissionRepository.findSavingListByMemberMissionIsSaving();
+    }
+
+
+    // 예치금 반환 (매일 오전 10시마다 실행)
+    @Scheduled(cron = "0 0 10 * * *")
+    public void returnDeposit(){
+        // 예치금 반환해야할 목록 불러오기
+        List<ReturnDepositList> list = memberMissionRepository.findReturnDepositList();
+        log.info("예치금 반환 목록 - {}",list);
+
+        for(ReturnDepositList returnDeposit: list){
+            AccountTransferRequest request = AccountTransferRequest.builder()
+                    .accountNum(returnDeposit.getMemberMainAccount())
+                    .accountTransactionNum(accountNumber)
+                    .accountApprovalAmount(returnDeposit.getMemberMissionRefund())
+                    .accountPassword(password)
+                    .build();
+
+            Mono<String> mono = WebClient.create()
+                    .post()
+                    .uri(seesawBank_api+"/account-transactional/transfer")
+                    .bodyValue(request)
+                    .retrieve()
+                    .bodyToMono(String.class);
+        }
+    }
+
+    // 미션 참여자 목록(닉네임, 프로필 사진) 가져오기
+    public List<MissionMemberResponse> getMissionMemberList(String missionId) {
+        return memberMissionRepository.findMissionMemberResponseByMissionId(missionId);
     }
 
     // 카카오페이 결제 번호 반환
