@@ -7,7 +7,6 @@ import com.doacha.seesaw.model.entity.Spending;
 import com.doacha.seesaw.repository.MemberRepository;
 import com.doacha.seesaw.repository.RecordRepository;
 import com.doacha.seesaw.repository.SpendingRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
