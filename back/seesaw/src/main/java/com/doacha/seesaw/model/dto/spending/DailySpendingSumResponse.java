@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class DailySpendingSumResponse {
     private long spendingCostSum;
     private Timestamp spendingDate;

@@ -15,14 +15,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
+import java.util.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @Slf4j
@@ -289,8 +287,40 @@ public class SpendingService{
 
     // 지출 일별 합계
     public List<DailySpendingSumResponse> findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(String memberEmail, int spendingYear, int spendingMonth) {
-        List<DailySpendingSumResponse>dailySpendingSumResponses= spendingRepository.findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
-        return dailySpendingSumResponses;
+        List<DailySpendingSumResponse> dailySpendingSumResponses= spendingRepository.findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail,spendingYear,spendingMonth);
+        List<DailySpendingSumResponse> entireDailySpendingSumResponses = new ArrayList<>();
+        int day=0;
+        if(spendingMonth==2&&(spendingYear % 4 == 0 && (spendingYear % 100 != 0 || spendingYear % 400 == 0))){
+            day=29;
+        }
+        else if(spendingMonth==2){
+            day=28;
+        }
+        else if(spendingMonth==1||spendingMonth==3||spendingMonth==5||spendingMonth==7||spendingMonth==8||spendingMonth==10||spendingMonth==12){
+            day=31;
+        }
+        else{
+            day=30;
+        }
+        for(int i=1; i<=day; i++){
+            boolean visit=false;
+            for(DailySpendingSumResponse d : dailySpendingSumResponses){
+                if(d.getSpendingDay()==i){
+                    entireDailySpendingSumResponses.add(d);
+                    visit=true;
+                    break;
+                }}
+            if(!visit) {
+                DailySpendingSumResponse emptySpendingSumResponse = DailySpendingSumResponse.builder()
+                        .spendingCostSum(0)
+                        .spendingDay(i)
+                        .memberEmail(memberEmail)
+                        .build();
+                entireDailySpendingSumResponses.add(emptySpendingSumResponse);
+            }
+        }
+        Collections.sort(entireDailySpendingSumResponses, Comparator.comparingInt(DailySpendingSumResponse::getSpendingDay));
+        return entireDailySpendingSumResponses;
     }
     // 지출 월별 합계
     public MonthSpendingSumResponse findAllMonthSumByMemberEmailAndSpendingYear(String memberEmail, int spendingYear,int spendingMonth){
