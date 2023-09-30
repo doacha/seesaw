@@ -13,6 +13,7 @@ public class MyMissionStatResponse {
     private String missionId;
     private Long sum;
     private Long ranking;
+    private int missionMemberCount;
     private String memberEmail;
     private Double average;
     private Long count;
