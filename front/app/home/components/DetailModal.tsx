@@ -3,12 +3,20 @@ import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import Button from '@/app/components/Button'
 
-import SpendingCostInput from './SpendingCostInput'
-import Input from './Input'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
 import { Spending } from '@/app/types'
+import ToggleCapsule from '@/app/components/ToggleCapsule'
+import styles from '../styles/Home.module.css'
+import { categoryList } from '@/app/lib/constants'
+
+import SpendingCostInput from './SpendingCostInput'
+import CategoryInput from './CategoryInput'
+import Input from './Input'
+import TextAreaInput from './TextAreaInput'
+
+import { UpdateDeleteCheckStore } from '@/stores/updateDeleteCheck'
 
 type Props = {
   open: boolean
@@ -17,16 +25,21 @@ type Props = {
 }
 
 const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
+  const { checkUpdateDelete, setCheckUpdateDelete } = UpdateDeleteCheckStore()
+
   console.log('여기는 디테일')
-  const [clickCate, setClickCate] = useState(false)
   const [spend, setSpend] = useState<Spending>({
     spendingTitle: '',
     spendingCost: 0,
     spendingDate: '',
-    spendingCategoryId: 2,
+    spendingCategoryId: -1,
     // memberEmail은 zustand에서 가져오기
-    memberEmail: '',
+    memberEmail: 'tldnjs324@naver.com',
   })
+  const [clickDa, setClickDa] = useState(false)
+  const clickDate = () => {
+    setClickDa(!clickDa)
+  }
 
   const fetchDetailSpending = (selectedSpendingId: number) => {
     fetch(
@@ -62,8 +75,16 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
     setSpend({ ...spend, [name]: newValue })
   }
 
-  const clickCategory = () => {
-    setClickCate(!clickCate)
+  const handleCapsuleClick = (
+    idx: number,
+    isSelected: boolean,
+    type: string,
+  ) => {
+    if (!isSelected) {
+      setSpend({ ...spend, [type]: idx })
+      return
+    }
+    setSpend({ ...spend, [type]: -1 })
   }
   const fetchDelete = (selectedSpendingId: number) => {
     fetch(
@@ -79,9 +100,11 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
           icon: 'success',
         })
       }
+      setCheckUpdateDelete(true)
       handleToggle()
     })
   }
+  // 이건 삭제
   const clickDetele = () => {
     fetchDelete(selectedSpendingId)
   }
@@ -99,8 +122,9 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
     spendingCost: spend.spendingCost as number,
     spendingDate: spend.spendingDate as string,
     spendingMemo: spend.spendingMemo as string,
-    spendingCategoryId: 2,
-    memberEmail: 'doacha@seesaw.com',
+    spendingCategoryId: spend.spendingCategoryId as number,
+    // memberEmail은 zustand에 존재하는 친구
+    memberEmail: 'tldnjs324@naver.com',
   }
   const fetchUpdate = (data: object) => {
     fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/update`, {
@@ -118,6 +142,7 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
             icon: 'success',
           })
         }
+        setCheckUpdateDelete(true)
         return res.json()
       })
       .then((data) => {
@@ -128,11 +153,10 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
           spendingCost: 0,
           spendingDate: '',
           spendingMemo: '',
+          spendingCategoryId: -1,
           // 여기 수정이 필요합니다.
-          spendingCategoryId: 2,
-          memberEmail: 'doacha@seesaw.com',
+          memberEmail: 'tldnjs324@naver.com',
         })
-        // console.log(data)
       })
   }
   const clickSave = () => {
@@ -153,7 +177,6 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
         icon: 'error',
       })
     } else {
-      // console.log(data)
       fetchUpdate(data)
     }
   }
@@ -164,10 +187,7 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
   if (open) {
     modalClass += ' modal-open'
   }
-  const [clickDa, setClickDa] = useState(false)
-  const clickDate = () => {
-    setClickDa(!clickDa)
-  }
+
   const formatDate = (date: Date): string => {
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -179,6 +199,10 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
     }
     const formatter = new Intl.DateTimeFormat('ko-KR', options)
     return formatter.format(date)
+  }
+
+  const handleCategoryClick = (idx: number) => {
+    setSpend({ ...spend, spendingCategoryId: idx })
   }
 
   return (
@@ -201,15 +225,46 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
               />
 
               {/* 카테고리 들어갈 곳 */}
-              <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
-                <div className="w-28">
-                  <p className="font-scDreamExBold text-base">카테고리</p>
-                </div>
-                <div className="flex my-auto w-full justify-between">
-                  <p className="font-scDreamLight text-base"></p>
-                  <div onClick={clickCategory} className="ml-1"></div>
-                </div>
+              <div className={`overflow-auto ${styles.delScroll}`}>
+                <CategoryInput
+                  selectedCategoryId={spend.spendingCategoryId as number}
+                  handleCategoryClick={handleCategoryClick}
+                />
               </div>
+              {/* <div className={`overflow-auto ${styles.delScroll}`}>
+                <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
+                  <div className=" w-20 my-auto">
+                    <div className="w-20">
+                      <p className="font-scDreamExBold text-base">카테고리</p>
+                    </div>
+                  </div>
+                  <div className="flex my-auto w-full justify-between">
+                    <div className="carousel">
+                      {categoryList.map(
+                        (element, idx) =>
+                          idx > 0 && (
+                            <ToggleCapsule
+                              className="carousel-item mr-[15px] h-[14px]"
+                              bgColor="background-fill"
+                              textColor={`${idx}`}
+                              key={idx}
+                              isSelected={idx === spend.spendingCategoryId}
+                              onClick={() =>
+                                handleCapsuleClick(
+                                  idx,
+                                  idx === spend.spendingCategoryId,
+                                  'spendingCategoryId',
+                                )
+                              }
+                            >
+                              {element}
+                            </ToggleCapsule>
+                          ),
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div> */}
 
               <Input
                 title="거래처"
@@ -254,9 +309,8 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
                 </div>
               </div>
 
-              <Input
+              <TextAreaInput
                 title="메모"
-                type="text"
                 name="spendingMemo"
                 value={spend?.spendingMemo as string}
                 onChange={handleInput}

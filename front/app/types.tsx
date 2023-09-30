@@ -74,6 +74,7 @@ export interface Spending {
   spendingMonth?: number
   spendingYear?: number
   spendingDay?: number
+  condition?: string
 }
 
 export interface MissionCardProps {

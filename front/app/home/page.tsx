@@ -7,33 +7,43 @@ import HomeHeader from './components/HomeHeader'
 import SortButtons from './components/SortButton'
 import SpendingList from './components/SpendingList'
 import AddPostModal from './components/AddPostModal'
+import Swal from 'sweetalert2'
 
 import { memberEmailStore } from '@/stores/memberEmail'
-
+import { UpdateDeleteCheckStore } from '@/stores/updateDeleteCheck'
 import CategoryList from './components/CategoryList'
 import { Spending } from '../types'
 
 const HomePage = () => {
   const router = useRouter()
   const { memberEmail, setMemberEmail } = memberEmailStore()
+  const { checkUpdateDelete, setCheckUpdateDelete } = UpdateDeleteCheckStore()
+
+  const [sort, setSort] = useState('최신순')
   const [spendData, setSpendData] = useState<Spending>({
-    memberEmail: '',
-    spendingYear: 0,
-    spendingMonth: 0,
+    // email은 zustand에 들어있는 걸로 가져와야 함
+    memberEmail: 'tldnjs324@naver.com',
+    spendingYear: new Date().getFullYear(),
+    spendingMonth: new Date().getMonth() + 1,
+    spendingCostSum: 0,
+    condition: sort === '최신순' ? 'spendingDate' : 'spendingCost',
   })
+  const [spendingList, setSpendingList] = useState<Spending[]>([])
 
   // 화살표 클릭 감지
   const [clickEvent, setClickEvent] = useState<boolean>(false)
   // zustand에 저장된 email 가져오기
   // console.log(memberEmail)
 
-  const [sort, setSort] = useState('최신순')
+  // 화살표 우클릭==0 좌클릭==1
+  const [clickDirection, setClickDirection] = useState<number>(0)
 
   const [open, setOpen] = useState(false)
 
   const clickReport = () => {
     router.push('/report')
   }
+
   const clickArrowRight = () => {
     const newMonth = (spendData.spendingMonth as number) + 1
     const newYear = (spendData.spendingYear as number) + 1
@@ -49,9 +59,9 @@ const HomePage = () => {
         spendingYear: newYear,
       })
     }
-    console.log('arrow 오른쪽 클릭')
-    console.log(spendData)
+    // 우클릭 이벤트 발생
     setClickEvent((prev) => !prev)
+    setClickDirection(0)
   }
 
   const clickArrowLeft = () => {
@@ -69,13 +79,17 @@ const HomePage = () => {
         spendingYear: newYear,
       })
     }
-    console.log(spendData)
+    // 좌클릭 이벤트 발생
     setClickEvent((prev) => !prev)
+    setClickDirection(1)
   }
+
+  // 최신순, 고액순 분리
   const clickText = (e: any) => {
     setSort(e.target.innerText)
   }
 
+  // 유저에게 보여지는 시간 표시
   const formatTime = (date: Date): string => {
     const options: Intl.DateTimeFormatOptions = {
       hour: 'numeric',
@@ -96,36 +110,84 @@ const HomePage = () => {
     return formatter.format(date)
   }
 
-  const toDayYearMonth = new Date()
-
-  const dailySumData: {
-    memberEmail: string
-    spendingYear: number
-    spendingMonth: number
-  } = {
-    // zustand에 들어있는 친구를 들고와야해
-    memberEmail: 'doacha@seesaw.com',
-    spendingYear: toDayYearMonth.getFullYear(),
-    spendingMonth: toDayYearMonth.getMonth() + 1,
-  }
-  const fetchMonthSum = () => {
-    fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/monthsum`, {
+  const fetchRefresh = () => {
+    fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/refresh`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
       },
-      body: JSON.stringify(dailySumData), // 데이터를 JSON 문자열로 변환하여 전송
+      body: spendData.memberEmail, // 데이터를 JSON 문자열로 변환하여 전송
+    }).then((res) => {
+      console.log(res)
+      if (res.status === 200) {
+        fetchSpendList()
+      } else {
+        Swal.fire({
+          width: 300,
+          text: '새로고침에 실패했습니다.',
+          icon: 'error',
+        })
+      }
+      return res.json()
+    })
+  }
+  // 전체 spendList를 page.tsx에서 불러올거야
+  const fetchSpendList = () => {
+    fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/list`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
+      },
+      body: JSON.stringify(spendData), // 데이터를 JSON 문자열로 변환하여 전송
     })
       .then((res) => {
         return res.json()
       })
       .then((data) => {
-        setSpendData(data)
+        if (data.length === 0) {
+          Swal.fire({
+            width: 300,
+            text: '저장된 데이터가 없습니다!',
+            icon: 'error',
+          })
+          if (clickDirection === 0) {
+            if ((spendData.spendingMonth as number) === 1) {
+              setSpendData({
+                ...spendData,
+                ['spendingYear']: (spendData.spendingYear as number) - 1,
+                ['spendingMonth']: 12,
+              })
+            } else {
+              setSpendData({
+                ...spendData,
+                ['spendingMonth']: (spendData.spendingMonth as number) - 1,
+              })
+            }
+          } else if (clickDirection === 1) {
+            if ((spendData.spendingMonth as number) === 12) {
+              setSpendData({
+                ...spendData,
+                ['spendingYear']: (spendData.spendingYear as number) + 1,
+                ['spendingMonth']: 1,
+              })
+            } else {
+              setSpendData({
+                ...spendData,
+                ['spendingMonth']: (spendData.spendingMonth as number) + 1,
+              })
+            }
+          }
+        } // 저장된 데이터가 있다면 spendingList에 내용 추가
+        else {
+          setSpendingList(data)
+          let sum = 0
+          data.forEach((element: any) => {
+            sum += element.spendingCost as number
+          })
+          setMonthTotalSum(sum)
+        }
       })
   }
-  useEffect(() => {
-    fetchMonthSum()
-  }, [clickEvent])
 
   // category 관련
   const [state, setState] = useState<boolean[]>(Array(21).fill(false))
@@ -138,11 +200,13 @@ const HomePage = () => {
       //전체 카테고리 활성화시, 이외 카테고리 해제
       newState.fill(false)
       newState[0] = true
+    } else {
+      //전체 카테고리 이외의 친구 누르면 그 친구들이 들어가야지
+      newState[id] = true
     }
     setState(newState)
   }
 
-  console.log(state)
   const newSelected: number[] = [] // state 기반으로 선택된 카테고리 값 배열 생성
   state.forEach((element, idx) => {
     if (element) {
@@ -150,18 +214,28 @@ const HomePage = () => {
     }
   })
 
+  console.log(newSelected)
+  // addPostModal을 열었는지 확인하는 boolean 변수
   const handleToggle = () => {
-    // setOpen((prev) => !prev) 이거 왜 안됨?
-    setOpen(!open)
+    setOpen((prev) => !prev)
   }
+
+  // monthTotalSum을 계산하기 위한 state 변수
+  const [monthTotalSum, setMonthTotalSum] = useState<number>(0)
+
+  useEffect(() => {
+    fetchRefresh()
+  }, [clickEvent, open, sort, checkUpdateDelete])
 
   return (
     <>
       <div className="flex flex-col h-screen bg-background-fill">
         <div className="w-full h-44 bg-background">
           <HomeHeader
-            spendingYear={toDayYearMonth.getFullYear()}
             spend={spendData}
+            spendSum={monthTotalSum}
+            // 화살표 누름?
+            clickEvent={clickEvent}
             clickArrowRight={clickArrowRight}
             clickArrowLeft={clickArrowLeft}
             clickReport={clickReport}
@@ -174,12 +248,14 @@ const HomePage = () => {
         <div className="overflow-auto">
           <div className="mx-5 mt-5 pb-20">
             <SpendingList
-              spendData={spendData}
+              // 이건 사용자에게 보여질 날짜 데이터 처리
               formatTime={formatTime}
+              // 최신순 고액순
               sort={sort}
+              // 사용자에게 보여질 날짜 데이터 처리
               formatDayTime={formatDayTime}
-              openBoolean={open}
-              clickEvent={clickEvent}
+              // 소비 내역 전체 리스트
+              spendingList={spendingList}
               // 카테고리 선택 관련
               newSelected={newSelected}
             />
