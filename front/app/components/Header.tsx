@@ -1,12 +1,13 @@
-import { faChevronLeft, faPlus } from '@fortawesome/free-solid-svg-icons'
+'use client'
+
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-
+import Backbutton from './Backbutton'
 interface Props {
   title: string
   backButton?: boolean
   plusButton?: boolean
-  route?: string
 }
 
 const Header = (props: Props) => {
@@ -14,13 +15,7 @@ const Header = (props: Props) => {
   return (
     <div className="navbar bg-white fixed top-0 z-40">
       <div className="flex-1">
-        {props.backButton && props.route ? (
-          <Link href={props.route}>
-            <button className="btn btn-ghost normal-case text-xl">
-              <FontAwesomeIcon icon={faChevronLeft} />
-            </button>
-          </Link>
-        ) : null}
+        {props.backButton && <Backbutton />}
         <div
           className={
             props.backButton

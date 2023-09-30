@@ -1,20 +1,13 @@
+'use client'
+
 import GroupStatusTodayContainer from './GroupStatusTodayContainer'
 import GroupMissionHistoryContainer from './GroupMissionHistoryContainer'
-const GroupStatus = ({
-  data,
-}: {
-  data: {
-    missionPeriod: number
-    missionTargetPrice: number
-    missionStartDate: string
-    missionCurrentCycle: number
-    missionDeposit: number
-  }
-}) => {
+import { GroupStatusProps } from '@/app/types'
+const GroupStatus = ({ data }: { data: GroupStatusProps }) => {
   return (
     <div>
-      <GroupStatusTodayContainer />
-      <GroupMissionHistoryContainer />
+      {/* <GroupStatusTodayContainer data={data} />
+      <GroupMissionHistoryContainer data={data} /> */}
     </div>
   )
 }

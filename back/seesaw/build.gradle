@@ -53,6 +53,10 @@ dependencies {
     // WebClient
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+    // S3
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.556'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+
 }
 
 tasks.named('test') {

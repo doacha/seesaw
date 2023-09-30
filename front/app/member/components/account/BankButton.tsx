@@ -9,9 +9,11 @@ const BankButton = (props: Props) => {
   return (
     <div
       className={
-        props.selectedBank === props.bankName
-          ? 'flex items-center gap-2 px-4 py-1 rounded-full bg-primary text-white w-fit'
-          : 'flex items-center gap-2 px-4 py-1 rounded-full'
+        props.onBankButtonClick
+          ? props.selectedBank === props.bankName
+            ? 'flex items-center gap-2 px-4 py-1 rounded-full bg-primary text-white w-fit'
+            : 'flex items-center gap-2 px-4 py-1 rounded-full'
+          : 'flex items-center gap-2 py-1 rounded-full'
       }
       onClick={() => {
         props.onBankButtonClick ? props.onBankButtonClick(props.bankName) : null
