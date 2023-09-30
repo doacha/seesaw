@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 
 
 @Data
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class DailySpendingSumResponse {
     private long spendingCostSum;
-    private int spendingDay;
+    private Timestamp spendingDate;
     private String memberEmail;
 
 }

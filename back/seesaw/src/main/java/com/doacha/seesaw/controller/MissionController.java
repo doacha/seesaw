@@ -1,5 +1,6 @@
 package com.doacha.seesaw.controller;
 
+import com.doacha.seesaw.exception.BadRequestException;
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.model.entity.Mission;
@@ -102,7 +103,10 @@ public class MissionController {
             missionService.updateMissionMemberCount(participateMissionRequest.getMissionId(), 1);
             log.info("미션 참여 성공");
             return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (BadRequestException e){
+            log.info("미션 참여 실패 - 인원수 초과");
+            return new ResponseEntity<String>(FAIL, HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
             log.info("미션 참여 실패 - 서버 오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -266,6 +270,7 @@ public class MissionController {
         }
     }
 
+    // 미션 상세 - 나의 현황 - 예치금 현황
     @Operation( summary = "미션 상세 - 나의 현황 - 예치금 현황", description = "미션 총 인원 / 미션 실패 인원 / 내가 받을 수 있는 예치금 / 미션 실패 가능 기회 / 현재 미션 실패 횟수 반환하는 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "나의 현황 불러오기 성공"),
@@ -283,8 +288,6 @@ public class MissionController {
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    // 미션 상세 - 나의 현황 - 예치금 현황
 
 
     // 카카오페이 결제 번호 반환
