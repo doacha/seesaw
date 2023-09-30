@@ -1,53 +1,62 @@
 import { getCycleTerm } from '../../../util'
-interface CycleResult {
-  cycleCount: number
-  spendingRecord: Array<{ recordName: string; recordPrice: number }>
+import { GroupStatusProps } from '@/app/types'
+enum Property {
+  'recordNumber',
+  'recordStartDate',
+  'recordEndDate',
+  'recordStatus',
+  'recordList',
+}
+
+interface MyRecordHistory {
+  0: number
+  1: string
+  2: string
+  3: number
+  4: Array<any>
+  [key: number]: any
 }
 
 const MyMissionHistoryCard = ({
   data,
-  startDate,
-  missionPeriod,
-  missionTargetPrice,
+  propsData,
 }: {
-  data: CycleResult
-  startDate: string
-  missionPeriod: number
-  missionTargetPrice: number
+  data: Array<any>
+  propsData: GroupStatusProps
 }) => {
-  //   const newRecord = [...data.spendingRecord]
-  //   const sumOfSpending = newRecord.reduce((accu, curr) => {
-  //     accu.recordPrice += curr.recordPrice
-  //     return accu
-  //   }).recordPrice
+  let recordList = []
   let sumOfSpending = 0
-  data.spendingRecord.forEach(
-    (element) => (sumOfSpending += element.recordPrice),
-  )
-  const isSuccess = sumOfSpending <= missionTargetPrice
+  for (let i = 4; i < data.length; i++) {
+    recordList.push(data[i])
+    sumOfSpending += data[i][1]
+  }
   return (
-    <div className="my-2.5 mb-5 p-2 shadow-md rounded-lg">
+    <div className="my-2.5 mt-5 p-2 shadow-md rounded-lg">
       {/* 제목 */}
       <div className="mb-[10px]">
         <span
           className={`${
-            isSuccess ? 'text-primary' : 'text-error'
+            data[Property.recordStatus] !== 2 ? 'text-primary' : 'text-error'
           } font-scDreamExBold mr-[10px]`}
         >
-          {isSuccess ? '성공' : '실패'}
+          {data[Property.recordStatus] !== 2 ? '성공' : '실패'}
         </span>
         <span className="font-scDreamExBold mr-[10px]">
-          {data.cycleCount}회차
+          {data[Property.recordNumber]}회차
         </span>
         <span className="text-[10px] text-outline">
-          {getCycleTerm(startDate, data.cycleCount, missionPeriod)}
+          {getCycleTerm(
+            propsData.missionStartDate,
+            data[Property.recordNumber],
+            propsData.missionPeriod,
+          )}
         </span>
       </div>
       {/* 상세목록 */}
-      {data.spendingRecord.map((element, idx) => (
+      {recordList.map((element, idx) => (
         <div className="md-[5px] flex justify-between" key={idx}>
-          <span>{element.recordName}</span>
-          <span>{element.recordPrice.toLocaleString('ko-KR')}</span>
+          <span>{element[0]}</span>
+          <span>{element[1].toLocaleString('ko-KR')}</span>
         </div>
       ))}
       <hr className="my-[10px]" />
