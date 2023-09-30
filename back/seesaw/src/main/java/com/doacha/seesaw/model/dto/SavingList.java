@@ -17,7 +17,7 @@ public class SavingList {
     @Schema(description = "미션 아이디", example = "abcd1234", required = true)
     private String missionId;
 
-    @Schema(description = "일반 계좌 번호 (출금인 경우만 기입)", example = "457899-01-100002", required = true)
+    @Schema(description = "일반 계좌 번호", example = "457899-01-100002", required = true)
     private String memberMainAccount;
 
     @Schema(description = "적금 계좌 번호", example = "457899-01-100001", required = true)
