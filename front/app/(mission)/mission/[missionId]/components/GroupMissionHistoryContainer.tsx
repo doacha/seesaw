@@ -2,7 +2,7 @@
 
 import GroupMissionHistoryCard from './GroupMissionHistoryCard'
 import { useMutation } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { GroupStatusProps } from '@/app/types'
 import { RecordDetail } from '@/app/types'
 
@@ -10,16 +10,19 @@ const getPastRecord = async (input: {
   missionId: string
   pageNumber: number
 }) => {
-  return await fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/record`, {
-    method: 'POST',
-    body: JSON.stringify({
-      missionId: input.missionId,
-      pageNumber: input.pageNumber,
-    }),
-    headers: {
-      'Content-Type': 'application/json',
+  return await fetch(
+    `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/record/history`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        missionId: input.missionId,
+        pageNumber: input.pageNumber,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     },
-  }).then((res) => {
+  ).then((res) => {
     let js = res.json()
     console.log('진짜결과', js)
     return js
@@ -32,7 +35,7 @@ const GroupMissionHistoryContainer = ({ data }: { data: GroupStatusProps }) => {
     data: groupMissionHistory,
     isSuccess,
   } = useMutation(getPastRecord)
-  console.log('asdfasdfasdf', data.missionId)
+  const [recordHistory, setRecordHistory] = useState<RecordDetail[][]>([])
   useEffect(() => {
     mutate(
       {
@@ -40,21 +43,21 @@ const GroupMissionHistoryContainer = ({ data }: { data: GroupStatusProps }) => {
         pageNumber: 0,
       },
       {
-        onSuccess: (res) => console.group('아뭐냐고', res),
+        onSuccess: (res) => setRecordHistory(res),
         onError: (err) => console.log(err),
       },
     )
   }, [])
+  console.log('왜안됳', recordHistory)
   return (
     <div className="rounded-lg bg-background p-5 m-5">
       <div className="font-scDreamMedium">미션 기록</div>
       <hr />
       {isSuccess &&
-        (groupMissionHistory as RecordDetail[][]).map((element, idx) => (
+        (recordHistory as RecordDetail[][]).map((element, idx) => (
           <GroupMissionHistoryCard
             data={element}
             missionData={data}
-            startDate={groupMissionHistory.startDate}
             key={idx}
           />
         ))}

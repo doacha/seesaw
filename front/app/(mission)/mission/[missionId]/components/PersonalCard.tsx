@@ -5,8 +5,8 @@ const PersonalCard = ({ data }: { data: RecordDetail }) => {
   return (
     <div className="flex flex-row gap-2 bg-background mb-2.5">
       <Image
-        src={data.memberImgUrl}
-        alt="member profile image"
+        src={data.memberImgUrl ?? '/default_profile.svg'}
+        alt="member profile img"
         width={38}
         height={38}
         className="rounded-full m-auto"
