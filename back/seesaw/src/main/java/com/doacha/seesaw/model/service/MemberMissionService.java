@@ -188,7 +188,7 @@ public class MemberMissionService {
     // 적금 계좌 이체 (매일 오전 3시마다 실행)
     @Scheduled(cron = "0 0 3 * * *")
     public void requestTransfer(){
-        List<SavingList> list = getSavingList();
+        List<SavingList> list = memberMissionRepository.findSavingListByMemberMissionIsSaving();
 
         for(SavingList saving: list){
             // 각각의 적금건에 대해 이체 요청 하기
@@ -216,13 +216,6 @@ public class MemberMissionService {
             });
         }
     }
-
-
-    // 적금 이체해야할 목록 불러오기
-    public List<SavingList> getSavingList(){
-        return memberMissionRepository.findSavingListByMemberMissionIsSaving();
-    }
-
 
     // 예치금 반환 (매일 오전 10시마다 실행)
     @Scheduled(cron = "0 0 10 * * *")
