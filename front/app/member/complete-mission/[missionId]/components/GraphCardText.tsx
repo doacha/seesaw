@@ -9,7 +9,7 @@ interface Props {
 const GraphCardText = (props: Props) => {
   return (
     <div className="flex flex-col">
-      <div className="flex text-lg font-scDreamMedium flex-nowrap">
+      <div className="flex text-lg font-scDreamMedium flex-wrap">
         <div className="inline-block whitespace-nowrap">{props.textBefore}</div>
         {props.amount?<div className={`inline-block whitespace-nowrap ${props.txtColor}`}>{props.amount.toLocaleString()}원</div>: null }
         <div className="inline-block whitespace-nowrap">{props.textAfter}</div>
