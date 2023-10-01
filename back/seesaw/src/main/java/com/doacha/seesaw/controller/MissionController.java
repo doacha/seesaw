@@ -22,7 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -358,4 +360,11 @@ public class MissionController {
         }
     }
 
+
+    // 완료 미션 상단 기본 정보
+    @Operation(summary = "완료미션 상단 기본 정보", description = "제목 이미지 시작일 끝일 성공여부 설명 카테고리")
+    @PostMapping("/endinfo")
+    public EndMissionInfoResponse getMissionEndInfo(@RequestBody GetMyMissionDataRequest getMyMissionDataRequest){
+        return memberMissionService.getMissionEndInfo(getMyMissionDataRequest);
+    }
 }
