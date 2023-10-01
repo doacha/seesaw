@@ -48,9 +48,6 @@ public class Member {
 
     @Column(name="member_refresh_token")
     private String memberRefreshToken;
-    
-    @Column(name="member_account")
-    private String memberAccount;
 
     @Column(name="member_saving_account")
     private String memberSavingAccount;
@@ -61,7 +58,10 @@ public class Member {
     @Column(name="member_bank_id")
     private String memberBankId;
 
-    public Member(String memberEmail, String memberPassword, String memberName, String memberNickname, String memberBirth, boolean memberGender, boolean memberIsSocial, int memberState) {
+    @Column(name="member_auth_key")
+    private String memberAuthKey;
+
+    public Member(String memberEmail, String memberPassword, String memberName, String memberNickname, String memberBirth, boolean memberGender, boolean memberIsSocial, int memberState, String memberAuthKey) {
         this.memberEmail = memberEmail;
         this.memberPassword = memberPassword;
         this.memberName = memberName;
@@ -70,5 +70,6 @@ public class Member {
         this.memberGender = memberGender;
         this.memberIsSocial = memberIsSocial;
         this.memberState = memberState;
+        this.memberAuthKey = memberAuthKey;
     }
 }
