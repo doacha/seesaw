@@ -295,7 +295,7 @@ const Regist = () => {
                 />
               </div>
             </div>
-          {/* </form> */}
+          </form>
 
           {/* 계정이 있다면? */}
           <div className="mt-14 flex items-center justify-center gap-8">
