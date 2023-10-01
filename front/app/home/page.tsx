@@ -144,7 +144,10 @@ const HomePage = () => {
         return res.json()
       })
       .then((data) => {
-        if (data.length === 0) {
+        if (
+          data.length === 0 &&
+          spendData.spendingMonth !== new Date().getMonth() + 1
+        ) {
           Swal.fire({
             width: 300,
             text: '저장된 데이터가 없습니다!',
