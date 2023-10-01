@@ -96,12 +96,19 @@ export interface MissionCardProps {
   memberMissionStatus?: string
 }
 
+export interface GroupAverageInfo {
+  missionId : string
+  missionAverage : number
+  entireAverage : number
+  difference : number
+}
 export interface Record {
   recordNumber: number
   recordStatus: number
   recordTotalCost: number
   recordId: number
-  recordWriteTime: string
+  startDate : string
+  endDate : string
   memberEmail: string
   missionId: string
   recordContent: string
@@ -135,7 +142,7 @@ export interface MissionDetail extends MissionList {
   missionIsPublic: boolean
   missionCurrentCycle: number
   missionStatus: number
-  missionFailureCount: number
+  missionPenaltyPrice: number
   missionCreationTime: string
   missionHostEmail: string
   missionCategoryId: number
@@ -156,4 +163,22 @@ export interface MissionCreate {
   missionCategoryId: number
   memberMissionIsSaving: boolean
   [key: string]: any
+}
+
+export interface GroupStatusProps {
+  missionId: string
+  missionPeriod: number
+  missionTargetPrice: number
+  missionStartDate: string
+  missionCurrentCycle: number
+  missionDeposit: number
+}
+
+export interface RecordDetail {
+  memberImgUrl: string
+  memberNickname: string
+  recordNumber: number
+  recordId: number
+  recordTotalCost: number
+  recordStatus: number
 }

@@ -30,7 +30,7 @@ const memberPage = () => {
     setAccountList,
   } = accountListStore()
 
-  const {setProfileEditInfo} = profileEditInfoStore()
+  const { setProfileEditInfo } = profileEditInfoStore()
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
@@ -57,7 +57,7 @@ const memberPage = () => {
         },
       )
       const tmp = await res.json()
-      console.log('처음가져왔을때',tmp.info.memberImgUrl)
+      console.log('처음가져왔을때', tmp.info.memberImgUrl)
       return tmp
     } catch (err) {
       console.log(err)
@@ -105,9 +105,7 @@ const memberPage = () => {
       }
     })
   }, [accountListData])
-  
-  
-  
+
   return (
     <div className="bg-background-fill flex flex-col h-screen w-screen">
       {isLoading ? null : (
@@ -122,7 +120,10 @@ const memberPage = () => {
             >
               {confirmed ? (
                 <ProfileEditCard
-                  setOpenEditPage={() => setOpenEditPage(false)}
+                  setOpenEditPage={() => {
+                    setOpenEditPage(false)
+                    setConfirmed(false)
+                  }}
                   handleModalClick={handleModalClick}
                 />
               ) : (
@@ -153,15 +154,18 @@ const memberPage = () => {
             ) : (
               <div className=" flex flex-col h-min-full p-5 gap-5">
                 {installmentAccount ? (
-                  <AccountCard account={installmentAccount} bgColor='installment'/>
+                  <AccountCard
+                    account={installmentAccount}
+                    bgColor="installment"
+                  />
                 ) : (
                   <InstallmentCreateButton
                     onClickEvent={() => router.push('member/installment')}
                   />
                 )}
                 {mainAccount ? (
-                  <div className='flex flex-col gap-5'>
-                    <AccountCard account={mainAccount} bgColor='main'/>
+                  <div className="flex flex-col gap-5">
+                    <AccountCard account={mainAccount} bgColor="main" />
                     {accountList.map((account, index) =>
                       account.accountType !== 1 &&
                       account.accountNum !== mainAccountNum ? (

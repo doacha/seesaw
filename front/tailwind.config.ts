@@ -55,7 +55,7 @@ const config: Config = {
         'point-pink': '#FFD1BF',
         // neutral: '#2b3440',
         'background-fill': '#F3F4F8',
-        background: '#FAFCFF',
+        background: '#FFFFFF',
         outline: '#787D85',
         'outline-container': '#DCE1E9',
         surface: '#001B2A',
