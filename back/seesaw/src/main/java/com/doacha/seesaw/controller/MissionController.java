@@ -184,7 +184,7 @@ public class MissionController {
         }
     }
     @Operation(summary="완료 미션 기준으로 최근 기간 동안의 해당 카테고리 소비 총합")
-    @PostMapping("/periodSum")
+    @PostMapping("/periodsum")
     public ResponseEntity<?> getMySpendingSum(@RequestBody QuitMissionRequest quitMissionRequest){
         try{
             Long mySpendingSum=missionService.getMySpendingSum(quitMissionRequest.getMissionId(), quitMissionRequest.getMemberEmail());
