@@ -5,6 +5,7 @@ import com.doacha.seesaw.model.dto.record.*;
 import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.model.entity.Record;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -76,8 +77,18 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
 
 
-
-
+@Query("SELECT NEW com.doacha.seesaw.model.dto.mission.RecentMissionResponse(" +
+        "m.missionId, " +
+        "mm.member.memberEmail, " +
+        "SUM(r.recordTotalCost) AS sum, " +
+        "r.recordNumber) " +
+        "FROM Record r " +
+        "JOIN r.memberMission mm " +
+        "JOIN mm.mission m " +
+        "WHERE m.missionId = :missionId AND mm.member.memberEmail = :memberEmail " +
+        "GROUP BY r.recordNumber " +
+        "ORDER BY r.recordNumber DESC ")
+List<RecentMissionResponse> getRecentMissionStats(@Param("missionId") String missionId , @Param("memberEmail")String memberEmail, Pageable pageable);
 
     @Query("SELECT COUNT(r) FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail AND r.recordStatus = 2")
     int countFail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
