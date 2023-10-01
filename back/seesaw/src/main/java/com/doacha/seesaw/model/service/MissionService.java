@@ -150,19 +150,7 @@ public class MissionService {
 //                .build();
 //        return missionRankingResponse;
 //    }
-    // 미션 통계 내에 나의 순위
-//    public MyMissionRankingResponse getMyMissionRanking(String missionId, String memberEmail){
-//        List<MyMissionRankingResponse> missionRankingList = recordRepository.getMyMissionRanking(missionId);
-//        MyMissionRankingResponse myMissionRankingResponse = null;
-//        for(MyMissionRankingResponse missionRankingResponse : missionRankingList){
-//            if(missionRankingResponse.getMemberEmail().equals(memberEmail)){
-//               myMissionRankingResponse = missionRankingResponse;
-//                break;
-//            }
-//
-//        }
-//        return myMissionRankingResponse;
-//    }
+
 
     // 완료 미션 최근 기록 5개
     public List<RecentMissionResponse> getRecentMissionStats(String missionId, String memberEmail){
@@ -206,22 +194,6 @@ public class MissionService {
             throw new NoContentException();
         }
     }
-//    public MyMissionAverageResponse getMyMissionAverage(String missionId, String memberEmail){
-//        Optional<MyMissionAverageResponse> optionalResponse= recordRepository.getMyMissionAverage(missionId, memberEmail);
-//        if(optionalResponse.isPresent()){
-//            MyMissionAverageResponse myMissionAverageResponse = MyMissionAverageResponse.builder()
-//                    .missionId(optionalResponse.get().getMissionId())
-//                    .average(optionalResponse.get().getAverage())
-//                    .memberEmail(optionalResponse.get().getMemberEmail())
-//                    .count(optionalResponse.get().getCount())
-//                    .build();
-//            return myMissionAverageResponse;
-//        }
-//        else{
-//            throw new NoContentException();
-//        }
-//
-//    }
 
     public CompareMissionResponse getCompareMissionAverage(String missionId){
         List<CompareMissionDto> compareMissionResponse = recordRepository.getCompareMission(missionId);
@@ -235,15 +207,9 @@ public class MissionService {
             int missionPeriod= mission.get().getMissionPeriod();
             List<EntireMissionDto> entireMissionDtos = recordRepository.getEntireMissionByCategoryId(missionId,categoryId);
             Double entireAverageSum=0.0;
-            log.info("CategoryId : {}",categoryId);
-            log.info("My MissionPeriod : {}",missionPeriod);
             for(EntireMissionDto entireMissionDto : entireMissionDtos){
                 Double entireSum =0.0;
-                log.info("Entire MissionSum : {}",entireMissionDto.getSum());
                 entireSum+=entireMissionDto.getSum()/(entireMissionDto.getMissionPeriod()*entireMissionDto.getMissionTotalCycle()*entireMissionDto.getMissionMemberCount());
-                log.info("Entire MissionId : {}",entireMissionDto.getMissionId());
-                log.info("EntireMissionPeriod : {}",entireMissionDto.getMissionPeriod());
-                log.info("EntireMissionTotalCycle : {}",entireMissionDto.getMissionTotalCycle());
                 entireAverageSum+=entireSum;
             }
             double entireAverage = entireAverageSum/(double)entireMissionDtos.size();
