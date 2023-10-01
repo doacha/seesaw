@@ -17,6 +17,7 @@ import com.doacha.seesaw.repository.MemberRepository;
 import com.doacha.seesaw.util.MailUtils;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.service.spi.InjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -56,6 +57,7 @@ public class MemberService {
     @Autowired
     private S3Uploader s3Uploader;
 
+    @Autowired
     private JavaMailSender javaMailSender;
 
     // 회원가입
@@ -85,19 +87,39 @@ public class MemberService {
 
         //인증 관련 메일을 보내자
         MailUtils sendMail = new MailUtils(javaMailSender);
-        sendMail.setSubject("[ICEWATER 커뮤니티 이메일 인증메일 입니다.]"); //메일제목
+        sendMail.setSubject("[시소 이메일 인증 메일 입니다.]"); //메일 제목
         sendMail.setText(
-                "<h1>메일인증</h1>" +
+                "<h1>시소 이메일 인증</h1>" +
                         "<br/>"+member.getMemberName()+"님 "+
-                        "<br/>시소에 회원가입해주셔서 감사합니다."+
+                        "<br/>시소에 가입해주셔서 감사합니다."+
                         "<br/>아래 [이메일 인증 확인]을 눌러주세요."+
-                        "<a href='http://localhost:8080/member/registerEmail?memberEmail=" + member.getMemberEmail() +
+                        "<a href='http://localhost:8080/seesaw/member/registerEmail?memberEmail=" + member.getMemberEmail() +
                         "&key=" + key +
                         "' target='_blenk'>이메일 인증 확인</a>");
         sendMail.setFrom("doriarichacha@gmail.com", "시소");
         sendMail.setTo(member.getMemberEmail());
         sendMail.send();
         return MemberResponse.of(member);
+    }
+
+    // 이메일 인증
+    @Transactional
+    public void memberAuth(String memberEmail) throws Exception{
+        Optional<Member> member = memberRepository.findByMemberEmail(memberEmail);
+
+        Member update;
+
+        update = Member.builder()
+                .memberEmail(member.get().getMemberEmail())
+                .memberPassword(member.get().getMemberPassword())
+                .memberName(member.get().getMemberName())
+                .memberNickname(member.get().getMemberNickname())
+                .memberAuthKey(member.get().getMemberAuthKey())
+                .memberIsSocial(member.get().isMemberIsSocial())
+                .memberState(1) // 1: 가입으로 업데이트
+                .build();
+
+        memberRepository.save(update);
     }
 
     // 로그인

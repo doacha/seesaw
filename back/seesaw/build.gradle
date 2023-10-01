@@ -49,6 +49,7 @@ dependencies {
     // mail
     implementation group: 'jakarta.mail', name: 'jakarta.mail-api', version: '2.1.0'
     implementation group: 'org.springframework', name: 'spring-context-support', version: '6.0.4'
+    implementation group: 'org.eclipse.angus', name: 'jakarta.mail', version: '2.0.2'
 
     // WebClient
     implementation 'org.springframework.boot:spring-boot-starter-webflux'

@@ -40,7 +40,7 @@ public class Member {
     private boolean memberIsSocial; // 소셜로그인 여부
 
     @Column(name="member_state",nullable = false)
-    @Comment("0: 가입, 1: 휴면, 탈퇴")
+    @Comment("0: 가입 미인증, 1: 가입 인증, 2: 탈퇴, 3: 휴면")
     private int memberState;
 
     @Column(name="member_imgUrl")
