@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class RecentMissionResponse {
     private String missionId;
     private String memberEmail;
-    private Long sum;
+    private int recordTotalCost;
     private int recordNumber;
 }

@@ -54,7 +54,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 //            "WHERE mm2.mission.missionId = :missionId " +
 //            "GROUP BY mm2.member.memberNickname))")
 //    MissionTopSpendingResponse getMissionTopSpender(@Param("missionId") String missionId);
-
+//
 //    @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionFrugalSpendingResponse(mm.member.memberNickname AS missionTopSpender, SUM(r.recordTotalCost) AS missionTopSpending) " +
 //            "FROM Record r " +
 //            "JOIN r.memberMission mm " +
@@ -66,13 +66,13 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 //            "WHERE mm2.mission.missionId = :missionId " +
 //            "GROUP BY mm2.member.memberNickname))")
 //    MissionFrugalSpendingResponse getMissionFrugalSpender(@Param("missionId") String missionId);
-
-
-//    @Query("SELECT new com.doacha.seesaw.model.dto.mission.DailyTopSpendingResponse(mm.member.memberNickname AS dailyTopSpender, MAX(s.spendingCost) AS dailyTopSpending, r.recordNumber AS dailyTopSpendingNum) " +
-//            "FROM Spending s " +
-//            "JOIN Record r " +
+//
+//
+//    @Query("SELECT new com.doacha.seesaw.model.dto.mission.DailyTopSpendingResponse(mm.member.memberNickname AS dailyTopSpender, MAX(r.recordTotalCost) AS dailyTopSpending, r.recordNumber AS dailyTopSpendingNum) " +
+//            "FROM Record r " +
 //            "JOIN r.memberMission mm " +
-//            "WHERE mm.mission.missionId = :missionId " )
+//            "WHERE mm.mission.missionId = :missionId " +
+//            "GROUP BY r.recordTotalCost " )
 //    DailyTopSpendingResponse getDailyTopSpender(@Param("missionId") String missionId);
 
 
@@ -80,7 +80,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.RecentMissionResponse(" +
         "m.missionId, " +
         "mm.member.memberEmail, " +
-        "SUM(r.recordTotalCost) AS sum, " +
+        "r.recordTotalCost AS recordTotalCost, " +
         "r.recordNumber) " +
         "FROM Record r " +
         "JOIN r.memberMission mm " +

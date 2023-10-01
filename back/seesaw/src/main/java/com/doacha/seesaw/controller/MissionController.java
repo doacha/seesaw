@@ -213,16 +213,6 @@ public class MissionController {
         }
     }
 
-//    @Operation(summary="카테고리별 그룹 평균과 비교")
-//    @PostMapping("/category-compare")
-//    public ResponseEntity<?>CompareWithMissionMember(@RequestBody QuitMissionRequest quitMissionRequest){
-//        try{
-//            return new ResponseEntity<>()
-//        }
-//        catch(Exception e){
-//            return new ResponseEntity<>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 
 //    @Operation(summary="미션 최고 금액, 최저 금액", description = "미션내에 최고 금액, 최저 금액 사용자와 금액 불러오는 API")
 //    @GetMapping("/ranking/{missionId}")
