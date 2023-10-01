@@ -17,8 +17,8 @@ public class CreateMissionRequest {
     @Schema(description = "총 모집 인원수", example = "6", required = true)
     private int missionMaxCount;
 
-    @Schema(description = "미션 이미지 Url", required = false)
-    private String missionImgUrl;
+//    @Schema(description = "미션 이미지 Url", required = false)
+//    private String missionImgUrl;
 
     @Schema(description = "미션 소개글", example = "일주일동안 5만원쓰기 같이 하실 분!!", required = true)
     private String missionPurpose;

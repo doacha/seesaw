@@ -19,7 +19,7 @@ public interface CardTransactionRepository extends JpaRepository<CardTransaction
     @Query("SELECT NEW com.doacha.seesawbank.model.dto.cardTransaction.GetCardTransactionResponse" +
             "(c.card.member.memberId, c.cardApprovalNum, c.cardStoreName, c.cardApprovalAmount, c.cardCompany, c.cardStoreCategory, c.cardTransactionTime) " +
             "FROM CardTransaction c WHERE c.card.member.memberId = :memberId " +
-            "AND (:startDateTime IS NULL OR c.cardTransactionTime >= :startDateTime) " +
+            "AND (:startDateTime IS NULL OR c.cardTransactionTime > :startDateTime) " +
             "AND (:endDateTime IS NULL OR c.cardTransactionTime <= :endDateTime) " +
             "ORDER BY c.cardTransactionTime DESC")
     List<GetCardTransactionResponse> findCardTransactionResponseByCardTransactionRequest(@Param("memberId") String memberId, @Param("startDateTime") Timestamp startDateTime, @Param("endDateTime") Timestamp endDateTime);

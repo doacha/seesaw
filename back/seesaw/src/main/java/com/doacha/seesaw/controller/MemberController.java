@@ -9,6 +9,7 @@ import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.service.MemberMissionService;
 import com.doacha.seesaw.model.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -18,13 +19,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
-@CrossOrigin(origins="*", allowedHeaders = "*")
+@CrossOrigin(origins="*", allowedHeaders = "*", methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.HEAD, RequestMethod.OPTIONS, RequestMethod.POST, RequestMethod.PUT})
 public class MemberController {
     private final MemberService memberService;
     private final MemberMissionService memberMissionService;
@@ -32,7 +34,7 @@ public class MemberController {
     
     // 회원가입
     @PostMapping("/signup")
-    public MemberResponse signUp(@RequestBody SignUpRequest signUpRequest) {
+    public MemberResponse signUp(@RequestBody SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
         return memberService.signUp(signUpRequest);
     }
 
@@ -72,7 +74,8 @@ public class MemberController {
 //    @PostMapping(value = "/modify",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)//,  produces = "application/json; charset=utf-8")
 //    public MyInfoResponse changeInfo(HttpServletRequest request, @RequestPart (value="image") MultipartFile image, @RequestPart (value="changeInfoRequest") ChangeInfoRequest changeInfoRequest) throws IOException
     @PostMapping(value = "/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public MyInfoResponse changeInfo(@RequestPart(value = "image") MultipartFile image, @RequestPart(value = "changeInfoRequest") ChangeInfoRequest changeInfoRequest) throws IOException{
+    public MyInfoResponse changeInfo(@RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "changeInfoRequest") ChangeInfoRequest changeInfoRequest) throws IOException{
+
         return memberService.changeInfo(image, changeInfoRequest);
     }
 
@@ -117,5 +120,11 @@ public class MemberController {
             return memberService.createAccount(createAccountToSeesawRequest);
         }
         return ResponseEntity.ok(false);
+    }
+
+    // 테스트용 이미지 업로드 코드
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void uploadImage(@RequestPart(value = "image", required = false) MultipartFile image) throws IOException{
+        memberService.uploadImage(image, 0);
     }
 }

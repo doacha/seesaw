@@ -1,6 +1,7 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.BadRequestException;
+import com.doacha.seesaw.mail.TempKey;
 import com.doacha.seesaw.model.dto.SavingRequest;
 import com.doacha.seesaw.model.dto.account.AccountResponse;
 import com.doacha.seesaw.model.dto.account.AccountTransactionListResponse;
@@ -13,11 +14,14 @@ import com.doacha.seesaw.redis.RedisDao;
 import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MemberRepository;
 //import jakarta.transaction.Transactional;
+import com.doacha.seesaw.util.MailUtils;
+import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +32,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -50,13 +56,18 @@ public class MemberService {
     @Autowired
     private S3Uploader s3Uploader;
 
+    private JavaMailSender javaMailSender;
+
     // 회원가입
     @Transactional
-    public MemberResponse signUp(SignUpRequest signUpRequest) {
+    public MemberResponse signUp(SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
         boolean isExist = memberRepository
                 .existsByMemberEmail(signUpRequest.getMemberEmail());
         if (isExist) throw new BadRequestException("이미 존재하는 이메일입니다.");
         String encodedPassword = passwordEncoder.encode(signUpRequest.getMemberPassword());
+
+        // 이메일 인증 번호 생성
+        String key = new TempKey().getKey(50,false);
 
         Member member = new Member(
                 signUpRequest.getMemberEmail(),
@@ -66,10 +77,26 @@ public class MemberService {
                 signUpRequest.getMemberBirth(),
                 signUpRequest.isMemberGender(),
                 false,
-                0 // 처음엔 미인증(0)으로
+                0, // 처음엔 미인증(0)으로
+                key
                 );
 
-        member = memberRepository.save(member);
+        member = memberRepository.save(member); // 회원가입(인증 전)
+
+        //인증 관련 메일을 보내자
+        MailUtils sendMail = new MailUtils(javaMailSender);
+        sendMail.setSubject("[ICEWATER 커뮤니티 이메일 인증메일 입니다.]"); //메일제목
+        sendMail.setText(
+                "<h1>메일인증</h1>" +
+                        "<br/>"+member.getMemberName()+"님 "+
+                        "<br/>시소에 회원가입해주셔서 감사합니다."+
+                        "<br/>아래 [이메일 인증 확인]을 눌러주세요."+
+                        "<a href='http://localhost:8080/member/registerEmail?memberEmail=" + member.getMemberEmail() +
+                        "&key=" + key +
+                        "' target='_blenk'>이메일 인증 확인</a>");
+        sendMail.setFrom("doriarichacha@gmail.com", "시소");
+        sendMail.setTo(member.getMemberEmail());
+        sendMail.send();
         return MemberResponse.of(member);
     }
 
@@ -236,7 +263,14 @@ public class MemberService {
                 .memberGender(changeInfoRequest.isMemberGender())
                 .memberNickname(changeInfoRequest.getMemberNickname())
                 .memberImgUrl(storedFileName)
-                .memberPhoneNumber(changeInfoRequest.getMemberPhoneNumber())
+                .memberPhoneNumber(changeInfoRequest.getMemberPhoneNumber()) // 이 다음으로 추가됨
+                .memberSavingAccount(member.get().getMemberSavingAccount())
+                .memberMainAccount(member.get().getMemberMainAccount())
+                .memberBankId(member.get().getMemberBankId())
+                .memberAuthKey(member.get().getMemberAuthKey())
+                .memberIsSocial(member.get().isMemberIsSocial())
+                .memberState(member.get().getMemberState())
+                .memberRefreshToken(member.get().getMemberRefreshToken())
                 .build();
 
         memberRepository.save(update);
@@ -262,9 +296,13 @@ public class MemberService {
                 .memberNickname(member.get().getMemberNickname())
                 .memberImgUrl(member.get().getMemberImgUrl())
                 .memberPhoneNumber(member.get().getMemberPhoneNumber())
-                .memberState(2) // 2가 탈퇴 상태
+                .memberSavingAccount(member.get().getMemberSavingAccount())
                 .memberMainAccount(member.get().getMemberMainAccount())
                 .memberBankId(member.get().getMemberBankId())
+                .memberAuthKey(member.get().getMemberAuthKey())
+                .memberIsSocial(member.get().isMemberIsSocial())
+                .memberState(2) // 2가 탈퇴 상태
+                .memberRefreshToken(member.get().getMemberRefreshToken())
                 .build();
 
         memberRepository.save(update);
@@ -287,4 +325,17 @@ public class MemberService {
         return MyInfoResponse.of(member);
     }
 
+    // 테스트용 이미지 업로드
+    @Transactional
+    public void uploadImage(MultipartFile image, int dirNum) throws IOException {
+        // 이미지를 변경하려고 한다면 s3에 업로드하고 바꿔주기
+        if(!image.isEmpty()) {
+            if(dirNum == 0){
+                s3Uploader.upload(image, "profile");
+            }else if(dirNum == 1){
+                s3Uploader.upload(image, "mission");
+            }
+        }
+
+    }
 }
