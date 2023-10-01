@@ -17,8 +17,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,12 +70,12 @@ public class MissionController {
             @ApiResponse(responseCode = "200", description = "미션 생성 성공"),
             @ApiResponse(responseCode = "500", description = "미션 생성 실패 - 서버 오류")
     })
-    @PostMapping()
-    public ResponseEntity<?> createMission(@RequestBody CreateMissionRequest createMissionRequest) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createMission(@RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "createMissionRequest") CreateMissionRequest createMissionRequest) {
         log.info("새로운 미션 정보: " + createMissionRequest);
         try {
             log.info("미션 생성");
-            Mission newMission = missionService.createMission(createMissionRequest);
+            Mission newMission = missionService.createMission(image, createMissionRequest);
             log.info("미션 생성 성공");
             log.info("미션 생성한 멤버 정보 저장 시도");
             memberMissionService.registCreateMemberMission(newMission, createMissionRequest.getMemberMissionSavingMoney());

@@ -14,7 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -35,6 +37,9 @@ public class MissionService {
     @Autowired
     SpendingRepository spendingRepository;
 
+    @Autowired
+    private S3Uploader s3Uploader;
+
     // 미션 목록
     public List<MissionListResponse> getMissionList(Pageable pageable) {
         List<MissionListResponse> list = missionRepository.findMissionListResponseByMissionByIsPublic(pageable);
@@ -42,9 +47,15 @@ public class MissionService {
     }
 
     // 미션 생성
-    public Mission createMission(CreateMissionRequest mission) {
+    public Mission createMission(MultipartFile image, CreateMissionRequest mission) throws IOException {
 
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        // 이미지 처리
+        String storedFileName = ""; // 없을 수도 있으니 빈칸
+        if(!image.isEmpty()) {
+            storedFileName = s3Uploader.upload(image,"mission");
+        }
 
         Mission createdMission = Mission.builder()
                 .missionId(createRandomId())
@@ -53,7 +64,7 @@ public class MissionService {
                 .missionTitle(mission.getMissionTitle())
                 .missionMemberCount(1)
                 .missionMaxCount(mission.getMissionMaxCount())
-                .missionImgUrl(mission.getMissionImgUrl())
+                .missionImgUrl(storedFileName)
                 .missionPurpose(mission.getMissionPurpose())
                 .missionDeposit(mission.getMissionDeposit())
                 .missionIsPublic(mission.isMissionIsPublic())
