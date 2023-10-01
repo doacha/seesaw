@@ -18,10 +18,10 @@ export interface Account {
 
 export interface Transaction {
   accountApprovalAmount: number
-  amountBalance: number
+  accountBalance: number
   accountTransactionTime: string
   accountNum: string
-  accountIsDeposit: boolean
+  // accountIsDeposit: boolean
   accountTransactionName: string
 }
 
@@ -97,12 +97,19 @@ export interface MissionCardProps {
   memberMissionStatus?: string
 }
 
+export interface GroupAverageInfo {
+  missionId : string
+  missionAverage : number
+  entireAverage : number
+  difference : number
+}
 export interface Record {
   recordNumber: number
   recordStatus: number
   recordTotalCost: number
   recordId: number
-  recordWriteTime: string
+  startDate : string
+  endDate : string
   memberEmail: string
   missionId: string
   recordContent: string

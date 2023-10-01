@@ -2,25 +2,33 @@ import { ImageFile } from '@/app/types'
 import { create } from 'zustand'
 
 interface profileEditInfo {
-  newImgUrl: ImageFile
+  newImg: ImageFile
+  memberName : string
+  memberGender : boolean | null
+  prevNickname : string
   newNickname: string
+  prevPassword : string
   newPassword: string
   confirmPassword: string
   phoneNumber: string
   birth: string[]
   [key: string]: any
-  setProfileEditInfo: (key: string, value: string) => void
+  setProfileEditInfo: (key: string, value: string | ImageFile) => void
   setBirthInfo: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
 export const profileEditInfoStore = create<profileEditInfo>((set) => ({
-  newImgUrl: { id: '', url: '' },
+  newImg: { id: '', url: '' },
+  memberName: '',
+  memberGender : null,
+  prevNickname : '',
   newNickname: '',
+  prevPassword: '',
   newPassword: '',
   confirmPassword: '',
   phoneNumber: '',
   birth: ['', '', ''],
-  setProfileEditInfo: (key: string, value: string) =>
+  setProfileEditInfo: (key: string, value: string | ImageFile) =>
     set((prev) => ({ ...prev, [key]: value })),
   setInitBirthInfo: (birth: string) =>
     set((prev) => {

@@ -10,41 +10,106 @@ import GroupStatisticCard from './components/GroupStatisticCard'
 import Card from '@/app/components/Card'
 import RecordCard from './components/RecordCard'
 import { recordList, mission } from '@/app/dummies'
+import { useQuery } from '@tanstack/react-query'
+import { memberEmailStore } from '@/stores/memberEmail'
+import Loading from '@/app/components/Loading'
 
 const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1')
-
+  const { memberEmail } = memberEmailStore()
+  console.log(params.missionId)
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
   }
 
+  const getCompleteMissionDetailInfo = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/endinfo`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // body: JSON.stringify({memberEmail : memberEmail, missionId : params.missionId})
+          body: JSON.stringify({
+            missionId: 'Ch58ZYwiI3',
+            memberEmail: 'tldnjs324@naver.com',
+          }),
+        },
+      )
+      const data = await res.json()
+      console.log(data)
+      return data
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const getRecordList = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/record/enddetail`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // body: JSON.stringify({memberEmail : memberEmail, missionId : params.missionId})
+          body: JSON.stringify({
+            missionId: 'yzn5LMDMCG',
+            memberEmail: 'doacha@seesaw.com',
+          }),
+        },
+      )
+      const data = await res.json()
+      console.log(data)
+      return data
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const {
+    isLoading,
+    data: mission,
+    error,
+  } = useQuery(['completeMissionDetailInfo'], getCompleteMissionDetailInfo)
+  const { data: recordList } = useQuery(['recordList'], getRecordList)
+
   return (
     <div className="w-screen h-screen bg-background-fill">
-      <Header title={mission.missionTitle} backButton />
+      {isLoading ? (
+        <Loading/>
+      ) : (
+        <div>
+          <Header title={mission.missionTitle} backButton />
 
-      <div className="h-full py-16 overflow-auto ">
-        <CompleteMissionDetailCard mission={mission} />
-        <Tab
-          labels={['통계', '내 기록']}
-          activeTab={activeTab}
-          handleTabChange={handleTabChange}
-        ></Tab>
+          <div className="h-screen py-16 overflow-auto ">
+            <CompleteMissionDetailCard mission={mission} />
+            <Tab
+              labels={['통계', '내 기록']}
+              activeTab={activeTab}
+              handleTabChange={handleTabChange}
+            ></Tab>
 
-        {activeTab === 'tab1' ? (
-          <div className="flex flex-col p-5 gap-5">
-            <MystatisticCard />
-            <GroupStatisticCard />
+            {activeTab === 'tab1' ? (
+              <div className="flex flex-col p-5 gap-5">
+                <MystatisticCard missionId={params.missionId} />
+                <GroupStatisticCard missionId={params.missionId}/>
+              </div>
+            ) : (
+              <div className="flex flex-col p-5 gap-5">
+                <Card
+                  content={recordList.map((record: Record) => (
+                    <RecordCard record={record} />
+                  ))}
+                />
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="flex flex-col p-5 gap-5">
-            <Card
-              content={recordList.map((record) => (
-                <RecordCard record={record} />
-              ))}
-            />
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }
