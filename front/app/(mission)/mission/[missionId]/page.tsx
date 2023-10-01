@@ -52,7 +52,7 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
     <div className="bg-background-fill h-full overflow-auto py-16">
       {/* <Header title={data.missionTitle} backButton /> */}
       <MissionDetailContainer data={data} />
-      {data.missionStatus !== 0 ? (
+      {data.missionStatus === 0 ? (
         <>
           <MissionDetailContents data={contentsProps} />
           <FaskMakeButton path={`${data.missionId}/create`} />

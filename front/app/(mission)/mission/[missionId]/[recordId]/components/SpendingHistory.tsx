@@ -1,4 +1,4 @@
-interface recordSpendngHistory {}
+import { RecordList } from '@/app/types'
 
 const SpendingHistory = ({
   history,
@@ -6,24 +6,29 @@ const SpendingHistory = ({
   balance,
   textColor,
 }: {
-  history: Array<{ recordHistory: string; recordPrice: number }>
+  history:
+    | Array<{
+        recordName: string
+        recordCost: number
+      }>
+    | undefined
   targetPrice: number
   balance: number
   textColor: string
 }) => {
   return (
     <div className="collapse-content p-0">
-      <div className="flex justify-between mb-2">
+      <div className="flex justify-between mb-5">
         <span className="font-scDreamExBold">미션금액</span>
         <span>{targetPrice.toLocaleString('ko-KR')}</span>
       </div>
-      <hr className="border-outline mb-2" />
-      {history.map((element, idx) => (
-        <div className="flex justify-between mb-2" key={idx}>
-          <span>{element.recordHistory}</span>
-          <span>{element.recordPrice.toLocaleString('ko-KR')}</span>
-        </div>
-      ))}
+      {history &&
+        history.map((element, idx) => (
+          <div className="flex justify-between mb-2" key={idx}>
+            <span>{element.recordName}</span>
+            <span>{element.recordCost.toLocaleString('ko-KR')}</span>
+          </div>
+        ))}
       <hr className="border-outline" />
       <div className="flex justify-between font-scDreamExBold mt-2">
         <span>잔액</span>

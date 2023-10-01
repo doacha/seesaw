@@ -177,3 +177,28 @@ export interface RecordDetail {
   recordTotalCost: number
   recordStatus: number
 }
+
+export interface RecordList {
+  recordNumber: number
+  recordList: Array<{
+    recordName: string
+    recordCost: number
+  }>
+}
+
+export interface RecordStatusProps {
+  missionId: string
+  missionPeriod: number
+  missionTargetPrice: number
+  missionStartDate: string
+  pageNumber: number
+}
+
+export interface Comment {
+  commentId: number
+  commentContent: string
+  memberNickname: string
+  memberEmail: string
+  memberImgUrl: string
+  commentWriteTime: string
+}

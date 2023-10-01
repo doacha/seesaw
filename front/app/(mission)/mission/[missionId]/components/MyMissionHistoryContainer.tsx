@@ -1,9 +1,13 @@
+'use client'
+
 import { myMissionHistory } from '@/app/dummies'
 import MyMissionHistoryCard from './MyMissionHistoryCard'
 import { GroupStatusProps } from '@/app/types'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
-enum MyRecordHistoryProperty {
+import { recordListStore } from '@/stores/myRecordList'
+import { RecordList } from '@/app/types'
+enum Property {
   'recordNumber',
   'recordStartDate',
   'recordEndDate',
@@ -21,6 +25,44 @@ interface MyRecordHistory {
 }
 
 const EMAIL_DUMMY = 'jiwon@seesaw.com'
+
+const MyMissionHistoryContainer = ({
+  propsData,
+}: {
+  propsData: GroupStatusProps
+}) => {
+  const { mutate, isSuccess, data } = useMutation(getMyRecordHistory)
+  const { setRecordList } = recordListStore()
+  useEffect(() => {
+    mutate(
+      {
+        missionId: propsData.missionId,
+        memberEmail: EMAIL_DUMMY,
+        pageNumber: 0,
+      },
+      {
+        onSuccess: (res) => {
+          setRecordList(convertResponseToList(res))
+        },
+      },
+    )
+  }, [])
+
+  return (
+    <div className="bg-background p-5 rounded-lg mx-5">
+      <div className="font-scDreamMedium">미션 기록</div>
+      <hr />
+      {data &&
+        (data as Array<any>[]).map((element, idx) => (
+          <MyMissionHistoryCard
+            data={element}
+            propsData={propsData}
+            key={idx}
+          />
+        ))}
+    </div>
+  )
+}
 
 const getMyRecordHistory = async (input: {
   missionId: string
@@ -47,34 +89,23 @@ const getMyRecordHistory = async (input: {
   })
 }
 
-const MyMissionHistoryContainer = ({
-  propsData,
-}: {
-  propsData: GroupStatusProps
-}) => {
-  const { mutate, isSuccess, data } = useMutation(getMyRecordHistory)
-  useEffect(() => {
-    mutate({
-      missionId: propsData.missionId,
-      memberEmail: EMAIL_DUMMY,
-      pageNumber: 0,
-    })
-  }, [])
-  console.log('mymissionHistory', data)
-  return (
-    <div className="bg-background p-5 rounded-lg mx-5">
-      <div className="font-scDreamMedium">미션 기록</div>
-      <hr />
-      {data &&
-        (data as Array<any>[]).map((element, idx) => (
-          <MyMissionHistoryCard
-            data={element}
-            propsData={propsData}
-            key={idx}
-          />
-        ))}
-    </div>
-  )
+const convertResponseToList = (res: Array<any>[]) => {
+  const recordList: RecordList[] = []
+  res.forEach((element, idx) => {
+    const record: RecordList = {
+      recordNumber: 0,
+      recordList: [],
+    }
+    record.recordNumber = element[Property.recordNumber]
+    for (let i = 4; i < element.length; i++) {
+      record.recordList.push({
+        recordName: element[i][0],
+        recordCost: element[i][1],
+      })
+    }
+    recordList.push(record)
+  })
+  return recordList
 }
 
 export default MyMissionHistoryContainer
