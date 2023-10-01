@@ -108,7 +108,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "WHERE m.missionId = :missionId " +
             "AND mm.member.memberEmail = :memberEmail " +
             "GROUP BY m.missionId, mm.member.memberEmail")
-   Optional<MyMissionAverageResponse> getMyMissionAverage(String missionId, String memberEmail);
+   Optional<MyMissionAverageResponse> getMyMissionAverage(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
 
     @Query("SELECT r.recordTotalCost FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail ORDER BY r.recordNumber ASC ")
     List<Integer> findRecordTotalCostByMissionIdAndMemberEmail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);

@@ -1,10 +1,7 @@
 package com.doacha.seesaw.model.dto.spending;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
 
@@ -13,9 +10,11 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class DailySpendingSumResponse {
     private long spendingCostSum;
     private Timestamp spendingDate;
     private String memberEmail;
+
 
 }
