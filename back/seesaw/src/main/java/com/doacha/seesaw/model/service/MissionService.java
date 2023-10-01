@@ -194,7 +194,8 @@ public class MissionService {
                     .missionId(myMissionRankingResponse.getMissionId())
                     .sum(myMissionRankingResponse.getSum())
                     .ranking(myMissionRankingResponse.getRanking())
-                    .missionMemberCount(myMissionRankingResponse.getMissionMemberCount())
+                    .missionMemberCount
+                            (myMissionRankingResponse.getMissionMemberCount())
                     .memberEmail(myMissionRankingResponse.getMemberEmail())
                     .average(optionalResponse.get().getAverage())
                     .count(optionalResponse.get().getCount())
