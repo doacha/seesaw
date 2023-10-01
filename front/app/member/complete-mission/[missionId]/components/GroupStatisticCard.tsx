@@ -63,12 +63,12 @@ const GroupStatisticCard = (props: Props) => {
       ) : (
         <GraphCard
           type="horizontal"
-          textBefore="다른 미션보다 &nbsp;"
+          textBefore="다른 미션들의 평균보다&nbsp;"
           currentAmount={groupAverageInfo?.difference? groupAverageInfo.difference<0 ? -Math.round(groupAverageInfo.difference) :Math.round(groupAverageInfo.difference) : 0}
           textAfter={
             groupAverageInfo?.difference ?? 0 < 0
-              ? '적게 쓰셨어요.'
-              : '더 쓰셨어요.'
+              ? " 적게 쓰셨어요."
+              : ' 더 쓰셨어요.'
           }
           comment="잘하셨어요! 꾸준히 아껴보자구요!"
           groupAverageInfo={groupAverageInfo}
