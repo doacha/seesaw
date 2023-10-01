@@ -167,6 +167,18 @@ public class MissionController {
 //    }
 
 
+    @Operation(summary="미션 총 사용 금액 중 최근 5개")
+    @PostMapping("recentstats")
+    public ResponseEntity<?> RecentFiveMission (@RequestBody QuitMissionRequest quitMissionRequest){
+        try {
+            List<RecentMissionResponse> recentMissionResponses =
+            missionService.getRecentMissionStats(quitMissionRequest.getMissionId(), quitMissionRequest.getMemberEmail());
+            return new ResponseEntity<>(recentMissionResponses,HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @Operation(summary="내 미션 통계")
     @PostMapping("/mystats")
     public ResponseEntity<?>MyMissionStatResponse(@RequestBody QuitMissionRequest quitMissionRequest) {
