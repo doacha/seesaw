@@ -23,7 +23,7 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
     <div className=" bg-background">
       <div className="w-full h-[210px] overflow-hidden relative">
         <Image
-          src={`${data.missionImgUrl}`}
+          src={`${data.missionImgUrl ?? '/default_mission.svg'}`}
           alt="미션 대표 이미지"
           width={390}
           height={390}
