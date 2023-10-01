@@ -169,6 +169,15 @@ public class MissionService {
         List<RecentMissionResponse> recentMissionResponses = recordRepository.getRecentMissionStats(missionId, memberEmail, PageRequest.of(0, 5));
         return recentMissionResponses;
     }
+    public Long getMySpendingSum(String missionId, String memberEmail){
+        Optional<Mission> mission = missionRepository.findById(missionId);
+        int categoryId = mission.get().getMissionCategoryId();
+        int period = mission.get().getMissionPeriod();
+        LocalDateTime end=LocalDateTime.now();
+        LocalDateTime start = end.minusDays(period-1);
+        Long mySpendingSum = spendingRepository.findSumByPeriodAndCategory(categoryId, memberEmail, start, end);
+        return mySpendingSum;
+    }
     // 미션 통계 내에 나의 순위 + 평균 소비 금액
     public MyMissionStatResponse getMyMissionStats(String missionId, String memberEmail){
         Optional<MyMissionAverageResponse> optionalResponse= recordRepository.getMyMissionAverage(missionId, memberEmail);

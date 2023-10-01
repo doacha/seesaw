@@ -168,7 +168,7 @@ public class MissionController {
 
 
     @Operation(summary="미션 총 사용 금액 중 최근 5개")
-    @PostMapping("recentstats")
+    @PostMapping("/recentstats")
     public ResponseEntity<?> RecentFiveMission (@RequestBody QuitMissionRequest quitMissionRequest){
         try {
             List<RecentMissionResponse> recentMissionResponses =
@@ -177,6 +177,17 @@ public class MissionController {
         }
         catch(Exception e){
             return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @Operation(summary="완료 미션 기준으로 최근 기간 동안의 해당 카테고리 소비 총합")
+    @PostMapping("/periodSum")
+    public ResponseEntity<?> getMySpendingSum(@RequestBody QuitMissionRequest quitMissionRequest){
+        try{
+            Long mySpendingSum=missionService.getMySpendingSum(quitMissionRequest.getMissionId(), quitMissionRequest.getMemberEmail());
+            return new ResponseEntity<>(mySpendingSum,HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @Operation(summary="내 미션 통계")
