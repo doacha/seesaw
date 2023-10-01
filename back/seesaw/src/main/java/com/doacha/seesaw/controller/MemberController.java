@@ -119,4 +119,10 @@ public class MemberController {
         }
         return ResponseEntity.ok(false);
     }
+
+    // 테스트용 이미지 업로드 코드
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void uploadImage(@RequestPart(value = "image", required = false) MultipartFile image) throws IOException{
+        memberService.uploadImage(image, 0);
+    }
 }

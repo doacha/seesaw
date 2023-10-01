@@ -287,4 +287,17 @@ public class MemberService {
         return MyInfoResponse.of(member);
     }
 
+    // 테스트용 이미지 업로드
+    @Transactional
+    public void uploadImage(MultipartFile image, int dirNum) throws IOException {
+        // 이미지를 변경하려고 한다면 s3에 업로드하고 바꿔주기
+        if(!image.isEmpty()) {
+            if(dirNum == 0){
+                s3Uploader.upload(image, "profile");
+            }else if(dirNum == 1){
+                s3Uploader.upload(image, "mission");
+            }
+        }
+
+    }
 }
