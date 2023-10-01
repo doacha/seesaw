@@ -144,13 +144,10 @@ public class RecordService {
             group.add(memberHistory);
         }
 
-        // 상위 5개 recordTotalCost를 가진 객체만 선택
         List<List<MemberHistory>> groupedMemberHistory = new ArrayList<>();
         for (List<MemberHistory> group : recordNumberGroups.values()) {
             group.sort(Comparator.comparingDouble(MemberHistory::getRecordTotalCost));
-
-            List<MemberHistory> top5Group = group.subList(0, Math.min(group.size(), 5));
-            groupedMemberHistory.add(top5Group);
+            groupedMemberHistory.add(group);
         }
 
         // 회차 기준 내림차순 정렬

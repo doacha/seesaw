@@ -31,7 +31,7 @@ export const getTimeBefore = (writeDate: string) => {
   console.log('pre', present.getTime(), 'write', writeTime.getTime())
 
   const passedSeconds = Math.trunc(
-    (present.getTime() - writeTime.getTime()) / 1000 + HOUR * 9,
+    (present.getTime() - writeTime.getTime() - 9000 * HOUR) / 1000 + HOUR * 9,
   )
   console.log('시간', passedSeconds)
   if (passedSeconds < SECOND) {

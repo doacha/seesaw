@@ -1,7 +1,7 @@
 export const YEAR: number[] = []
 
 const nowYear = new Date().getFullYear()
-for (let i = 1980; i <= nowYear; i++) {
+for (let i = 1970; i <= nowYear; i++) {
   YEAR.push(i)
 }
 

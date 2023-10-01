@@ -3,6 +3,7 @@ import type { MissionCreate } from '@/app/types'
 import { faCamera } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
+import { ImageFile } from '@/app/types'
 const ImageInput = ({
   state,
   setState,
@@ -12,11 +13,14 @@ const ImageInput = ({
 }) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
-    const file = e.target.files?.[0]
-    console.log(file)
-    if (file) {
-      const image = window.URL.createObjectURL(file)
-      setState({ ...state, missionImgUrl: image })
+    const uploadFile = e.target.files?.[0]
+    if (uploadFile) {
+      const fileForUpload: ImageFile = {
+        id: uploadFile.name,
+        file: uploadFile,
+        url: URL.createObjectURL(uploadFile),
+      }
+      setState({ ...state, imgFile: fileForUpload })
     }
   }
   return (
