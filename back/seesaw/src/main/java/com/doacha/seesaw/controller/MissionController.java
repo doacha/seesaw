@@ -17,10 +17,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -68,12 +72,12 @@ public class MissionController {
             @ApiResponse(responseCode = "200", description = "미션 생성 성공"),
             @ApiResponse(responseCode = "500", description = "미션 생성 실패 - 서버 오류")
     })
-    @PostMapping()
-    public ResponseEntity<?> createMission(@RequestBody CreateMissionRequest createMissionRequest) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createMission(@RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "createMissionRequest") CreateMissionRequest createMissionRequest) {
         log.info("새로운 미션 정보: " + createMissionRequest);
         try {
             log.info("미션 생성");
-            Mission newMission = missionService.createMission(createMissionRequest);
+            Mission newMission = missionService.createMission(image, createMissionRequest);
             log.info("미션 생성 성공");
             log.info("미션 생성한 멤버 정보 저장 시도");
             memberMissionService.registCreateMemberMission(newMission, createMissionRequest.getMemberMissionSavingMoney());
@@ -167,6 +171,29 @@ public class MissionController {
 //    }
 
 
+    @Operation(summary="미션 총 사용 금액 중 최근 5개")
+    @PostMapping("/recentstats")
+    public ResponseEntity<?> RecentFiveMission (@RequestBody QuitMissionRequest quitMissionRequest){
+        try {
+            List<RecentMissionResponse> recentMissionResponses =
+            missionService.getRecentMissionStats(quitMissionRequest.getMissionId(), quitMissionRequest.getMemberEmail());
+            return new ResponseEntity<>(recentMissionResponses,HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @Operation(summary="완료 미션 기준으로 최근 기간 동안의 해당 카테고리 소비 총합")
+    @PostMapping("/periodsum")
+    public ResponseEntity<?> getMySpendingSum(@RequestBody QuitMissionRequest quitMissionRequest){
+        try{
+            Long mySpendingSum=missionService.getMySpendingSum(quitMissionRequest.getMissionId(), quitMissionRequest.getMemberEmail());
+            return new ResponseEntity<>(mySpendingSum,HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @Operation(summary="내 미션 통계")
     @PostMapping("/mystats")
     public ResponseEntity<?>MyMissionStatResponse(@RequestBody QuitMissionRequest quitMissionRequest) {
@@ -190,16 +217,6 @@ public class MissionController {
         }
     }
 
-//    @Operation(summary="카테고리별 그룹 평균과 비교")
-//    @PostMapping("/category-compare")
-//    public ResponseEntity<?>CompareWithMissionMember(@RequestBody QuitMissionRequest quitMissionRequest){
-//        try{
-//            return new ResponseEntity<>()
-//        }
-//        catch(Exception e){
-//            return new ResponseEntity<>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 
 //    @Operation(summary="미션 최고 금액, 최저 금액", description = "미션내에 최고 금액, 최저 금액 사용자와 금액 불러오는 API")
 //    @GetMapping("/ranking/{missionId}")
@@ -356,4 +373,11 @@ public class MissionController {
         }
     }
 
+
+    // 완료 미션 상단 기본 정보
+    @Operation(summary = "완료미션 상단 기본 정보", description = "제목 이미지 시작일 끝일 성공여부 설명 카테고리")
+    @PostMapping("/endinfo")
+    public EndMissionInfoResponse getMissionEndInfo(@RequestBody GetMyMissionDataRequest getMyMissionDataRequest){
+        return memberMissionService.getMissionEndInfo(getMyMissionDataRequest);
+    }
 }
