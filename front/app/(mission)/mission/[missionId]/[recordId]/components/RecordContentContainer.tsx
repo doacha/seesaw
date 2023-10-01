@@ -1,34 +1,19 @@
 'use client'
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleDown, faEllipsis } from '@fortawesome/free-solid-svg-icons'
+import {
+  faAngleDown,
+  faEllipsis,
+  faChevronDown,
+  faChevronUp,
+} from '@fortawesome/free-solid-svg-icons'
 import { getCycleTerm, getTimeBefore } from '../../../../util'
 import { text } from 'stream/consumers'
 import SpendingHistory from './SpendingHistory'
-const boardDetailDummy = {
-  recordId: 1,
-  recordContent: '수정을 해보자',
-  recordWriteTime: '2023-09-12T14:42:17.000+00:00',
-  recordTotalCost: 0,
-  recordNumber: 1,
-  recordStatus: 1,
-  memberEmail: 'doacha1@seesaw.com',
-  memberNickname: '도아차',
-  memberImgUrl: '/차차_군침이.jpg',
-  missionTargetPrice: 30000,
-  recordSpendingHistory: [
-    {
-      recordHistory: '스벅 먹음',
-      recordPrice: 5900,
-    },
-    {
-      recordHistory: '스벅 먹음',
-      recordPrice: 5900,
-    },
-  ],
-}
-
-interface boardDetailProps {
+import { recordListStore } from '@/stores/myRecordList'
+import { RecordList } from '@/app/types'
+import { useRef, useState } from 'react'
+interface RecordDetailProps {
   recordId: number
   recordContent: string
   recordWriteTime: string
@@ -38,28 +23,48 @@ interface boardDetailProps {
   memberEmail: string
   memberNickname: string
   memberImgUrl: string
-  missionTargetPrice: number
-  recordSpendingHistory: Array<{ recordHistory: string; recordPrice: number }>
 }
-const RecordContentContainer = (/*{ data }: { data: boardDetailProps }*/) => {
-  const data = boardDetailDummy
+const RecordContentContainer = ({
+  propsData,
+}: {
+  propsData: RecordDetailProps
+}) => {
+  const { recordList, recordStatus } = recordListStore()
+  const [isOpened, setIsOpened] = useState<Boolean>(false)
+  const checkRef = useRef<HTMLInputElement>(null)
   const [bgColor, textColor, successText] =
-    data.recordStatus === 1
+    propsData.recordStatus === 1
       ? ['bg-seesaw-blue-100', 'text-primary', '성공']
       : ['bg-seesaw-red-100', 'text-error', '실패']
-  const balance = data.missionTargetPrice - data.recordTotalCost
+  const balance = recordStatus.missionTargetPrice - propsData.recordTotalCost
+
+  const getRecordList = (recordNumber: number, list: RecordList[]) => {
+    if (list.length === 0) {
+      return
+    }
+    const targetIdx = list.findIndex(
+      (element) => element.recordNumber === recordNumber,
+    )
+    console.log('스토어확인', list)
+    return list[targetIdx].recordList
+  }
+
   return (
     <div className="rounded-lg bg-background m-5">
       {/* 헤더 */}
       <div className={`collapse ${bgColor} rounded-t-lg rounded-b-none p-5`}>
-        <input type="checkbox" />
+        <input
+          type="checkbox"
+          ref={checkRef}
+          onClick={() => setIsOpened(!isOpened)}
+        />
         {/* collapase title 간략 정보*/}
         <div className="collapse-title flex flex-col items-center p-0">
           {/* 기간 및 자세히 보기 */}
           <div className="flex justify-between w-full mb-2.5">
             <span>
               <span className="font-scDreamMedium mr-[10px]">
-                {data.recordNumber}회차
+                {propsData.recordNumber}회차
               </span>
               <span className="text-[10px] text-outline">
                 {getCycleTerm(`2023-09-12T14:42:17.000+00:00`, 1, 1)}
@@ -71,13 +76,13 @@ const RecordContentContainer = (/*{ data }: { data: boardDetailProps }*/) => {
           <div className="flex justify-between items-center w-full mb-2.5">
             <span>
               <Image
-                src={data.memberImgUrl}
+                src={propsData.memberImgUrl ?? '/default_profile.svg'}
                 width={35}
                 height={35}
                 alt="member profile image"
                 className="rounded-full inline-block mr-[15px]"
               />
-              <span>{data.memberNickname}</span>
+              <span>{propsData.memberNickname}</span>
             </span>
             <span className="text-[10px] text-outline">
               {getTimeBefore(`2023-09-18 11:37:17.000+00:00`)}
@@ -91,25 +96,34 @@ const RecordContentContainer = (/*{ data }: { data: boardDetailProps }*/) => {
             <span>
               <span className="text-[10px] text-outline mr-[10px]">잔액</span>
               <span className={`font-scDreamExBold ${textColor}`}>
-                {data.recordTotalCost.toLocaleString('ko-KR')}
+                {propsData.recordTotalCost.toLocaleString('ko-KR')}
               </span>
             </span>
           </div>
           <div className="w-full text-center">
             <hr className="border-outline my-2.5 w-full" />
-            <FontAwesomeIcon icon={faAngleDown} />
+            {!isOpened && <FontAwesomeIcon icon={faChevronDown} />}
           </div>
         </div>
         {/* collpase content - 거래 내역 상세 */}
         <SpendingHistory
           textColor={textColor}
-          targetPrice={data.missionTargetPrice}
-          history={data.recordSpendingHistory}
+          targetPrice={recordStatus.missionTargetPrice}
+          history={getRecordList(propsData.recordNumber, recordList)}
           balance={balance}
         />
+        {isOpened && (
+          <FontAwesomeIcon
+            icon={faChevronUp}
+            className="mx-auto"
+            onClick={() => checkRef.current?.click()}
+          />
+        )}
       </div>
       {/* 본문 */}
-      <div className="p-5">{data.recordContent}</div>
+      <div className="p-5">
+        {propsData.recordContent ?? '입력된 메모가 없습니다.'}
+      </div>
     </div>
   )
 }
