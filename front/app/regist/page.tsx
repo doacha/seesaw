@@ -200,7 +200,7 @@ const Regist = () => {
         <div className="h-[750px] px-5 py-5 gb-base-100 rounded-lg bg-background">
           <p className="font-envR pb-3 justify-start text-2xl">회원가입</p>
           {/* form은 나빠요. */}
-          {/* <form method="POST" > */}
+          <form method="POST" onSubmit={(e) => e.preventDefault()}>
             {/* 이메일 입력... 왜 계속 랜더링이 돌고 있는거야?ㄴ */}
             {/* 이메일 입력 */}
             {/* <Email
