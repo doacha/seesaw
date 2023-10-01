@@ -17,6 +17,7 @@ const GroupStatisticCard = (props: Props) => {
         `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/compare/yzn5LMDMCG`,
       )
       const data: GroupAverageInfo = await res.json()
+      console.log(data)
       return data
     } catch (err) {
       console.log(err)
@@ -64,13 +65,13 @@ const GroupStatisticCard = (props: Props) => {
         <GraphCard
           type="horizontal"
           textBefore="다른 미션들의 평균보다&nbsp;"
-          currentAmount={groupAverageInfo?.difference? groupAverageInfo.difference<0 ? -Math.round(groupAverageInfo.difference) :Math.round(groupAverageInfo.difference) : 0}
-          textAfter={
-            groupAverageInfo?.difference ?? 0 < 0
-              ? " 적게 쓰셨어요."
-              : ' 더 쓰셨어요.'
+          currentAmount={groupAverageInfo?.difference? groupAverageInfo.difference>0 ? Math.round(groupAverageInfo.difference) : -Math.round(groupAverageInfo.difference) : 0}
+          textAfter={groupAverageInfo?.difference?
+            groupAverageInfo?.difference < 0
+              ?' 더 쓰셨어요.' 
+              : " 적게 쓰셨어요." : ''
           }
-          comment="잘하셨어요! 꾸준히 아껴보자구요!"
+          comment={groupAverageInfo?.difference? groupAverageInfo.difference <0 ? "다음엔 조금 더 어려운 미션에 참여해볼까요?" :"의지력이 대단한걸요?!" : ''}
           groupAverageInfo={groupAverageInfo}
         />
       )}
