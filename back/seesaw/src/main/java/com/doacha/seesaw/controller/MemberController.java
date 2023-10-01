@@ -9,6 +9,7 @@ import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.service.MemberMissionService;
 import com.doacha.seesaw.model.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +34,7 @@ public class MemberController {
     
     // 회원가입
     @PostMapping("/signup")
-    public MemberResponse signUp(@RequestBody SignUpRequest signUpRequest) {
+    public MemberResponse signUp(@RequestBody SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
         return memberService.signUp(signUpRequest);
     }
 

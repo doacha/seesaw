@@ -146,11 +146,10 @@ export interface MissionCreate {
   imgFile: ImageFile
   missionTitle: string
   missionMaxCount: number
-  missionImgUrl: string
   missionPurpose: string
   missionDeposit: number
   missionIsPublic: boolean
-  missionTargetPrice: number
+  memberMissionSavingMoney: number
   missionPeriod: number
   missionTotalCycle: number
   missionStartDate: { month: number; day: number }

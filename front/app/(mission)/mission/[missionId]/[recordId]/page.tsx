@@ -15,27 +15,40 @@ interface RecordDetailProps {
 }
 
 const RecordIdPage = async ({ params }: { params: any }) => {
-  const recordDetail = (await getRecordContent(
-    params.recordId,
-  )) as RecordDetailProps
-  const comments = (await getRecordComments(params.recordId)) as Comment[]
+  // const [recordDetail, comments] = await Promise.all([
+  //   getRecordContent(params.recordId),
+  //   getRecordComments(2),
+  // ])
+  const recordDetail = await getRecordContent(params.recordId)
   return (
     <div className="bg-background-fill pt-[68px] min-h-[844px]">
       <RecordContentContainer propsData={recordDetail} />
-      <CommentsContainer propsData={comments} />
-      <CommentInput />
+      <CommentsContainer recordId={params.recordId} />
+      <CommentInput recordId={params.recordId} />
     </div>
   )
 }
-
 const getRecordContent = async (recordId: number) => {
+  console.log(
+    '비교군',
+    `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/record/${recordId}`,
+  )
   return await fetch(
     `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/record/${recordId}`,
-  ).then((res) => res.json())
+  ).then((res) => {
+    let s = res.json()
+    return s
+  })
 }
-const getRecordComments = async (recordId: number) => {
-  return await fetch(
-    `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/comment/${recordId}`,
-  ).then((res) => res.json())
-}
+
+// const getRecordComments = async (index: number) => {
+//   console.log(
+//     '너냐?',
+//     `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/comment/${index}`,
+//   )
+//   return await fetch(
+//     `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/comment/${index}`,
+//   ).then((res) => res.json())
+// }
+
 export default RecordIdPage
