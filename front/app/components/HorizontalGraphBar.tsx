@@ -17,7 +17,7 @@ const getHeight = (value: 'big' | 'small') => {
 }
 
 const HorizontalGarphBar = (props: Props) => {
-  console.log(props.length)
+  // console.log(props.length)
   return (
     <div className="flex items-center gap-2">
       <div className="text-xs w-[24px]">{props.title}</div>

@@ -18,7 +18,7 @@ const MyMissionListCard = (props: Props) => {
   }
 
   return (
-    <div className="flex flex-col bg-white flex-grow rounded-lg p-5 gap-2">
+    <div className="flex flex-col bg-background flex-grow rounded-lg p-5 gap-2">
       <div className="flex w-full justify-between items-center">
         <div className="font-scDreamMedium text-lg">내 미션 목록</div>
         <div className="relative w-[80px] h-[40px]">

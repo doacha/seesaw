@@ -6,6 +6,7 @@ interface MemberEmail {
 }
 
 export const memberEmailStore = create<MemberEmail>((set) => ({
-  memberEmail: '',
+  memberEmail: 'doacha@seesaw.com',
+  // memberEmail: '',
   setMemberEmail: (email: string) => set({ memberEmail: email }),
 }))

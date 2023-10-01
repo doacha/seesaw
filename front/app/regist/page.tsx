@@ -34,6 +34,7 @@ const Regist = () => {
     memberInput
 
   const handleInput = (e: any) => {
+    console.log('인풋 체인지 이벤트 실행')
     const { name, value } = e.target
     if (name === 'email') {
       setCheckedEmail(0)
@@ -51,6 +52,7 @@ const Regist = () => {
 
   // 이거 왜 계속 로드 중이야
   const fetchCheckEmail = () => {
+    console.log('fetch 실행')
     fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/emailcheck`, {
       method: 'POST',
       headers: {
@@ -58,8 +60,12 @@ const Regist = () => {
       },
       body: email,
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log('fetch 답변')
+        return response.json()
+      })
       .then((data) => {
+        console.log(data)
         if (data === true) {
           setCheckedEmail(2)
         } else {
@@ -289,7 +295,7 @@ const Regist = () => {
                 />
               </div>
             </div>
-          </form>
+          {/* </form> */}
 
           {/* 계정이 있다면? */}
           <div className="mt-14 flex items-center justify-center gap-8">
