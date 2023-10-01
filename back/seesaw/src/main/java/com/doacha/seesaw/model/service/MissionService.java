@@ -164,6 +164,11 @@ public class MissionService {
 //        return myMissionRankingResponse;
 //    }
 
+    // 완료 미션 최근 기록 5개
+    public List<RecentMissionResponse> getRecentMissionStats(String missionId, String memberEmail){
+        List<RecentMissionResponse> recentMissionResponses = recordRepository.getRecentMissionStats(missionId, memberEmail, PageRequest.of(0, 5));
+        return recentMissionResponses;
+    }
     // 미션 통계 내에 나의 순위 + 평균 소비 금액
     public MyMissionStatResponse getMyMissionStats(String missionId, String memberEmail){
         Optional<MyMissionAverageResponse> optionalResponse= recordRepository.getMyMissionAverage(missionId, memberEmail);
