@@ -1,13 +1,20 @@
 import Input from '@/app/components/Input'
 import Button from '@/app/components/Button'
 interface EmailProps {
+  checkedEmail: number
   onClick: () => void
   onChange: (e: any) => void
   isVaild: boolean
   value: string
 }
 
-const Email = ({ onClick, onChange, isVaild, value }: EmailProps) => {
+const Email = ({
+  checkedEmail,
+  onClick,
+  onChange,
+  isVaild,
+  value,
+}: EmailProps) => {
   return (
     <>
       <p className="font-scDreamExBold text-xs justify-start">이메일</p>
@@ -23,9 +30,19 @@ const Email = ({ onClick, onChange, isVaild, value }: EmailProps) => {
               value={value}
             />
             <div className="relative">
-              {!isVaild && value.length > 0 && (
+              {!isVaild && value.length > 0 && checkedEmail == 0 && (
                 <p className="absolute top-0 left-0 mt-[2px] text-error text-xs">
                   * 이메일 양식을 맞춰주세요!
+                </p>
+              )}
+              {isVaild && value.length > 0 && checkedEmail === 1 && (
+                <p className="absolute top-0 left-0 mt-[2px] text-error text-xs">
+                  * 이미 사용중인 이메일입니다!
+                </p>
+              )}
+              {isVaild && value.length > 0 && checkedEmail === 2 && (
+                <p className="absolute top-0 left-0 mt-[2px] text-green-500 text-xs">
+                  * 사용가능한 이메일입니다!
                 </p>
               )}
             </div>
@@ -33,9 +50,9 @@ const Email = ({ onClick, onChange, isVaild, value }: EmailProps) => {
           <div className="col-span-1 my-auto">
             <Button
               color="primary"
-              label="인증하기"
+              label="중복확인"
               size="xs"
-              onClick={onClick}
+              onClick={() => onClick()}
             />
           </div>
         </div>
