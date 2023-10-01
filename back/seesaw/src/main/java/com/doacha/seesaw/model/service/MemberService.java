@@ -6,6 +6,7 @@ import com.doacha.seesaw.model.dto.account.AccountResponse;
 import com.doacha.seesaw.model.dto.account.AccountTransactionListResponse;
 import com.doacha.seesaw.model.dto.account.CreateAccountRequest;
 import com.doacha.seesaw.model.dto.account.CreateAccountToSeesawRequest;
+import com.doacha.seesaw.model.dto.mission.MissionListResponse;
 import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.redis.RedisDao;
@@ -14,6 +15,7 @@ import com.doacha.seesaw.repository.MemberRepository;
 //import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,7 +31,9 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hibernate.sql.ast.SqlTreeCreationLogger.LOGGER;
@@ -40,7 +44,6 @@ import static org.hibernate.sql.ast.SqlTreeCreationLogger.LOGGER;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMissionRepository memberMissionRepository;
-    // TODO: 나중에 PasswordEncoder 다시 설정 해주기
     private final PasswordEncoder passwordEncoder;
     private final RedisDao redisDao;
 
@@ -127,7 +130,7 @@ public class MemberService {
     }
 
     // 백에 계좌 리스트 api 요청
-    public ResponseEntity<?> getAccountList (String memberEmail){
+    public Map<String, Object> getAccountList (String memberEmail){
 
         Member member = memberRepository
                 .findByMemberEmail(memberEmail)
@@ -146,7 +149,12 @@ public class MemberService {
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<List> result = restTemplate.exchange(requestEntity, List.class);
-        return result;
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("accountList", result.getBody());
+        map.put("mainAccount", memberRepository.findByMemberEmail(memberEmail).get().getMemberMainAccount());
+
+        return map;
     }
 
 
@@ -207,7 +215,6 @@ public class MemberService {
 
         Member update;
 
-
         if(changeInfoRequest.getMemberNewPassword()!=null || !"".equals(changeInfoRequest.getMemberNewPassword())){ // 비번 새로 바꾸려고 하면
             if(!passwordEncoder.matches( changeInfoRequest.getMemberPassword(), member.get().getMemberPassword())){ // 비번 확인
                 throw new BadRequestException("비밀번호를 확인하세요."); // 비번 다르면 익셉션
@@ -216,7 +223,7 @@ public class MemberService {
         }
         // 이미지 처리
         String storedFileName = changeInfoRequest.getMemberImgUrl(); // 일단 기존 것으로 초기화
-        // 이미
+        // 이미지를 변경하려고 한다면 s3에 업로드하고 바꿔주기
         if(!image.isEmpty()) {
             storedFileName = s3Uploader.upload(image,"profile");
         }

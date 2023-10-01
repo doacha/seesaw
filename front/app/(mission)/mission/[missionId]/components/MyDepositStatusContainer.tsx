@@ -1,63 +1,70 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faFaceDizzy,
-  faXmark,
   faArrowRight,
-  faMoneyBill1Wave,
   faCoins,
-  faShieldHalved,
 } from '@fortawesome/free-solid-svg-icons'
 import ShieldGroup from './ShieldGroup'
-const dummy = {
-  missionFailMemberCount: 5,
-  missionPrice: 36000,
-  missionMyFailureCount: 4,
-  missionFailureCount: 8,
-  missionTargetPrice: 30000,
-  memberNickname: '차차애비',
+import { useEffect } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { GroupStatusProps } from '@/app/types'
+
+interface DepositStatus {
+  missionMemberCnt: number
+  missionFailMemberCnt: number
+  changedDeposit: number
+  failCnt: number
+  myFailCnt: number
 }
 
-const OverlappedMoneyIcon = ({ size }: { size: string }) => {
-  return (
-    <span className={`relative text-primary ${size} mr-3`}>
-      <FontAwesomeIcon
-        icon={faMoneyBill1Wave}
-        className="absolute left-[-30px] top-3"
-      />
-      <FontAwesomeIcon
-        icon={faMoneyBill1Wave}
-        className="absolute right-1 top-1"
-      />
-      <FontAwesomeIcon
-        icon={faMoneyBill1Wave}
-        className="absolute right-3 bottom-5"
-      />
-    </span>
-  )
+const NICKNAME_DUMMY = '도아차' // 로그인 연결 후 제거
+
+const getDepositeStatus = async (input: {
+  memberEmail: string
+  missionId: string
+}) => {
+  return await fetch(
+    `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/deposit-condition`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        memberEmail: input.memberEmail,
+        missionId: input.missionId,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  ).then((res) => {
+    let js = res.json()
+    console.log('예치금혀황', js)
+    return js
+  })
 }
 
-const BrokenShield = ({ isSmall }: { isSmall?: boolean }) => {
-  const xMarkSize = isSmall ? 'text-[18px]' : 'text-[50px]'
-  const shieldSize = isSmall ? 'text-[25px]' : 'text-[70px]'
-  const topPosition = isSmall ? 'top-[9px]' : 'top-[27px]'
-  return (
-    <div className="relative">
-      <FontAwesomeIcon
-        icon={faShieldHalved}
-        className={`text-primary ${shieldSize}`}
-      />
-      <FontAwesomeIcon
-        icon={faXmark}
-        className={`absolute text-error left-0 ${topPosition} ${xMarkSize}`}
-      />
-    </div>
-  )
-}
+const MyDepositStatusContainer = ({
+  propsData,
+}: {
+  propsData: GroupStatusProps
+}) => {
+  let additionalPrize = 0
+  const { mutate, data, isSuccess } = useMutation(getDepositeStatus)
+  useEffect(() => {
+    mutate(
+      {
+        memberEmail: 'doacha@seesaw.com', // 더미 아이디, 추후 변경 필요
+        missionId: propsData.missionId,
+      },
+      {
+        onError: (err) => console.log('으악', err),
+      },
+    )
+  }, [])
 
-const MyDepositStatusContainer = () => {
-  const data = dummy
-  const additionalPrize = data.missionPrice - data.missionTargetPrice
-
+  if (isSuccess) {
+    additionalPrize = propsData.missionTargetPrice + data.changedDeposit
+    console.log('결과', additionalPrize)
+  }
   return (
     <div className="bg-background rounded-lg p-5 m-5">
       <div className="font-scDreamMedium">예치금 현황</div>
@@ -67,7 +74,7 @@ const MyDepositStatusContainer = () => {
         <div className="text-outline text-xs mb-2.5">
           현재{' '}
           <span className="text-black text-sm">
-            {data.missionFailMemberCount}
+            {isSuccess && data?.missionFailMemberCnt}
           </span>
           명이 미션 실패했어요
         </div>
@@ -81,12 +88,9 @@ const MyDepositStatusContainer = () => {
               x
             </span>
             <span className="text-black text-[40px] font-black">
-              {data.missionFailMemberCount}
+              {data?.missionFailMemberCnt ?? 0}
             </span>
           </span>
-          {/* <span className="text-[38px] font-scDreamExBold text-outline">
-            &rarr
-          </span> */}
           <span>
             <FontAwesomeIcon
               icon={faArrowRight}
@@ -96,7 +100,6 @@ const MyDepositStatusContainer = () => {
               icon={faCoins}
               className="text-primary text-[40px] mb-2"
             />
-            {/* <OverlappedMoneyIcon size="text-[30px]" /> */}
           </span>
         </div>
         {additionalPrize >= 0 && (
@@ -105,8 +108,10 @@ const MyDepositStatusContainer = () => {
               미션 예치금을
               <br />
               <span className="text-primary font-scDreamExBold text-base">
-                {data.missionTargetPrice.toLocaleString('ko-KR')} +{' '}
-                {additionalPrize.toLocaleString('ko-KR')}
+                {propsData.missionTargetPrice.toLocaleString('ko-KR')} +{' '}
+                {(
+                  additionalPrize - propsData.missionTargetPrice
+                ).toLocaleString('ko-KR')}
               </span>
               원 받을 수 있어요!
             </span>
@@ -118,7 +123,7 @@ const MyDepositStatusContainer = () => {
               미션 예치금을
               <br />
               <span className="text-red font-scDreamExBold text-red">
-                {data.missionTargetPrice.toLocaleString('ko-KR')} -{' '}
+                {propsData.missionTargetPrice.toLocaleString('ko-KR') ?? 0} -{' '}
                 {additionalPrize.toLocaleString('ko-KR')}
               </span>
               원 받습니다...
@@ -130,19 +135,19 @@ const MyDepositStatusContainer = () => {
       <div className="rounded-lg bg-background-fill p-3 my-5">
         <div className="text-xs">
           <span className="text-sm font-scDreamMedium mr-1">
-            {data.memberNickname}
+            {NICKNAME_DUMMY}
           </span>
           님의 실패 현황
         </div>
         <div>
           <ShieldGroup
-            failureCount={data.missionFailureCount}
-            myFailureCount={data.missionMyFailureCount}
+            failureCount={data?.failCnt ?? 0}
+            myFailureCount={data?.myFailCnt ?? 0}
           />
         </div>
         <div className="font-scDreamExBold text-right text-[20px]">
-          <span className="text-error">{data.missionMyFailureCount}</span>
-          <span> / {data.missionFailureCount}</span>
+          <span className="text-error">{data?.myFailCnt ?? 0}</span>
+          <span> / {data?.failCnt ?? 0}</span>
         </div>
       </div>
     </div>

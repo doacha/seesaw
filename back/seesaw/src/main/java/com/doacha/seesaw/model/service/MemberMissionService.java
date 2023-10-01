@@ -217,6 +217,11 @@ public class MemberMissionService {
         }
     }
 
+    // 미션 참여자 목록(닉네임, 프로필 사진) 가져오기
+    public List<MissionMemberResponse> getMissionMemberList(String missionId) {
+        return memberMissionRepository.findMissionMemberResponseByMissionId(missionId);
+    }
+
     // 카카오페이 결제 번호 반환
 //    public String getMemberMissionTnum(GetMemberMissionTnumRequest getMemberMissionTnumRequest) {
 //        return memberMissionRepository.findMemberMissionTnumByMissionIdAndMemberEmail(getMemberMissionTnumRequest.getMissionId(), getMemberMissionTnumRequest.getMemberEmail());

@@ -84,20 +84,21 @@ const ProfileEditCard = (props: Props) => {
       memberPhoneNumber: phoneNumber,
     }
 
+    console.log("제이슨형태 프로필정보", JSON.stringify(profileData))
     console.log(profileData , newImg.file);
-    // if (newImg?.file !== undefined) {
-    //   formData.append('image', newImg.file)
-    // }
+    if (newImg?.file !== undefined) {
+      formData.append('image', newImg.file)
+    }
 
     formData.append(
       'changeInfoRequest',
-      // new Blob(
-      //   [
-      //     JSON.stringify(profileData),
-      //   ],
-      //   { type: 'application/json' },
-      // ),
-      JSON.stringify(profileData)
+      new Blob(
+        [
+          JSON.stringify(profileData),
+        ],
+        { type: 'application/json' },
+      ),
+      // JSON.stringify(profileData)
     )
       
     try {
@@ -105,10 +106,11 @@ const ProfileEditCard = (props: Props) => {
         `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/modify`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
+          // headers: {
+          //   'Content-Type': 'multipart/form-data',
+          // },
           body: formData,
+
         },
       )
       const data = await res.json()
