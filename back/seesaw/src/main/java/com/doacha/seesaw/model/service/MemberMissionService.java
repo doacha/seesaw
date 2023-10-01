@@ -151,6 +151,31 @@ public class MemberMissionService {
         return myPageMissionListResponses;
     }
 
+    // 끝난 미션 정보 보내기
+    public EndMissionInfoResponse getMissionEndInfo(GetMyMissionDataRequest getMyMissionDataRequest){
+        Member member = memberRepository
+                .findByMemberEmail(getMyMissionDataRequest.getMemberEmail())
+                .orElseThrow(() -> new BadRequestException("유효하지 않은 사용자입니다."));
+
+        Mission mission = missionRepository
+                .findById(getMyMissionDataRequest
+                        .getMissionId()).orElseThrow(()-> new BadRequestException("유효하지 않은 미션입니다."));
+
+        MemberMission memberMission = memberMissionRepository.findByMissionIdAndMemberEmail(mission.getMissionId(), member.getMemberEmail());
+
+        //제목 이미지 시작일 끝일 성공여부 설명 카테고리
+        EndMissionInfoResponse endMissionInfoResponse = new EndMissionInfoResponse(
+                mission.getMissionTitle(),
+                mission.getMissionImgUrl(),
+                mission.getMissionStartDate(),
+                dateAdd(mission.getMissionStartDate(), mission.getMissionTotalCycle()*mission.getMissionPeriod()-1),
+                memberMission.getMemberMissionStatus(),
+                mission.getMissionPurpose(),
+                mission.getMissionCategoryId()
+        );
+        return endMissionInfoResponse;
+    }
+
     public String dateAdd(Date date, int plus){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -163,7 +188,7 @@ public class MemberMissionService {
     // 적금 계좌 이체 (매일 오전 3시마다 실행)
     @Scheduled(cron = "0 0 3 * * *")
     public void requestTransfer(){
-        List<SavingList> list = getSavingList();
+        List<SavingList> list = memberMissionRepository.findSavingListByMemberMissionIsSaving();
 
         for(SavingList saving: list){
             // 각각의 적금건에 대해 이체 요청 하기
@@ -191,13 +216,6 @@ public class MemberMissionService {
             });
         }
     }
-
-
-    // 적금 이체해야할 목록 불러오기
-    public List<SavingList> getSavingList(){
-        return memberMissionRepository.findSavingListByMemberMissionIsSaving();
-    }
-
 
     // 예치금 반환 (매일 오전 10시마다 실행)
     @Scheduled(cron = "0 0 10 * * *")

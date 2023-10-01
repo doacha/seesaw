@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,9 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
     @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MonthSpendingSumResponse(SUM(s.spendingCost) AS spendingCostSum, YEAR(s.spendingDate), MONTH(s.spendingDate) AS spendingMonth,s.member.memberEmail)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingMonth GROUP BY MONTH(s.spendingDate),s.member.memberEmail")
     Optional<MonthSpendingSumResponse> findPastMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(@Param("memberEmail")String memberEmail, @Param("spendingYear") int spendingYear, @Param("spendingMonth")int spendingMonth);
 
+
+    @Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.spendingCategoryId= :categoryId AND s.member.memberEmail=:memberEmail AND s.spendingDate BETWEEN :start AND :end ")
+    Long findSumByPeriodAndCategory(@Param("categoryId")int categoryId, @Param("memberEmail") String memberEmail, @Param("start")LocalDateTime start, @Param("end")LocalDateTime end);
 //    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.CompareMissionDto(" +
 //            "mm.mission.missionId AS missionId, " +
 //            "AVG(r.recordTotalCost) AS missionAverage) " +
