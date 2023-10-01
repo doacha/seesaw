@@ -21,10 +21,7 @@ const RecordIdPage = async ({ params }: { params: any }) => {
   const comments = (await getRecordComments(params.recordId)) as Comment[]
   return (
     <div className="bg-background-fill pt-[68px] min-h-[844px]">
-      <RecordContentContainer
-        propsData={recordDetail}
-        missionId={params.missionId}
-      />
+      <RecordContentContainer propsData={recordDetail} />
       <CommentsContainer propsData={comments} />
       <CommentInput />
     </div>
