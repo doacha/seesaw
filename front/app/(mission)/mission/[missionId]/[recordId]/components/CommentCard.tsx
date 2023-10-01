@@ -1,20 +1,13 @@
 import Image from 'next/image'
 import { getTimeBefore } from '../../../../util'
-
-interface Comment {
-  commentId: number
-  commentContent: string
-  memberNickname: string
-  memberEmail: string
-  memberImgUrl: string
-  commentWriteTime: string
-}
+import { Comment } from '@/app/types'
 
 const CommentCard = ({ data }: { data: Comment }) => {
   return (
     <div className="flex flex-row items-center gap-2.5 mb-5">
       <Image
-        src={data.memberImgUrl}
+        // src={data.memberImgUrl}
+        src={'/차차_군침이.jpg'}
         alt="member profile image"
         width={27}
         height={26}

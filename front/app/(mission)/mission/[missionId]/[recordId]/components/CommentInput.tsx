@@ -13,7 +13,7 @@ const CommentInput = (/*{ data }: { data: member }*/) => {
     memberImgUrl: '/차차_군침이.jpg',
   }
   return (
-    <div className="flex flex-row items-center gap-2.5 mb-5 bg-background rounded-lg h-12 p-5 m-5">
+    <div className="absolute p-5 w-[calc(100vw-40px)] left-5 bottom-[70px] flex flex-row items-center gap-2.5 mb-5 bg-background rounded-lg h-12">
       <Image
         src={data.memberImgUrl}
         alt="member profile image"
