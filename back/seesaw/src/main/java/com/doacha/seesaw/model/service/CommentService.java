@@ -47,6 +47,7 @@ public class CommentService {
         CommentResponse response = CommentResponse.builder()
                 .commentId(newComment.getCommentId())
                 .memberNickname(member.getMemberNickname())
+                .memberEmail(member.getMemberEmail())
                 .commentContent(newComment.getCommentContent())
                 .commentWriteTime(newComment.getCommentWriteTime())
                 .build();
@@ -73,6 +74,7 @@ public class CommentService {
         CommentResponse response = CommentResponse.builder()
                 .commentId(updatedComment.getCommentId())
                 .memberNickname(comment.getMember().getMemberNickname())
+                .memberEmail(comment.getMember().getMemberEmail())
                 .memberImgUrl(comment.getMember().getMemberImgUrl())
                 .commentContent(updatedComment.getCommentContent())
                 .commentWriteTime(updatedComment.getCommentWriteTime())
