@@ -31,13 +31,14 @@ const getMissionWaitListFetch = async (missionId: string) => {
 // API 연결 이후 params를 통해 데이터를 가져와야 한다.
 const MissionDetailpage = async ({ params }: { params: any }) => {
   const data = (await getMissionDetailFetch(params.missionId)) as MissionDetail
+  console.log('미션데티엘', data)
   let missionWaitList
   if (data.missionStatus === 0) {
     missionWaitList = (await getMissionWaitListFetch(
       params.missionId,
     )) as MemberCard[]
   }
-  data.missionImgUrl = '/차차_군침이.jpg'
+  // data.missionImgUrl = '/차차_군침이.jpg'
   const contentsProps = {
     missionId: params.missionId,
     missionPeriod: data.missionPeriod,
