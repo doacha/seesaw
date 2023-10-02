@@ -38,6 +38,18 @@ public class Spending {
             "11: 의료/건강, 12: 금융, 13: 문화/여가, 14: 여행/숙박, 15: 교육/학습, 16: 자녀/육아, 17: 반려동물, 18: 경조/선물")
     private int spendingCategoryId;
 
+//    @Column(name="spending_status")
+//    @Comment("0: 바뀌지 않음, 1: 금액 수정, 2: 카테고리 수정, 3: 삭제")
+//    private int spendingStatus;
+//
+//    @Column(name="spending_is_deleted")
+//    @Comment("0: 삭제 안됨, 1: 삭제")
+//    private boolean spendingIsDeleted;
+//
+//    @Column(name="spending_derivation")
+//    @Comment("수정이나 삭제된 경우 어떤 spending_id의 수정/삭제인지")
+//    private int spendingDerivation;
+
     @ManyToOne
     @JoinColumn(name="member_email",nullable = false)
     private Member member;
