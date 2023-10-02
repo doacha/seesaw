@@ -154,6 +154,9 @@ public class SpendingController {
             spendingService.refreshSpending(memberEmail);
             log.info("가계부에 카드내역 불러오기 성공");
             return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        } catch (NoContentException e) {
+            log.info(e.getMessage());
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             log.info("가계부에 카드내역 불러오기 실패 - 서버 오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);

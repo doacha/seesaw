@@ -78,7 +78,7 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Me
     @Query("SELECT DISTINCT new com.doacha.seesaw.model.dto.spending.GetCardTransactionDto( " +
             "mm.member.memberEmail, " +
             "mm.member.memberBankId, " +
-            "(SELECT MAX(s.spendingDate) FROM Spending s WHERE s.member.memberEmail = mm.member.memberEmail)) " +
+            "(SELECT MAX(s.spendingDate) FROM Spending s WHERE s.member.memberEmail = mm.member.memberEmail AND s.spendingType=0)) " +
             "FROM MemberMission mm " +
             "WHERE mm.mission.missionStatus = 1")
     List<GetCardTransactionDto> findGetCardTransactionDto();
