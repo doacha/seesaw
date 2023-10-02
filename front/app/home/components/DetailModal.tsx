@@ -72,6 +72,9 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
     if (name === 'spendingCost') {
       newValue = parseInt(value, 10)
     }
+    if (name === 'spendingDate') {
+      console.log(name, value)
+    }
     setSpend({ ...spend, [name]: newValue })
   }
 
