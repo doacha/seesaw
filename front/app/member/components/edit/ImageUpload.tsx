@@ -1,14 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { profileEditInfoStore } from '@/stores/profileEditInfo'
 import { ImageFile } from '../../../types'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import Image from 'next/image'
 
-interface Props {
-  imageList: ImageFile[]
-}
+// interface Props {
+//   imageList: ImageFile[]
+// }
 
 const ImageUpload = () => {
   // 업로드할 파일들을 담을 State!
 
-  const [imageList, setImageList] = useState<ImageFile[]>([{ id: '', url: '' }])
+  const { newImg, setProfileEditInfo } = profileEditInfoStore()
   const imageInput = useRef<HTMLInputElement>(null)
 
   const onUploadButtonClicked = () => {
@@ -16,9 +20,7 @@ const ImageUpload = () => {
       imageInput.current.click()
     }
   }
-
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e)
     const temp = []
     const imageToAdd = e.target.files
     if (imageToAdd) {
@@ -31,24 +33,25 @@ const ImageUpload = () => {
 
         temp.push(tmpImageFile)
       }
-      console.log(temp)
-      setImageList(temp)
+      setProfileEditInfo('newImg', temp[0])
     }
   }
 
   const uploadButton = (
     <div
-      className="min-w-[200px] min-h-[200px] bg-gray-100 rounded-lg flex flex-col justify-center mr-5"
+      className="min-w-[200px] min-h-[200px] bg-background-fill rounded-full flex flex-col justify-center"
       onClick={onUploadButtonClicked}
     >
-      <i className="fa-solid fa-plus text-4xl"></i>
-      <div className="mt-2">업로드</div>
+      <FontAwesomeIcon icon={faPenToSquare} size="xl" />
+      <div className="mt-2 text-center font-scDreamMedium">
+        프로필 사진 등록
+      </div>
     </div>
   )
 
-  //   const onRemoveButtonClicked = (deleteUrl: string) => {
-  //     dispatch(deleteImageList(deleteUrl))
-  //   }
+  const onRemoveButtonClicked = () => {
+    setProfileEditInfo('newImg', { id: 'profileImg', url: '' })
+  }
 
   return (
     <>
@@ -61,20 +64,17 @@ const ImageUpload = () => {
           style={{ display: 'none' }}
           onChange={(e) => handleImage(e)}
         />
-        {imageList.map((image) => (
+        {newImg.url !== '' ? (
           <div
-            key={image.url}
+            key={newImg.url}
             className="relative min-w-[200px] min-h-[200px] bg-gray-100 rounded-full flex flex-col justify-center"
           >
-            <img
-              src={image.url}
-              alt={image.id}
-              className="w-[200px] h-[200px] rounded-full z-0"
-            ></img>
-
+            <div className='avatar w-[200px] h-[200px] rounded-full'>
+            <Image src={newImg.url} alt={newImg.id} width={200} height={200} className='rounded-full'></Image>
+            </div>
             <div
               className="absolute z-10 w-full h-full flex items-center justify-center rounded-full bg-black opacity-0 hover:opacity-30 transition-opacity"
-              onClick={onUploadButtonClicked}
+              onClick={onRemoveButtonClicked}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -86,10 +86,10 @@ const ImageUpload = () => {
               </svg>
             </div>
           </div>
-        ))}
-        {/* {uploadButton} */}
+        ) : null}
+
+        {newImg.url !== '' ? null : uploadButton}
       </div>
-      {/* <button onClick={fileUploadHandler}>파일 업로드 하기</button> */}
     </>
   )
 }

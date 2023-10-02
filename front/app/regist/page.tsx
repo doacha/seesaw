@@ -2,7 +2,9 @@
 
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+import Input from '../components/Input'
 
 import Button from '../components/Button'
 
@@ -15,6 +17,7 @@ import Gender from './components/Gender'
 import Name from './components/Name'
 
 const Regist = () => {
+  console.log('너 무한으로 돌고있니?')
   const [memberInput, setmemberInput] = useState({
     email: '',
     pw: '',
@@ -31,24 +34,71 @@ const Regist = () => {
     memberInput
 
   const handleInput = (e: any) => {
+    console.log('인풋 체인지 이벤트 실행')
     const { name, value } = e.target
+    if (name === 'email') {
+      setCheckedEmail(0)
+    }
+    if (name === 'nickname') {
+      setCheckedNickname(0)
+    }
     setmemberInput({ ...memberInput, [name]: value })
   }
 
   const router = useRouter()
 
-  // Todo - 이메일 인증하고 해당 인증 내용을 확인하는 boolean 변수 만들어야 함
-  const checkEmail = () => {
-    console.log('중복확인 클릭')
+  // 0 => 이메일 input 눌렀는데 중복확인 안한상태 | 1 => 이메일 input 눌렀는데 중복확인 실패한 상태 | 2 => 이메일 input 누르고 중복확인 성공한 상태
+  const [checkedEmail, setCheckedEmail] = useState<number>(0)
+
+  // 이거 왜 계속 로드 중이야
+  const fetchCheckEmail = () => {
+    console.log('fetch 실행')
+    fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/emailcheck`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: email,
+    })
+      .then((response) => {
+        console.log('fetch 답변')
+        return response.json()
+      })
+      .then((data) => {
+        console.log(data)
+        if (data === true) {
+          setCheckedEmail(2)
+        } else {
+          setCheckedEmail(1)
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+      })
   }
 
-  // Todo - 닉네임 중복 확인하고 해당 닉네밍 중복 확인 통과 했는지 확인하는 boolean 변수 만들어야 함
-  const checkNick = () => {
-    console.log('닉네임 중복확인')
+  // 0 => 닉네임 input 눌렀는데 중복확인 안한상태 | 1 => 닉네임 input 눌렀는데 중복확인 실패한 상태 | 2 => 닉네임 input 누르고 중복확인 성공한 상태
+  const [checkedNickname, setCheckedNickname] = useState<number>(0)
+
+  const fetchCheckNickname = () => {
+    fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/nicknamecheck`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
+      },
+      body: nickname, // 데이터를  문자열로 변환하여 전송
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          setCheckedNickname(2)
+        } else if (res.status === 400) {
+          setCheckedNickname(1)
+        }
+      })
+      .then((data) => {})
   }
 
   const checkGender = (e: any) => {
-    // back에 어떻게 요청을 보내느냐에 따라 값을 다르게 넣어야해
     setmemberInput({ ...memberInput, ['gender']: e.target.innerText })
   }
 
@@ -57,23 +107,29 @@ const Regist = () => {
   }
 
   const signUp = () => {
-    // Todo. 중복 인증이 되었는지도 함께 확인해야함
-    const isAllValid = isEmailValid && isPwValid && isPwSame && isBirth
     const BirthStr = year + month + day
+    const isAllValid =
+      isEmailValid &&
+      isPwValid &&
+      isPwSame &&
+      isBirth &&
+      isGender &&
+      checkedEmail === 2 &&
+      checkedNickname === 2
     const data: {
       memberEmail: string
       memberPassword: string
       memberName: string
       memberNickname: string
       memberBirth: string
-      memberGender: boolean | undefined // boolean 또는 undefined
+      memberGender: boolean
     } = {
       memberEmail: email,
       memberPassword: pw,
       memberName: name,
       memberNickname: nickname,
       memberBirth: BirthStr,
-      memberGender: gender !== '' && gender === '여자' ? true : false,
+      memberGender: gender === '여자' ? true : false,
     }
     !isAllValid
       ? Swal.fire({
@@ -84,6 +140,8 @@ const Regist = () => {
         })
       : fetchRegist(data)
   }
+
+  // 여기는 로그인으로 이동하는 곳
   const clickLogin = () => {
     router.push('/login')
   }
@@ -106,6 +164,8 @@ const Regist = () => {
   const isPwSame = pw === pwCheck
   // 생년월일 입력여부
   const isBirth = Boolean(year && month && day)
+  // 성별 입력여부
+  const isGender = Boolean(gender)
 
   const fetchRegist = (data: object) => {
     fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/signup`, {
@@ -126,22 +186,71 @@ const Regist = () => {
         }
         return res.json()
       })
-      .catch((err) => Swal.showValidationMessage(`Request failed: ${err}`))
+      .then((data) => console.log(data))
   }
+
+  useEffect(() => {
+    // checkedEmail 상태가 변경될 때만 실행할 코드
+    // 예: API 요청 및 상태 업데이트
+  }, [checkedEmail])
 
   return (
     <div className="flex h-screen bg-background-fill">
       <div className="px-5 py-5 w-full">
-        <div className="h-[730px] px-5 py-5 gb-base-100 rounded-lg bg-background">
+        <div className="h-[750px] px-5 py-5 gb-base-100 rounded-lg bg-background">
           <p className="font-envR pb-3 justify-start text-2xl">회원가입</p>
-          <form>
+          {/* form은 나빠요. */}
+          <form method="POST" onSubmit={(e) => e.preventDefault()}>
+            {/* 이메일 입력... 왜 계속 랜더링이 돌고 있는거야?ㄴ */}
             {/* 이메일 입력 */}
-            <Email
-              onClick={checkEmail}
+            {/* <Email
+              checkedEmail={checkedEmail}
+              onClick={fetchCheckEmail}
               onChange={handleInput}
               isVaild={isEmailValid}
               value={email}
-            />
+            /> */}
+
+            <p className="font-scDreamExBold text-xs justify-start">이메일</p>
+            <div className="mt-2 mb-7 w-full">
+              <div className="grid gap-3 grid-cols-3">
+                <div className="col-span-2">
+                  <Input
+                    name="email"
+                    onChange={handleInput}
+                    type="id"
+                    placeholder="이메일 입력"
+                    interval="0"
+                    value={email}
+                  />
+                  <div className="relative">
+                    {!isEmailValid && email.length > 0 && checkedEmail == 0 && (
+                      <p className="absolute top-0 left-0 mt-[2px] text-error text-xs">
+                        * 이메일 양식을 맞춰주세요!
+                      </p>
+                    )}
+                    {isEmailValid && email.length > 0 && checkedEmail === 1 && (
+                      <p className="absolute top-0 left-0 mt-[2px] text-error text-xs">
+                        * 이미 사용중인 이메일입니다!
+                      </p>
+                    )}
+                    {isEmailValid && email.length > 0 && checkedEmail === 2 && (
+                      <p className="absolute top-0 left-0 mt-[2px] text-green-500 text-xs">
+                        * 사용가능한 이메일입니다!
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="col-span-1 my-auto">
+                  <Button
+                    color="primary"
+                    label="중복확인"
+                    size="xs"
+                    onClick={fetchCheckEmail}
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* 비밀번호 입력 */}
             <Password
@@ -157,13 +266,14 @@ const Regist = () => {
 
             {/* 닉네임 입력 */}
             <Nickname
+              checkedNickname={checkedNickname}
               value={nickname}
               onChange={handleInput}
-              onClick={checkNick}
+              onClick={fetchCheckNickname}
             />
 
             {/* 생년월일 입력 */}
-            <Birth onChange={handleInput} />
+            <Birth onChange={handleInput} birth={[year, month, day]} />
 
             {/* 성별 입력 */}
             <Gender onClick={checkGender} gender={gender} />

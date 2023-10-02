@@ -17,7 +17,7 @@ const getHeight = (value: 'big' | 'small') => {
 }
 
 const HorizontalGarphBar = (props: Props) => {
-  console.log(props.length)
+  // console.log(props.length)
   return (
     <div className="flex items-center gap-2">
       <div className="text-xs w-[24px]">{props.title}</div>
@@ -29,7 +29,7 @@ const HorizontalGarphBar = (props: Props) => {
         className={`${props.txtColor} text-[10px] leading-5 font-scDreamLight`}
       >
         {props.unitType === 'won'
-          ? props.amount.toLocaleString()
+          ? `${props.amount.toLocaleString()} 원`
           : props.unitType === 'percent'
           ? `${props.amount}%`
           : props.amount}

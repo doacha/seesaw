@@ -9,18 +9,21 @@ import styles from '../styles/Home.module.css'
 import Input from './Input'
 import TextAreaInput from './TextAreaInput'
 import CategoryInput from './CategoryInput'
+
+import { memberEmailStore } from '@/stores/memberEmail'
+
 import DateInput from './DateInput'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
-// categoryToggle 수정 및 처리 필요
 type Props = {
   open: boolean
   handleToggle: () => void
 }
 
 const AddPostModal = ({ open, handleToggle }: Props) => {
+  const { memberEmail, setMemberEmail } = memberEmailStore()
   let modalClass = 'modal sm:modal-middle'
 
   // open 속성이 true인 경우 'modal-open' 클래스를 추가합니다.
@@ -28,16 +31,16 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     modalClass += ' modal-open'
   }
 
+  // Todo.. 날짜 해결필요
   const today = new Date()
-
+  console.log(today.toUTCString())
   const [postInput, setPostInput] = useState({
     spendingTitle: '',
     spendingCost: 0,
     spendingDate: today,
     spendingMemo: '',
     spendingCategoryId: 20,
-    // email은 수정이 필요해요
-    memberEmail: 'tldnjs324@naver.com',
+    memberEmail: memberEmail,
   })
 
   const {
@@ -46,8 +49,6 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     spendingDate,
     spendingMemo,
     spendingCategoryId,
-    // 여기서 email은 zustend 저장된 이메일이겠죠?
-    memberEmail,
   } = postInput
 
   // 왜 여기선 data를 Date 자료형으로 보내야 하는거지? 어휴 이씨 짜증나네
@@ -64,8 +65,7 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     spendingDate: spendingDate,
     spendingMemo: spendingMemo,
     spendingCategoryId: spendingCategoryId,
-    // email 수정 필요
-    memberEmail: 'tldnjs324@naver.com',
+    memberEmail: memberEmail,
   }
 
   const handleInput = (e: any) => {
@@ -107,7 +107,7 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
           spendingDate: today,
           spendingMemo: '',
           spendingCategoryId: 20,
-          memberEmail: 'tldnjs324@naver.com',
+          memberEmail: memberEmail,
         })
       })
   }
@@ -129,19 +129,6 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     } else {
       fetchAddPost(data)
     }
-  }
-
-  // category 선택
-  const handleCapsuleClick = (
-    idx: number,
-    isSelected: boolean,
-    type: string,
-  ) => {
-    if (!isSelected) {
-      setPostInput({ ...postInput, [type]: idx })
-      return
-    }
-    setPostInput({ ...postInput, [type]: -1 })
   }
 
   // date 관련

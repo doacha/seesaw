@@ -11,6 +11,8 @@ import ToggleCapsule from '@/app/components/ToggleCapsule'
 import styles from '../styles/Home.module.css'
 import { categoryList } from '@/app/lib/constants'
 
+import { memberEmailStore } from '@/stores/memberEmail'
+
 import SpendingCostInput from './SpendingCostInput'
 import CategoryInput from './CategoryInput'
 import Input from './Input'
@@ -26,6 +28,7 @@ type Props = {
 
 const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
   const { checkUpdateDelete, setCheckUpdateDelete } = UpdateDeleteCheckStore()
+  const { memberEmail, setMemberEmail } = memberEmailStore()
 
   console.log('여기는 디테일')
   const [spend, setSpend] = useState<Spending>({
@@ -33,8 +36,7 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
     spendingCost: 0,
     spendingDate: '',
     spendingCategoryId: -1,
-    // memberEmail은 zustand에서 가져오기
-    memberEmail: 'tldnjs324@naver.com',
+    memberEmail: memberEmail,
   })
   const [clickDa, setClickDa] = useState(false)
   const clickDate = () => {
@@ -52,7 +54,6 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
         return res.json()
       })
       .then((data) => {
-        console.log(data)
         setSpend(data)
       })
   }
@@ -71,6 +72,9 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
     // 소수점 입력 불가
     if (name === 'spendingCost') {
       newValue = parseInt(value, 10)
+    }
+    if (name === 'spendingDate') {
+      console.log(name, value)
     }
     setSpend({ ...spend, [name]: newValue })
   }
@@ -123,8 +127,7 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
     spendingDate: spend.spendingDate as string,
     spendingMemo: spend.spendingMemo as string,
     spendingCategoryId: spend.spendingCategoryId as number,
-    // memberEmail은 zustand에 존재하는 친구
-    memberEmail: 'tldnjs324@naver.com',
+    memberEmail: memberEmail,
   }
   const fetchUpdate = (data: object) => {
     fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/update`, {
@@ -154,8 +157,7 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
           spendingDate: '',
           spendingMemo: '',
           spendingCategoryId: -1,
-          // 여기 수정이 필요합니다.
-          memberEmail: 'tldnjs324@naver.com',
+          memberEmail: memberEmail,
         })
       })
   }
@@ -231,40 +233,6 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
                   handleCategoryClick={handleCategoryClick}
                 />
               </div>
-              {/* <div className={`overflow-auto ${styles.delScroll}`}>
-                <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
-                  <div className=" w-20 my-auto">
-                    <div className="w-20">
-                      <p className="font-scDreamExBold text-base">카테고리</p>
-                    </div>
-                  </div>
-                  <div className="flex my-auto w-full justify-between">
-                    <div className="carousel">
-                      {categoryList.map(
-                        (element, idx) =>
-                          idx > 0 && (
-                            <ToggleCapsule
-                              className="carousel-item mr-[15px] h-[14px]"
-                              bgColor="background-fill"
-                              textColor={`${idx}`}
-                              key={idx}
-                              isSelected={idx === spend.spendingCategoryId}
-                              onClick={() =>
-                                handleCapsuleClick(
-                                  idx,
-                                  idx === spend.spendingCategoryId,
-                                  'spendingCategoryId',
-                                )
-                              }
-                            >
-                              {element}
-                            </ToggleCapsule>
-                          ),
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div> */}
 
               <Input
                 title="거래처"

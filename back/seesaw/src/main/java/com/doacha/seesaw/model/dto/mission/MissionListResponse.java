@@ -39,4 +39,7 @@ public class MissionListResponse {
 
     @Schema(description = "미션 시작일", example = "2023-09-11", required = true)
     private Date missionStartDate;
+
+    @Schema(description = "미션 카테고리", example = "2", required = true)
+    private int missionCategoryId;
 }
