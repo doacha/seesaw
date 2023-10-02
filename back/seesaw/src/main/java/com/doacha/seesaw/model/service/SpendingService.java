@@ -239,12 +239,7 @@ public class SpendingService {
         Optional<Spending> spending = spendingRepository.findById(spendingId);
         String memo = "";
         if (spending.isPresent()) {
-            if (spending.get().getSpendingMemo() == null) {
-                memo = "";
-            } else {
-                memo = spending.get().getSpendingMemo();
-            }
-            SpendingDetailResponse spendingDetailResponse = SpendingDetailResponse.builder().spendingId(spending.get().getSpendingId()).spendingTitle(spending.get().getSpendingTitle()).spendingCost(spending.get().getSpendingCost()).spendingDate(spending.get().getSpendingDate()).spendingMemo(memo).spendingCategoryId(spending.get().getSpendingCategoryId()).build();
+            SpendingDetailResponse spendingDetailResponse = SpendingDetailResponse.builder().spendingId(spending.get().getSpendingId()).spendingTitle(spending.get().getSpendingTitle()).spendingCost(spending.get().getSpendingCost()).spendingDate(spending.get().getSpendingDate()).spendingMemo(spending.get().getSpendingMemo()).spendingCategoryId(spending.get().getSpendingCategoryId()).build();
             return spendingDetailResponse;
         } else {
             throw new NoContentException();
