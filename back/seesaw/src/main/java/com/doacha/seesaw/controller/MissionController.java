@@ -377,16 +377,16 @@ public class MissionController {
             @ApiResponse(responseCode = "500", description = "나의 미션 불러오기 실패 - 서버 오류")
     })
     @PostMapping("/mymission")
-    public ResponseEntity<?> getMyMissionList(@PageableDefault(size = 6, sort = "missionCreationTime", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(name = "memberEmail") String memberEmail) {
-        log.info(memberEmail + "의 미션 목록 불러오기");
-        log.info("페이지번호 : {}", String.valueOf(pageable.getPageNumber()));
+    public ResponseEntity<?> getMyMissionList(@RequestBody MyMissionRequest myMissionRequest) {
+        log.info(myMissionRequest.getMemberEmail()+"의 미션 목록 불러오기");
+//        log.info("페이지번호 : {}", String.valueOf(pageable.getPageNumber()));
         try {
-            List<MissionListResponse> list = missionService.getMyMissionList(pageable, memberEmail);
-            log.info(memberEmail + "의 미션 불러오기 성공");
+            List<MissionListResponse> list = missionService.getMyMissionList(myMissionRequest);
+            log.info(myMissionRequest.getMemberEmail()+ "의 미션 목록 불러오기 성공");
 
             return new ResponseEntity<List<MissionListResponse>>(list, HttpStatus.OK);
         } catch (Exception e) {
-            log.info(memberEmail + "의 미션 불러오기 실패 - 서버 오류");
+            log.info(myMissionRequest.getMemberEmail()+ "의 미션 목록 불러오기 실패 - 서버 오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
