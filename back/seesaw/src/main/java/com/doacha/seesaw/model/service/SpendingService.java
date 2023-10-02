@@ -360,7 +360,9 @@ public class SpendingService {
                 spendingYear--;
             }
         }
-
+        entireMonthSpendingSumResponses.sort(Comparator
+                .comparing(MonthSpendingSumResponse::getSpendingYear)
+                .thenComparing(MonthSpendingSumResponse::getSpendingMonth));
         return entireMonthSpendingSumResponses;
     }
     // 지출 월별 합계
