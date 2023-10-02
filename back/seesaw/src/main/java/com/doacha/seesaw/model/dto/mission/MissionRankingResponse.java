@@ -14,7 +14,7 @@ public class MissionRankingResponse {
     private Long missionTopSpending;
     private String missionFrugalSpender;
     private Long missionFrugalSpending;
-    private String dailyTopSpender;
-    private Long dailyTopSpending;
-    private Long dailyTopSpendingNum;
+    private String recordTopSpender;
+    private Long recordTopSpending;
+    private Long recordTopSpendingNum;
 }
