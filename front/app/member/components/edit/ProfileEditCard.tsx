@@ -20,7 +20,6 @@ const ProfileEditCard = (props: Props) => {
     newImg,
     memberName,
     memberGender,
-    memberImgUrl,
     prevNickname,
     newNickname,
     prevPassword,
@@ -57,7 +56,6 @@ const ProfileEditCard = (props: Props) => {
         },
       )
       const data = await res.json()
-      console.log(data)
       if(typeof data === 'object'){
         setNicknameChecked(2)
       }else{
@@ -84,8 +82,6 @@ const ProfileEditCard = (props: Props) => {
       memberPhoneNumber: phoneNumber,
     }
 
-    console.log("제이슨형태 프로필정보", JSON.stringify(profileData))
-    console.log(profileData , newImg.file);
     if (newImg?.file !== undefined) {
       formData.append('image', newImg.file)
     }
@@ -106,21 +102,15 @@ const ProfileEditCard = (props: Props) => {
         `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/modify`,
         {
           method: 'POST',
-          // headers: {
-          //   'Content-Type': 'multipart/form-data',
-          // },
           body: formData,
-
         },
       )
       const data = await res.json()
-      console.log(data)
     } catch (err) {
       console.log(err)
     }
   }
 
-  console.log('에딧창에서 ',newImg)
   return (
     <div
       className="bg-white rounded-lg p-5 flex flex-col gap-5"

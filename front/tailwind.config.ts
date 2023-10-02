@@ -14,6 +14,15 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        slideUp: {
+          '0%': { transform: 'translateY(70px)' },
+          '100%': { transform: 'traslateY(0)' },
+        }
+      },
+      animation: {
+        slideUp: 'slideUp 1s ease-in-out 1',
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':

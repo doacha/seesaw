@@ -10,9 +10,6 @@ interface Props {
   missionId: string
 }
 
-const amountList: number[] = [20000, 30000, 25000, 100000, 60000, 200000]
-const averageAmountList: number[] = [210000, 182000]
-
 const MystatisticCard = (props: Props) => {
   const { memberEmail } = memberEmailStore()
 
@@ -33,7 +30,6 @@ const MystatisticCard = (props: Props) => {
         },
       )
       const data = await res.json()
-      console.log(data)
       return data
     } catch (err) {
       console.log(err)
@@ -56,8 +52,7 @@ const MystatisticCard = (props: Props) => {
           }),
         },
       )
-      const data : Record[] = await res.json()
-      console.log("경호요청",data)
+      const data: Record[] = await res.json()
       return data
     } catch (err) {
       console.log(err)
@@ -80,26 +75,35 @@ const MystatisticCard = (props: Props) => {
           }),
         },
       )
-      const data : number = await res.json()
-      console.log("경호요청2",data)
+      const data: number = await res.json()
       return data
     } catch (err) {
       console.log(err)
     }
   }
 
+  //userQuery로 실행하는 통계 데이터
   const {
     isLoading,
     data: completeMissionStat,
     error,
   } = useQuery(['getCompleteMissionStat'], getCompleteMissionStat)
 
-  const {isLoading: graphInfoLoading, data : latestRecord} = useQuery(['getLatestRecord'],getLatestRecord)
-  const {isLoading : graphCurrentInfoLoading, data : currentAmount } = useQuery(['getCurrentAmount'],getCurrentAmount)
+  const { isLoading: graphInfoLoading, data: latestRecord } = useQuery(
+    ['getLatestRecord'],
+    getLatestRecord,
+  )
+  const { isLoading: graphCurrentInfoLoading, data: currentAmount } = useQuery(
+    ['getCurrentAmount'],
+    getCurrentAmount,
+  )
+
   return (
     <div className="w-full flex flex-col bg-white rounded-lg p-5 gap-5">
-      <div className="self-start text-lg font-scDreamMedium">내 통계</div>
-      <hr />
+      <div>
+        <div className="self-start text-lg font-scDreamMedium mb-1">내 통계</div>
+        <hr />
+      </div>
       {isLoading ? (
         <Loading />
       ) : (
@@ -122,14 +126,18 @@ const MystatisticCard = (props: Props) => {
           iconColor="bg-secondary-container"
         />
       )}
-      {graphInfoLoading || graphCurrentInfoLoading ? <Loading/> :<GraphCard
-        type="vertical"
-        textBefore="현재&nbsp;"
-        recordList={latestRecord??[]}
-        currentAmount = {currentAmount?? 0} 
-        textAfter="을 썼어요."
-      /> }
-      
+      {graphInfoLoading || graphCurrentInfoLoading ? (
+        <Loading />
+      ) : (
+        <GraphCard
+          type="vertical"
+          textBefore="현재&nbsp;"
+          recordList={latestRecord ?? []}
+          currentAmount={currentAmount ?? 0}
+          textAfter="을 썼어요."
+        />
+      )}
+
       {/* <GraphCard
         type="horizontal"
         textBefore="미션으로&nbsp;"
