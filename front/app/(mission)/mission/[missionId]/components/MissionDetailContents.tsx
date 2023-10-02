@@ -18,6 +18,7 @@ const MissionDetailContents = ({ data }: { data: GroupStatusProps }) => {
       missionStartDate: data.missionStartDate,
       missionTargetPrice: data.missionTargetPrice,
       pageNumber: 0,
+      missionCurrentCycle: data.missionCurrentCycle,
     })
   }
   return (

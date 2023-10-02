@@ -190,6 +190,7 @@ export interface RecordStatusProps {
   missionPeriod: number
   missionTargetPrice: number
   missionStartDate: string
+  missionCurrentCycle: number
   pageNumber: number
 }
 
