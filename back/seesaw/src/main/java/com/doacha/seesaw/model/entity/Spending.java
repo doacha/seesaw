@@ -50,6 +50,10 @@ public class Spending {
 //    @Comment("수정이나 삭제된 경우 어떤 spending_id의 수정/삭제인지")
 //    private int spendingDerivation;
 
+    @Column(name="spending_type")
+    @Comment("0: 카드 내역, 1: 직접 추가")
+    private int spendingType;
+
     @ManyToOne
     @JoinColumn(name="member_email",nullable = false)
     private Member member;
