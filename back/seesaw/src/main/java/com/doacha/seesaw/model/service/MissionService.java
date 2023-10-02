@@ -3,6 +3,7 @@ package com.doacha.seesaw.model.service;
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.model.entity.Mission;
+import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MissionRepository;
 import com.doacha.seesaw.repository.RecordRepository;
 import com.doacha.seesaw.repository.SpendingRepository;
@@ -30,6 +31,9 @@ public class MissionService {
 
     @Autowired
     MissionRepository missionRepository;
+
+    @Autowired
+    MemberMissionRepository memberMissionRepository;
 
     @Autowired
     RecordRepository recordRepository;
@@ -239,5 +243,9 @@ public class MissionService {
         }
     }
 
-
+    // 나의 미션 불러오기
+    public List<MissionListResponse> getMyMissionList(MyMissionRequest myMissionRequest) {
+        Pageable pageable = PageRequest.of(myMissionRequest.getPageNumber(), 6, Sort.by(Sort.Order.desc("missionCreationTime")));
+        return missionRepository.findMissionListResponseByMemberEmail(myMissionRequest.getMemberEmail(), pageable);
+    }
 }
