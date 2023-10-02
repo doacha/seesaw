@@ -9,15 +9,16 @@ import { useRef } from 'react'
 const SearchBar = ({
   state,
   setState,
-  setIsEnabled,
 }: {
   state: SearchState
   setState: React.Dispatch<React.SetStateAction<SearchState>>
-  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const handleSubmit = () => {
-    setState({ ...state, inputText: inputRef.current?.value ?? '' })
-    setIsEnabled(true)
+    setState({
+      ...state,
+      inputText: inputRef.current?.value ?? '',
+      isEnabled: true,
+    })
   }
 
   const inputRef = useRef<HTMLInputElement>(null)

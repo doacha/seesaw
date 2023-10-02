@@ -15,6 +15,7 @@ export const recordListStore = create<RecordListStore>((set) => ({
     missionPeriod: 0,
     missionStartDate: '',
     missionTargetPrice: 0,
+    missionCurrentCycle: 0,
     pageNumber: 0,
   },
 

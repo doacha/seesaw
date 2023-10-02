@@ -20,13 +20,11 @@ const SearchContainer = ({
   handleCapsule,
   state,
   setState,
-  setIsEnabled,
 }: {
   onClick: any
   handleCapsule: any
   state: SearchState
   setState: React.Dispatch<React.SetStateAction<SearchState>>
-  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const [periodDropDownOn, setPeriodDropDownOn] = useState(false)
   const [cycleDropDownOn, setCycleDropDownOn] = useState(false)
@@ -57,11 +55,7 @@ const SearchContainer = ({
 
   return (
     <div className="rounded-lg bg-background px-5 py-2.5 w-full">
-      <SearchBar
-        state={state}
-        setState={setState}
-        setIsEnabled={setIsEnabled}
-      />
+      <SearchBar state={state} setState={setState} />
       <div className="mt-5">카테고리</div>
       <div className={`mt-2.5 overflow-scroll ${styles.delScroll}`}>
         <div className="carousel">
