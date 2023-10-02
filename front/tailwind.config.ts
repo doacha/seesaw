@@ -2,10 +2,8 @@ import type { Config } from 'tailwindcss'
 import { categoryColors } from './app/lib/constants'
 const colors = require('tailwindcss/colors')
 
-
-
 const config: Config = {
-  mode: "jit",
+  mode: 'jit',
 
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -18,9 +16,15 @@ const config: Config = {
         slideUp: {
           '0%': { transform: 'translateY(70px)' },
           '100%': { transform: 'traslateY(0)' },
-        }
+        },
+        heartBeat: {
+          '0%': { transform: 'scale(0);' },
+          '30%': { transform: 'scale(1);' },
+          '60%': { transform: 'scale(1);' },
+        },
       },
       animation: {
+        heartBeat: 'heartBeat 3s',
         slideUp: 'slideUp 1s ease-in-out 1',
       },
       backgroundImage: {
