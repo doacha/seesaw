@@ -14,7 +14,6 @@ import DateInput from './DateInput'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
-// categoryToggle 수정 및 처리 필요
 type Props = {
   open: boolean
   handleToggle: () => void
@@ -29,6 +28,7 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
   }
 
   const today = new Date()
+  console.log(today.toUTCString())
 
   const [postInput, setPostInput] = useState({
     spendingTitle: '',
@@ -129,19 +129,6 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     } else {
       fetchAddPost(data)
     }
-  }
-
-  // category 선택
-  const handleCapsuleClick = (
-    idx: number,
-    isSelected: boolean,
-    type: string,
-  ) => {
-    if (!isSelected) {
-      setPostInput({ ...postInput, [type]: idx })
-      return
-    }
-    setPostInput({ ...postInput, [type]: -1 })
   }
 
   // date 관련

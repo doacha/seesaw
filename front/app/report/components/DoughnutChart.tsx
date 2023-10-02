@@ -4,14 +4,17 @@ import ChartDataLabels from 'chartjs-plugin-datalabels'
 import { iconColors, categoryList } from '../../lib/constants'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 
-// 데이터 가져와야해
-import { categorySumList } from '../../dummies'
+import { Spending } from '@/app/types'
 
-const DoughnutChart = () => {
+interface Props {
+  spendingList: Spending[]
+}
+
+const DoughnutChart = ({ spendingList }: Props) => {
   ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels)
 
   const data = {
-    labels: categorySumList
+    labels: spendingList
       .slice(0, 5)
       .map(
         (element) =>
@@ -21,11 +24,11 @@ const DoughnutChart = () => {
     plugins: [ChartDataLabels],
     datasets: [
       {
-        label: 'category',
-        data: categorySumList
+        label: '사용 금액',
+        data: spendingList
           .slice(0, 5)
           .map((element) => element.spendingCostSum) as number[],
-        backgroundColor: categorySumList
+        backgroundColor: spendingList
           .slice(0, 5)
           .map(
             (element) =>
@@ -37,10 +40,7 @@ const DoughnutChart = () => {
   }
 
   const doughnutSum = () => {
-    // const sliceSumList = categorySumList.slice(0, 5)
-    const result = categorySumList.map(
-      (element, key) => element.spendingCostSum,
-    )
+    const result = spendingList.map((element, key) => element.spendingCostSum)
     const total = result.reduce(
       (sum, currValue) => (sum as number) + (currValue || 0),
       0,
@@ -80,10 +80,10 @@ const DoughnutChart = () => {
       ctx.textAlign = 'center'
       ctx.fillText(
         `${
-          categorySumList[0].spendingCostSum &&
-          Math.round(
-            (categorySumList[0].spendingCostSum / doughnutSum()) * 100,
-          ) + '%'
+          spendingList &&
+          spendingList[0].spendingCostSum &&
+          Math.round((spendingList[0].spendingCostSum / doughnutSum()) * 100) +
+            '%'
         }`,
         width / 2,
         top + height / 1.8,
