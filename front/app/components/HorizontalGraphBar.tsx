@@ -29,7 +29,7 @@ const HorizontalGarphBar = (props: Props) => {
         className={`${props.txtColor} text-[10px] leading-5 font-scDreamLight`}
       >
         {props.unitType === 'won'
-          ? props.amount.toLocaleString()
+          ? `${props.amount.toLocaleString()} 원`
           : props.unitType === 'percent'
           ? `${props.amount}%`
           : props.amount}

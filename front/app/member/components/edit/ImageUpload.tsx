@@ -12,7 +12,6 @@ import Image from 'next/image'
 const ImageUpload = () => {
   // 업로드할 파일들을 담을 State!
 
-  // const [imageList, setImageList] = useState<ImageFile[]>([{ id: '', url: '' }])
   const { newImg, setProfileEditInfo } = profileEditInfoStore()
   const imageInput = useRef<HTMLInputElement>(null)
 
@@ -21,9 +20,7 @@ const ImageUpload = () => {
       imageInput.current.click()
     }
   }
-  console.log(newImg)
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e)
     const temp = []
     const imageToAdd = e.target.files
     if (imageToAdd) {
@@ -36,7 +33,6 @@ const ImageUpload = () => {
 
         temp.push(tmpImageFile)
       }
-      console.log(temp)
       setProfileEditInfo('newImg', temp[0])
     }
   }
@@ -94,7 +90,6 @@ const ImageUpload = () => {
 
         {newImg.url !== '' ? null : uploadButton}
       </div>
-      {/* <button onClick={fileUploadHandler}>파일 업로드 하기</button> */}
     </>
   )
 }

@@ -17,7 +17,6 @@ import Loading from '@/app/components/Loading'
 const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1')
   const { memberEmail } = memberEmailStore()
-  console.log(params.missionId)
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
   }
@@ -39,7 +38,6 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
         },
       )
       const data = await res.json()
-      console.log(data)
       return data
     } catch (err) {
       console.log(err)
@@ -63,7 +61,6 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
         },
       )
       const data = await res.json()
-      console.log(data)
       return data
     } catch (err) {
       console.log(err)
