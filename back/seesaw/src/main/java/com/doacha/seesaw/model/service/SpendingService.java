@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.YearMonth;
 import java.util.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -349,7 +350,7 @@ public class SpendingService {
             }
             if (!visit) {
                 Calendar calendar = Calendar.getInstance();
-                calendar.set(spendingYear, spendingMonth - 1, i + 1);
+                calendar.set(spendingYear, spendingMonth - 1, i);
                 Date newDate = calendar.getTime();
                 Timestamp expectedDate = new Timestamp(newDate.getTime());
                 DailySpendingSumResponse emptySpendingSumResponse = DailySpendingSumResponse.builder().spendingCostSum(0).spendingDate(expectedDate).memberEmail(memberEmail).build();
@@ -360,22 +361,22 @@ public class SpendingService {
         return entireDailySpendingSumResponses;
     }
 
-    // 입력 받은 월 1년간 합계
-//    public List<MonthSumResponse> getMonthSumList(String memberEmail, int spendingYear, int spendingMonth) {
+//     입력 받은 월 1년간 합계
+//    public List<MonthSpendingSumResponse> getMonthSumList(String memberEmail, int spendingYear, int spendingMonth) {
 //        LocalDateTime start = LocalDateTime.of(spendingYear - 1, spendingMonth + 1, 1, 0, 0);
 //        LocalDateTime end = LocalDateTime.of(spendingYear, spendingMonth, 1, 0, 0).plusMonths(1).minusSeconds(1);
-//        List<MonthSumResponse> monthSpendingSumResponseList = spendingRepository.getMonthSumList(memberEmail, start, end);
-//        List<MonthSumResponse> entireMonthSpendingSumResponses = new ArrayList<>();
+//        List<MonthSpendingSumResponse> monthSpendingSumResponseList = spendingRepository.getMonthSumList(memberEmail, start, end);
+//        List<MonthSpendingSumResponse> entireMonthSpendingSumResponses = new ArrayList<>();
 //        int a = spendingMonth;
 //        int count = 0;
 //        while (count != 12) {
 //            boolean visit = false;
-//            for (MonthSumResponse m : monthSpendingSumResponseList) {
-//                if (m.getSpendingCostSum() != null) {
+//            for (MonthSpendingSumResponse m : monthSpendingSumResponseList) {
+//                if (m.getSpendingCostSum() != 0) {
 //                    entireMonthSpendingSumResponses.add(m);
 //                    visit = true;
 //                    count++;
-//                    spendingMonth--;
+//                    spendingMonth++;
 //                    break;
 //                }
 //            }
@@ -384,9 +385,13 @@ public class SpendingService {
 //                calendar.set(spendingYear, spendingMonth, 1);
 //                Date newDate = calendar.getTime();
 //                Timestamp date = new Timestamp(newDate.getTime());
-//                MonthSumResponse monthSumResponse = MonthSumResponse.builder().spendingCostSum(0L).spendingDate(date)
+//                MonthSpendingSumResponse monthSpendingSumResponse = MonthSpendingSumResponse.builder()
+//                        .spendingCostSum(0L)
+//                        .spendingYear(date.getYear())
+//                        .spendingMonth(date.getMonth())
+//                        .memberEmail(memberEmail)
 //                        .build();
-//                entireMonthSpendingSumResponses.add(monthSumResponse);
+//                entireMonthSpendingSumResponses.add(monthSpendingSumResponse);
 //                count++;
 //                spendingMonth--;
 //            }
@@ -394,7 +399,42 @@ public class SpendingService {
 //        return entireMonthSpendingSumResponses;
 //    }
 
-
+    public List<MonthSpendingSumResponse> getMonthSumList(String memberEmail, int spendingYear, int spendingMonth) {
+        YearMonth yearMonth = YearMonth.of(spendingYear, spendingMonth);
+        int lastDayOfMonth = yearMonth.lengthOfMonth();
+        LocalDateTime start = LocalDateTime.of(spendingYear-1, spendingMonth+1, 1, 0, 0);
+        LocalDateTime end = LocalDateTime.of(spendingYear, spendingMonth, lastDayOfMonth, 23, 59, 59);
+        List<MonthSpendingSumResponse> monthSpendingSumResponseList = spendingRepository.getMonthSumList(memberEmail, start, end);
+        List<MonthSpendingSumResponse> entireMonthSpendingSumResponses = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            boolean visit = false;
+            for(MonthSpendingSumResponse m : monthSpendingSumResponseList){
+                if (m.getSpendingYear() == spendingYear && m.getSpendingMonth() == spendingMonth && m.getSpendingCostSum() != 0) {
+                    entireMonthSpendingSumResponses.add(m);
+                    visit = true;
+                    break;
+                }
+            }
+            if (!visit) {
+                MonthSpendingSumResponse monthSpendingSumResponse = MonthSpendingSumResponse.builder()
+                        .spendingCostSum(0L)
+                        .spendingYear(spendingYear)
+                        .spendingMonth(spendingMonth)
+                        .memberEmail(memberEmail)
+                        .build();
+                entireMonthSpendingSumResponses.add(monthSpendingSumResponse);
+            }
+            spendingMonth--;
+            if (spendingMonth == 0) {
+                spendingMonth = 12;
+                spendingYear--;
+            }
+        }
+        entireMonthSpendingSumResponses.sort(Comparator
+                .comparing(MonthSpendingSumResponse::getSpendingYear)
+                .thenComparing(MonthSpendingSumResponse::getSpendingMonth));
+        return entireMonthSpendingSumResponses;
+    }
     // 지출 월별 합계
     public MonthSpendingSumResponse findAllMonthSumByMemberEmailAndSpendingYear(String memberEmail, int spendingYear, int spendingMonth) {
         MonthSpendingSumResponse monthSpendingSumResponses = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail, spendingYear, spendingMonth);

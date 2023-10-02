@@ -15,6 +15,7 @@ public interface MemberRepository extends JpaRepository<Member, String> {
 
     Optional<Member> findByMemberEmail(@Param("memberEmail") String memberEmail);
 
+    Optional<Member> findByMemberEmailAndMemberAuthKey(@Param("memberEmail") String memberEmail, @Param("memberAuthKey") String memberAuthKey);
     @Query("SELECT new com.doacha.seesaw.model.dto.spending.GetCardTransactionDto( " +
             "m.memberEmail, " +
             "m.memberBankId, " +

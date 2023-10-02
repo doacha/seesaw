@@ -136,6 +136,17 @@ public class MissionController {
         }
     }
 
+    @Operation(summary="미션 기간만큼 과거와 비교")
+    @PostMapping("/saving")
+    public ResponseEntity<?> missionSaving(@RequestBody QuitMissionRequest quitMissionRequest){
+        try{
+            MissionSavingResponse missionSavingResponse = missionService.getMissionSavingResponse(quitMissionRequest.getMissionId(),quitMissionRequest.getMemberEmail());
+            return new ResponseEntity<MissionSavingResponse> (missionSavingResponse, HttpStatus.OK);
+        }
+        catch(Exception e ){
+            return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @Operation(summary = "미션 통계", description = "미션 통계 API")
     @PostMapping("/stats")
     public ResponseEntity<?> getMissionStats(@RequestBody GetMemberMissionTnumRequest getMemberMissionTnumRequest) {
