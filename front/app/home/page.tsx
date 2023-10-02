@@ -21,8 +21,7 @@ const HomePage = () => {
 
   const [sort, setSort] = useState('최신순')
   const [spendData, setSpendData] = useState<Spending>({
-    // email은 zustand에 들어있는 걸로 가져와야 함
-    memberEmail: 'tldnjs324@naver.com',
+    memberEmail: memberEmail,
     spendingYear: new Date().getFullYear(),
     spendingMonth: new Date().getMonth() + 1,
     condition: 'spendingDate', // 초기값은 'spendingDate'로 설정
@@ -31,8 +30,6 @@ const HomePage = () => {
 
   // 화살표 클릭 감지
   const [clickEvent, setClickEvent] = useState<boolean>(false)
-  // zustand에 저장된 email 가져오기
-  // console.log(memberEmail)
 
   // 화살표 우클릭==0 좌클릭==1
   const [clickDirection, setClickDirection] = useState<number>(0)
