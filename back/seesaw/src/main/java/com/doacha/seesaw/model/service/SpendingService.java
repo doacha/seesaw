@@ -1,5 +1,6 @@
 package com.doacha.seesaw.model.service;
 
+import com.doacha.seesaw.exception.ForbiddenException;
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.spending.*;
 import com.doacha.seesaw.model.entity.*;
@@ -40,10 +41,18 @@ public class SpendingService {
     private String seesawBank_api;
 
     // 등록 save
-    public void save(SpendingDto spendingdto) {
-        Optional<Member> member = memberRepository.findById(spendingdto.getMemberEmail());
-        Spending spending = Spending.builder().spendingTitle(spendingdto.getSpendingTitle()).spendingCost(spendingdto.getSpendingCost()).spendingDate(spendingdto.getSpendingDate()).spendingMemo(spendingdto.getSpendingMemo()).spendingCategoryId(spendingdto.getSpendingCategoryId()).member(member.get()).build();
+    public void save(SpendingDto spendingDto) {
+        Optional<Member> member = memberRepository.findById(spendingDto.getMemberEmail());
+        Spending spending = Spending.builder().spendingTitle(spendingDto.getSpendingTitle()).spendingCost(spendingDto.getSpendingCost()).spendingDate(spendingDto.getSpendingDate()).spendingMemo(spendingDto.getSpendingMemo()).spendingCategoryId(spendingDto.getSpendingCategoryId()).member(member.get()).build();
         spendingRepository.save(spending);
+
+        log.info("등록한 내역과 카테고리 & 기간 일치하는 미션에 참여중인지 확인");
+        Record record = checkRecord(spendingDto.getMemberEmail(), spendingDto.getSpendingCategoryId(), spendingDto.getSpendingDate());
+
+        if(record == null) return;
+
+        log.info("가계부와 미션 연동");
+        linkSpendingToRecord(record, spendingDto);
     }
 
 
@@ -75,6 +84,7 @@ public class SpendingService {
         return monthSpendingResponses;
     }
 
+
     // 시소 뱅크에서 카드내역 받아오기
     public void getCardTransactionFromSeeSawBank(GetCardTransactionRequest request, String memberEmail) {
         log.info("시소 뱅크에 카드 내역 요청");
@@ -87,26 +97,35 @@ public class SpendingService {
                 log.info("카드 내역 가계부에 저장");
                 save(spendingDto);
 
-                log.info("소비내역과 카테고리가 같은 미션에 참여중인지 확인");
-                Record record = recordRepository.findRecordByMemberEmailAndCategoryId(memberEmail, spendingDto.getSpendingCategoryId());
+                log.info("카테고리 & 기간 일치하는 미션에 참여중인지 확인");
+                Record record = checkRecord(spendingDto.getMemberEmail(), spendingDto.getSpendingCategoryId(), spendingDto.getSpendingDate());
 
-                if (record == null) {
-                    log.info("카테고리같은 미션에 참여 X");
-                    continue;
-                }
+                if(record == null) continue;
 
-                Date date = new Date(spendingDto.getSpendingDate().getTime());
-
-                if (date.before(record.getRecordStartDate()) || date.after(record.getRecordEndDate())) {
-                    log.info("기간 일치하지 않음");
-                    continue;
-                }
-
-                log.info("카테고리같고 기간 일치하는 미션에 참여중");
+                log.info("가계부와 미션 연동");
                 linkSpendingToRecord(record, spendingDto);
-                spendingRepository.findById(record.getRecordId());
             }
         });
+    }
+
+    // 소비 내역의 카테고리에 해당하는 미션에 참여중인지 확인
+    private Record checkRecord(String memberEmail, int categoryId, Timestamp spendingDate) {
+        Record record = recordRepository.findRecordByMemberEmailAndCategoryId(memberEmail, categoryId);
+
+        if (record == null) {
+            log.info("카테고리에 해당하는 미션에 참여하지 않음");
+            return null;
+        }
+
+        Date date = new Date(spendingDate.getTime()); // 소비 날짜
+        if (date.before(record.getRecordStartDate()) || date.after(record.getRecordEndDate())) {
+            log.info("소비 날짜와 참여중인 미션의 기간 일치하지 않음");
+            return null;
+        }
+
+        log.info("카테고리 & 기간 일치하는 미션에 참여중");
+
+        return record;
     }
 
     // 가계부와 미션 연동
@@ -217,18 +236,30 @@ public class SpendingService {
         // spendingId로 지출 찾기
         Optional<Spending> spending = spendingRepository.findById(spendingUpdateRequest.getSpendingId());
         if (!spending.isPresent()) throw new NoContentException();
-        else {
-            // 이메일로 멤버 찾기
-            Optional<Member> member = memberRepository.findById(spendingUpdateRequest.getMemberEmail());
 
-            // 변경할 지출 새로 저장
-            Spending update = Spending.builder().spendingId(spending.get().getSpendingId()).spendingTitle(spendingUpdateRequest.getSpendingTitle()).spendingCost(spendingUpdateRequest.getSpendingCost()).spendingDate(spendingUpdateRequest.getSpendingDate()).spendingMemo(spendingUpdateRequest.getSpendingMemo()).spendingCategoryId(spendingUpdateRequest.getSpendingCategoryId()).member(member.get()).build();
-            spendingRepository.save(update);
-        }
+        // 카테고리에 해당하는 미션에 참여중인지 확인 => 참여중이면 수정 불가능
+        Record record = checkRecord(spendingUpdateRequest.getMemberEmail(), spendingUpdateRequest.getSpendingCategoryId(), spendingUpdateRequest.getSpendingDate());
+        if(record != null) throw new ForbiddenException("카테고리가 일치하는 미션에 참여중입니다.");
+
+        // 이메일로 멤버 찾기
+        Optional<Member> member = memberRepository.findById(spendingUpdateRequest.getMemberEmail());
+
+        // 변경할 지출 새로 저장
+        Spending update = Spending.builder().spendingId(spending.get().getSpendingId()).spendingTitle(spendingUpdateRequest.getSpendingTitle()).spendingCost(spendingUpdateRequest.getSpendingCost()).spendingDate(spendingUpdateRequest.getSpendingDate()).spendingMemo(spendingUpdateRequest.getSpendingMemo()).spendingCategoryId(spendingUpdateRequest.getSpendingCategoryId()).member(member.get()).build();
+        spendingRepository.save(update);
+
     }
 
     // 지출 삭제
     public void delete(Long spendingId) {
+        // 해당하는 spending 내역 가져오기
+        Optional<Spending> spending = spendingRepository.findById(spendingId);
+        if (!spending.isPresent()) throw new NoContentException();
+
+        // 카테고리에 해당하는 미션에 참여중인지 확인 => 참여중이면 삭제 불가능
+        Record record = checkRecord(spending.get().getMember().getMemberEmail(), spending.get().getSpendingCategoryId(), spending.get().getSpendingDate());
+        if(record != null) throw new ForbiddenException("카테고리가 일치하는 미션에 참여중입니다.");
+
         spendingRepository.deleteById(spendingId);
     }
 
