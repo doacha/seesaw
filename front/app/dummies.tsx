@@ -759,3 +759,17 @@ export const sumList: type.Spending[] = [
     memberEmail: 'doacha@seesaw.com',
   },
 ]
+
+export const bankList = [
+  { bankName: '시소뱅크', bankImg: './seesaw_logo.svg' },
+  { bankName: '신한은행', bankImg: './seesaw_logo.svg' },
+  { bankName: '국민은행', bankImg: './seesaw_logo.svg' },
+  { bankName: '우리은행', bankImg: './seesaw_logo.svg' },
+]
+
+export const bankList2 = [
+  { bankName: '봉준은행', bankImg: './seesaw_logo.svg' },
+  { bankName: '재웅은행', bankImg: './seesaw_logo.svg' },
+  { bankName: '경호은행', bankImg: './seesaw_logo.svg' },
+  { bankName: '시원은행', bankImg: './seesaw_logo.svg' },
+]

@@ -58,7 +58,6 @@ const memberPage = () => {
         },
       )
       const tmp = await res.json()
-      console.log('처음가져왔을때', tmp.info.memberImgUrl)
       return tmp
     } catch (err) {
       console.log(err)
