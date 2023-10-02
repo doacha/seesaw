@@ -198,6 +198,7 @@ public class MissionService {
                 .missionId(missionId)
                 .pastTotalCost(pastTotalCost)
                 .missionTotalCost(missionTotalCost)
+                .difference(missionTotalCost-pastTotalCost)
                 .build();
         return missionSavingResponse;
     }
