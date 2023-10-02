@@ -159,10 +159,10 @@ export interface MissionCreate {
   memberMissionSavingMoney: number
   missionPeriod: number
   missionTotalCycle: number
+  missionTargetPrice: number
   missionStartDate: { month: number; day: number }
   missionHostEmail: string
   missionCategoryId: number
-  memberMissionIsSaving: boolean
   [key: string]: any
 }
 
@@ -199,6 +199,7 @@ export interface RecordStatusProps {
   missionStartDate: string
   missionCurrentCycle: number
   pageNumber: number
+  todayRecordId: number
 }
 
 export interface Comment {

@@ -10,7 +10,7 @@ import {
 import { getCycleTerm, getTimeBefore } from '../../../../util'
 import { text } from 'stream/consumers'
 import SpendingHistory from './SpendingHistory'
-import { recordListStore } from '@/stores/myRecordList'
+import { recordListStore } from '@/stores/recordListStore'
 import { RecordList } from '@/app/types'
 import { useRef, useState, useEffect } from 'react'
 interface RecordDetailProps {
@@ -72,7 +72,11 @@ const RecordContentContainer = ({
                 {propsData.recordNumber}회차
               </span>
               <span className="text-[10px] text-outline">
-                {getCycleTerm(`2023-09-12T14:42:17.000+00:00`, 1, 1)}
+                {getCycleTerm(
+                  recordStatus.missionStartDate,
+                  propsData.recordNumber,
+                  recordStatus.missionPeriod,
+                )}
               </span>
             </span>
             <FontAwesomeIcon icon={faEllipsis} className="text-outline" />
