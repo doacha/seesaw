@@ -23,6 +23,7 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
             "CASE WHEN :condition ='spendingCost' THEN s.spendingCost END DESC")
     List<MonthSpendingResponse> findAllByMemberEmailAndSpendingYearAndSpendingMonth(@Param("memberEmail") String memberEmail, @Param("SpendingYear") int SpendingYear, @Param("SpendingMonth") int SpendingMonth,@Param("condition") String condition);
 
+//    @Query("SELECT AVG(s.spendingCost) FROM Spending s WHERE s.member.memberEmail= :memberEmail AND s.spendingCategoryId = :categoryId ")
     // 미션 기간만큼 과거 해당 카테고리 소비 합
     @Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.member.memberEmail= :memberEmail AND s.spendingCategoryId= :categoryId AND s.spendingDate BETWEEN :start AND :end " )
     Long findPastSum(@Param("memberEmail") String memberEmail, @Param("categoryId") int categoryId, @Param("start") Date start, @Param("end")Date end);
