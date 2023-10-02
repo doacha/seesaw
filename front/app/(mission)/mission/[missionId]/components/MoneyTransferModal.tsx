@@ -11,9 +11,13 @@ import { useRef } from 'react'
 const MoneyTransferModal = ({
   modalRef,
   changeModal,
+  password,
+  setPassword,
 }: {
   modalRef: React.RefObject<HTMLDialogElement>
   changeModal: (processLivel: number) => void
+  password: string[]
+  setPassword: React.Dispatch<SetStateAction<string[]>>
 }) => {
   const cancelButtonRef = useRef<HTMLButtonElement>(null)
   const inputRefs = [
@@ -22,7 +26,7 @@ const MoneyTransferModal = ({
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
   ]
-  const [password, setPassword] = useState<string[]>(['', '', '', ''])
+
   const inputKeyboardList = Array(10)
   const onInputFilled = (
     e: React.ChangeEvent<HTMLInputElement>,
