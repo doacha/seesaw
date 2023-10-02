@@ -38,6 +38,11 @@ public class MemberController {
         return memberService.signUp(signUpRequest);
     }
 
+    @GetMapping(value="registerEmail")
+    public String emailConfirm(@RequestParam String memberEmail)throws Exception{
+        memberService.memberAuth(memberEmail);
+        return "/member/registerEmail";
+    }
     // 로그인
     @PostMapping("/login")
     public TokenResponse login(@RequestBody LoginRequest loginRequest) throws JsonProcessingException {
