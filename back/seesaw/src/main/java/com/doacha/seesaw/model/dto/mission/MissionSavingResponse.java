@@ -13,4 +13,5 @@ public class MissionSavingResponse {
     private String missionId;
     private Long pastTotalCost;
     private Long missionTotalCost;
+    private Long difference;
 }
