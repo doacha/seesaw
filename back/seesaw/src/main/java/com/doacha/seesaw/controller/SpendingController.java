@@ -106,7 +106,7 @@ public class SpendingController {
         }
     }
 
-    @PostMapping("/monthsum-list")
+    @PostMapping("/monthsumlist")
     @Operation(summary="해당 월의 1년전부터 월 합계")
     public ResponseEntity<?> getMonthSumList(@RequestBody SpendingSumRequest spendingSumRequest){
         try{
