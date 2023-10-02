@@ -243,7 +243,8 @@ public class MissionService {
     }
 
     // 나의 미션 불러오기
-    public List<MissionListResponse> getMyMissionList(Pageable pageable, String memberEmail) {
-        return missionRepository.findMissionListResponseByMemberEmail(memberEmail, pageable);
+    public List<MissionListResponse> getMyMissionList(MyMissionRequest myMissionRequest) {
+        Pageable pageable = PageRequest.of(myMissionRequest.getPageNumber(), 6, Sort.by(Sort.Order.desc("missionCreationTime")));
+        return missionRepository.findMissionListResponseByMemberEmail(myMissionRequest.getMemberEmail(), pageable);
     }
 }
