@@ -29,24 +29,24 @@ const getSearchList = async (input: SearchState) => {
 
 const MissionPage = () => {
   const [isActiveSearch, setIsActiveSearch] = useState(true)
-  const [isEnabled, setIsEnabled] = useState(false)
   const [searchState, setSearchState] = useState<SearchState>({
     inputText: '',
     category: 0,
     cycle: -1,
     period: -1,
+    isEnabled: true,
   })
   const { data, refetch, isSuccess } = useQuery<MissionList[]>({
     queryKey: ['mission-card', searchState],
     queryFn: () => getSearchList(searchState),
     staleTime: 50000,
     cacheTime: 50000,
-    enabled: isEnabled,
+    // enabled: searchState.isEnabled,
   })
 
-  if (isSuccess && isEnabled) {
-    setIsEnabled(false)
-  }
+  // if (isSuccess && searchState.isEnabled) {
+  //   setSearchState({ ...searchState, isEnabled: false })
+  // }
 
   const handleActiveSearch = () => {
     setIsActiveSearch(true)
@@ -65,14 +65,14 @@ const MissionPage = () => {
     type: string,
   ) => {
     if (isSelected) {
-      setSearchState({ ...searchState, [type]: -1 })
+      setSearchState({ ...searchState, [type]: -1, isEnabled: true })
       return
     }
-    setSearchState({ ...searchState, [type]: idx })
+    setSearchState({ ...searchState, [type]: idx, isEnaled: true })
   }
 
   return (
-    <div className="bg-background-fill">
+    <div className="bg-background-fill h-screen">
       <Header title="미션 목록" plusButton backButton />
       <div className="py-16 pt-[74px] overflow-scroll flex flex-col gap-5 px-5">
         {isActiveSearch && (
@@ -81,7 +81,6 @@ const MissionPage = () => {
             handleCapsule={handleCapsuleClick}
             state={searchState}
             setState={setSearchState}
-            setIsEnabled={setIsEnabled}
           />
         )}
         {!isActiveSearch && (

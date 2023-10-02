@@ -3,6 +3,8 @@ import { categoryColors } from './app/lib/constants'
 const colors = require('tailwindcss/colors')
 
 const config: Config = {
+  mode: 'jit',
+
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,6 +12,21 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        slideUp: {
+          '0%': { transform: 'translateY(70px)' },
+          '100%': { transform: 'traslateY(0)' },
+        },
+        heartBeat: {
+          '0%': { transform: 'scale(0);' },
+          '30%': { transform: 'scale(1);' },
+          '60%': { transform: 'scale(1);' },
+        },
+      },
+      animation: {
+        heartBeat: 'heartBeat 3s',
+        slideUp: 'slideUp 1s ease-in-out 1',
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
@@ -51,7 +68,7 @@ const config: Config = {
         'point-pink': '#FFD1BF',
         // neutral: '#2b3440',
         'background-fill': '#F3F4F8',
-        background: '#FAFCFF',
+        background: '#FFFFFF',
         outline: '#787D85',
         'outline-container': '#DCE1E9',
         surface: '#001B2A',

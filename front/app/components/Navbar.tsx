@@ -23,7 +23,8 @@ const Navbar = () => {
 
   return (
     <>
-      {pathname !== '/login' &&
+      {pathname !== '/' &&
+      pathname !== '/login' &&
       pathname !== '/regist' &&
       pathname !== '/seesawbank' &&
       pathname !== '/member/installment' ? (

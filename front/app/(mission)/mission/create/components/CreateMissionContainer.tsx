@@ -6,16 +6,17 @@ import CategoryInput from './CategoryInput'
 import CycleInput from './CycleInput'
 import StartDateInput from './StartDateInput'
 import DepositeInput from './DepositInput'
-import SelectPublicInput from './SelectSavingInput'
+import SelectPublicInput from './SelectPublicInput'
+import SelectSavingInput from './SelectSavingInput'
 import ImageInput from './ImageInput'
 import Button from '@/app/components/Button'
 import TargetPriceInput from './TargetPriceInput'
-import SelectSavingInput from './SelectSavingInput'
 import type { MissionCreate } from '@/app/types'
 import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { faL } from '@fortawesome/free-solid-svg-icons'
+
+const DUMMY_EMAIL = 'doacha@seesaw.com'
 
 interface CreateMissionRequest {
   imgFile: File
@@ -39,7 +40,8 @@ const postNewMission = async (input: FormData) => {
     method: 'POST',
     body: input,
     headers: {
-      'Content-Type': 'multipart/form-data',
+      // 'Content-Type': 'multipart/form-data',
+      // 'Content-Type': 'application/json',
     },
   }).then((res) => {
     let js = res.json()
@@ -53,22 +55,20 @@ const CreateMissionContainer = () => {
     imgFile: { id: '', url: '' },
     missionTitle: '', //
     missionMaxCount: 0, //
-    missionImgUrl: '',
     missionPurpose: '',
     missionDeposit: 0, //
     missionIsPublic: true, //
-    missionTargetPrice: 0, //
+    memberMissionSavingMoney: 0, //
     missionPeriod: -1, //
     missionTotalCycle: 0, //
     missionStartDate: { month: -1, day: -1 }, //
-    missionHostEmail: '', // hostemail이 필요가 없네
+    missionHostEmail: DUMMY_EMAIL, // hostemail이 필요가 없네
     missionCategoryId: -1,
     memberMissionIsSaving: true,
   })
 
   const { mutate, isSuccess } = useMutation(postNewMission)
   const router = useRouter()
-  console.log('input', input)
 
   const handleChangeTextInput = (event: any) => {
     const { name, value } = event.target
@@ -76,39 +76,44 @@ const CreateMissionContainer = () => {
   }
 
   const handleSubmit = () => {
+    input.missionTotalCycle = Math.trunc(
+      (input.missionTotalCycle * 7) / input.missionPeriod,
+    )
+    input.missionMaxCount = Math.trunc(input.missionTotalCycle / 5)
     // 인풋 유효 검사
-    if (isInvalidInput(input)) {
-      console.log('유효하지 않은 인풋')
-      return
-    }
+    // if (isInvalidInput(input)) {
+    //   console.log('유효하지 않은 인풋')
+    //   return
+    // }
 
     // 제출
     const request: { [key: string]: any } = {}
     for (const value in input) {
+      if (value === 'memberMissionIsSaving') continue
+      if (value === 'imgFile') continue
       if (value === 'missionStartDate') {
         const currentYear = new Date().getFullYear()
         request[value] =
           currentYear +
           '-' +
-          input.missionStartDate.month +
+          String(input.missionStartDate.month).padStart(2, '0') +
           '-' +
-          input.missionStartDate.day
+          String(input.missionStartDate.day).padStart(2, '0')
         continue
       }
       request[value] = input[value]
     }
+    console.log('리퀘스트체크', request)
     const formData = new FormData()
+    if (input.imgFile.file !== undefined) {
+      formData.append('image', input.imgFile.file)
+    }
     formData.append(
-      'changeInfoRequest',
-      // new Blob(
-      //   [
-      //     JSON.stringify(profileData),
-      //   ],
-      //   { type: 'application/json' },
-      // ),
-      JSON.stringify(request),
+      'createMissionRequest',
+      new Blob([JSON.stringify(request)], { type: 'application/json' }),
+      // JSON.stringify(request),
     )
-
+    console.log('폼데이타', formData)
     mutate(formData, {
       onSuccess: (res) => router.push(`/mission/${res.missionId}`),
       onError: (err) => console.log('미션 생성 에러\n', err),

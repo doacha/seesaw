@@ -1,5 +1,3 @@
-'use client'
-
 interface MissionCardProps {
   missionId: string
   missionTitle: string
@@ -12,21 +10,32 @@ interface MissionCardProps {
   missionStartDate: string
 }
 import { missionCardDummy as dummyMissionCard } from '@/app/dummies'
+import Image from 'next/image'
 import { missionCycleArray } from '@/app/lib/constants'
 import Capsule from '@/app/components/Capsule'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 const MissionCard = ({ data }: { data: MissionCardProps }) => {
-  console.log('missionTitle', data.missionTitle)
+  // console.log('미션카드 데이터 체크', data)
   return (
-    <Link href={`/mission/${data.missionId}`}>
-      <div className="card w-[calc(50%-10px)] min-w-[165px] h-[184px] shadow-md rounded-lg bg-backgroun">
+    <Link
+      href={`/mission/${data.missionId}`}
+      className="w-[calc(50%-10px)] min-w-[140px]"
+    >
+      <div className="card min-w-[140px] h-[184px] shadow-md rounded-lg bg-background">
         <figure className="relative h-25">
-          <img
-            src={data.missionImgUrl}
+          <Image
+            src={
+              data.missionImgUrl === 'string'
+                ? '/default_profile.svg'
+                : data.missionImgUrl
+            }
+            width={100}
+            height={100}
             alt="mission Image"
             className="object-cover"
+            style={{ width: 'calc(100%)', objectFit: 'cover' }}
           />
           <div className="absolute top-3 left-3 bg-primary-container/80 rounded text-[10px] px-1">{`D - ${getDueDate(
             data.missionStartDate,
@@ -42,17 +51,27 @@ const MissionCard = ({ data }: { data: MissionCardProps }) => {
           </div>
           {/* 제한인원 */}
         </figure>
-        <div className="p-2.5 h-[84px] bg-background">
+        <div className="p-2.5 h-[84px]">
           <div className="text-xs card-title mb-2.5">{data.missionTitle}</div>
           <div className="flex gap-2.5 mb-2.5">
-            <Capsule bgColor="background-fill" textColor="black" isSmall={true}>
+            <Capsule
+              bgColor="background-fill"
+              textColor="black"
+              isSmall={true}
+              className="truncate"
+            >
               {`${data.missionPeriod}일당 하루`}
             </Capsule>
-            <Capsule bgColor="background-fill" textColor="black" isSmall={true}>
+            <Capsule
+              bgColor="background-fill"
+              textColor="black"
+              isSmall={true}
+              className="truncate"
+            >
               {`${
                 missionCycleArray[
                   (data.missionPeriod * data.missionTotalCycle) / 7
-                ] ?? ''
+                ] ?? '더미'
               }`}
             </Capsule>
           </div>

@@ -3,6 +3,7 @@ package com.doacha.seesaw.model.service;
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.model.entity.Mission;
+import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MissionRepository;
 import com.doacha.seesaw.repository.RecordRepository;
 import com.doacha.seesaw.repository.SpendingRepository;
@@ -14,7 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -30,10 +33,16 @@ public class MissionService {
     MissionRepository missionRepository;
 
     @Autowired
+    MemberMissionRepository memberMissionRepository;
+
+    @Autowired
     RecordRepository recordRepository;
 
     @Autowired
     SpendingRepository spendingRepository;
+
+    @Autowired
+    private S3Uploader s3Uploader;
 
     // 미션 목록
     public List<MissionListResponse> getMissionList(Pageable pageable) {
@@ -42,9 +51,15 @@ public class MissionService {
     }
 
     // 미션 생성
-    public Mission createMission(CreateMissionRequest mission) {
+    public Mission createMission(MultipartFile image, CreateMissionRequest mission) throws IOException {
 
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        // 이미지 처리
+        String storedFileName = ""; // 없을 수도 있으니 빈칸
+        if(!image.isEmpty()) {
+            storedFileName = s3Uploader.upload(image,"mission");
+        }
 
         Mission createdMission = Mission.builder()
                 .missionId(createRandomId())
@@ -53,7 +68,7 @@ public class MissionService {
                 .missionTitle(mission.getMissionTitle())
                 .missionMemberCount(1)
                 .missionMaxCount(mission.getMissionMaxCount())
-                .missionImgUrl(mission.getMissionImgUrl())
+                .missionImgUrl(storedFileName)
                 .missionPurpose(mission.getMissionPurpose())
                 .missionDeposit(mission.getMissionDeposit())
                 .missionIsPublic(mission.isMissionIsPublic())
@@ -228,5 +243,9 @@ public class MissionService {
         }
     }
 
-
+    // 나의 미션 불러오기
+    public List<MissionListResponse> getMyMissionList(MyMissionRequest myMissionRequest) {
+        Pageable pageable = PageRequest.of(myMissionRequest.getPageNumber(), 6, Sort.by(Sort.Order.desc("missionCreationTime")));
+        return missionRepository.findMissionListResponseByMemberEmail(myMissionRequest.getMemberEmail(), pageable);
+    }
 }

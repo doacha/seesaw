@@ -18,10 +18,10 @@ export interface Account {
 
 export interface Transaction {
   accountApprovalAmount: number
-  amountBalance: number
+  accountBalance: number
   accountTransactionTime: string
   accountNum: string
-  accountIsDeposit: boolean
+  // accountIsDeposit: boolean
   accountTransactionName: string
 }
 
@@ -97,12 +97,19 @@ export interface MissionCardProps {
   memberMissionStatus?: string
 }
 
+export interface GroupAverageInfo {
+  missionId : string
+  missionAverage : number
+  entireAverage : number
+  difference : number
+}
 export interface Record {
   recordNumber: number
   recordStatus: number
   recordTotalCost: number
   recordId: number
-  recordWriteTime: string
+  startDate : string
+  endDate : string
   memberEmail: string
   missionId: string
   recordContent: string
@@ -146,11 +153,10 @@ export interface MissionCreate {
   imgFile: ImageFile
   missionTitle: string
   missionMaxCount: number
-  missionImgUrl: string
   missionPurpose: string
   missionDeposit: number
   missionIsPublic: boolean
-  missionTargetPrice: number
+  memberMissionSavingMoney: number
   missionPeriod: number
   missionTotalCycle: number
   missionStartDate: { month: number; day: number }
@@ -176,4 +182,30 @@ export interface RecordDetail {
   recordId: number
   recordTotalCost: number
   recordStatus: number
+}
+
+export interface RecordList {
+  recordNumber: number
+  recordList: Array<{
+    recordName: string
+    recordCost: number
+  }>
+}
+
+export interface RecordStatusProps {
+  missionId: string
+  missionPeriod: number
+  missionTargetPrice: number
+  missionStartDate: string
+  missionCurrentCycle: number
+  pageNumber: number
+}
+
+export interface Comment {
+  commentId: number
+  commentContent: string
+  memberNickname: string
+  memberEmail: string
+  memberImgUrl: string
+  commentWriteTime: string
 }
