@@ -1,17 +1,14 @@
 package com.doacha.seesaw.model.dto.spending;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class MonthSpendingSumResponse {
     private long spendingCostSum;
     private int spendingYear;
