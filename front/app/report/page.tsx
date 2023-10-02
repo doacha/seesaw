@@ -17,9 +17,12 @@ import Swal from 'sweetalert2'
 import { Spending } from '@/app/types'
 import Loading from '@/app//components/Loading'
 
+import { memberEmailStore } from '@/stores/memberEmail'
+
 import { QueryKey, useQuery } from '@tanstack/react-query'
 
 const ReportPage = () => {
+  const { memberEmail, setMemberEmail } = memberEmailStore()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   console.log('여기는 리포트 전체 페이지')
   // 통계 / 캘린더
@@ -30,8 +33,7 @@ const ReportPage = () => {
   }
 
   const [spendData, setSpendData] = useState<Spending>({
-    // email은 zustand에 들어있는 걸로 가져와야 함
-    memberEmail: 'tldnjs324@naver.com',
+    memberEmail: memberEmail,
     spendingYear: new Date().getFullYear(),
     spendingMonth: new Date().getMonth(),
     spendingCostSum: 0,
@@ -39,8 +41,6 @@ const ReportPage = () => {
 
   // 화살표 클릭 감지
   const [clickEvent, setClickEvent] = useState<boolean>(false)
-  // zustand에 저장된 email 가져오기
-  // console.log(memberEmail)
 
   // 화살표 우클릭==0 좌클릭==1
   const [clickDirection, setClickDirection] = useState<number>(0)
