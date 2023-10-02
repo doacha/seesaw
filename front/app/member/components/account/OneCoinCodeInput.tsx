@@ -1,11 +1,11 @@
 'use client'
 import { useState } from 'react'
-
+import { useRef } from 'react'
 interface Props {
   code: string[]
   onCodeChange: (e: React.ChangeEvent<HTMLInputElement>, index: number) => void
 }
-import { useRef } from 'react'
+
 const OneCoinCodeInput = (props: Props) => {
   const inputRefs = [
     useRef<HTMLInputElement>(null),

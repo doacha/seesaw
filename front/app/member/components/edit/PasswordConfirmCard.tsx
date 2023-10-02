@@ -36,7 +36,6 @@ const PasswordConfirmCard = (props: Props) => {
         },  
       )
       const memberInfo = await res.json()
-      console.log(memberInfo)
       setProfileEditInfo('prevPassword', memberPassword)
       setProfileEditInfo('prevNickname', memberInfo.memberNickname)
       setProfileEditInfo('newNickname', memberInfo.memberNickname)
