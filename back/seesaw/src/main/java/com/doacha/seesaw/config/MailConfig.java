@@ -16,7 +16,7 @@ public class MailConfig {
 
         javaMailSender.setHost("smtp.gmail.com"); // 메인 도메인 서버 주소 => 정확히는 smtp 서버 주소
         javaMailSender.setUsername("doriarichacha@gmail.com"); // 아이디
-        javaMailSender.setPassword("lsndgkrixgwsegaq"); // 비밀번호(그냥 이메일 비번은 ehfldkflckck@409)
+        javaMailSender.setPassword("cajqeyimiouzkfqm"); // 비밀번호(그냥 이메일 비번은 a409@ehfldkflckck)
 
         javaMailSender.setPort(587); // 메일 인증서버 포트
 
@@ -32,7 +32,8 @@ public class MailConfig {
         properties.setProperty("mail.smtp.starttls.enable", "true"); // smtp strattles 사용
         properties.setProperty("mail.debug", "true"); // 디버그 사용
         properties.setProperty("mail.smtp.ssl.trust","smtp.gmail.com"); // ssl 인증 서버는 smtp.gmail.com
-        properties.setProperty("mail.smtp.ssl.enable","true"); // ssl 사용
+        properties.setProperty("mail.smtp.ssl.enable","false"); // ssl 사용
+        properties.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
         return properties;
     }
 }

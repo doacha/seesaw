@@ -124,6 +124,18 @@ public class SpendingController {
         }
     }
 
+    @PostMapping("/monthsumlist")
+    @Operation(summary="해당 월의 1년전부터 월 합계")
+    public ResponseEntity<?> getMonthSumList(@RequestBody SpendingSumRequest spendingSumRequest){
+        try{
+            List<MonthSpendingSumResponse> monthSpendingSumList = spendingService.getMonthSumList(spendingSumRequest.getMemberEmail(),spendingSumRequest.getSpendingYear(),spendingSumRequest.getSpendingMonth());
+            return new ResponseEntity<>(monthSpendingSumList, HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/category")
     @Operation(summary="월 별 카테고리")
     public ResponseEntity<List<MonthCategoryResponse>> getMonthCategory(@RequestBody SpendingSumRequest spendingSumRequest){
