@@ -3,11 +3,14 @@ import MissionDetailContainer from './components/MissionDetailContainer'
 import { mission, missionDetailDummy } from '@/app/dummies'
 import MissionDetailContents from './components/MissionDetailContents'
 import MissionWaitingList from './components/MissionWaitingList'
-import FaskMakeButton from '@/app/components/FastMakeButton'
 import CategoryList from '@/app/home/components/CategoryList'
 import MissionJoinButton from './components/MissionJoinButton'
 import { categoryList } from '@/app/lib/constants'
 import { MissionDetail } from '@/app/types'
+import UpdateRecordButton from './components/UpdateRecordButton'
+
+const MISSION_WAIT = 0
+const MISSION_START = 1
 
 interface MemberCard {
   memberNickname: string
@@ -53,10 +56,10 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
     <div className="bg-background-fill h-full overflow-auto py-16">
       {/* <Header title={data.missionTitle} backButton /> */}
       <MissionDetailContainer data={data} />
-      {data.missionStatus === 0 ? (
+      {data.missionStatus === MISSION_START ? (
         <>
           <MissionDetailContents data={contentsProps} />
-          <FaskMakeButton path={`${data.missionId}/create`} />
+          <UpdateRecordButton />
         </>
       ) : (
         <>
@@ -64,6 +67,7 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
           <MissionJoinButton
             isSaveMission
             missionCategory={categoryList[data.missionCategoryId]}
+            missionTargetPrice={data.missionTargetPrice}
           />
         </>
       )}
