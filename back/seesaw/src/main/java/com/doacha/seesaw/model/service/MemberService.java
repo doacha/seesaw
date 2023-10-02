@@ -104,19 +104,28 @@ public class MemberService {
 
     // 이메일 인증
     @Transactional
-    public void memberAuth(String memberEmail) throws Exception{
-        Optional<Member> member = memberRepository.findByMemberEmail(memberEmail);
+    public void memberAuth(String memberEmail, String key) throws Exception{
+        log.info("멤버 어스까지 왔습니다.");
+        Optional<Member> member = memberRepository.findByMemberEmailAndMemberAuthKey(memberEmail, key);
 
         Member update;
 
         update = Member.builder()
                 .memberEmail(member.get().getMemberEmail())
                 .memberPassword(member.get().getMemberPassword())
+                .memberBirth(member.get().getMemberBirth())
                 .memberName(member.get().getMemberName())
+                .memberGender(member.get().isMemberGender())
                 .memberNickname(member.get().getMemberNickname())
+                .memberImgUrl(member.get().getMemberImgUrl())
+                .memberPhoneNumber(member.get().getMemberPhoneNumber())
+                .memberSavingAccount(member.get().getMemberSavingAccount())
+                .memberMainAccount(member.get().getMemberMainAccount())
+                .memberBankId(member.get().getMemberBankId())
                 .memberAuthKey(member.get().getMemberAuthKey())
                 .memberIsSocial(member.get().isMemberIsSocial())
-                .memberState(1) // 1: 가입으로 업데이트
+                .memberState(1)
+                .memberRefreshToken(member.get().getMemberRefreshToken())
                 .build();
 
         memberRepository.save(update);
@@ -128,6 +137,9 @@ public class MemberService {
         Member member = memberRepository
                 .findByMemberEmail(loginRequest.getMemberEmail())
                 .orElseThrow(() -> new BadRequestException("아이디 혹은 비밀번호를 확인하세요."));
+
+        if(member.getMemberState()==0) throw new BadRequestException("이메일 인증 후 로그인을 진행해주세요");
+        else if(member.getMemberState()!=1) throw new BadRequestException("탈퇴 혹은 휴면 계정입니다.");
 
         // password encoder 사용해서 비밀번호 확인
         boolean matches = passwordEncoder.matches(
