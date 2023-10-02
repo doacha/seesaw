@@ -17,6 +17,7 @@ import {
 } from '@/app/lib/constants'
 import type { MissionDetail } from '@/app/types'
 const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
+  console.log('왜안뜸', data)
   const totalTerm =
     Math.trunc((data.missionPeriod * data.missionTotalCycle) / 7) + 1
   return (

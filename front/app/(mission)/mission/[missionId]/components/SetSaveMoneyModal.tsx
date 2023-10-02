@@ -12,6 +12,7 @@ const SetSaveMoneyModal = ({
   savingMoney,
   missionCategory,
   changeModal,
+  missionTargetPrice,
 }: {
   setState: React.Dispatch<SetStateAction<number>>
   modalRef: React.RefObject<HTMLDialogElement>
@@ -19,6 +20,7 @@ const SetSaveMoneyModal = ({
   savingMoney: number
   missionCategory: string
   changeModal: (processLivel: number) => void
+  missionTargetPrice: number
 }) => {
   const cancelButtonRef = useRef<HTMLButtonElement>(null)
   const handleSavingMoneyByButton = (unit: number, sign?: string) => {
@@ -44,7 +46,7 @@ const SetSaveMoneyModal = ({
       <div className="modal-box bg-background">
         <div className="font-scDreamExBold mb-5">적금 금액 설정</div>
         <div className="mb-5">
-          미션 목표 금액은 00000,
+          미션 목표 금액은 {missionTargetPrice},
           <br />
           평소 {missionCategory} 소비 금액은 0000입니다
         </div>
