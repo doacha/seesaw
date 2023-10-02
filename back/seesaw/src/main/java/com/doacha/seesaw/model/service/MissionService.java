@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
@@ -139,6 +141,20 @@ public class MissionService {
         return missionRepository.save(updatedMission);
     }
 
+    // 미션의 카테고리에 해당하는 개인 지출 월 평균
+    public SpendingAverageResponse getSpendingAverage(int categoryId, String memberEmail){
+        YearMonth endMonth = YearMonth.from(LocalDateTime.now().minusMonths(1));
+        LocalDateTime end = endMonth.atEndOfMonth().atTime(LocalTime.MAX);
+        LocalDateTime start = LocalDateTime.now().minusMonths(12).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
+        Long sum = spendingRepository.findSumByPeriodAndCategory(categoryId,memberEmail,start,end);
+        double average = (double)sum/12.0;
+        SpendingAverageResponse spendingAverageResponse = SpendingAverageResponse.builder()
+                .memberEmail(memberEmail)
+                .categoryId(categoryId)
+                .average(average)
+                .build();
+        return spendingAverageResponse;
+    }
 
     // 미션 삭제
     public void deleteMission(String missionId){
