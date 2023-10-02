@@ -141,7 +141,7 @@ const HomePage = () => {
           icon: 'error',
         })
       }
-      return res.json()
+      return res
     })
   }
   // 전체 spendList를 page.tsx에서 불러올거야
