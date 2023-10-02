@@ -22,6 +22,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -181,6 +182,25 @@ public class MissionService {
         Long mySpendingSum = spendingRepository.findSumByPeriodAndCategory(categoryId, memberEmail, start, end);
         return mySpendingSum;
     }
+    // 미션 기간만큼 과거 소비와 미션 비교
+    public MissionSavingResponse getMissionSavingResponse(String missionId, String memberEmail){
+        Optional<Mission> mission = missionRepository.findById(missionId);
+        int categoryId = mission.get().getMissionCategoryId();
+        Date end = mission.get().getMissionStartDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(end);
+        calendar.add(Calendar.DAY_OF_MONTH, -mission.get().getMissionPeriod() * mission.get().getMissionTotalCycle());
+        java.util.Date utilStartDate = calendar.getTime();
+        Date start = new Date(utilStartDate.getTime());
+        Long missionTotalCost = recordRepository.findMissionSum(missionId, memberEmail);
+        Long pastTotalCost = spendingRepository.findPastSum(memberEmail,categoryId, start,end);
+        MissionSavingResponse missionSavingResponse = MissionSavingResponse.builder()
+                .missionId(missionId)
+                .pastTotalCost(pastTotalCost)
+                .missionTotalCost(missionTotalCost)
+                .build();
+        return missionSavingResponse;
+    }
     // 미션 통계 내에 나의 순위 + 평균 소비 금액
     public MyMissionStatResponse getMyMissionStats(String missionId, String memberEmail){
         Optional<MyMissionAverageResponse> optionalResponse= recordRepository.getMyMissionAverage(missionId, memberEmail);
@@ -210,7 +230,6 @@ public class MissionService {
             throw new NoContentException();
         }
     }
-
     public CompareMissionResponse getCompareMissionAverage(String missionId){
         List<CompareMissionDto> compareMissionResponse = recordRepository.getCompareMission(missionId);
         Optional<Mission> mission = missionRepository.findById(missionId);

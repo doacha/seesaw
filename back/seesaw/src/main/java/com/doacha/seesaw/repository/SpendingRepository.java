@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,9 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
             "CASE WHEN :condition ='spendingCost' THEN s.spendingCost END DESC")
     List<MonthSpendingResponse> findAllByMemberEmailAndSpendingYearAndSpendingMonth(@Param("memberEmail") String memberEmail, @Param("SpendingYear") int SpendingYear, @Param("SpendingMonth") int SpendingMonth,@Param("condition") String condition);
 
+    // 미션 기간만큼 과거 해당 카테고리 소비 합
+    @Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.member.memberEmail= :memberEmail AND s.spendingCategoryId= :categoryId AND s.spendingDate BETWEEN :start AND :end " )
+    Long findPastSum(@Param("memberEmail") String memberEmail, @Param("categoryId") int categoryId, @Param("start") Date start, @Param("end")Date end);
     // 일별 지출 합계
     @Query("SELECT new com.doacha.seesaw.model.dto.spending.DailySpendingSumResponse(SUM(s.spendingCost) AS spendingCostSum, s.spendingDate, s.member.memberEmail) FROM Spending s WHERE s.member.memberEmail = :memberEmail AND YEAR(s.spendingDate) = :spendingYear AND MONTH(s.spendingDate) = :spendingMonth GROUP BY DAY(s.spendingDate), s.member.memberEmail")
     List<DailySpendingSumResponse> findDailySumByMemberEmailAndSpendingYearAndSpendingMonth(@Param("memberEmail") String memberEmail, @Param("spendingYear") int spendingYear, @Param("spendingMonth") int spendingMonth);
