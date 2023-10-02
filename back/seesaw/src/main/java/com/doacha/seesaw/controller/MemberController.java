@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,6 +28,7 @@ import java.util.Map;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 @CrossOrigin(origins="*", allowedHeaders = "*", methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.HEAD, RequestMethod.OPTIONS, RequestMethod.POST, RequestMethod.PUT})
+@Slf4j
 public class MemberController {
     private final MemberService memberService;
     private final MemberMissionService memberMissionService;
@@ -38,9 +40,11 @@ public class MemberController {
         return memberService.signUp(signUpRequest);
     }
 
-    @GetMapping(value="registerEmail")
-    public String emailConfirm(@RequestParam String memberEmail)throws Exception{
-        memberService.memberAuth(memberEmail);
+    // 이메일 인증
+    @GetMapping("/registerEmail")
+    public String emailConfirm(@RequestParam String memberEmail, String key)throws Exception{
+        log.info("인증 요청 온 이메일: " + memberEmail);
+        memberService.memberAuth(memberEmail, key);
         return "/member/registerEmail";
     }
     // 로그인
