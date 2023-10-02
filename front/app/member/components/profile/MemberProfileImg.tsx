@@ -7,8 +7,8 @@ interface Props {
 const MemberProfileImg = (props: Props) => {
   return (
     <div className="avatar">
-      <div className="w-20 rounded-full">
-        <Image src={props.src} alt="profileImg" width={80} height={80}></Image>
+      <div className="w-16 rounded-full">
+        <Image src={props.src} alt="profileImg" width={64} height={64}></Image>
       </div>
     </div>
   )

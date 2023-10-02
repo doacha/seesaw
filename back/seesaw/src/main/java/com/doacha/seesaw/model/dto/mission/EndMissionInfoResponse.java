@@ -26,7 +26,7 @@ public class EndMissionInfoResponse {
     private String missionEndDate;
 
     @Schema(description = "미션 상태", example = "0", required = true)
-    private int missionStatus;
+    private int memberMissionStatus;
 
     @Schema(description = "미션 소개글", example = "일주일동안 5만원쓰기 같이 하실 분!!", required = true)
     private String missionPurpose;
