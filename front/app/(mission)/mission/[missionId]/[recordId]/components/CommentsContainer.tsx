@@ -2,16 +2,21 @@
 import { Comment } from '@/app/types'
 import CommentCard from './CommentCard'
 import { useQuery } from '@tanstack/react-query'
-
+import { useEffect } from 'react'
+import { commentRefetchStore } from '@/stores/commenRefetch'
 const CommentsContainer = (
-  /*{ propsData }: { propsData: Array<Comment> }*/
+  /*{ propsData }: { propsData: Array<Coßment> }*/
   { recordId }: { recordId: number },
 ) => {
-  const { data, isSuccess } = useQuery<Comment[]>({
+  const { data, refetch } = useQuery<Comment[]>({
     queryKey: ['get-comments', recordId],
     queryFn: () => getRecordComments(recordId),
     staleTime: 10 * 1000,
   })
+  const { setRefetch } = commentRefetchStore()
+  useEffect(() => {
+    setRefetch(refetch)
+  }, [])
   console.log('외않됨', data)
   return (
     <div className="bg-background rounded-lg p-5 m-5">
