@@ -38,8 +38,8 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
     Optional<MonthSpendingSumResponse> findPastMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(@Param("memberEmail")String memberEmail, @Param("spendingYear") int spendingYear, @Param("spendingMonth")int spendingMonth);
 
 
-//    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MonthSumResponse(SUM(s.spendingCost) AS spendingCostSum, MONTH(s.spendingDate)) FROM Spending s WHERE s.member.memberEmail=:memberEmail AND s.spendingDate BETWEEN :start AND :end GROUP BY MONTH(s.spendingDate)")
-//    List<MonthSumResponse> getMonthSumList(@Param("memberEmail") String memberEmail, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+   @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MonthSpendingSumResponse(SUM(s.spendingCost) AS spendingCostSum, YEAR(s.spendingDate), MONTH(s.spendingDate) AS spendingMonth, s.member.memberEmail) FROM Spending s WHERE s.member.memberEmail=:memberEmail AND s.spendingDate BETWEEN :start AND :end GROUP BY MONTH(s.spendingDate)")
+    List<MonthSpendingSumResponse> getMonthSumList(@Param("memberEmail") String memberEmail, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     @Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.spendingCategoryId= :categoryId AND s.member.memberEmail=:memberEmail AND s.spendingDate BETWEEN :start AND :end ")
     Long findSumByPeriodAndCategory(@Param("categoryId")int categoryId, @Param("memberEmail") String memberEmail, @Param("start")LocalDateTime start, @Param("end")LocalDateTime end);
