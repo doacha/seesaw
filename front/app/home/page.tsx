@@ -25,8 +25,7 @@ const HomePage = () => {
     memberEmail: 'tldnjs324@naver.com',
     spendingYear: new Date().getFullYear(),
     spendingMonth: new Date().getMonth() + 1,
-    spendingCostSum: 0,
-    condition: sort === '최신순' ? 'spendingDate' : 'spendingCost',
+    condition: 'spendingDate', // 초기값은 'spendingDate'로 설정
   })
   const [spendingList, setSpendingList] = useState<Spending[]>([])
 
@@ -84,9 +83,24 @@ const HomePage = () => {
     setClickDirection(1)
   }
 
-  // 최신순, 고액순 분리
+  // 최신순, 고액순 클릭 시 sort 변경
   const clickText = (e: any) => {
-    setSort(e.target.innerText)
+    const newSort = e.target.innerText
+    // setSort 왜있지?
+    setSort(newSort)
+
+    // sort 변경 시 condition 값을 업데이트
+    if (newSort === '최신순') {
+      setSpendData({
+        ...spendData,
+        condition: 'spendingDate',
+      })
+    } else {
+      setSpendData({
+        ...spendData,
+        condition: 'spendingCost',
+      })
+    }
   }
 
   // 유저에게 보여지는 시간 표시
@@ -118,7 +132,6 @@ const HomePage = () => {
       },
       body: spendData.memberEmail, // 데이터를 JSON 문자열로 변환하여 전송
     }).then((res) => {
-      console.log(res)
       if (res.status === 200) {
         fetchSpendList()
       } else {
@@ -187,37 +200,46 @@ const HomePage = () => {
           data.forEach((element: any) => {
             sum += element.spendingCost as number
           })
+          // 월 합계를 위한 변수
           setMonthTotalSum(sum)
         }
       })
   }
 
-  // category 관련
-  const [state, setState] = useState<boolean[]>(Array(21).fill(false))
-  // 미분류 포함하면 총 21개
+  // Todo.. 이해하기... 왜 머리가 안돌아 가니이이이이
+  const categoryInit = Array(21).fill(false)
+  categoryInit[0] = true // 0은 true로 변경
+  // category 선택 여부 판단 boolean 배열
+  const [state, setState] = useState<boolean[]>(categoryInit)
+  // 미분류 포함하면 총 21개, id와 isSelected는 어디서 가져오는 거야?
   const clickCategory = (id: number, isSelected: boolean) => {
+    // 기존 state 배열 가져와
     const newState = [...state]
-    newState[id] = !isSelected
-    newState[0] = false //전체 이외의 카테고리 클릭 시 전체 카테고리 해제
     if (id === 0 && !isSelected) {
-      //전체 카테고리 활성화시, 이외 카테고리 해제
+      // 전체 카테고리가 선택된 경우, 이외 카테고리 해제
       newState.fill(false)
       newState[0] = true
     } else {
-      //전체 카테고리 이외의 친구 누르면 그 친구들이 들어가야지
-      newState[id] = true
+      // 개별 카테고리가 이미 선택되어있으면 선택 해제, 선택 안되어있으면 선택
+      newState[id] = !isSelected
+      // "전체" 카테고리 선택 해제
+      newState[0] = false
     }
     setState(newState)
   }
 
-  const newSelected: number[] = [] // state 기반으로 선택된 카테고리 값 배열 생성
-  state.forEach((element, idx) => {
-    if (element) {
-      newSelected.push(idx)
-    }
-  })
+  const newSelected: number[] = state.reduce<number[]>(
+    (selected, isSelected, idx) => {
+      if (isSelected && idx !== 0) {
+        selected.push(idx)
+      } else if (isSelected && idx == 0) {
+        selected.push(0)
+      }
+      return selected
+    },
+    [],
+  )
 
-  console.log(newSelected)
   // addPostModal을 열었는지 확인하는 boolean 변수
   const handleToggle = () => {
     setOpen((prev) => !prev)
@@ -228,7 +250,7 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchRefresh()
-  }, [clickEvent, open, sort, checkUpdateDelete])
+  }, [spendData, clickEvent, open, sort, checkUpdateDelete])
 
   return (
     <>
