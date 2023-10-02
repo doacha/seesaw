@@ -3,6 +3,7 @@ import GraphCardText from './GraphCardText'
 import { useEffect, useState } from 'react'
 import HorizontalGarphBar from '@/app/components/HorizontalGraphBar'
 import { GroupAverageInfo, Record } from '@/app/types'
+import AverageCount from './AverageCount'
 
 interface Props {
   type: 'vertical' | 'horizontal'
@@ -57,27 +58,27 @@ const GraphCard = (props: Props) => {
       setLengthList([entireLength, groupLength])
     }
   }, [])
-
+  
   return (
     <div className="relative w-full bg-background-fill p-5 rounded-lg">
       {props.type === 'vertical' ? (
         <div
-          className={`flex flex-col absolute w-[calc(100%-40px)] bottom-[108px] items-start`}
+          className={`flex flex-col absolute w-[calc(100%-40px)] bottom-[114px] items-start animate-slideUp`}
         >
           <div
             className={
               averageAmount > props.currentAmount
-                ? 'flex text-[10px] min-w-max text-secondary  font-scDreamLight'
-                : 'flex text-[10px] min-w-max text-error  font-scDreamLight'
+                ? 'flex text-[10px] min-w-max text-secondary  font-scDreamLight '
+                : 'flex text-[10px] min-w-max text-error  font-scDreamLight '
             }
           >
-            평균 {averageAmount.toLocaleString()}원
+            <AverageCount value={averageAmount}/>
           </div>
           <div
             className={
               averageAmount > props.currentAmount
-                ? ' bg-secondary-container  rounded-full w-full h-[3px]'
-                : ' bg-error-container  rounded-full w-full h-[3px]'
+                ? ' bg-secondary-container  rounded-full w-full h-[3px] '
+                : ' bg-error-container  rounded-full w-full h-[3px] '
             }
           />
         </div>
@@ -95,7 +96,13 @@ const GraphCard = (props: Props) => {
             : '다시 소비가 늘어나셨네요! 이런! '
         }
         txtColor={
-          averageAmount > props.currentAmount ? 'text-secondary' : 'text-error'
+          props.groupAverageInfo
+            ? props.currentAmount > props.groupAverageInfo.missionAverage
+              ? 'text-secondary'
+              : 'text-error'
+            : averageAmount > props.currentAmount
+            ? 'text-secondary'
+            : 'text-error'
         }
       />
 
@@ -168,11 +175,21 @@ const GraphCard = (props: Props) => {
               />
               <HorizontalGarphBar
                 amount={Math.round(props.groupAverageInfo.missionAverage)}
-                bgColor="bg-secondary"
+                bgColor={
+                  props.groupAverageInfo.entireAverage >
+                  props.groupAverageInfo.missionAverage
+                    ? 'bg-secondary'
+                    : 'bg-error'
+                }
                 height="big"
                 length={lengthList[1]}
                 title="미션"
-                txtColor="text-secondary"
+                txtColor={
+                  props.groupAverageInfo.entireAverage >
+                  props.groupAverageInfo.missionAverage
+                    ? 'text-secondary'
+                    : 'text-error'
+                }
                 unitType="won"
               />
             </div>

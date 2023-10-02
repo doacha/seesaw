@@ -2,6 +2,7 @@ package com.doacha.seesaw.repository;
 
 import com.doacha.seesaw.model.dto.MemberMissionId;
 import com.doacha.seesaw.model.dto.SavingList;
+import com.doacha.seesaw.model.dto.mission.MissionListResponse;
 import com.doacha.seesaw.model.dto.mission.MissionMemberResponse;
 import com.doacha.seesaw.model.dto.mission.MyPageMissionListResponse;
 import com.doacha.seesaw.model.dto.mission.ReturnDepositList;
@@ -10,6 +11,7 @@ import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.model.entity.Mission;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

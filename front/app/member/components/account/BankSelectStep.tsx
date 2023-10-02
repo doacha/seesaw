@@ -1,24 +1,11 @@
 import { useState } from 'react'
 import BankButton from './BankButton'
+import { bankList, bankList2 } from '@/app/dummies'
 
 interface Props {
   selectedBank: string
   onBankButtonClick: (value: string) => void
 }
-
-const bankList = [
-  { bankName: '시소뱅크', bankImg: './seesaw_logo.svg' },
-  { bankName: '신한은행', bankImg: './seesaw_logo.svg' },
-  { bankName: '국민은행', bankImg: './seesaw_logo.svg' },
-  { bankName: '우리은행', bankImg: './seesaw_logo.svg' },
-]
-
-const bankList2 = [
-  { bankName: '봉준은행', bankImg: './seesaw_logo.svg' },
-  { bankName: '재웅은행', bankImg: './seesaw_logo.svg' },
-  { bankName: '경호은행', bankImg: './seesaw_logo.svg' },
-  { bankName: '시원은행', bankImg: './seesaw_logo.svg' },
-]
 
 const BankSelectStep = (props: Props) => {
   return (

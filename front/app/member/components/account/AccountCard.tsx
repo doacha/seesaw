@@ -59,7 +59,6 @@ const AccountCard = (props: Props) => {
   const [page, setPage] = useState<number>(0)
 
   const getAccountDetailInfo = async () => {
-    console.log(page + '번째')
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SEESAW_BANK_API_URL}/account/accountdetail`,
@@ -83,8 +82,6 @@ const AccountCard = (props: Props) => {
   }
 
   const getMoreAccountDetailInfo = async () => {
-    // setIsLoading(true)
-    console.log('더가져오기'+ page + '번째')
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SEESAW_BANK_API_URL}/account/accountdetail`,
@@ -128,8 +125,6 @@ const AccountCard = (props: Props) => {
 
   useEffect(() => {
     if (isLoading) {
-      // console.log('로딩이 트루에용')
-      //로딩되었을 때만 실행
       const observer = new IntersectionObserver(
         entries => {
           if (entries[0].isIntersecting) {
@@ -144,29 +139,17 @@ const AccountCard = (props: Props) => {
   }, [isLoading]);
 
   useEffect(() => {
-    // console.log('page 트리거인 getinfo 실행 useEffect')
     getMoreAccountDetailInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const loadMore = () => {
-    // console.log('뭐임?')
     setPage(prev=>prev+1);
   };
 
   const target = useRef<HTMLDivElement>(null);
 
   return (
-    // <div
-    //   className={
-    //     props.bgColor === 'installment'
-    //       ? 'collapse bg-primary rounded-lg'
-    //       : props.bgColor === 'main'
-    //       ? 'collapse bg-white rounded-lg border-[3px] border-primary'
-    //       : 'collapse bg-white rounded-lg'
-    //   }
-    // >
-    <div className={isOpened && opentAccountNum === props.account.accountNum ? 'collapse absolute top-[104px] left-0 w-full h-[calc(100vh-168px)] z-50 transition-all rounded-none bg-background' : 'collapse bg-background rounded-lg' }>
+    <div className={isOpened && opentAccountNum === props.account.accountNum ? 'collapse absolute top-[105px] left-0 w-full h-[calc(100vh-168px)] z-50 transition-all rounded-none bg-background' : 'collapse bg-background rounded-lg' }>
       <input type="checkbox" onClick={() => detailButtonClick()} />
       <div className={
         props.bgColor === 'installment'
