@@ -4,13 +4,13 @@ import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation'
 import { currentTabStore } from '@/stores/currentTab'
 import { Tab } from '../types'
+import { useEffect, useState } from 'react'
 
 const Navbar = () => {
   const pathname = usePathname()
-
-  //add 버그 있음.
   const router = useRouter()
   const { currentTab, setCurrentTab } = currentTabStore()
+
 
   const onTabClick = (value: Tab) => {
     setCurrentTab(value)
@@ -21,9 +21,21 @@ const Navbar = () => {
     }
   }
 
+  useEffect(() => {
+    console.log('setTab실행')
+    if(pathname === '/mission-landing'){
+      setCurrentTab('mission')
+    }else if(pathname === '/member'){
+      setCurrentTab('member')
+    }else if(pathname === '/home'){
+      setCurrentTab('home')
+    }
+  }, [])
+  
+
   return (
     <>
-      {pathname !== '/' &&
+      {currentTab !== ''? pathname !== '/' &&
       pathname !== '/login' &&
       pathname !== '/regist' &&
       pathname !== '/seesawbank' &&
@@ -45,7 +57,7 @@ const Navbar = () => {
             onTabClick={() => onTabClick('member')}
           />
         </div>
-      ) : null}
+      ) : null : null}
     </>
   )
 }

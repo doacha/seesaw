@@ -1,19 +1,20 @@
-import { GroupAverageInfo } from '@/app/types'
+import { GroupAverageInfo, MissionRanking } from '@/app/types'
 import GroupGraphCard from './GroupGraphCard'
 import MyStatisticDetailCard from './MyStatisticDetailCard'
 import { useQuery } from '@tanstack/react-query'
 import Loading from '@/app/components/Loading'
 import GraphCard from './GraphCard'
+import { memberEmailStore } from '@/stores/memberEmail'
+import { currentMissionIdStore } from '@/stores/currentMissionId'
 
-interface Props {
-  missionId: string
-}
 
-const GroupStatisticCard = (props: Props) => {
+const GroupStatisticCard = () => {
+  const { memberEmail } = memberEmailStore()
+  const {currentMissionId} = currentMissionIdStore()
   const getGroupAverageInfo = async () => {
     try {
       const res = await fetch(
-        // `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/compare/${props.missionId}`,
+        // `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/compare/${currentMissionId}`,
         `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/compare/yzn5LMDMCG`,
       )
       const data: GroupAverageInfo = await res.json()
@@ -23,8 +24,41 @@ const GroupStatisticCard = (props: Props) => {
     }
   }
 
-  const { isLoading: groupAverageInfoLoading, data: groupAverageInfo } =
-    useQuery(['getGroupAverageInfo'], getGroupAverageInfo)
+  const getMissionRanking = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/ranking`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            missionId: currentMissionId,
+            memberEmail: memberEmail,
+          }),
+          // body: JSON.stringify({
+          //   missionId: 'yzn5LMDMCG',
+          //   memberEmail: 'doacha@seesaw.com',
+          // }),
+        },
+      )
+      const data: MissionRanking = await res.json()
+      return data
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const { isLoading: groupAverageLoading, data: groupAverageInfo } = useQuery(
+    ['getGroupAverageInfo'],
+    getGroupAverageInfo,
+  )
+
+  const { isLoading: missionRankingLoading, data: missionRanking } = useQuery(
+    ['getMissionRanking'],
+    getMissionRanking,
+  )
   return (
     <div className="w-full flex flex-col bg-white rounded-lg p-5 gap-5">
       <div>
@@ -33,28 +67,34 @@ const GroupStatisticCard = (props: Props) => {
         </div>
         <hr />
       </div>
-      <MyStatisticDetailCard
-        icon="faCrown"
-        iconColor="bg-error"
-        title="알뜰왕"
-        amount={56400}
-        content="차차아버님"
-      />
-      <MyStatisticDetailCard
-        icon="faSackDollar"
-        iconColor="bg-primary"
-        title="큰손"
-        amount={220000}
-        content="매국노봉준상"
-      />
-      <MyStatisticDetailCard
-        icon="faFire"
-        iconColor="bg-primary-container"
-        title="과소비 대장"
-        amount={80000}
-        content="욕쟁이김한나"
-      />
-      {groupAverageInfoLoading ? (
+      {missionRankingLoading ? null : (
+        <div className='flex flex-col gap-5'>
+          <MyStatisticDetailCard
+            icon="faCrown"
+            iconColor="bg-secondary"
+            title="알뜰왕"
+            amount={missionRanking?.missionFrugalSpendingCost??0}
+            content={missionRanking?.missionFrugalSpender??'닉네임'}
+          />
+          <MyStatisticDetailCard
+            icon="faSackDollar"
+            iconColor="bg-primary"
+            title="큰손"
+            amount={missionRanking?.missionTopSpendingCost??0}
+            content={missionRanking?.missionTopSpender??'닉네임'}
+          />
+          <MyStatisticDetailCard
+            icon="faFire"
+            iconColor="bg-error"
+            title="과소비 대장"
+            amount={missionRanking?.recordTopSpendingCost??0}
+            content={missionRanking?.recordTopSpender??'닉네임'}
+            round={missionRanking?.recordTopSpendingNum?? 0}
+          />
+        </div>
+      )}
+
+      {groupAverageLoading ? (
         <Loading />
       ) : (
         <GraphCard
@@ -84,7 +124,7 @@ const GroupStatisticCard = (props: Props) => {
           groupAverageInfo={groupAverageInfo}
         />
       )}
-      <GroupGraphCard />
+      <GroupGraphCard/>
     </div>
   )
 }

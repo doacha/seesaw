@@ -8,6 +8,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import Header from './components/Header'
 import Navbar from './components/Navbar'
+import { currentTabStore } from '@/stores/currentTab'
 config.autoAddCss = false
 //////////////////////////////////////////////////////////
 //아이콘을 사용하는 페이지에서 FontAwesomeIcon태그 import //
@@ -55,6 +56,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+
   return (
     <html
       lang="en"
@@ -63,7 +65,7 @@ export default function RootLayout({
     >
       <body>
         <Providers>{children}</Providers>
-        <Navbar />
+        <Navbar/>
       </body>
     </html>
   )
