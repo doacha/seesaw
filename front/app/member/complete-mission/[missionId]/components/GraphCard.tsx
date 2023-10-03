@@ -2,7 +2,7 @@ import VerticalGraphBar from '@/app/components/VerticalGraphBar'
 import GraphCardText from './GraphCardText'
 import { useEffect, useState } from 'react'
 import HorizontalGarphBar from '@/app/components/HorizontalGraphBar'
-import { GroupAverageInfo, Record } from '@/app/types'
+import { GroupAverageInfo, Record, SavedAmount } from '@/app/types'
 import AverageCount from './AverageCount'
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
   textBefore: string
   recordList?: Record[]
   groupAverageInfo?: GroupAverageInfo
+  savedAmount?: SavedAmount
   currentAmount: number
   textAfter: string
   comment?: string
@@ -31,6 +32,9 @@ const GraphCard = (props: Props) => {
       : props.groupAverageInfo
       ? (props.groupAverageInfo.entireAverage +
           props.groupAverageInfo.missionAverage) /
+        2
+      : props.savedAmount
+      ? (props.savedAmount.missionTotalCost + props.savedAmount.pastTotalCost) /
         2
       : 0,
   )
@@ -56,9 +60,18 @@ const GraphCard = (props: Props) => {
       )}px`
 
       setLengthList([entireLength, groupLength])
+    } else if (props.savedAmount) {
+      let pastLength = `${Math.round(
+        (props.savedAmount.pastTotalCost / averageAmount) * 100,
+      )}px`
+      let missionLength = `${Math.round(
+        (props.savedAmount.missionTotalCost/ averageAmount) * 100,
+      )}px`
+
+      setLengthList([pastLength, missionLength])
     }
   }, [])
-  
+
   return (
     <div className="relative w-full bg-background-fill p-5 rounded-lg">
       {props.type === 'vertical' ? (
@@ -72,7 +85,7 @@ const GraphCard = (props: Props) => {
                 : 'flex text-[10px] min-w-max text-error  font-scDreamLight '
             }
           >
-            <AverageCount value={averageAmount}/>
+            <AverageCount value={averageAmount} />
           </div>
           <div
             className={
@@ -187,6 +200,39 @@ const GraphCard = (props: Props) => {
                 txtColor={
                   props.groupAverageInfo.entireAverage >
                   props.groupAverageInfo.missionAverage
+                    ? 'text-secondary'
+                    : 'text-error'
+                }
+                unitType="won"
+              />
+            </div>
+          ) : null}
+
+          {props.savedAmount ? (
+            <div className="flex flex-col gap-5">
+              <HorizontalGarphBar
+                amount={Math.round(props.savedAmount.pastTotalCost)}
+                bgColor="bg-white"
+                height="big"
+                length={lengthList[0]}
+                title="이전"
+                txtColor="text-black"
+                unitType="won"
+              />
+              <HorizontalGarphBar
+                amount={Math.round(props.savedAmount.missionTotalCost)}
+                bgColor={
+                  props.savedAmount.missionTotalCost <
+                  props.savedAmount.pastTotalCost
+                    ? 'bg-secondary'
+                    : 'bg-error'
+                }
+                height="big"
+                length={lengthList[1]}
+                title="이후"
+                txtColor={
+                  props.savedAmount.missionTotalCost <
+                  props.savedAmount.pastTotalCost
                     ? 'text-secondary'
                     : 'text-error'
                 }

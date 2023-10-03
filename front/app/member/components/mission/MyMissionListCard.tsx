@@ -5,6 +5,7 @@ import MyMissionInfoCard from './MyMissionInfoCard'
 import Dropdown from '@/app/components/Dropdown'
 import { missionList } from '@/app/dummies'
 import { useState } from 'react'
+import MissionEmptyAlert from './MissionEmptyAlert'
 
 interface Props {
   missionList: Mission[]
@@ -18,7 +19,7 @@ const MyMissionListCard = (props: Props) => {
   }
 
   return (
-    <div className="flex flex-col bg-background flex-grow rounded-lg p-5 gap-2">
+    <div className="flex flex-col bg-background flex-grow rounded-lg p-5 gap-2 h-[400px]">
       <div className="flex w-full justify-between items-center">
         <div className="font-scDreamMedium text-lg">내 미션 목록</div>
         <div className="relative w-[80px] h-[40px]">
@@ -26,12 +27,16 @@ const MyMissionListCard = (props: Props) => {
         </div>
       </div>
       <div className="flex flex-col gap-3 h-auto max-h-[480px] overflow-auto">
-        {props.missionList.map((mission) =>
-          sortType === 0 ? (
-            <MyMissionInfoCard mission={mission} key={mission.missionId} />
-          ) : sortType === mission.memberMissionStatus ? (
-            <MyMissionInfoCard mission={mission} key={mission.missionId} />
-          ) : null,
+        {props.missionList.length > 0 ? (
+          props.missionList.map((mission) =>
+            sortType === 0 ? (
+              <MyMissionInfoCard mission={mission} key={mission.missionId} />
+            ) : sortType === mission.memberMissionStatus ? (
+              <MyMissionInfoCard mission={mission} key={mission.missionId} />
+            ) : null,
+          )
+        ) : (
+          <MissionEmptyAlert />
         )}
       </div>
     </div>

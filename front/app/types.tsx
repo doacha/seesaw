@@ -4,7 +4,7 @@ export interface ImageFile {
   url: string
 }
 
-export type Tab = 'home' | 'mission' | 'member'
+export type Tab = '' | 'home' | 'mission' | 'member'
 
 export interface Account {
   accountImg: string
@@ -101,6 +101,41 @@ export interface GroupAverageInfo {
   missionId: string
   missionAverage: number
   entireAverage: number
+  difference: number
+}
+
+export interface MissionRanking {
+  memberEmail: string
+  missionTopSpender: string
+  missionTopSpendingCost: number
+  missionFrugalSpender: string
+  missionFrugalSpendingCost: number
+  recordTopSpender: string
+  recordTopSpendingCost: number
+  recordTopSpendingNum: number
+}
+
+export interface MissionCompareList {
+  missionId: string
+  memberId: string
+  firstCategoryId: number
+  firstCategoryMissionAverage: number
+  firstCategoryMemberAverage: number
+  secondCategoryId: number
+  secondCategoryMissionAverage: number
+  secondCategoryMemberAverage: number
+  thirdCategoryId: number
+  thirdCategoryMissionAverage: number
+  thirdCategoryMemberAverage: number
+  frugalCategoryId: number
+  frugalCategoryMissionAverage: number
+  frugalCategoryMemberAverage: number
+}
+
+export interface SavedAmount {
+  missionId: string
+  pastTotalCost: number
+  missionTotalCost: number
   difference: number
 }
 export interface Record {

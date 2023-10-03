@@ -4,7 +4,7 @@ import { Mission, MissionCardProps, Record } from '@/app/types'
 import CompleteMissionDetailCard from './components/CompleteMissionDetailCard'
 import Header from '@/app/components/Header'
 import Tab from '@/app/components/Tab'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import MystatisticCard from './components/MyStatisticCard'
 import GroupStatisticCard from './components/GroupStatisticCard'
 import Card from '@/app/components/Card'
@@ -13,10 +13,12 @@ import { recordList, mission } from '@/app/dummies'
 import { useQuery } from '@tanstack/react-query'
 import { memberEmailStore } from '@/stores/memberEmail'
 import Loading from '@/app/components/Loading'
+import { currentMissionIdStore } from '@/stores/currentMissionId'
 
 const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1')
   const { memberEmail } = memberEmailStore()
+  const { currentMissionId, setCurrentMissionId} = currentMissionIdStore()
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
   }
@@ -30,11 +32,11 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          // body: JSON.stringify({memberEmail : memberEmail, missionId : params.missionId})
-          body: JSON.stringify({
-            missionId: 'Ch58ZYwiI3',
-            memberEmail: 'tldnjs324@naver.com',
-          }),
+          body: JSON.stringify({memberEmail : memberEmail, missionId : params.missionId})
+          // body: JSON.stringify({
+          //   missionId: 'Ch58ZYwiI3',
+          //   memberEmail: 'tldnjs324@naver.com',
+          // }),
         },
       )
       const data = await res.json()
@@ -53,11 +55,7 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          // body: JSON.stringify({memberEmail : memberEmail, missionId : params.missionId})
-          body: JSON.stringify({
-            missionId: 'yzn5LMDMCG',
-            memberEmail: 'doacha@seesaw.com',
-          }),
+          body: JSON.stringify({memberEmail : memberEmail, missionId : params.missionId})
         },
       )
       const data = await res.json()
@@ -74,6 +72,11 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
   } = useQuery(['completeMissionDetailInfo'], getCompleteMissionDetailInfo)
   const { data: recordList } = useQuery(['recordList'], getRecordList)
 
+  useEffect(() => {
+    setCurrentMissionId(params.missionId)
+  }, [])
+  
+  
   return (
     <div className="w-screen h-screen bg-background-fill">
       {isLoading ? (
@@ -92,14 +95,14 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
 
             {activeTab === 'tab1' ? (
               <div className="flex flex-col p-5 gap-5">
-                <MystatisticCard missionId={params.missionId} />
-                <GroupStatisticCard missionId={params.missionId}/>
+                <MystatisticCard />
+                <GroupStatisticCard/>
               </div>
             ) : (
               <div className="flex flex-col p-5 gap-5">
                 <Card
-                  content={recordList.map((record: Record) => (
-                    <RecordCard record={record} />
+                  content={recordList.map((record: Record, index : number) => (
+                    <RecordCard record={record} key={index}/>
                   ))}
                 />
               </div>

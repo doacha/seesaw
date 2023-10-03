@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation'
 import { accountListStore } from '@/stores/accountList'
 import { profileEditInfoStore } from '@/stores/profileEditInfo'
 import MemberProfileImg from './components/profile/MemberProfileImg'
+import { memberEmailStore } from '@/stores/memberEmail'
 
 const memberPage = () => {
   const router = useRouter()
@@ -32,7 +33,8 @@ const memberPage = () => {
   } = accountListStore()
 
   const { setProfileEditInfo } = profileEditInfoStore()
-
+  const {memberEmail} = memberEmailStore()
+  console.log(memberEmail)
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
   }
@@ -54,7 +56,7 @@ const memberPage = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: 'doacha@seesaw.com',
+          body: memberEmail,
         },
       )
       const tmp = await res.json()
@@ -73,7 +75,7 @@ const memberPage = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: 'jiwon@seesaw.com',
+          body: memberEmail,
         },
       )
       const data = await res.json()
@@ -97,6 +99,7 @@ const memberPage = () => {
   )
 
   useEffect(() => {
+    if(accountList){
     accountList.forEach((account) => {
       if (account.accountType === 1) {
         setInstallmentAccount(account)
@@ -104,6 +107,7 @@ const memberPage = () => {
         setMainAccount(account)
       }
     })
+  }
   }, [accountListData])
 
   return (

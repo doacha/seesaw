@@ -6,6 +6,7 @@ interface Props {
   amount: number
   icon: string
   iconColor: string
+  round?: number
 }
 
 const MyStatisticDetailCard = (props: Props) => {
@@ -15,7 +16,10 @@ const MyStatisticDetailCard = (props: Props) => {
         <StatisticIcon icon={props.icon} color={props.iconColor} />
         <div className="flex flex-col">
           <div>{props.title}</div>
-          <div className="text-outline text-sm">{props.content}</div>
+          <div className="flex text-outline text-sm">
+            {props.round? <div>{props.round}회차 &nbsp;</div> : null}
+            {props.content}
+          </div>
         </div>
       </div>
       <div className="text-xl font-scDreamMedium">
