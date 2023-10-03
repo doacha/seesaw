@@ -28,7 +28,7 @@ const SpendingCostInput = ({ value, onChange }: Props) => {
         />
       ) : (
         <div className="flex flex-row">
-          <p className="font-envR text-3xl">{value}</p>
+          <p className="font-envR text-3xl">{value.toLocaleString('ko-KR')}</p>
           <span className="font-envR text-3xl">원</span>
         </div>
       )}

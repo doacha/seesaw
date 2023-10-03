@@ -12,7 +12,7 @@ const Entrance = () => {
     // 2초 대기 후 로그인 페이지로 이동
     const timer = setTimeout(() => {
       router.push('/login') // '/login'은 로그인 페이지 경로에 맞게 수정해야 합니다.
-    }, 1000)
+    }, 1500)
 
     return () => clearTimeout(timer) // 컴포넌트가 언마운트될 때 타이머를 정리합니다.
   }, [router])
