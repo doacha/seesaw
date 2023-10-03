@@ -10,11 +10,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class MissionRankingResponse {
-    private String missionTopSpender;
-    private Long missionTopSpending;
+
     private String missionFrugalSpender;
+
     private Long missionFrugalSpending;
+
+    private String missionTopSpender;
+
+    private Long missionTopSpending;
+
     private String recordTopSpender;
-    private Long recordTopSpending;
-    private Long recordTopSpendingNum;
+
+    private int recordTopSpending;
+
+    private int recordTopSpendingNum;
 }
