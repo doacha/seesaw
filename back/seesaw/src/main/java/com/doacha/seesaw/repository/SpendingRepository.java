@@ -1,7 +1,8 @@
 package com.doacha.seesaw.repository;
 import com.doacha.seesaw.model.dto.mission.CompareMissionDto;
+import com.doacha.seesaw.model.dto.mission.EntireMissionDto;
 import com.doacha.seesaw.model.dto.mission.MissionStatsResponse;
-import com.doacha.seesaw.model.dto.mission.MyMissionRankingResponse;
+import com.doacha.seesaw.model.dto.mission.MissionMemberSumDto;
 import com.doacha.seesaw.model.dto.spending.*;
 import com.doacha.seesaw.model.entity.Spending;
 import jakarta.persistence.QueryHint;
@@ -12,6 +13,7 @@ import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +50,7 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
     List<MonthSpendingSumResponse> getMonthSumList(@Param("memberEmail") String memberEmail, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     @Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.spendingCategoryId= :categoryId AND s.member.memberEmail=:memberEmail AND s.spendingDate BETWEEN :start AND :end ")
-    Long findSumByPeriodAndCategory(@Param("categoryId")int categoryId, @Param("memberEmail") String memberEmail, @Param("start")LocalDateTime start, @Param("end")LocalDateTime end);
+    Optional<Long> findSumByPeriodAndCategory(@Param("categoryId")int categoryId, @Param("memberEmail") String memberEmail, @Param("start")LocalDateTime start, @Param("end")LocalDateTime end);
     //@Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.spendingCategoryId = :categoryId AND s.member.memberEmail = :memberEmail AND s.spendingDate <= :end")
     //Long findSumByCategoryAndEnd(@Param("categoryId") int categoryId, @Param("memberEmail") String memberEmail, @Param("end") LocalDateTime end);
     //    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.CompareMissionDto(" +
@@ -76,7 +78,35 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
             "  AND s.record.memberMission.mission.missionId = :missionId " +
             "GROUP BY s.member.memberEmail, s.spendingCategoryId")
     MissionStatsResponse getCategorySumAndAverageByMissionAndMember(@Param("memberEmail") String memberEmail, @Param("missionId") String missionId);
+//    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MissionMemberSumDto(" +
+//            "s.spendingCategoryId AS spendingCategory, SUM(s.spendingCost) AS sum ) " +
+//            "FROM Record r " +
+//            "JOIN r.spendingList s" +
+//            "JOIN r.memberMission.mm " +
+//            "JOIN mm.mission.m " +
+//            "WHERE m.missionId = :missionId AND s.spendingDate BETWEEN :start AND :end " +
+//            "GROUP BY s.spendingCategoryId" )
+//    List<MissionMemberSumDto> getMissionMemberSum(@Param("missionId") String missionId, @Param("start")Date start, @Param("end")Date end);
 
 
+//    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MissionMemberSumDto(" +
+//            "s.spendingCategoryId AS spendingCategory, SUM(s.spendingCost) AS sum ) " +
+//            "FROM Spending s " +
+//            "JOIN s.member m " +
+//            "JOIN m.memberMission mm " +
+//            "WHERE mm.mission.missionId = :missionId " +
+//            "AND s.spendingDate BETWEEN :startDate AND :endDate " +
+//            "GROUP BY s.spendingCategoryId")
+//    List<MissionMemberSumDto> getMissionMemberSum(@Param("missionId") String missionId, @Param("startDate") Date startDate,@Param("endDate") Date endDate);
+
+    @Query(value = "SELECT s.spending_category_id AS categoryId, SUM(s.spending_cost) AS sum " +
+            "FROM spending s " +
+            "JOIN member_mission mm ON s.member_email = mm.member_email " +
+            "WHERE mm.mission_id = :missionId AND s.spending_date BETWEEN :startDate AND :endDate " +
+            "GROUP BY s.spending_category_id", nativeQuery = true)
+    List<MissionMemberSumDto> getMissionMemberSum(
+            @Param("missionId") String missionId,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
 }
 
