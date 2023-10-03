@@ -9,7 +9,6 @@ import { Spending } from '@/app/types'
 interface HomeHeaderProps {
   spend: Spending
   spendSum: number
-  clickEvent: boolean
   clickArrowLeft: () => void
   clickArrowRight: () => void
   clickReport: () => void
@@ -18,7 +17,6 @@ interface HomeHeaderProps {
 const HomeHeader = ({
   spend,
   spendSum,
-  clickEvent,
   clickArrowLeft,
   clickArrowRight,
   clickReport,
@@ -47,10 +45,13 @@ const HomeHeader = ({
             type="button"
             name="right-arrow"
           >
-            <FontAwesomeIcon
-              icon={faChevronRight}
-              style={{ color: '#001b2a' }}
-            />
+            {spend.spendingYear !== new Date().getFullYear() &&
+              spend.spendingMonth !== new Date().getMonth() + 1 && (
+                <FontAwesomeIcon
+                  icon={faChevronRight}
+                  style={{ color: '#001b2a' }}
+                />
+              )}
           </button>
         </div>
         <p className="text-3xl font-envR">

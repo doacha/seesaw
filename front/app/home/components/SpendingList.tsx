@@ -74,58 +74,64 @@ const SpendingList = ({
       {sort === '최신순' ? (
         <>
           {/* Object.entries가 그룹화된 데이터를 배열로 변환하는 과정 */}
-          {Object.entries(groupedSpending).map(([day, data]) => (
-            <div className="mb-2" key={day}>
-              <Card
-                title={day}
-                content={
-                  // if works!
-                  <>
-                    {data.map((spending, key) => (
-                      <div
-                        key={spending.spendingId}
-                        // 화살표 함수 쓴이유..? 안쓰면 어떻게 되는데? Todo. 화살표 함수 쓴 이유 정리하기
-                        onClick={() =>
-                          handleToggle(spending.spendingId as number)
-                        }
-                        className="h-9 flex w-full flex-row gap-5"
-                      >
-                        <div className="flex my-auto w-6 ml-1">
-                          {spending.spendingCategoryId && (
-                            <FontAwesomeIcon
-                              icon={categoryIcon[spending.spendingCategoryId]}
-                              style={{
-                                color: iconColors[spending.spendingCategoryId],
-                              }}
-                              size="xl"
-                            />
-                          )}
-                        </div>
-                        <div className="flex w-full justify-between">
-                          <div className="flex flex-col">
-                            <span className=" overflow-hidden font-scDreamRegular text-xs ">
-                              {spending.spendingTitle}
-                            </span>
-                            <span className="font-scDreamRegular text-xs text-outline">
-                              {spending.spendingDate &&
-                                formatTime(new Date(spending.spendingDate))}
-                            </span>
+          {Object.entries(groupedSpending) ? (
+            Object.entries(groupedSpending).map(([day, data]) => (
+              <div className="mb-2" key={day}>
+                <Card
+                  title={day}
+                  content={
+                    // if works!
+                    <>
+                      {data.map((spending, key) => (
+                        <div
+                          key={spending.spendingId}
+                          // 화살표 함수 쓴이유..? 안쓰면 어떻게 되는데? Todo. 화살표 함수 쓴 이유 정리하기
+                          onClick={() =>
+                            handleToggle(spending.spendingId as number)
+                          }
+                          className="h-9 flex w-full flex-row gap-5"
+                        >
+                          <div className="flex my-auto w-6 ml-1">
+                            {spending.spendingCategoryId && (
+                              <FontAwesomeIcon
+                                icon={categoryIcon[spending.spendingCategoryId]}
+                                style={{
+                                  color:
+                                    iconColors[spending.spendingCategoryId],
+                                }}
+                                size="xl"
+                              />
+                            )}
                           </div>
-                          <div>
-                            <p className=" whitespace-nowrap font-scDreamExBold text-sm">
-                              {spending.spendingCost &&
-                                spending.spendingCost.toLocaleString('ko-KR')}
-                              원
-                            </p>
+                          <div className="flex w-full justify-between">
+                            <div className="flex flex-col">
+                              <span className=" overflow-hidden font-scDreamRegular text-xs ">
+                                {spending.spendingTitle}
+                              </span>
+                              <span className="font-scDreamRegular text-xs text-outline">
+                                {spending.spendingDate &&
+                                  formatTime(new Date(spending.spendingDate))}
+                              </span>
+                            </div>
+                            <div>
+                              <p className=" whitespace-nowrap font-scDreamExBold text-sm">
+                                {spending.spendingCost &&
+                                  spending.spendingCost.toLocaleString('ko-KR')}
+                                원
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </>
-                }
-              />
-            </div>
-          ))}
+                      ))}
+                    </>
+                  }
+                />
+              </div>
+            ))
+          ) : (
+            // Todo 없는 데이터 처리
+            <div>데이터가 없습니다!</div>
+          )}
         </>
       ) : (
         <div className="w-full h-fit rounded-lg bg-background">
