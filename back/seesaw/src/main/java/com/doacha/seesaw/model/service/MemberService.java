@@ -303,30 +303,7 @@ public class MemberService {
 
             memberRepository.save(update);
         }
-//        if(changeInfoRequest.getMemberPassword()!=null && !"".equals(changeInfoRequest.getMemberPassword()) && changeInfoRequest.getMemberNewPassword()!=null && !"".equals(changeInfoRequest.getMemberNewPassword())){ // 비번 새로 바꾸려고 하면
-//            if(!passwordEncoder.matches( changeInfoRequest.getMemberPassword(), member.get().getMemberPassword())){ // 비번 확인
-//                throw new BadRequestException("비밀번호를 확인하세요."); // 비번 다르면 익셉션
-//            }
-//            String encodedPassword = passwordEncoder.encode(changeInfoRequest.getMemberNewPassword());
-//            update = Member.builder()
-//                    .memberEmail(member.get().getMemberEmail())
-//                    .memberPassword(encodedPassword)
-//                    .memberBirth(member.get().getMemberBirth())
-//                    .memberName(member.get().getMemberName())
-//                    .memberGender(member.get().isMemberGender())
-//                    .memberNickname(member.get().getMemberNickname())
-//                    .memberImgUrl(member.get().getMemberImgUrl())
-//                    .memberPhoneNumber(member.get().getMemberPhoneNumber())
-//                    .memberSavingAccount(member.get().getMemberSavingAccount())
-//                    .memberMainAccount(member.get().getMemberMainAccount())
-//                    .memberBankId(member.get().getMemberBankId())
-//                    .memberAuthKey(member.get().getMemberAuthKey())
-//                    .memberIsSocial(member.get().isMemberIsSocial())
-//                    .memberState(member.get().getMemberState())
-//                    .memberRefreshToken(member.get().getMemberRefreshToken())
-//                    .build();
-////            member.get().builder().memberPassword(changeInfoRequest.getMemberNewPassword()).build();
-//        }
+
         // 이미지 처리
         String storedFileName = changeInfoRequest.getMemberImgUrl(); // 일단 기존 것으로 초기화
         // 이미지를 변경하려고 한다면 s3에 업로드하고 바꿔주기
@@ -342,6 +319,66 @@ public class MemberService {
                 .memberGender(changeInfoRequest.isMemberGender())
                 .memberNickname(changeInfoRequest.getMemberNickname())
                 .memberImgUrl(storedFileName)
+                .memberPhoneNumber(changeInfoRequest.getMemberPhoneNumber()) // 이 다음으로 추가됨
+                .memberSavingAccount(member.get().getMemberSavingAccount())
+                .memberMainAccount(member.get().getMemberMainAccount())
+                .memberBankId(member.get().getMemberBankId())
+                .memberAuthKey(member.get().getMemberAuthKey())
+                .memberIsSocial(member.get().isMemberIsSocial())
+                .memberState(member.get().getMemberState())
+                .memberRefreshToken(member.get().getMemberRefreshToken())
+                .build();
+
+        memberRepository.save(update);
+
+        return MyInfoResponse.of(member.get());
+    }
+
+    // 회원 정보 수정(이미지 변경 없을 때)
+    @Transactional
+    public MyInfoResponse changeInfoNoImage(ChangeInfoRequest changeInfoRequest){
+
+        Optional<Member> member = memberRepository.findByMemberEmail(changeInfoRequest.getMemberEmail());
+
+        Member update;
+
+        if(changeInfoRequest.getMemberPassword()==null || changeInfoRequest.getMemberPassword().isEmpty() || changeInfoRequest.getMemberNewPassword()==null || changeInfoRequest.getMemberNewPassword().isEmpty()){
+            log.info("비밀번호 변경 X");
+        }else{ // 비밀번호가 뭐라도 들어오면 비번 변경
+            if(!passwordEncoder.matches( changeInfoRequest.getMemberPassword(), member.get().getMemberPassword())){ // 비번 확인
+                throw new BadRequestException("비밀번호를 확인하세요."); // 비번 다르면 익셉션
+            }
+            String encodedPassword = passwordEncoder.encode(changeInfoRequest.getMemberNewPassword());
+            update = Member.builder()
+                    .memberEmail(member.get().getMemberEmail())
+                    .memberPassword(encodedPassword)
+                    .memberBirth(member.get().getMemberBirth())
+                    .memberName(member.get().getMemberName())
+                    .memberGender(member.get().isMemberGender())
+                    .memberNickname(member.get().getMemberNickname())
+                    .memberImgUrl(member.get().getMemberImgUrl())
+                    .memberPhoneNumber(member.get().getMemberPhoneNumber())
+                    .memberSavingAccount(member.get().getMemberSavingAccount())
+                    .memberMainAccount(member.get().getMemberMainAccount())
+                    .memberBankId(member.get().getMemberBankId())
+                    .memberAuthKey(member.get().getMemberAuthKey())
+                    .memberIsSocial(member.get().isMemberIsSocial())
+                    .memberState(member.get().getMemberState())
+                    .memberRefreshToken(member.get().getMemberRefreshToken())
+                    .build();
+
+            memberRepository.save(update);
+        }
+
+
+        update = Member.builder()
+                .memberEmail(member.get().getMemberEmail())
+                .memberPassword(member.get().getMemberPassword())
+                .memberBirth(changeInfoRequest.getMemberBirth())
+                .memberName(changeInfoRequest.getMemberName())
+                .memberGender(changeInfoRequest.isMemberGender())
+                .memberNickname(changeInfoRequest.getMemberNickname())
+                .memberImgUrl(member.get().getMemberImgUrl())
                 .memberPhoneNumber(changeInfoRequest.getMemberPhoneNumber()) // 이 다음으로 추가됨
                 .memberSavingAccount(member.get().getMemberSavingAccount())
                 .memberMainAccount(member.get().getMemberMainAccount())
