@@ -74,6 +74,8 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
               isSaveMission
               missionCategory={categoryList[data.missionCategoryId]}
               missionTargetPrice={data.missionTargetPrice}
+              missionCategoryId={data.missionCategoryId}
+              missionPeriod={data.missionPeriod}
             />
           )}
         </>
