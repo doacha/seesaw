@@ -35,8 +35,6 @@ const MonthSumGraphCard = ({
     error,
   } = useQuery(['monthSumList', spendData], () => fetchMonthSumList(spendData))
 
-  console.log('monthSumList는 =>', monthSumList)
-
   let monthSumAmountList: number[] =
     monthSumList &&
     monthSumList.map((element: any) => element.spendingCostSum as number)

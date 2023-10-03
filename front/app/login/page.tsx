@@ -19,7 +19,7 @@ const Login = () => {
 
   const { email, pw } = memberInput
   const { memberEmail, setMemberEmail } = memberEmailStore()
-  const { setCurrentTab} = currentTabStore()
+  const { setCurrentTab } = currentTabStore()
   const handleInput = (e: any) => {
     const { name, value } = e.target
     setmemberInput({ ...memberInput, [name]: value })
@@ -55,12 +55,11 @@ const Login = () => {
     })
       .then((res) => {
         if (res.status === 200) {
-          
           // 홈으로 이동하기 전에 loading이 필요하려나?
           setMemberEmail(email)
           setCurrentTab('home')
           router.push('/home')
-        } else if (res.status === 404) {
+        } else if (res.status === 400) {
           Swal.fire({
             title: '로그인 실패',
             width: 300,

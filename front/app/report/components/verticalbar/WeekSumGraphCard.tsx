@@ -13,7 +13,6 @@ const WeekSumGraphCard = ({
   groupedSpending,
 }: WeekSumGraphCardProps) => {
   let valuesArray: number[] = Object.values(groupedSpending)
-  console.log(valuesArray)
 
   const averageAmount = () => {
     let sum = 0
