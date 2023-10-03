@@ -7,7 +7,6 @@ import CycleInput from './CycleInput'
 import StartDateInput from './StartDateInput'
 import DepositeInput from './DepositInput'
 import SelectPublicInput from './SelectPublicInput'
-import SelectSavingInput from './SelectSavingInput'
 import ImageInput from './ImageInput'
 import Button from '@/app/components/Button'
 import TargetPriceInput from './TargetPriceInput'
@@ -19,7 +18,9 @@ import SetSaveMoneyModal from '@/app/(mission)/mission//[missionId]/components/S
 import ConfirmDepositModal from '@/app/(mission)/mission//[missionId]/components/ConfirmDepositModal'
 import MoneyTransferModal from '@/app/(mission)/mission//[missionId]/components/MoneyTransferModal'
 import { useRef } from 'react'
-import { categoryList, missionPeriodArray } from '@/app/lib/constants'
+import { categoryList } from '@/app/lib/constants'
+import Swal from 'sweetalert2'
+import SelectMaxMemberInput from './SelectMaxMemberInput'
 const DUMMY_EMAIL = 'doacha@seesaw.com'
 const DUMMY_CATEGORYSAVEMONEY = 10000
 const DUMMY_ACCOUNT_NUM = '457899-01-655239'
@@ -64,11 +65,6 @@ const CreateMissionContainer = () => {
       (input.missionTotalCycle * 7) / input.missionPeriod,
     )
     input.missionMaxCount = Math.trunc(input.missionTotalCycle / 5)
-    // 인풋 유효 검사
-    // if (isInvalidInput(input)) {
-    //   console.log('유효하지 않은 인풋')
-    //   return
-    // }
 
     // 제출
     const request: { [key: string]: any } = {}
@@ -183,6 +179,11 @@ const CreateMissionContainer = () => {
       })
       return
     }
+
+    if (processLevel === -1 && isInvalidInput(input)) {
+      console.log('인풋 망함')
+      return
+    }
     refList[processLevel + 1].current?.showModal()
   }
   console.log('까보자', spendMoney, categorySpendMoneyOrigin)
@@ -224,6 +225,8 @@ const CreateMissionContainer = () => {
 
       {/* 공개 설정 */}
       <SelectPublicInput state={input} setState={setInput} />
+      {/* 인원수 설정 */}
+      <SelectMaxMemberInput state={input} setState={setInput} />
       {/* 사진 설정 */}
       <ImageInput state={input} setState={setInput} />
 
@@ -318,15 +321,35 @@ const getCategorySpendMoney = async ({
 
 const isInvalidInput = (input: MissionCreate) => {
   for (const property in input) {
-    if (property === 'imgFile') continue
-    else if (property === 'missionCategoryId' && input[property] === 0) continue
+    if (property === 'imgFile' && input[property].url === '') {
+      getAlert(property)
+      return true
+    } else if (
+      (property === 'missionCategoryId' ||
+        property === 'memberMissionSavingMoney') &&
+      input[property] === 0
+    )
+      continue
+    else if (
+      property === 'missionStartDate' &&
+      (input[property].day === -1 || input[property].month === -1)
+    ) {
+      getAlert(property)
+      return true
+    }
     switch (typeof input[property]) {
       case 'string': {
-        if (input[property] === '') return true
+        if (input[property] === '') {
+          getAlert(property)
+          return true
+        }
         break
       }
       case 'number': {
-        if (input[property] <= 0) return true
+        if (input[property] <= 0) {
+          getAlert(property)
+          return true
+        }
         break
       }
       default:
@@ -350,4 +373,31 @@ const deleteChange = (money: number) => {
   let temp = Math.ceil(money / 1000) * 1000
   return temp
 }
+
+const alertName: {
+  [key: string]: any
+} = {
+  imgFile: '이미지를',
+  missionTitle: '미션 제목을', //
+  missionMaxCount: '참가 인원수를', //
+  missionPurpose: '미션 소개를',
+  missionDeposit: '예치금을', //
+  missionIsPublic: '공개여부를', //
+  memberMissionSavingMoney: '적금 금액을', //
+  missionPeriod: '인증 빈도를', //
+  missionTotalCycle: '미션기간을', //
+  missionStartDate: '시작날짜를', //
+  missionHostEmail: DUMMY_EMAIL, // hostemail이 필요가 없네
+  missionCategoryId: '카테고리를',
+  missionTargetPrice: '목표 금액을',
+}
+
+const getAlert = (property: string) => {
+  return Swal.fire({
+    width: 300,
+    html: `${alertName[property]} 설정해주세요!`,
+    icon: 'error',
+  })
+}
+
 export default CreateMissionContainer
