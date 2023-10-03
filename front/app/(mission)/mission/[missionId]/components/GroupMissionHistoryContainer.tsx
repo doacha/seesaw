@@ -5,7 +5,8 @@ import { useMutation } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import { GroupStatusProps } from '@/app/types'
 import { RecordDetail } from '@/app/types'
-
+import { recordListStore } from '@/stores/recordListStore'
+const DUMMY_NICKNAME = '지원'
 const getPastRecord = async (input: {
   missionId: string
   pageNumber: number
@@ -24,18 +25,13 @@ const getPastRecord = async (input: {
     },
   ).then((res) => {
     let js = res.json()
-    console.log('진짜결과', js)
     return js
   })
 }
 
 const GroupMissionHistoryContainer = ({ data }: { data: GroupStatusProps }) => {
-  const {
-    mutate,
-    data: groupMissionHistory,
-    isSuccess,
-  } = useMutation(getPastRecord)
-  const [recordHistory, setRecordHistory] = useState<RecordDetail[][]>([])
+  const { mutate, data: groupMissionHistory } = useMutation(getPastRecord)
+  const { recordMap, setRecordMap } = recordListStore()
   useEffect(() => {
     mutate(
       {
@@ -43,24 +39,29 @@ const GroupMissionHistoryContainer = ({ data }: { data: GroupStatusProps }) => {
         pageNumber: 0,
       },
       {
-        onSuccess: (res) => setRecordHistory(res),
+        onSuccess: (res: RecordDetail[][]) => {
+          const newRecordMap: { [key: number]: any } = { ...recordMap }
+          res.forEach((recordListByRecordNumber) => {
+            let idx = recordListByRecordNumber.findIndex((record) => {
+              record.memberNickname === DUMMY_NICKNAME
+            })
+            const number = recordListByRecordNumber[idx].recordNumber
+            const id = recordListByRecordNumber[idx].recordId
+            newRecordMap[number] = id
+          })
+          setRecordMap(newRecordMap)
+        },
         onError: (err) => console.log(err),
       },
     )
   }, [])
-  console.log('왜안됳', recordHistory)
   return (
     <div className="rounded-lg bg-background p-5 m-5">
       <div className="font-scDreamMedium">미션 기록</div>
       <hr />
-      {isSuccess &&
-        (recordHistory as RecordDetail[][]).map((element, idx) => (
-          <GroupMissionHistoryCard
-            data={element}
-            missionData={data}
-            key={idx}
-          />
-        ))}
+      {((groupMissionHistory as RecordDetail[][]) ?? []).map((element, idx) => (
+        <GroupMissionHistoryCard data={element} missionData={data} key={idx} />
+      ))}
     </div>
   )
 }

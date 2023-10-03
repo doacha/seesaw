@@ -34,7 +34,7 @@ const memberPage = () => {
 
   const { setProfileEditInfo } = profileEditInfoStore()
   const {memberEmail} = memberEmailStore()
-
+  console.log(memberEmail)
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
   }
@@ -75,7 +75,7 @@ const memberPage = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: 'jiwon@seesaw.com',
+          body: memberEmail,
         },
       )
       const data = await res.json()
@@ -99,6 +99,7 @@ const memberPage = () => {
   )
 
   useEffect(() => {
+    if(accountList){
     accountList.forEach((account) => {
       if (account.accountType === 1) {
         setInstallmentAccount(account)
@@ -106,6 +107,7 @@ const memberPage = () => {
         setMainAccount(account)
       }
     })
+  }
   }, [accountListData])
 
   return (

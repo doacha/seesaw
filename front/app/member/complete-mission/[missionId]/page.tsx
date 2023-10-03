@@ -95,8 +95,8 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
 
             {activeTab === 'tab1' ? (
               <div className="flex flex-col p-5 gap-5">
-                <MystatisticCard missionId={params.missionId} />
-                <GroupStatisticCard missionId={params.missionId}/>
+                <MystatisticCard />
+                <GroupStatisticCard/>
               </div>
             ) : (
               <div className="flex flex-col p-5 gap-5">

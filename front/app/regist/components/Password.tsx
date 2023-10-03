@@ -43,7 +43,7 @@ const Password = ({
             {pwCheck.length > 0 && (
               <p
                 className="absolute top-0 left-0 mt-[2px] text-xs"
-                style={{ color: !isPwSame ? 'red' : 'green' }}
+                style={{ color: !isPwSame ? '#ed3a50' : '#16a34a' }}
               >
                 {!isPwSame
                   ? '* 비밀번호가 일치하지 않습니다'
