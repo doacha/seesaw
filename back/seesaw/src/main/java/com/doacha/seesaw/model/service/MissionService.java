@@ -2,6 +2,7 @@ package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.mission.*;
+import com.doacha.seesaw.model.dto.spending.MemberSpendingSumDto;
 import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MissionRepository;
@@ -23,9 +24,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -176,17 +175,114 @@ public class MissionService {
     }
     public CompareWithMissionMemberResponse getCompareMissionMemberStats(String memberEmail, String missionId){
         Optional<Mission> mission = missionRepository.findById(missionId);
-        int categoryId = mission.get().getMissionCategoryId();
-        Date date = mission.get().getMissionStartDate();
-        Instant instant = date.toInstant();
-        LocalDateTime start = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
-        LocalDateTime end = start.plusDays(mission.get().getMissionPeriod()*mission.get().getMissionTotalCycle());
+        Date start = mission.get().getMissionStartDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(start);
+        calendar.add(Calendar.DAY_OF_MONTH, +mission.get().getMissionPeriod() * mission.get().getMissionTotalCycle());
+        java.util.Date utilStartDate = calendar.getTime();
+        Date end = new Date(utilStartDate.getTime());
+        List<MissionMemberSumDto> missionList = new ArrayList<>();
+        List<MemberSpendingSumDto> memberList= new ArrayList<>();
+        Long missionSum=0L;
+        Long memberSum=0L;
         log.info("start: {}", start);
-        log.info("end :{}", end);
-        List<MissionMemberSumDto> missionMemberSumDtoList = spendingRepository.getMissionMemberSum(missionId, start, end);
-        for(MissionMemberSumDto m : missionMemberSumDtoList){
+        log.info("end: {}", end);
+        for(int i=0; i<20; i++){
+            MissionMemberSumDto missionMemberSumDto = MissionMemberSumDto.builder()
+                    .categoryId(i)
+                    .sum(0L)
+                    .build();
+            MemberSpendingSumDto memberSpendingSumDto = MemberSpendingSumDto.builder()
+                    .memberNickname("")
+                    .categoryId(i)
+                    .sum(0L)
+                    .build();
+            missionList.add(missionMemberSumDto);
+            memberList.add(memberSpendingSumDto);
         }
-        return null;
+        memberList.sort(Comparator.comparingLong(MemberSpendingSumDto::getCategoryId));
+        missionList.sort(Comparator.comparingLong(MissionMemberSumDto::getCategoryId));
+        List<MissionMemberSumDto> missionMemberSumDtoList = spendingRepository.getMissionMemberSum(missionId, memberEmail,start, end);
+        List<MemberSpendingSumDto> memberSpendingSumDtoList = spendingRepository.getMemberSumByCategory(memberEmail, start, end);
+        String nickname = memberSpendingSumDtoList.get(0).getMemberNickname();
+        for (MissionMemberSumDto missionMemberSumDto : missionMemberSumDtoList) {
+            int categoryId = missionMemberSumDto.getCategoryId();
+            missionList.set(categoryId, MissionMemberSumDto.builder()
+                    .categoryId(categoryId)
+                    .sum(missionMemberSumDto.getSum())
+                    .build());
+        }
+
+        for (MemberSpendingSumDto memberSpendingSumDto : memberSpendingSumDtoList) {
+            int categoryId = memberSpendingSumDto.getCategoryId();
+            memberList.set(categoryId, MemberSpendingSumDto.builder()
+                    .memberNickname(nickname)
+                    .categoryId(categoryId)
+                    .sum(memberSpendingSumDto.getSum())
+                    .build());
+        }
+        for(int i=0; i<20; i++){
+            log.info("missionListCategoryId :{}",missionList.get(i).getCategoryId());
+            log.info("missionmoney:{}",missionList.get(i).getSum());
+            log.info("membernListCategoryId :{}",memberList.get(i).getCategoryId());
+            log.info("membermonety:{}",memberList.get(i).getSum());
+        }
+        List<MissionMemberSumDto> sumList = new ArrayList<>();
+
+        for(int i=0; i<20; i++){
+            MissionMemberSumDto missionMemberSumDto = MissionMemberSumDto.builder()
+                    .categoryId(i)
+                    .sum(missionList.get(i).getSum()-memberList.get(i).getSum())
+                    .build();
+            sumList.add(missionMemberSumDto);
+        }
+        sumList.sort(Comparator.comparingLong(MissionMemberSumDto::getSum));
+        for(int i=0; i<20; i++){
+            log.info("sumcategory :{}",sumList.get(i).getCategoryId());
+            log.info("summoney:{}",sumList.get(i).getSum());
+        }
+        for(int i=0; i<20; i++){
+            missionSum+=missionList.get(i).getSum();
+            memberSum+=memberList.get(i).getSum();
+        }
+        log.info("sum0 : {}",memberList.get(sumList.get(0).getCategoryId()).getSum());
+        log.info("missionsum: {}", missionSum);
+        log.info("membersum: {}",memberSum);
+        CompareWithMissionMemberResponse compareWithMissionMemberResponse = CompareWithMissionMemberResponse.builder()
+                .memberEmail(memberEmail)
+                .missionId(missionId)
+                .memberNickname(memberSpendingSumDtoList.get(0).getMemberNickname())
+                .firstCategoryId(sumList.get(0).getCategoryId())
+                .firstCategoryMissionAverage(((double)missionList.get(sumList.get(0).getCategoryId()).getSum()/(double)missionSum)*100)
+                .firstCategoryMemberAverage(((double)memberList.get(sumList.get(0).getCategoryId()).getSum()/(double)memberSum)*100)
+                .secondCategoryId(sumList.get(1).getCategoryId())
+                .secondCategoryMissionAverage(((double)missionList.get(sumList.get(1).getCategoryId()).getSum()/(double)missionSum)*100)
+                .secondCategoryMemberAverage(((double)memberList.get(sumList.get(1).getCategoryId()).getSum()/(double)memberSum)*100)
+                .thirdCategoryId(sumList.get(2).getCategoryId())
+                .thirdCategoryMissionAverage(((double)missionList.get(sumList.get(2).getCategoryId()).getSum()/(double)missionSum)*100)
+                .thirdCategoryMemberAverage(((double)memberList.get(sumList.get(2).getCategoryId()).getSum()/(double)memberSum)*100)
+                .frugalCategoryId(sumList.get(18).getCategoryId())
+                .frugalCategoryMissionAverage(((double)missionList.get(sumList.get(18).getCategoryId()).getSum()/(double)missionSum)*100)
+                .frugalCategoryMemberAverage(((double)memberList.get(sumList.get(18).getCategoryId()).getSum()/(double)memberSum)*100)
+                .build();
+//        CompareWithMissionMemberResponse compareWithMissionMemberResponse = CompareWithMissionMemberResponse.builder()
+//                .memberEmail(memberEmail)
+//                .missionId(missionId)
+//                .memberNickname(memberSpendingSumDtoList.get(0).getMemberNickname())
+//                .firstCategoryId(sumList.get(18).getCategoryId())
+//                .firstCategoryMissionAverage((double)missionList.get(sumList.get(18).getCategoryId()).getSum())
+//                .secondCategoryMemberAverage((double)memberList.get(sumList.get(18).getCategoryId()).getSum())
+//                .secondCategoryId(sumList.get(17).getCategoryId())
+//                .secondCategoryMissionAverage((double)missionList.get(sumList.get(17).getCategoryId()).getSum())
+//                .secondCategoryMemberAverage((double)memberList.get(sumList.get(17).getCategoryId()).getSum())
+//                .thirdCategoryId(sumList.get(16).getCategoryId())
+//                .thirdCategoryMissionAverage((double)missionList.get(sumList.get(16).getCategoryId()).getSum())
+//                .thirdCategoryMemberAverage((double)memberList.get(sumList.get(16).getCategoryId()).getSum())
+//                .frugalCategoryId(sumList.get(0).getCategoryId())
+//                .frugalCategoryMissionAverage((double)missionList.get(sumList.get(0).getCategoryId()).getSum())
+//                .frugalCategoryMemberAverage((double)memberList.get(sumList.get(0).getCategoryId()).getSum())
+//                .build();
+        return compareWithMissionMemberResponse;
     }
 
      //완료 미션 랭킹
