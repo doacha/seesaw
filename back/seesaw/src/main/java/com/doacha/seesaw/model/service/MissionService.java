@@ -188,22 +188,27 @@ public class MissionService {
         }
         return null;
     }
-    // 미션 내 랭킹
-//    public MissionRankingResponse getMissionRanking (String missionId){
-//        MissionTopSpendingResponse missionTopSpendingResponse = recordRepository.getMissionTopSpender(missionId);
-//        MissionFrugalSpendingResponse missionFrugalSpendingResponse = recordRepository.getMissionFrugalSpender(missionId);
-//        DailyTopSpendingResponse dailyTopSpendingResponse = recordRepository.getDailyTopSpender(missionId);
-//        MissionRankingResponse missionRankingResponse = MissionRankingResponse.builder()
-//                .missionTopSpender(missionTopSpendingResponse.getMissionTopSpender())
-//                .missionTopSpending(missionTopSpendingResponse.getMissionTopSpending())
-//                .missionFrugalSpender(missionFrugalSpendingResponse.getMissionFrugalSpender())
-//                .missionFrugalSpending(missionFrugalSpendingResponse.getMissionFrugalSpending())
-//                .dailyTopSpender(dailyTopSpendingResponse.getDailyTopSpender())
-//                .dailyTopSpending(dailyTopSpendingResponse.getDailyTopSpending())
-//                .dailyTopSpendingNum(dailyTopSpendingResponse.getDailyTopSpendingNum())
-//                .build();
-//        return missionRankingResponse;
-//    }
+
+     //완료 미션 랭킹
+    public MissionRankingResponse getMissionRanking (String missionId){
+        // 알뜰왕 (미션 기간 중 제일 적게 쓴 사람)
+        List<Object[]> min = recordRepository.findMinTotalCostByMissionId(missionId);
+        // 큰손 (미션 기간 중 제일 많이 쓴 사람)
+        List<Object[]> max = recordRepository.findMaxTotalCostByMissionId(missionId);
+        // 과소비대장 (한 회차동안 제일 많이 쓴 사람)
+        List<Object[]> recordMax = recordRepository.findMaxTotalCostRecordByMissionId(missionId);
+
+        MissionRankingResponse missionRankingResponse = MissionRankingResponse.builder()
+                .missionFrugalSpender(min.get(0)[0].toString())
+                .missionFrugalSpending((Long)(min.get(0)[1]))
+                .missionTopSpender(max.get(0)[0].toString())
+                .missionTopSpending((Long)max.get(0)[1])
+                .recordTopSpender(recordMax.get(0)[0].toString())
+                .recordTopSpending((int)recordMax.get(0)[1])
+                .recordTopSpendingNum((int)recordMax.get(0)[2])
+                .build();
+        return missionRankingResponse;
+    }
 
 
     // 완료 미션 최근 기록 5개
