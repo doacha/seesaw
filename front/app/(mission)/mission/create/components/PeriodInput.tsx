@@ -5,9 +5,11 @@ import styles from '@/app/(mission)/mission/components/SearchContainer.module.cs
 const PeriodInput = ({
   state,
   handleClick,
+  calculateSavingMoney,
 }: {
   state: MissionCreate
   handleClick: any
+  calculateSavingMoney: any
 }) => {
   return (
     <div className={`overflow-auto ${styles.delScroll}`}>
@@ -22,9 +24,10 @@ const PeriodInput = ({
                 textColor="black"
                 key={idx}
                 isSelected={idx === state.missionPeriod}
-                onClick={() =>
+                onClick={() => {
                   handleClick(idx, idx === state.missionPeriod, 'missionPeriod')
-                }
+                  calculateSavingMoney(idx)
+                }}
               >
                 {element}
               </ToggleCapsule>
