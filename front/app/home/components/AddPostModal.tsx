@@ -33,11 +33,50 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
 
   // Todo.. 날짜 해결필요
   const today = new Date()
-  console.log(today.toUTCString())
+  // console.log('today.toUTCString()는 =>', today.toUTCString())
+  // console.log('today.toISOString()는 =>', today.toISOString())
+  // console.log('today.toLocalDateString()는 => ', today.toLocaleString())
+  // console.log('today는 =>', today)
+
+  const handleInput = (e: any) => {
+    const { name, value } = e.target
+    // 0으로 시작못하게 처리
+    let newValue = value
+    console.log(name, value)
+    if (name === 'spendingCost' && /^0/.test(value)) {
+      newValue = value.substring(1)
+    }
+    // 소수점 입력 불가
+    if (name === 'spendingCost') {
+      newValue = parseInt(value, 10)
+    }
+    if (name === 'spendingDate') {
+      newValue = new Date(value)
+      console.log('value는 => ', new Date(value))
+    }
+    setPostInput({ ...postInput, [name]: newValue })
+  }
+
+  // ISO를 한국시간으로 변경하는 함수
+  function getLocalISOString(date: string) {
+    let dateDate = new Date(date)
+    let year = dateDate.getFullYear()
+    let month = String(dateDate.getMonth() + 1).padStart(2, '0')
+    let day = String(dateDate.getDate()).padStart(2, '0')
+    let hours = String(dateDate.getHours()).padStart(2, '0')
+    let minutes = String(dateDate.getMinutes()).padStart(2, '0')
+    let seconds = String(dateDate.getSeconds()).padStart(2, '0')
+    let milliseconds = String(dateDate.getMilliseconds()).padStart(3, '0')
+
+    let localISOString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`
+
+    return localISOString
+  }
+
   const [postInput, setPostInput] = useState({
     spendingTitle: '',
     spendingCost: 0,
-    spendingDate: today,
+    spendingDate: getLocalISOString(today.toISOString()),
     spendingMemo: '',
     spendingCategoryId: 20,
     memberEmail: memberEmail,
@@ -55,7 +94,7 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
   const data: {
     spendingTitle: string
     spendingCost: number
-    spendingDate: Date
+    spendingDate: string
     spendingMemo: string
     spendingCategoryId: number
     memberEmail: string
@@ -67,17 +106,6 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     spendingCategoryId: spendingCategoryId,
     memberEmail: memberEmail,
   }
-
-  const handleInput = (e: any) => {
-    const { name, value } = e.target
-    // 0으로 시작못하게 처리
-    let newValue = value
-    if (name === 'spendingCost' && /^0/.test(value)) {
-      newValue = value.substring(1)
-    }
-    setPostInput({ ...postInput, [name]: newValue })
-  }
-
   // 새로운 소비내역등록
   const fetchAddPost = (data: object) => {
     fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending`, {
@@ -89,7 +117,6 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     })
       .then((res) => {
         if (res.status === 200) {
-          console.log(spendingDate)
           Swal.fire({
             title: '등록완료 성공',
             width: 300,
@@ -104,7 +131,7 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
         setPostInput({
           spendingTitle: '',
           spendingCost: 0,
-          spendingDate: today,
+          spendingDate: getLocalISOString(today.toISOString()),
           spendingMemo: '',
           spendingCategoryId: 20,
           memberEmail: memberEmail,
@@ -179,41 +206,6 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
             />
           </div>
 
-          {/* <div className={`overflow-auto ${styles.delScroll}`}>
-            <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
-              <div className=" w-20 my-auto">
-                <div className="w-20">
-                  <p className="font-scDreamExBold text-base">카테고리</p>
-                </div>
-              </div>
-              <div className="flex my-auto w-full justify-between">
-                <div className="carousel">
-                  {categoryList.map(
-                    (element, idx) =>
-                      idx > 0 && (
-                        <ToggleCapsule
-                          className="carousel-item mr-[15px] h-[14px]"
-                          bgColor="background-fill"
-                          textColor={`${idx}`}
-                          key={idx}
-                          isSelected={idx === spendingCategoryId}
-                          onClick={() =>
-                            handleCapsuleClick(
-                              idx,
-                              idx === spendingCategoryId,
-                              'spendingCategoryId',
-                            )
-                          }
-                        >
-                          {element}
-                        </ToggleCapsule>
-                      ),
-                  )}
-                </div>
-              </div>
-            </div>
-          </div> */}
-
           <Input
             title="거래처"
             type="text"
@@ -233,7 +225,7 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
             <div className="flex my-auto w-full justify-between">
               {!clickDa ? (
                 <p className="my-auto font-scDreamLight text-xs">
-                  {formatDate(spendingDate)}
+                  {formatDate(new Date(spendingDate))}
                 </p>
               ) : (
                 <input
