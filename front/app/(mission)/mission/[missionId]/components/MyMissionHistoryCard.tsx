@@ -21,10 +21,13 @@ interface MyRecordHistory {
 const MyMissionHistoryCard = ({
   data,
   propsData,
+  recordId,
 }: {
   data: Array<any>
   propsData: GroupStatusProps
+  recordId: number
 }) => {
+  console.log('리코드아이디뭐임', recordId)
   let recordList = []
   let sumOfSpending = 0
   for (let i = 4; i < data.length; i++) {
@@ -32,7 +35,7 @@ const MyMissionHistoryCard = ({
     sumOfSpending += data[i][1]
   }
   return (
-    <Link href={`${propsData.missionId}/${data[Property.recordNumber]}`}>
+    <Link href={`${propsData.missionId}/${recordId}`}>
       <div className="my-2.5 mt-5 p-2 shadow-md rounded-lg">
         {/* 제목 */}
         <div className="mb-[10px]">

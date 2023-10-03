@@ -6,6 +6,7 @@ import Birth from '@/app/regist/components/Birth'
 import { profileEditInfoStore } from '@/stores/profileEditInfo'
 import { memberEmailStore } from '@/stores/memberEmail'
 import { profile } from 'console'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   setOpenEditPage: () => void
@@ -15,10 +16,10 @@ interface Props {
 const ProfileEditCard = (props: Props) => {
   const [nicknameChecked, setNicknameChecked] = useState<number>(0)
 
-
   const {
     newImg,
     memberName,
+    memberImgUrl,
     memberGender,
     prevNickname,
     newNickname,
@@ -77,38 +78,64 @@ const ProfileEditCard = (props: Props) => {
       memberNickname: newNickname,
       memberBirth: birth[0] + birth[1] + birth[2],
       memberGender: memberGender,
-      // memberImgUrl: newImg.url ? null : memberImgUrl,
-      memberImgUrl : null,
+      memberImgUrl: newImg.url,
       memberPhoneNumber: phoneNumber,
     }
 
+    console.log(profileData)
+
     if (newImg?.file !== undefined) {
+      console.log(newImg.file)
       formData.append('image', newImg.file)
+
+
+      formData.append(
+        'changeInfoRequest',
+        new Blob(
+          [
+            JSON.stringify(profileData),
+          ],
+          { type: 'application/json' },
+        ),
+        // JSON.stringify(profileData)
+      )
+        
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/modify`,
+          {
+            method: 'POST',
+            body: formData,
+          },
+        )
+        const data = await res.json()
+        props.setOpenEditPage()
+      } catch (err) {
+        console.log(err)
+      }
+    }else{
+      console.log('이미지 없을경우')
+        
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/modify-noimg`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(profileData),
+          },
+        )
+        const data = await res.json()
+        console.log(data)
+        props.setOpenEditPage()
+      } catch (err) {
+        console.log(err)
+      }
     }
 
-    formData.append(
-      'changeInfoRequest',
-      new Blob(
-        [
-          JSON.stringify(profileData),
-        ],
-        { type: 'application/json' },
-      ),
-      // JSON.stringify(profileData)
-    )
-      
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/modify`,
-        {
-          method: 'POST',
-          body: formData,
-        },
-      )
-      const data = await res.json()
-    } catch (err) {
-      console.log(err)
-    }
+    
   }
 
   return (

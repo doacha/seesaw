@@ -70,7 +70,7 @@ const ImageUpload = () => {
             className="relative min-w-[200px] min-h-[200px] bg-gray-100 rounded-full flex flex-col justify-center"
           >
             <div className='avatar w-[200px] h-[200px] rounded-full'>
-            <Image src={newImg.url} alt={newImg.id} width={200} height={200} className='rounded-full'></Image>
+            <Image src={newImg.url??'./default_profile.svg'} alt={newImg.id} width={200} height={200} className='rounded-full'></Image>
             </div>
             <div
               className="absolute z-10 w-full h-full flex items-center justify-center rounded-full bg-black opacity-0 hover:opacity-30 transition-opacity"
