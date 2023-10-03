@@ -31,27 +31,6 @@ const MissionJoinButton = ({
     }
     refList[processLevel + 1].current?.showModal()
   }
-  // const modalList = [
-  //   <SetSaveMoneyModal
-  //   setState={setProcessLevel}
-  //   modalRef={refList[0]}
-  //   setSavingMoney={setSavingMoney}
-  //   savingMoney={savingMoney}
-  //   missionCategory={missionCategory}
-  //   changeModal={handleJoinButton}
-  //   missionTargetPrice={data.missionTargetPrice}
-  // />,
-  //   <ConfirmDepositModal
-  //     changeModal={handleJoinButton}
-  //     modalRef={refList[1]}
-  //   />,
-  //   <MoneyTransferModal changeModal={handleJoinButton} modalRef={refList[2]} password={password} setPassword={setPassword}/>,
-  // ]
-  // 버튼 누르면
-  // 적금 미션이면 적금 금액 세팅
-  // 세팅 끝나고 나서 n회 실패부터 반환되는 예치금이 줄어듭니다. 예치금 입금 및 미션 참가하 하시겠습니까?
-  // 계좌이체 절차
-  //
 
   return (
     <div>
