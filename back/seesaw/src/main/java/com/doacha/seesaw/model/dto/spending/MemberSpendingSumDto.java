@@ -1,15 +1,16 @@
-package com.doacha.seesaw.model.dto.mission;
+package com.doacha.seesaw.model.dto.spending;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
 @Builder
-public class MissionMemberSumDto {
+public class MemberSpendingSumDto {
+    private String memberNickname;
     private int categoryId;
     private Long sum;
 }

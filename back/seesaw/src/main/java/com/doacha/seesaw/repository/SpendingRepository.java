@@ -104,9 +104,10 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
             "JOIN member_mission mm ON s.member_email = mm.member_email " +
             "WHERE mm.mission_id = :missionId AND s.spending_date BETWEEN :startDate AND :endDate " +
             "GROUP BY s.spending_category_id", nativeQuery = true)
-    List<MissionMemberSumDto> getMissionMemberSum(
-            @Param("missionId") String missionId,
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
+    List<MissionMemberSumDto> getMissionMemberSum(@Param("missionId") String missionId, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MemberSpendingSumDto(s.member.memberNickname AS memberNickname, s.spendingCategoryId AS categoryId, SUM(s.spendingCost) AS sum) FROM Spending s WHERE s.member.memberEmail= :memberEmail AND s.spendingDate BETWEEN :start AND :end GROUP BY s.spendingCategoryId " )
+    List<MemberSpendingSumDto> getMemberSumByCategory(@Param("memberEmail")String memberEmail, @Param("start")Date start, @Param("end")Date end);
+
 }
 
