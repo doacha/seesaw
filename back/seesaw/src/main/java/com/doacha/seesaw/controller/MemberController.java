@@ -91,6 +91,12 @@ public class MemberController {
         return memberService.changeInfo(image, changeInfoRequest);
     }
 
+    // 회원 정보 수정 이미지 변경 없을 때
+    @PostMapping(value = "/modify-noimg")
+    public MyInfoResponse changeInfoNoImage(@RequestBody ChangeInfoRequest changeInfoRequest) {
+        return memberService.changeInfoNoImage(changeInfoRequest);
+    }
+
     // 회원 탈퇴
     @GetMapping("/delete/{memberEmail}")
     public boolean deleteMember(@PathVariable  String memberEmail) {
