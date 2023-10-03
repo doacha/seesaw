@@ -34,7 +34,7 @@ const Nickname = ({
                 </p>
               )}
               {value.length > 0 && checkedNickname === 2 && (
-                <p className="absolute top-0 left-0 mt-[2px] text-secondary text-xs">
+                <p className="absolute top-0 left-0 mt-[2px] text-green-600 text-xs">
                   * 사용가능한 닉네임입니다!
                 </p>
               )}

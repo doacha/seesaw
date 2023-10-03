@@ -37,7 +37,7 @@ const Login = () => {
       ? Swal.fire({
           title: '로그인 실패',
           width: 300,
-          text: '아이디 또는 비밀번호를 잘못 입력했습니다.',
+          html: '아이디 또는 <br> 비밀번호를 입력해주세요.',
           icon: 'error',
         })
       : // 이메일 입력창과 패스워드 입력창이 채워졌다면 fetch 수행
@@ -62,6 +62,20 @@ const Login = () => {
           // 홈으로 이동하기 전에 loading이 필요하려나?
           setMemberEmail(email)
           router.push('/home')
+        } else if (res.status === 404) {
+          Swal.fire({
+            title: '로그인 실패',
+            width: 300,
+            html: '아이디 혹은 <br> 비밀번호를 확인하세요',
+            icon: 'error',
+          })
+        } else if (res.status === 401) {
+          Swal.fire({
+            title: '로그인 실패',
+            width: 300,
+            html: '이메일 인증을 완료해주세요!',
+            icon: 'error',
+          })
         }
         return res.json()
       })

@@ -1,6 +1,7 @@
 package com.doacha.seesaw.controller;
 
 import com.doacha.seesaw.exception.BadRequestException;
+import com.doacha.seesaw.exception.ForbiddenException;
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.model.entity.Mission;
@@ -275,16 +276,14 @@ public class MissionController {
     public ResponseEntity<?> quitMission(@RequestBody QuitMissionRequest quitMissionRequest) {
         log.info("미션 탈퇴");
         try {
-            log.info("미션 탈퇴한 멤버 정보 삭제");
-            memberMissionService.deleteMemberMission(quitMissionRequest);
-            log.info("미션 탈퇴한 멤버 정보 삭제 성공");
+            memberMissionService.quitMission(quitMissionRequest);
 
             log.info("미션 인원 수 줄이기");
             Mission updatedMission = missionService.updateMissionMemberCount(quitMissionRequest.getMissionId(), -1);
 
             log.info("남은 인원 수 : {}", updatedMission.getMissionMemberCount());
             if (updatedMission.getMissionMemberCount() == 0) {
-                log.info("미션 삭제");
+                log.info("남은 참가자 없음 - 미션 삭제");
                 missionService.deleteMission(quitMissionRequest.getMissionId());
                 log.info("미션 삭제 성공");
                 return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
@@ -292,6 +291,9 @@ public class MissionController {
 
             log.info("미션 탈퇴 성공");
             return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        } catch (ForbiddenException e) {
+            log.info(e.getMessage());
+            return new ResponseEntity<String>(FAIL, HttpStatus.FORBIDDEN);
         } catch (Exception e) {
             log.info("미션 탈퇴 실패 - 서버 오류");
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);

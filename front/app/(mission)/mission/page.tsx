@@ -6,7 +6,8 @@ import type { SearchState, MissionList } from '@/app/types'
 import MissionCard from '../components/MissionCard'
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-
+import { categoryList } from '@/app/lib/constants'
+import { isStarted } from '../util'
 const getSearchList = async (input: SearchState) => {
   console.log('input', input)
   console.log('asdf', convertStateToRequest(input))
@@ -92,7 +93,12 @@ const MissionPage = () => {
         {isSuccess && (
           <div className="flex flex-wrap gap-5">
             {data?.map((element, idx) => (
-              <MissionCard data={element} key={idx} />
+              <MissionCard
+                data={element}
+                key={idx}
+                category={categoryList[element.missionCategoryId]}
+                isStarted={isStarted(element.missionStartDate)}
+              />
             ))}
           </div>
         )}

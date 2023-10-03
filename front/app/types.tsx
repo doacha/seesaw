@@ -98,18 +98,18 @@ export interface MissionCardProps {
 }
 
 export interface GroupAverageInfo {
-  missionId : string
-  missionAverage : number
-  entireAverage : number
-  difference : number
+  missionId: string
+  missionAverage: number
+  entireAverage: number
+  difference: number
 }
 export interface Record {
   recordNumber: number
   recordStatus: number
   recordTotalCost: number
   recordId: number
-  startDate : string
-  endDate : string
+  startDate: string
+  endDate: string
   memberEmail: string
   missionId: string
   recordContent: string
@@ -135,6 +135,7 @@ export interface MissionList {
   missionPeriod: number
   missionTotalCycle: number
   missionStartDate: string
+  missionCategoryId: number
 }
 
 export interface MissionDetail extends MissionList {
@@ -146,7 +147,6 @@ export interface MissionDetail extends MissionList {
   missionPenaltyPrice: number
   missionCreationTime: string
   missionHostEmail: string
-  missionCategoryId: number
 }
 
 export interface MissionCreate {
@@ -159,10 +159,10 @@ export interface MissionCreate {
   memberMissionSavingMoney: number
   missionPeriod: number
   missionTotalCycle: number
+  missionTargetPrice: number
   missionStartDate: { month: number; day: number }
   missionHostEmail: string
   missionCategoryId: number
-  memberMissionIsSaving: boolean
   [key: string]: any
 }
 
@@ -199,6 +199,7 @@ export interface RecordStatusProps {
   missionStartDate: string
   missionCurrentCycle: number
   pageNumber: number
+  todayRecordId: number
 }
 
 export interface Comment {
