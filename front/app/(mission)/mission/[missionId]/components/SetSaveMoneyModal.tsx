@@ -13,6 +13,8 @@ const SetSaveMoneyModal = ({
   missionCategory,
   changeModal,
   missionTargetPrice,
+  spendMoney,
+  period,
 }: {
   setState: React.Dispatch<SetStateAction<number>>
   modalRef: React.RefObject<HTMLDialogElement>
@@ -21,6 +23,8 @@ const SetSaveMoneyModal = ({
   missionCategory: string
   changeModal: (processLivel: number) => void
   missionTargetPrice: number
+  spendMoney: number
+  period: number
 }) => {
   const cancelButtonRef = useRef<HTMLButtonElement>(null)
   const handleSavingMoneyByButton = (unit: number, sign?: string) => {
@@ -45,10 +49,16 @@ const SetSaveMoneyModal = ({
     >
       <div className="modal-box bg-background">
         <div className="font-scDreamExBold mb-5">적금 금액 설정</div>
-        <div className="mb-5">
-          미션 목표 금액은 {missionTargetPrice},
-          <br />
-          평소 {missionCategory} 소비 금액은 0000입니다
+        <div className="mb-5 flex flex-col gap-y-1">
+          <span>
+            {period}일 간 평균{' '}
+            <span className="font-scDreamExBold">{missionCategory}</span> 소비
+            금액은 {spendMoney.toLocaleString()}원,
+          </span>
+          <span className="mb-2.5">
+            미션 목표 금액은 {missionTargetPrice.toLocaleString()}원 입니다.
+          </span>
+          <span>참고하셔서 회차별 적금 금액을 설정해주세요!</span>
         </div>
         <Input
           placeholder=""

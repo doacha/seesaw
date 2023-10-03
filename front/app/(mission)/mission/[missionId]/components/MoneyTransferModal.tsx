@@ -13,11 +13,13 @@ const MoneyTransferModal = ({
   changeModal,
   password,
   setPassword,
+  missionTargetPrice,
 }: {
   modalRef: React.RefObject<HTMLDialogElement>
   changeModal: (processLivel: number) => void
   password: string[]
   setPassword: React.Dispatch<SetStateAction<string[]>>
+  missionTargetPrice: number
 }) => {
   const cancelButtonRef = useRef<HTMLButtonElement>(null)
   const inputRefs = [
@@ -69,7 +71,7 @@ const MoneyTransferModal = ({
             <div>시소 마스터</div>
           </div>
           <div className="bg-background-fill rounded-lg leading-[80px] h-[80px] font-scDreamExBold text-center text-[30px] mb-5">
-            30,000
+            {missionTargetPrice.toLocaleString()}
             <span className="font-scDreamMedium text-[26px] ml-2">원</span>
           </div>
           <div className="text-center mb-5">계좌 비밀번호를 입력해주세요.</div>
