@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class CompareWithMissionMemberResponse {
     private String missionId;
     private String memberEmail;
+    private String memberNickname;
 
     private int firstCategoryId;
     private double firstCategoryMissionAverage;
