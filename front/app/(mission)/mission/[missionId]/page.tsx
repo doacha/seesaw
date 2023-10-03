@@ -1,14 +1,12 @@
-import Header from '@/app/components/Header'
 import MissionDetailContainer from './components/MissionDetailContainer'
-import { mission, missionDetailDummy } from '@/app/dummies'
 import MissionDetailContents from './components/MissionDetailContents'
 import MissionWaitingList from './components/MissionWaitingList'
-import CategoryList from '@/app/home/components/CategoryList'
 import MissionJoinButton from './components/MissionJoinButton'
 import { categoryList } from '@/app/lib/constants'
 import { MissionDetail } from '@/app/types'
 import UpdateRecordButton from './components/UpdateRecordButton'
 import MissionExitButton from './components/MissionExitButton'
+import Header from '@/app/components/Header'
 const MISSION_WAIT = 0
 const MISSION_START = 1
 const DUMMY_NICKNAME = '도아차는나야123'
@@ -34,6 +32,7 @@ const getMissionWaitListFetch = async (missionId: string) => {
 }
 // API 연결 이후 params를 통해 데이터를 가져와야 한다.
 const MissionDetailpage = async ({ params }: { params: any }) => {
+  console.log('파라라라라파만팜ㅇㄴ팜ㅇ팡ㄴㅍ안ㅍㅁ낲만팜ㄴ판ㅇ파', params)
   const data = (await getMissionDetailFetch(params.missionId)) as MissionDetail
   let missionWaitList,
     isJoined = false
@@ -53,6 +52,7 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
     missionStartDate: data.missionStartDate,
     missionCurrentCycle: data.missionCurrentCycle,
     missionDeposit: data.missionDeposit,
+    missionTitle: data.missionTitle,
   }
   data.missionIsPublic = false
   const isStart = true
