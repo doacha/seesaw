@@ -93,7 +93,7 @@ public class MemberService {
                         "<br/>"+member.getMemberName()+"님 "+
                         "<br/>시소에 가입해주셔서 감사합니다."+
                         "<br/>아래 [이메일 인증 확인]을 눌러주세요."+
-                        "<a href='http://localhost:8080/seesaw/member/registerEmail?memberEmail=" + member.getMemberEmail() +
+                        "<a href='http://j9a409.p.ssafy.io:8080/seesaw/member/registerEmail?memberEmail=" + member.getMemberEmail() +
                         "&key=" + key +
                         "' target='_blenk'>이메일 인증 확인</a>");
         sendMail.setFrom("doriarichacha@gmail.com", "시소");
