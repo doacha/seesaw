@@ -13,7 +13,7 @@ const PeriodInput = ({
 }) => {
   return (
     <div className={`overflow-auto ${styles.delScroll}`}>
-      <div className="font-scDreamExBold mb-5">미션 빈도를 설정해주세요.</div>
+      <div className="font-scDreamExBold mb-5">인증 빈도를 설정해주세요.</div>
       <div className="carousel">
         {missionPeriodArray.map(
           (element, idx) =>
