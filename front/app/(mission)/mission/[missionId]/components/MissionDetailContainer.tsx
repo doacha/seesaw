@@ -8,7 +8,6 @@ import {
   faFlag,
   faLock,
   faArrowUpRightFromSquare,
-  faA,
 } from '@fortawesome/free-solid-svg-icons'
 import {
   categoryList,
@@ -16,6 +15,8 @@ import {
   missionPeriodArray,
 } from '@/app/lib/constants'
 import type { MissionDetail } from '@/app/types'
+import { MouseEventHandler } from 'react'
+import CopyToClipboardButton from './CopyToClipboardButton'
 const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
   console.log('왜안뜸', data)
   const totalTerm =
@@ -39,7 +40,7 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
             {data.missionTitle}
           </div>
           <div className="text-sm">
-            {!data.missionIsPublic && (
+            {data.missionIsPublic && (
               <FontAwesomeIcon icon={faLock} className="text-red-700 mr-2" />
             )}
             <FontAwesomeIcon icon={faUser} className="text-primary mr-2" />
@@ -49,11 +50,10 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
         {/* 내용 */}
         <div className="text-sm mb-[15px] h-[70px]">{data.missionPurpose}</div>
         {/* 카테고리 */}
-        <div className="flex flex-row gap-[15px]">
+        <div className="flex flex-row gap-[15px] mb-[15px]">
           <Capsule
             bgColor={`${data.missionCategoryId}`}
             textColor="background"
-            className="mb-2.5"
           >{`${categoryList[data.missionCategoryId]}`}</Capsule>
           <Capsule bgColor="background-fill" textColor="black">
             <span>
@@ -70,7 +70,6 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
         </div>
         {/* 일정 */}
         <div className="mb-2.5 flex gap-[15px] items-center">
-          <FontAwesomeIcon icon={faCalendarCheck} />
           <Capsule bgColor="background-fill" textColor="black">
             {missionPeriodArray[data.missionPeriod] ?? ''}
           </Capsule>
@@ -83,12 +82,7 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
         <div className="mb-2.5 flex flex-row justify-between items-center">
           <div>{`실패 한도 : ${Math.trunc(data.missionTotalCycle / 5)}회`}</div>
           {!data.missionIsPublic && data.missionStatus === 0 && (
-            <div className="bg-primary rounded-full px-2 py-1">
-              <FontAwesomeIcon
-                icon={faArrowUpRightFromSquare}
-                className="text-background"
-              />
-            </div>
+            <CopyToClipboardButton url={data.missionId} />
           )}
         </div>
       </div>
