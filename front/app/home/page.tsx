@@ -129,7 +129,8 @@ const HomePage = () => {
       },
       body: spendData.memberEmail, // 데이터를 JSON 문자열로 변환하여 전송
     }).then((res) => {
-      if (res.status === 200) {
+      // 204는 처리를 어떻게 할까?ㄴ
+      if (res.status === 200 || res.status === 204) {
         fetchSpendList()
       } else {
         Swal.fire({
@@ -256,8 +257,6 @@ const HomePage = () => {
           <HomeHeader
             spend={spendData}
             spendSum={monthTotalSum}
-            // 화살표 누름?
-            clickEvent={clickEvent}
             clickArrowRight={clickArrowRight}
             clickArrowLeft={clickArrowLeft}
             clickReport={clickReport}

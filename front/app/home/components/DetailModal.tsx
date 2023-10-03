@@ -30,7 +30,22 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
   const { checkUpdateDelete, setCheckUpdateDelete } = UpdateDeleteCheckStore()
   const { memberEmail, setMemberEmail } = memberEmailStore()
 
-  console.log('여기는 디테일')
+  // ISO를 한국시간으로 변경하는 함수
+  function getLocalISOString(date: string) {
+    let dateDate = new Date(date)
+    let year = dateDate.getFullYear()
+    let month = String(dateDate.getMonth() + 1).padStart(2, '0')
+    let day = String(dateDate.getDate()).padStart(2, '0')
+    let hours = String(dateDate.getHours()).padStart(2, '0')
+    let minutes = String(dateDate.getMinutes()).padStart(2, '0')
+    let seconds = String(dateDate.getSeconds()).padStart(2, '0')
+    let milliseconds = String(dateDate.getMilliseconds()).padStart(3, '0')
+
+    let localISOString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`
+
+    return localISOString
+  }
+
   const [spend, setSpend] = useState<Spending>({
     spendingTitle: '',
     spendingCost: 0,
@@ -54,6 +69,7 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
         return res.json()
       })
       .then((data) => {
+        console.log('백에서 받아오는 data', data)
         setSpend(data)
       })
   }
@@ -74,22 +90,12 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
       newValue = parseInt(value, 10)
     }
     if (name === 'spendingDate') {
-      console.log(name, value)
+      newValue = new Date(value)
+      console.log('value는 => ', new Date(value))
     }
     setSpend({ ...spend, [name]: newValue })
   }
 
-  const handleCapsuleClick = (
-    idx: number,
-    isSelected: boolean,
-    type: string,
-  ) => {
-    if (!isSelected) {
-      setSpend({ ...spend, [type]: idx })
-      return
-    }
-    setSpend({ ...spend, [type]: -1 })
-  }
   const fetchDelete = (selectedSpendingId: number) => {
     fetch(
       `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/delete/${selectedSpendingId}`,
@@ -103,8 +109,15 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
           width: 300,
           icon: 'success',
         })
+        setCheckUpdateDelete(true)
+      } else if (res.status === 403) {
+        Swal.fire({
+          title: '삭제 실패',
+          width: 300,
+          icon: 'error',
+          html: '미션에 참가중인 <br> 지출 내역입니다.',
+        })
       }
-      setCheckUpdateDelete(true)
       handleToggle()
     })
   }
@@ -124,11 +137,14 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
     spendingId: selectedSpendingId,
     spendingTitle: spend.spendingTitle as string,
     spendingCost: spend.spendingCost as number,
-    spendingDate: spend.spendingDate as string,
+    spendingDate: getLocalISOString(
+      (spend.spendingDate as string) && (spend.spendingDate as string),
+    ),
     spendingMemo: spend.spendingMemo as string,
     spendingCategoryId: spend.spendingCategoryId as number,
     memberEmail: memberEmail,
   }
+  console.log('내가 백으로 보내는 데이터', data)
   const fetchUpdate = (data: object) => {
     fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/update`, {
       method: 'PUT',
@@ -144,8 +160,16 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
             width: 300,
             icon: 'success',
           })
+          // Todo. setCheckUpdateDelete의 위치는?
+          setCheckUpdateDelete(true)
+        } else if (res.status === 403) {
+          Swal.fire({
+            title: '수정 실패',
+            width: 300,
+            icon: 'error',
+            html: '미션에 참가중인 <br> 지출 내역입니다.',
+          })
         }
-        setCheckUpdateDelete(true)
         return res.json()
       })
       .then((data) => {
