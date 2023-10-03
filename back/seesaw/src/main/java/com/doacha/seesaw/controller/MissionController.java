@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -136,6 +137,17 @@ public class MissionController {
         }
     }
 
+    @Operation(summary="미션 카테고리 선택시 해당 카테고리 월 평균")
+    @PostMapping("/monthaverage")
+    public ResponseEntity<?> monthAverage(@RequestBody SpendingAverageRequest spendingAverageRequest){
+        try{
+            SpendingAverageResponse spendingAverageResponse= missionService.getSpendingAverage(spendingAverageRequest.getCategoryId(), spendingAverageRequest.getMemberEmail());
+            return new ResponseEntity<>(spendingAverageResponse, HttpStatus.OK);
+        }
+        catch(Exception e ){
+            return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @Operation(summary="미션 기간만큼 과거와 비교")
     @PostMapping("/saving")
     public ResponseEntity<?> missionSaving(@RequestBody QuitMissionRequest quitMissionRequest){

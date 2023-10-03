@@ -21,7 +21,7 @@ const TargetPriceInput = ({
       return
     }
     setTargetPrice(TargetPriceState.NORMAL)
-    setState({ ...state, memberMissionSavingMoney: value })
+    setState({ ...state, missionTargetPrice: value })
   }
 
   return (

@@ -1,12 +1,9 @@
 'use client'
 
-import { myMissionHistory } from '@/app/dummies'
 import MyMissionHistoryCard from './MyMissionHistoryCard'
 import { GroupStatusProps } from '@/app/types'
-import { useMutation } from '@tanstack/react-query'
-import { useEffect } from 'react'
-import { recordListStore } from '@/stores/myRecordList'
 import { RecordList } from '@/app/types'
+import { recordListStore } from '@/stores/recordListStore'
 enum Property {
   'recordNumber',
   'recordStartDate',
@@ -28,26 +25,13 @@ const EMAIL_DUMMY = 'jiwon@seesaw.com'
 
 const MyMissionHistoryContainer = ({
   propsData,
+  data,
 }: {
   propsData: GroupStatusProps
+  data: Array<any>[]
 }) => {
-  const { mutate, isSuccess, data } = useMutation(getMyRecordHistory)
-  const { setRecordList } = recordListStore()
-  useEffect(() => {
-    mutate(
-      {
-        missionId: propsData.missionId,
-        memberEmail: EMAIL_DUMMY,
-        pageNumber: 0,
-      },
-      {
-        onSuccess: (res) => {
-          setRecordList(convertResponseToList(res))
-        },
-      },
-    )
-  }, [])
-
+  const { recordMap } = recordListStore()
+  console.log('맵확인', recordMap)
   return (
     <div className="bg-background p-5 rounded-lg mx-5">
       <div className="font-scDreamMedium">미션 기록</div>
@@ -58,6 +42,7 @@ const MyMissionHistoryContainer = ({
             data={element}
             propsData={propsData}
             key={idx}
+            recordId={recordMap[element[Property.recordNumber]]}
           />
         ))}
     </div>
