@@ -1,7 +1,9 @@
 package com.doacha.seesaw.model.service;
 
+import com.doacha.seesaw.exception.ForbiddenException;
 import com.doacha.seesaw.model.dto.SavingList;
 import com.doacha.seesaw.model.dto.SavingRequest;
+import com.doacha.seesaw.model.dto.account.AccountTransferResponse;
 import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.exception.BadRequestException;
 import com.doacha.seesaw.model.entity.Member;
@@ -60,6 +62,7 @@ public class MemberMissionService {
                 .member(member)
                 .mission(mission)
                 .memberMissionSavingMoney(savingMoney)
+                .memberMissionRefund(mission.getMissionDeposit())
                 .memberMissionIsSaving(false)
                 .memberMissionStatus(0)
                 .build();
@@ -71,21 +74,20 @@ public class MemberMissionService {
         Member member = memberRepository.findById(participateMissionRequest.getMemberEmail()).get();
         Mission mission = missionRepository.findById(participateMissionRequest.getMissionId()).get();
 
+        if(mission.getMissionMemberCount() == mission.getMissionMaxCount()){
+            throw new BadRequestException("모집 인원 초과");
+        }
+        
         MemberMission memberMission = MemberMission.builder()
                 .member(member)
                 .mission(mission)
                 .memberMissionSavingMoney(participateMissionRequest.getMemberMissionSavingMoney())
+                .memberMissionRefund(mission.getMissionDeposit())
                 .memberMissionIsSaving(false)
                 .memberMissionStatus(0)
                 .build();
 
         memberMissionRepository.save(memberMission);
-    }
-
-    // 미션 참여한 멤버 정보 삭제
-    public void deleteMemberMission(QuitMissionRequest quitMissionRequest) {
-        MemberMission memberMission = memberMissionRepository.findByMissionIdAndMemberEmail(quitMissionRequest.getMissionId(), quitMissionRequest.getMemberEmail());
-        memberMissionRepository.delete(memberMission);
     }
 
 
@@ -145,6 +147,31 @@ public class MemberMissionService {
         return myPageMissionListResponses;
     }
 
+    // 끝난 미션 정보 보내기
+    public EndMissionInfoResponse getMissionEndInfo(GetMyMissionDataRequest getMyMissionDataRequest){
+        Member member = memberRepository
+                .findByMemberEmail(getMyMissionDataRequest.getMemberEmail())
+                .orElseThrow(() -> new BadRequestException("유효하지 않은 사용자입니다."));
+
+        Mission mission = missionRepository
+                .findById(getMyMissionDataRequest
+                        .getMissionId()).orElseThrow(()-> new BadRequestException("유효하지 않은 미션입니다."));
+
+        MemberMission memberMission = memberMissionRepository.findByMissionIdAndMemberEmail(mission.getMissionId(), member.getMemberEmail());
+
+        //제목 이미지 시작일 끝일 성공여부 설명 카테고리
+        EndMissionInfoResponse endMissionInfoResponse = new EndMissionInfoResponse(
+                mission.getMissionTitle(),
+                mission.getMissionImgUrl(),
+                mission.getMissionStartDate(),
+                dateAdd(mission.getMissionStartDate(), mission.getMissionTotalCycle()*mission.getMissionPeriod()-1),
+                memberMission.getMemberMissionStatus(),
+                mission.getMissionPurpose(),
+                mission.getMissionCategoryId()
+        );
+        return endMissionInfoResponse;
+    }
+
     public String dateAdd(Date date, int plus){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -157,7 +184,7 @@ public class MemberMissionService {
     // 적금 계좌 이체 (매일 오전 3시마다 실행)
     @Scheduled(cron = "0 0 3 * * *")
     public void requestTransfer(){
-        List<SavingList> list = getSavingList();
+        List<SavingList> list = memberMissionRepository.findSavingListByMemberMissionIsSaving();
 
         for(SavingList saving: list){
             // 각각의 적금건에 대해 이체 요청 하기
@@ -186,13 +213,6 @@ public class MemberMissionService {
         }
     }
 
-
-    // 적금 이체해야할 목록 불러오기
-    public List<SavingList> getSavingList(){
-        return memberMissionRepository.findSavingListByMemberMissionIsSaving();
-    }
-
-
     // 예치금 반환 (매일 오전 10시마다 실행)
     @Scheduled(cron = "0 0 10 * * *")
     public void returnDeposit(){
@@ -215,6 +235,37 @@ public class MemberMissionService {
                     .retrieve()
                     .bodyToMono(String.class);
         }
+    }
+
+    // 미션 참여자 목록(닉네임, 프로필 사진) 가져오기
+    public List<MissionMemberResponse> getMissionMemberList(String missionId) {
+        return memberMissionRepository.findMissionMemberResponseByMissionId(missionId);
+    }
+
+    public void quitMission(QuitMissionRequest quitMissionRequest) {
+        MemberMission memberMission = memberMissionRepository.findByMissionIdAndMemberEmail(quitMissionRequest.getMissionId(), quitMissionRequest.getMemberEmail());
+        log.info("예치금 환불");
+        AccountTransferRequest request = AccountTransferRequest.builder()
+                .accountNum(memberMission.getMember().getMemberMainAccount())
+                .accountTransactionNum(accountNumber)
+                .accountApprovalAmount(memberMission.getMemberMissionRefund())
+                .accountPassword(password)
+                .build();
+
+        Mono<AccountTransferResponse> mono = WebClient.create()
+                .post()
+                .uri(seesawBank_api+"/account-transactional/transfer")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(AccountTransferResponse.class);
+
+        mono.subscribe(response -> {
+            if(response.getAccountApprovalAmount() != memberMission.getMemberMissionRefund()) {
+                throw new ForbiddenException("예치금 환불 실패로 인한 미션 탈퇴 실패");
+            }
+        });
+        log.info("미션 탈퇴한 멤버 정보 삭제");
+        memberMissionRepository.delete(memberMission);
     }
 
     // 카카오페이 결제 번호 반환

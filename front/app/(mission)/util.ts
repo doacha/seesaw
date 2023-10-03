@@ -28,12 +28,10 @@ const DAY = HOUR * 24
 export const getTimeBefore = (writeDate: string) => {
   const writeTime = new Date(writeDate)
   const present = new Date()
-  console.log('pre', present.getTime(), 'write', writeTime.getTime())
 
   const passedSeconds = Math.trunc(
-    (present.getTime() - writeTime.getTime()) / 1000 + HOUR * 9,
+    (present.getTime() - writeTime.getTime() - 9000 * HOUR) / 1000 + HOUR * 9,
   )
-  console.log('시간', passedSeconds)
   if (passedSeconds < SECOND) {
     return '방금 전'
   } else if (passedSeconds < MINUTE) {
@@ -47,4 +45,10 @@ export const getTimeBefore = (writeDate: string) => {
   } else {
     return writeTime.toLocaleDateString()
   }
+}
+
+export const isStarted = (date: string) => {
+  const startDate = new Date(date)
+  const current = new Date()
+  return current.getTime() - startDate.getTime() >= 0 ? true : false
 }

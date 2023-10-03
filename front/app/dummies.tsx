@@ -91,7 +91,8 @@ export const recordList: type.Record[] = [
     recordNumber: 1,
     recordStatus: 0,
     recordTotalCost: 30000,
-    recordWriteTime: '2023-09-13',
+    endDate: '2023-09-01',
+    startDate : '2023-08-23'
   },
   {
     memberEmail: 'jjwoong1733@gmail.com',
@@ -101,7 +102,8 @@ export const recordList: type.Record[] = [
     recordNumber: 2,
     recordStatus: 1,
     recordTotalCost: 30000,
-    recordWriteTime: '2023-09-13',
+    endDate: '2023-09-01',
+    startDate : '2023-08-23'
   },
   {
     memberEmail: 'jjwoong1733@gmail.com',
@@ -111,7 +113,8 @@ export const recordList: type.Record[] = [
     recordNumber: 3,
     recordStatus: 2,
     recordTotalCost: 30000,
-    recordWriteTime: '2023-09-13',
+    endDate: '2023-09-01',
+    startDate : '2023-08-23'
   },
 ]
 
@@ -120,25 +123,22 @@ export const transactionList: type.Transaction[] = [
     accountApprovalAmount: 20000,
     accountNum: '987-65-4321',
     accountTransactionTime: '2023-09-18T13:55:00.111Z',
-    amountBalance: 310000,
+    accountBalance : 123123,
     accountTransactionName: '차차',
-    accountIsDeposit: true,
   },
   {
     accountApprovalAmount: 20000,
     accountNum: '987-65-4321',
     accountTransactionTime: '2023-09-18T13:55:00.111Z',
-    amountBalance: 310000,
+    accountBalance: 310000,
     accountTransactionName: '차차',
-    accountIsDeposit: false,
   },
   {
     accountApprovalAmount: 20000,
     accountNum: '987-65-4321',
     accountTransactionTime: '2023-09-18T13:55:00.111Z',
-    amountBalance: 310000,
+    accountBalance: 310000,
     accountTransactionName: '차차',
-    accountIsDeposit: false,
   },
 ]
 
@@ -758,4 +758,18 @@ export const sumList: type.Spending[] = [
     spendingDate: '2023-09-30T04:32:44.853Z',
     memberEmail: 'doacha@seesaw.com',
   },
+]
+
+export const bankList = [
+  { bankName: '시소뱅크', bankImg: './seesaw_logo.svg' },
+  { bankName: '신한은행', bankImg: './seesaw_logo.svg' },
+  { bankName: '국민은행', bankImg: './seesaw_logo.svg' },
+  { bankName: '우리은행', bankImg: './seesaw_logo.svg' },
+]
+
+export const bankList2 = [
+  { bankName: '봉준은행', bankImg: './seesaw_logo.svg' },
+  { bankName: '재웅은행', bankImg: './seesaw_logo.svg' },
+  { bankName: '경호은행', bankImg: './seesaw_logo.svg' },
+  { bankName: '시원은행', bankImg: './seesaw_logo.svg' },
 ]

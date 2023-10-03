@@ -9,21 +9,27 @@ import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.service.MemberMissionService;
 import com.doacha.seesaw.model.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.result.view.RedirectView;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
-@CrossOrigin(origins="*", allowedHeaders = "*")
+@CrossOrigin(origins="*", allowedHeaders = "*", methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.HEAD, RequestMethod.OPTIONS, RequestMethod.POST, RequestMethod.PUT})
+@Slf4j
 public class MemberController {
     private final MemberService memberService;
     private final MemberMissionService memberMissionService;
@@ -31,10 +37,19 @@ public class MemberController {
     
     // 회원가입
     @PostMapping("/signup")
-    public MemberResponse signUp(@RequestBody SignUpRequest signUpRequest) {
+    public MemberResponse signUp(@RequestBody SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
         return memberService.signUp(signUpRequest);
     }
 
+    // 이메일 인증
+    @GetMapping("/registerEmail")
+    public RedirectView emailConfirm(@RequestParam String memberEmail, String key)throws Exception{
+        log.info("인증 요청 온 이메일: " + memberEmail);
+        memberService.memberAuth(memberEmail, key);
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://j9a409.p.ssafy.io:3000/login");
+        return redirectView;
+    }
     // 로그인
     @PostMapping("/login")
     public TokenResponse login(@RequestBody LoginRequest loginRequest) throws JsonProcessingException {
@@ -68,9 +83,18 @@ public class MemberController {
     }
 
     // 회원 정보 수정
-    @PutMapping("/modify")
-    public MyInfoResponse changeInfo(@RequestParam(value="image") MultipartFile image, @RequestBody ChangeInfoRequest changeInfoRequest) throws IOException {
+//    @PostMapping(value = "/modify",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)//,  produces = "application/json; charset=utf-8")
+//    public MyInfoResponse changeInfo(HttpServletRequest request, @RequestPart (value="image") MultipartFile image, @RequestPart (value="changeInfoRequest") ChangeInfoRequest changeInfoRequest) throws IOException
+    @PostMapping(value = "/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public MyInfoResponse changeInfo(@RequestPart(value = "image", required = false) MultipartFile image, @RequestPart(value = "changeInfoRequest") ChangeInfoRequest changeInfoRequest) throws IOException{
+
         return memberService.changeInfo(image, changeInfoRequest);
+    }
+
+    // 회원 정보 수정 이미지 변경 없을 때
+    @PostMapping(value = "/modify-noimg")
+    public MyInfoResponse changeInfoNoImage(@RequestBody ChangeInfoRequest changeInfoRequest) {
+        return memberService.changeInfoNoImage(changeInfoRequest);
     }
 
     // 회원 탈퇴
@@ -97,12 +121,14 @@ public class MemberController {
 
     // 마이페이지 내 계좌
     @PostMapping("/mypage-account")
-    public ResponseEntity<?> getAccountList(@RequestBody String memberEmail){
-        if(memberService.checkCertifiedAccount(memberEmail)) {
-            // 시소뱅크에 계좌 리스트 불러오는 api 호출하고 담아서 리턴
-            return memberService.getAccountList(memberEmail);
-        }
-        return ResponseEntity.ok(false);
+    public Map<String, Object> getAccountList(@RequestBody String memberEmail){
+        return memberService.getAccountList(memberEmail);
+//        if(memberService.checkCertifiedAccount(memberEmail)) {
+//            // 시소뱅크에 계좌 리스트 불러오는 api 호출하고 담아서 리턴
+//
+//        }else{
+//            return
+//        }
     }
 
     // 적금 계좌 개설
@@ -112,5 +138,11 @@ public class MemberController {
             return memberService.createAccount(createAccountToSeesawRequest);
         }
         return ResponseEntity.ok(false);
+    }
+
+    // 테스트용 이미지 업로드 코드
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void uploadImage(@RequestPart(value = "image", required = false) MultipartFile image) throws IOException{
+        memberService.uploadImage(image, 0);
     }
 }

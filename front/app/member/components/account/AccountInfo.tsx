@@ -2,6 +2,7 @@ import { Account } from '@/app/types'
 
 interface Props {
   account: Account
+  type? : string
 }
 
 const AccountInfo = (props: Props) => {
@@ -13,15 +14,16 @@ const AccountInfo = (props: Props) => {
           src={props.account.accountImg}
         />
         <div className="flex flex-col justify-center">
-          <div className="text-outline text-base">
+          {props.type ==='main'? <div className='text-primary text-sm'>대표</div>: null}
+          <div className={props.type ==='installment'? "text-background text-base":"text-surface text-base"}>
             {props.account.accountName}
           </div>
-          <div className="text-sm text-outline-container">
+          <div className={props.type ==='installment'? "text-outline-container text-base":"text-sm text-outline"}>
             {props.account.accountNum}
           </div>
         </div>
       </div>
-      <div className="text-lg font-scDreamExBold">
+      <div className={props.type ==='installment'? "text-background text-lg font-scDreamExBold":"text-lg font-scDreamExBold"}>
         {props.account.accountBalance.toLocaleString()}원
       </div>
     </div>

@@ -14,13 +14,13 @@ const MissionLandingPage = () => {
   }
 
   return (
-    <div className="bg-background-fill min-h-[840px]">
+    <div className="bg-background-fill h-screen">
       <Header title="미션 목록" plusButton />
       <div className="py-16 pt-[74px] overflow-scroll flex flex-col gap-5 px-5">
         <Link href="/mission">
           <SearchContainerSimple onClick={() => {}} state={dummyState} />
         </Link>
-        <Suspense fallback={<p>loading onGoingMission</p>}>
+        <Suspense fallback={<p>왜안됨</p>}>
           <OngoingMissionList />
         </Suspense>
       </div>

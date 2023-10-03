@@ -17,7 +17,7 @@ public interface AccountRepository extends JpaRepository<Account, String>, JpaSp
     Optional<Account> findAccountByAccountNum(@Param("accountNum") String accountNum);
 
     @Query("SELECT new com.doacha.seesawbank.model.dto.account.AccountListResponse(" +
-            "a.accountName, a.accountNum, a.accountBankName, a.accountRecentBalance) " +
+            "a.accountName, a.accountType, a.accountNum, a.accountBankName, a.accountRecentBalance) " +
             "FROM Account a " +
             "WHERE a.member.memberId = :memberId "
             )

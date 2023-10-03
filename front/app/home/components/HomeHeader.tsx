@@ -8,7 +8,7 @@ import { Spending } from '@/app/types'
 
 interface HomeHeaderProps {
   spend: Spending
-  spendingYear: number
+  spendSum: number
   clickArrowLeft: () => void
   clickArrowRight: () => void
   clickReport: () => void
@@ -16,7 +16,7 @@ interface HomeHeaderProps {
 
 const HomeHeader = ({
   spend,
-  spendingYear,
+  spendSum,
   clickArrowLeft,
   clickArrowRight,
   clickReport,
@@ -37,7 +37,7 @@ const HomeHeader = ({
             />
           </button>
           <p className="text-xl font-envR">
-            {spendingYear}년 {spend.spendingMonth}월
+            {spend.spendingYear}년 {spend.spendingMonth}월
           </p>
           <button
             className="my-auto w-6 h-6"
@@ -45,16 +45,17 @@ const HomeHeader = ({
             type="button"
             name="right-arrow"
           >
-            <FontAwesomeIcon
-              icon={faChevronRight}
-              style={{ color: '#001b2a' }}
-            />
+            {spend.spendingYear !== new Date().getFullYear() &&
+              spend.spendingMonth !== new Date().getMonth() + 1 && (
+                <FontAwesomeIcon
+                  icon={faChevronRight}
+                  style={{ color: '#001b2a' }}
+                />
+              )}
           </button>
         </div>
         <p className="text-3xl font-envR">
-          {spend.spendingCostSum &&
-            spend.spendingCostSum.toLocaleString('ko-KR')}
-          원
+          {spendSum.toLocaleString('ko-KR')}원
         </p>
       </div>
       <div className="mx-2 my-auto flex-col">

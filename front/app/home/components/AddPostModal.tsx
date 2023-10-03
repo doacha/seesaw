@@ -2,23 +2,28 @@
 
 import { useState } from 'react'
 import Button from '@/app/components/Button'
-import Input from './Input'
 import SpendingCostInput from './SpendingCostInput'
 import Swal from 'sweetalert2'
+
+import styles from '../styles/Home.module.css'
+import Input from './Input'
+import TextAreaInput from './TextAreaInput'
+import CategoryInput from './CategoryInput'
+
+import { memberEmailStore } from '@/stores/memberEmail'
+
 import DateInput from './DateInput'
 
-import ToggleCapsule from '@/app/components/ToggleCapsule'
-import styles from '../styles/Home.module.css'
-import { categoryList } from '@/app/lib/constants'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
-// categoryToggle 수정 및 처리 필요
 type Props = {
   open: boolean
   handleToggle: () => void
 }
 
 const AddPostModal = ({ open, handleToggle }: Props) => {
-  console.log('여기는 디테일')
+  const { memberEmail, setMemberEmail } = memberEmailStore()
   let modalClass = 'modal sm:modal-middle'
 
   // open 속성이 true인 경우 'modal-open' 클래스를 추가합니다.
@@ -26,16 +31,55 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     modalClass += ' modal-open'
   }
 
+  // Todo.. 날짜 해결필요
   const today = new Date()
+  // console.log('today.toUTCString()는 =>', today.toUTCString())
+  // console.log('today.toISOString()는 =>', today.toISOString())
+  // console.log('today.toLocalDateString()는 => ', today.toLocaleString())
+  // console.log('today는 =>', today)
+
+  const handleInput = (e: any) => {
+    const { name, value } = e.target
+    // 0으로 시작못하게 처리
+    let newValue = value
+    console.log(name, value)
+    if (name === 'spendingCost' && /^0/.test(value)) {
+      newValue = value.substring(1)
+    }
+    // 소수점 입력 불가
+    if (name === 'spendingCost') {
+      newValue = parseInt(value, 10)
+    }
+    if (name === 'spendingDate') {
+      newValue = new Date(value)
+      console.log('value는 => ', new Date(value))
+    }
+    setPostInput({ ...postInput, [name]: newValue })
+  }
+
+  // ISO를 한국시간으로 변경하는 함수
+  function getLocalISOString(date: string) {
+    let dateDate = new Date(date)
+    let year = dateDate.getFullYear()
+    let month = String(dateDate.getMonth() + 1).padStart(2, '0')
+    let day = String(dateDate.getDate()).padStart(2, '0')
+    let hours = String(dateDate.getHours()).padStart(2, '0')
+    let minutes = String(dateDate.getMinutes()).padStart(2, '0')
+    let seconds = String(dateDate.getSeconds()).padStart(2, '0')
+    let milliseconds = String(dateDate.getMilliseconds()).padStart(3, '0')
+
+    let localISOString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`
+
+    return localISOString
+  }
 
   const [postInput, setPostInput] = useState({
     spendingTitle: '',
     spendingCost: 0,
-    spendingDate: today,
+    spendingDate: getLocalISOString(today.toISOString()),
     spendingMemo: '',
-    spendingCategoryId: -1,
-    // email은 수정이 필요해요
-    memberEmail: 'doacha@seesaw.com',
+    spendingCategoryId: 20,
+    memberEmail: memberEmail,
   })
 
   const {
@@ -44,13 +88,9 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     spendingDate,
     spendingMemo,
     spendingCategoryId,
-    // 여기서 email은 zustend 저장된 이메일이겠죠?
-    memberEmail,
   } = postInput
 
-  // 백엔드로 보내기 위한 date 설정
-  const stringToDate = spendingDate.toISOString()
-
+  // 왜 여기선 data를 Date 자료형으로 보내야 하는거지? 어휴 이씨 짜증나네
   const data: {
     spendingTitle: string
     spendingCost: number
@@ -61,23 +101,12 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
   } = {
     spendingTitle: spendingTitle,
     spendingCost: spendingCost,
-    spendingDate: stringToDate,
+    spendingDate: spendingDate,
     spendingMemo: spendingMemo,
     spendingCategoryId: spendingCategoryId,
-    // email 수정 필요
-    memberEmail: 'doacha@seesaw.com',
+    memberEmail: memberEmail,
   }
-
-  const handleInput = (e: any) => {
-    const { name, value } = e.target
-    // 0으로 시작못하게 처리
-    let newValue = value
-    if (name === 'spendingCost' && /^0/.test(value)) {
-      newValue = value.substring(1)
-    }
-    setPostInput({ ...postInput, [name]: newValue })
-  }
-
+  // 새로운 소비내역등록
   const fetchAddPost = (data: object) => {
     fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending`, {
       method: 'POST',
@@ -102,14 +131,15 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
         setPostInput({
           spendingTitle: '',
           spendingCost: 0,
-          spendingDate: today,
+          spendingDate: getLocalISOString(today.toISOString()),
           spendingMemo: '',
-          spendingCategoryId: -1,
-          memberEmail: 'doacha@seesaw.com',
+          spendingCategoryId: 20,
+          memberEmail: memberEmail,
         })
-        console.log(data)
       })
   }
+
+  // 저장버튼 클릭
   const clickSave = () => {
     if (data.spendingCost === 0 || data.spendingCost?.toString() === '') {
       Swal.fire({
@@ -128,17 +158,29 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     }
   }
 
-  const handleCapsuleClick = (
-    idx: number,
-    isSelected: boolean,
-    type: string,
-  ) => {
-    if (!isSelected) {
-      setPostInput({ ...postInput, [type]: idx })
-      return
-    }
-    setPostInput({ ...postInput, [type]: -1 })
+  // date 관련
+  const [clickDa, setClickDa] = useState(false)
+  const clickDate = () => {
+    setClickDa(!clickDa)
   }
+
+  const handleCategoryClick = (idx: number) => {
+    setPostInput({ ...postInput, spendingCategoryId: idx })
+  }
+  // 뭐가 꼬인거지?
+  const formatDate = (date: Date): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+      hour: 'numeric',
+      minute: 'numeric',
+    }
+    const formatter = new Intl.DateTimeFormat('ko-KR', options)
+    return formatter.format(date)
+  }
+
   return (
     <div className={modalClass}>
       {/* we want any content for this modal layout so we just pass the children */}
@@ -158,38 +200,10 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
 
           {/* 카테고리 들어갈 곳 */}
           <div className={`overflow-auto ${styles.delScroll}`}>
-            <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
-              <div className=" w-20 my-auto">
-                <div className="w-20">
-                  <p className="font-scDreamExBold text-base">카테고리</p>
-                </div>
-              </div>
-              <div className="flex my-auto w-full justify-between">
-                <div className="carousel">
-                  {categoryList.map(
-                    (element, idx) =>
-                      idx > 0 && (
-                        <ToggleCapsule
-                          className="carousel-item mr-[15px] h-[14px]"
-                          bgColor="background-fill"
-                          textColor={`${idx}`}
-                          key={idx}
-                          isSelected={idx === spendingCategoryId}
-                          onClick={() =>
-                            handleCapsuleClick(
-                              idx,
-                              idx === spendingCategoryId,
-                              'spendingCategoryId',
-                            )
-                          }
-                        >
-                          {element}
-                        </ToggleCapsule>
-                      ),
-                  )}
-                </div>
-              </div>
-            </div>
+            <CategoryInput
+              selectedCategoryId={spendingCategoryId}
+              handleCategoryClick={handleCategoryClick}
+            />
           </div>
 
           <Input
@@ -202,11 +216,44 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
           />
 
           {/* 날짜 입력 */}
-          <DateInput value={spendingDate} onChange={handleInput} />
+          {/* <DateInput value={spendingDate} onChange={handleInput} /> */}
+          {/* 하.. 날짜가 사람을 힘들게 하네.. */}
+          <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
+            <div className="w-28">
+              <p className="font-scDreamExBold text-base">날짜</p>
+            </div>
+            <div className="flex my-auto w-full justify-between">
+              {!clickDa ? (
+                <p className="my-auto font-scDreamLight text-xs">
+                  {formatDate(new Date(spendingDate))}
+                </p>
+              ) : (
+                <input
+                  className="w-full mr-5 font-scDreamLight text-xs"
+                  type="datetime-local"
+                  name="spendingDate"
+                  onChange={handleInput}
+                ></input>
+              )}
+              <div onClick={clickDate} className="ml-1">
+                {!clickDa ? (
+                  <FontAwesomeIcon
+                    icon={faChevronRight}
+                    style={{ color: '#001b2a' }}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faChevronRight}
+                    style={{ color: '#001b2a' }}
+                    rotation={90}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
 
-          <Input
+          <TextAreaInput
             title="메모"
-            type="text"
             name="spendingMemo"
             value={spendingMemo}
             onChange={handleInput}

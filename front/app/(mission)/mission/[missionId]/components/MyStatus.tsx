@@ -1,22 +1,19 @@
 import MyDepositStatusContainer from './MyDepositStatusContainer'
 import MySavingMoney from './MySavingMoney'
 import MyMissionHistoryContainer from './MyMissionHistoryContainer'
+import { GroupStatusProps } from '@/app/types'
 const MyStatus = ({
   data,
+  recordHistory,
 }: {
-  data: {
-    missionPeriod: number
-    missionTargetPrice: number
-    missionStartDate: string
-    missionCurrentCycle: number
-    missionDeposit: number
-  }
+  data: GroupStatusProps
+  recordHistory: Array<any>[]
 }) => {
   return (
     <>
-      <MyDepositStatusContainer />
-      <MySavingMoney />
-      <MyMissionHistoryContainer />
+      <MyDepositStatusContainer propsData={data} />
+      <MySavingMoney propsData={data} />
+      <MyMissionHistoryContainer propsData={data} data={recordHistory} />
     </>
   )
 }

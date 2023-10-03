@@ -4,7 +4,7 @@ export interface ImageFile {
   url: string
 }
 
-export type Tab = 'home' | 'mission' | 'member'
+export type Tab = '' | 'home' | 'mission' | 'member'
 
 export interface Account {
   accountImg: string
@@ -18,10 +18,10 @@ export interface Account {
 
 export interface Transaction {
   accountApprovalAmount: number
-  amountBalance: number
+  accountBalance: number
   accountTransactionTime: string
   accountNum: string
-  accountIsDeposit: boolean
+  // accountIsDeposit: boolean
   accountTransactionName: string
 }
 
@@ -74,6 +74,7 @@ export interface Spending {
   spendingMonth?: number
   spendingYear?: number
   spendingDay?: number
+  condition?: string
 }
 
 export interface MissionCardProps {
@@ -96,12 +97,54 @@ export interface MissionCardProps {
   memberMissionStatus?: string
 }
 
+export interface GroupAverageInfo {
+  missionId: string
+  missionAverage: number
+  entireAverage: number
+  difference: number
+}
+
+export interface MissionRanking {
+  memberEmail: string
+  missionTopSpender: string
+  missionTopSpendingCost: number
+  missionFrugalSpender: string
+  missionFrugalSpendingCost: number
+  recordTopSpender: string
+  recordTopSpendingCost: number
+  recordTopSpendingNum: number
+}
+
+export interface MissionCompareList {
+  missionId: string
+  memberId: string
+  firstCategoryId: number
+  firstCategoryMissionAverage: number
+  firstCategoryMemberAverage: number
+  secondCategoryId: number
+  secondCategoryMissionAverage: number
+  secondCategoryMemberAverage: number
+  thirdCategoryId: number
+  thirdCategoryMissionAverage: number
+  thirdCategoryMemberAverage: number
+  frugalCategoryId: number
+  frugalCategoryMissionAverage: number
+  frugalCategoryMemberAverage: number
+}
+
+export interface SavedAmount {
+  missionId: string
+  pastTotalCost: number
+  missionTotalCost: number
+  difference: number
+}
 export interface Record {
   recordNumber: number
   recordStatus: number
   recordTotalCost: number
   recordId: number
-  recordWriteTime: string
+  startDate: string
+  endDate: string
   memberEmail: string
   missionId: string
   recordContent: string
@@ -127,6 +170,7 @@ export interface MissionList {
   missionPeriod: number
   missionTotalCycle: number
   missionStartDate: string
+  missionCategoryId: number
 }
 
 export interface MissionDetail extends MissionList {
@@ -135,25 +179,69 @@ export interface MissionDetail extends MissionList {
   missionIsPublic: boolean
   missionCurrentCycle: number
   missionStatus: number
-  missionFailureCount: number
+  missionPenaltyPrice: number
   missionCreationTime: string
   missionHostEmail: string
-  missionCategoryId: number
 }
 
 export interface MissionCreate {
+  imgFile: ImageFile
   missionTitle: string
   missionMaxCount: number
-  missionImgUrl: string
   missionPurpose: string
   missionDeposit: number
   missionIsPublic: boolean
-  missionTargetPrice: number
+  memberMissionSavingMoney: number
   missionPeriod: number
   missionTotalCycle: number
+  missionTargetPrice: number
   missionStartDate: { month: number; day: number }
   missionHostEmail: string
   missionCategoryId: number
-  memberMissionIsSaving: boolean
   [key: string]: any
+}
+
+export interface GroupStatusProps {
+  missionId: string
+  missionPeriod: number
+  missionTargetPrice: number
+  missionStartDate: string
+  missionCurrentCycle: number
+  missionDeposit: number
+}
+
+export interface RecordDetail {
+  memberImgUrl: string
+  memberNickname: string
+  recordNumber: number
+  recordId: number
+  recordTotalCost: number
+  recordStatus: number
+}
+
+export interface RecordList {
+  recordNumber: number
+  recordList: Array<{
+    recordName: string
+    recordCost: number
+  }>
+}
+
+export interface RecordStatusProps {
+  missionId: string
+  missionPeriod: number
+  missionTargetPrice: number
+  missionStartDate: string
+  missionCurrentCycle: number
+  pageNumber: number
+  todayRecordId: number
+}
+
+export interface Comment {
+  commentId: number
+  commentContent: string
+  memberNickname: string
+  memberEmail: string
+  memberImgUrl: string
+  commentWriteTime: string
 }
