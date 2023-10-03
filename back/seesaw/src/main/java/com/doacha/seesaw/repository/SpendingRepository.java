@@ -99,14 +99,15 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
 //            "GROUP BY s.spendingCategoryId")
 //    List<MissionMemberSumDto> getMissionMemberSum(@Param("missionId") String missionId, @Param("startDate") Date startDate,@Param("endDate") Date endDate);
 
-    @Query(value = "SELECT s.spending_category_id AS categoryId, SUM(s.spending_cost) AS sum " +
-            "FROM spending s " +
-            "JOIN member_mission mm ON s.member_email = mm.member_email " +
-            "WHERE mm.mission_id = :missionId AND s.spending_date BETWEEN :startDate AND :endDate " +
-            "GROUP BY s.spending_category_id", nativeQuery = true)
-    List<MissionMemberSumDto> getMissionMemberSum(
-            @Param("missionId") String missionId,
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MissionMemberSumDto( " +
+            "s.spendingCategoryId, SUM(s.spendingCost)) " +
+            "FROM Spending s " +
+            "JOIN MemberMission mm ON s.member.memberEmail = mm.member.memberEmail " +
+            "WHERE mm.mission.missionId = :missionId AND s.member.memberEmail!= :memberEmail AND s.spendingDate BETWEEN :startDate AND :endDate " +
+            "GROUP BY s.spendingCategoryId")
+    List<MissionMemberSumDto> getMissionMemberSum(@Param("missionId") String missionId, @Param("memberEmail")String memberEmail, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MemberSpendingSumDto(s.member.memberNickname AS memberNickname, s.spendingCategoryId AS categoryId, SUM(s.spendingCost) AS sum) FROM Spending s WHERE s.member.memberEmail= :memberEmail AND s.spendingDate BETWEEN :start AND :end GROUP BY s.spendingCategoryId " )
+    List<MemberSpendingSumDto> getMemberSumByCategory(@Param("memberEmail")String memberEmail, @Param("start")Date start, @Param("end")Date end);
+
 }
 
