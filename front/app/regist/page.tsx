@@ -181,6 +181,7 @@ const Regist = () => {
             title: '회원가입 성공',
             width: 300,
             icon: 'success',
+            html: '이메일 인증을 완료해주세요!',
           })
           router.push('/login')
         }
@@ -200,7 +201,7 @@ const Regist = () => {
         <div className="h-[750px] px-5 py-5 gb-base-100 rounded-lg bg-background">
           <p className="font-envR pb-3 justify-start text-2xl">회원가입</p>
           {/* form은 나빠요. */}
-          <form method="POST" onSubmit={(e) => e.preventDefault()}>
+          <div>
             {/* 이메일 입력... 왜 계속 랜더링이 돌고 있는거야?ㄴ */}
             {/* 이메일 입력 */}
             {/* <Email
@@ -235,7 +236,7 @@ const Regist = () => {
                       </p>
                     )}
                     {isEmailValid && email.length > 0 && checkedEmail === 2 && (
-                      <p className="absolute top-0 left-0 mt-[2px] text-green-500 text-xs">
+                      <p className="absolute top-0 left-0 mt-[2px] text-green-600 text-xs">
                         * 사용가능한 이메일입니다!
                       </p>
                     )}
@@ -295,7 +296,7 @@ const Regist = () => {
                 />
               </div>
             </div>
-          </form>
+          </div>
 
           {/* 계정이 있다면? */}
           <div className="mt-14 flex items-center justify-center gap-8">
