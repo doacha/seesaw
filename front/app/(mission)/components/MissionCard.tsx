@@ -46,16 +46,7 @@ const MissionCard = ({
             className="object-cover"
             style={{ height: '100px', objectFit: 'cover' }}
           />
-          {isStarted ? (
-            <div className="absolute top-3 left-3 bg-primary-container/80 rounded h-[18px] px-1 flex items-center">
-              {' '}
-              <FontAwesomeIcon
-                icon={faPiggyBank}
-                size="xs"
-                className="text-blue-600 py-auto "
-              />
-            </div>
-          ) : (
+          {!isStarted && (
             <div className="absolute top-3 left-3 bg-primary-container/80 rounded text-[10px] px-1 leading-[18px]">{`D - ${getDueDate(
               data.missionStartDate,
             )}`}</div>
