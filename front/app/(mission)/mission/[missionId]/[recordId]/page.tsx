@@ -1,13 +1,10 @@
 import CommentsContainer from './components/CommentsContainer'
 import RecordContentContainer from './components/RecordContentContainer'
 import CommentInput from './components/CommentInput'
+
 const RecordIdPage = async ({ params }: { params: any }) => {
   const recordDetail = await getRecordContent(params.recordId)
-  console.log(
-    'ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ',
-    recordDetail,
-    params.recordId,
-  )
+  console.log(recordDetail, params.recordId)
   return (
     <div className="bg-background-fill pt-[68px] min-h-[844px]">
       <RecordContentContainer propsData={recordDetail} />
