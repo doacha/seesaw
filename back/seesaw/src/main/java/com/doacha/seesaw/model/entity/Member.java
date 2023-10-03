@@ -16,16 +16,16 @@ public class Member {
     @Column(name="member_email",nullable = false)
     private String memberEmail;
 
-    @Column(name="member_password",nullable = false)
+    @Column(name="member_password")
     private String memberPassword;
 
     @Column(name="member_name",nullable = false)
     private String memberName;
 
-    @Column(name="member_nickname",nullable = false)
+    @Column(name="member_nickname")
     private String memberNickname;
 
-    @Column(name="member_birth",nullable = false)
+    @Column(name="member_birth")
     private String memberBirth;
 
     @Column(name="member_gender")
