@@ -10,6 +10,7 @@ import com.doacha.seesaw.repository.SpendingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,9 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.YearMonth;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
@@ -146,14 +145,23 @@ public class MissionService {
         YearMonth endMonth = YearMonth.from(LocalDateTime.now().minusMonths(1));
         LocalDateTime end = endMonth.atEndOfMonth().atTime(LocalTime.MAX);
         LocalDateTime start = LocalDateTime.now().minusMonths(12).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
-        Long sum = spendingRepository.findSumByPeriodAndCategory(categoryId,memberEmail,start,end);
-        double average = (double)sum/12.0;
+        Optional<Long> sum = spendingRepository.findSumByPeriodAndCategory(categoryId,memberEmail,start,end);
+        if(sum.isPresent()){
+            double average = (double)sum.get()/12.0;
         SpendingAverageResponse spendingAverageResponse = SpendingAverageResponse.builder()
                 .memberEmail(memberEmail)
                 .categoryId(categoryId)
                 .average(average)
                 .build();
-        return spendingAverageResponse;
+        return spendingAverageResponse; }
+        else{
+            SpendingAverageResponse spendingAverageResponse = SpendingAverageResponse.builder()
+                    .memberEmail(memberEmail)
+                    .categoryId(categoryId)
+                    .average(0.0)
+                    .build();
+            return spendingAverageResponse;
+        }
     }
 
     // 미션 삭제
@@ -165,6 +173,20 @@ public class MissionService {
     public MissionStatsResponse getCategorySumAndAverageByMissionAndMember (String memberEmail, String missionId){
         MissionStatsResponse missionStatsRequestList =spendingRepository.getCategorySumAndAverageByMissionAndMember(memberEmail, missionId);
         return missionStatsRequestList;
+    }
+    public CompareWithMissionMemberResponse getCompareMissionMemberStats(String memberEmail, String missionId){
+        Optional<Mission> mission = missionRepository.findById(missionId);
+        int categoryId = mission.get().getMissionCategoryId();
+        Date date = mission.get().getMissionStartDate();
+        Instant instant = date.toInstant();
+        LocalDateTime start = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalDateTime end = start.plusDays(mission.get().getMissionPeriod()*mission.get().getMissionTotalCycle());
+        log.info("start: {}", start);
+        log.info("end :{}", end);
+        List<MissionMemberSumDto> missionMemberSumDtoList = spendingRepository.getMissionMemberSum(missionId, start, end);
+        for(MissionMemberSumDto m : missionMemberSumDtoList){
+        }
+        return null;
     }
     // 미션 내 랭킹
 //    public MissionRankingResponse getMissionRanking (String missionId){
@@ -195,8 +217,13 @@ public class MissionService {
         int period = mission.get().getMissionPeriod();
         LocalDateTime end=LocalDateTime.now();
         LocalDateTime start = end.minusDays(period-1);
-        Long mySpendingSum = spendingRepository.findSumByPeriodAndCategory(categoryId, memberEmail, start, end);
-        return mySpendingSum;
+        Optional<Long> mySpendingSum = spendingRepository.findSumByPeriodAndCategory(categoryId, memberEmail, start, end);
+        if(mySpendingSum.isPresent()){
+        return mySpendingSum.get();
+        }
+        else{
+            throw new NoContentException();
+        }
     }
     // 미션 기간만큼 과거 소비와 미션 비교
     public MissionSavingResponse getMissionSavingResponse(String missionId, String memberEmail){

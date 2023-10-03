@@ -221,7 +221,6 @@ public class SpendingService {
         else {
             // 이메일로 멤버 찾기
             Optional<Member> member = memberRepository.findById(spendingUpdateRequest.getMemberEmail());
-
             // 변경할 지출 새로 저장
             Spending update = Spending.builder().spendingId(spending.get().getSpendingId()).spendingTitle(spendingUpdateRequest.getSpendingTitle()).spendingCost(spendingUpdateRequest.getSpendingCost()).spendingDate(spendingUpdateRequest.getSpendingDate()).spendingMemo(spendingUpdateRequest.getSpendingMemo()).spendingCategoryId(spendingUpdateRequest.getSpendingCategoryId()).member(member.get()).build();
             spendingRepository.save(update);
