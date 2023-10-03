@@ -11,7 +11,7 @@ import Tab from '../components/Tab'
 import CalendarCard from './components/calendar/CalendarCard'
 import TextCard from './components/TextCard'
 import DoughtnutChartCard from './components/DoughnutChartCard'
-import SumGraphCard from './components/SumGraphCard'
+import SumGraphCard from './components/verticalbar/SumGraphCard'
 import Swal from 'sweetalert2'
 
 import { Spending } from '@/app/types'
@@ -19,12 +19,9 @@ import Loading from '@/app//components/Loading'
 
 import { memberEmailStore } from '@/stores/memberEmail'
 
-import { QueryKey, useQuery } from '@tanstack/react-query'
-
 const ReportPage = () => {
   const { memberEmail, setMemberEmail } = memberEmailStore()
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  console.log('여기는 리포트 전체 페이지')
   // 통계 / 캘린더
   const [activeTab, setActiveTab] = useState<string>('tab1')
 
@@ -172,17 +169,21 @@ const ReportPage = () => {
                     <p className="text-2xl font-envR">
                       {spendData.spendingMonth}월
                     </p>
-                    <button
-                      className="my-auto w-6 h-6"
-                      onClick={clickArrowRight}
-                      type="button"
-                      name="right-arrow"
-                    >
-                      <FontAwesomeIcon
-                        icon={faChevronRight}
-                        style={{ color: '#001b2a' }}
-                      />
-                    </button>
+                    {spendData.spendingMonth === new Date().getMonth() &&
+                    spendData.spendingYear ===
+                      new Date().getFullYear() ? null : (
+                      <button
+                        className="my-auto w-6 h-6"
+                        onClick={clickArrowRight}
+                        type="button"
+                        name="right-arrow"
+                      >
+                        <FontAwesomeIcon
+                          icon={faChevronRight}
+                          style={{ color: '#001b2a' }}
+                        />
+                      </button>
+                    )}
                   </div>
                   <p className="text-3xl font-envR">
                     {spendData.spendingCostSum &&
