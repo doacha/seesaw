@@ -54,7 +54,7 @@ public class RecordService {
             return recordResponse;
         } else {
             //존재하지 않는 RecordId인 경우
-            throw new NoContentException();
+            throw new NoContentException(recordRequest.getRecordId()+"에 해당하는 레코드 없음");
         }
     }
 
@@ -80,7 +80,7 @@ public class RecordService {
             return recordResponse;
         } else {
             //존재하지 않는 RecordId인 경우
-            throw new NoContentException();
+            throw new NoContentException(recordRequest.getRecordId()+"에 해당하는 레코드 없음");
         }
     }
 
@@ -103,14 +103,14 @@ public class RecordService {
             recordRepository.save(deletedRecord);
         } else {
             //존재하지 않는 RecordId인 경우
-            throw new NoContentException();
+            throw new NoContentException(recordId+"에 해당하는 레코드 없음");
         }
     }
 
     // 글 상세
     public RecordResponse getRecordDetail(long recordId) {
         if(!recordRepository.existsById(recordId)){
-            throw new NoContentException();
+            throw new NoContentException(recordId+"에 해당하는 레코드 없음");
         }
         RecordResponse recordResponse = recordRepository.findRecordResponseById(recordId);
         return recordResponse;
@@ -144,13 +144,10 @@ public class RecordService {
             group.add(memberHistory);
         }
 
-        // 상위 5개 recordTotalCost를 가진 객체만 선택
         List<List<MemberHistory>> groupedMemberHistory = new ArrayList<>();
         for (List<MemberHistory> group : recordNumberGroups.values()) {
             group.sort(Comparator.comparingDouble(MemberHistory::getRecordTotalCost));
-
-            List<MemberHistory> top5Group = group.subList(0, Math.min(group.size(), 5));
-            groupedMemberHistory.add(top5Group);
+            groupedMemberHistory.add(group);
         }
 
         // 회차 기준 내림차순 정렬

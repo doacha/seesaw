@@ -3,12 +3,22 @@ import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import Button from '@/app/components/Button'
 
-import SpendingCostInput from './SpendingCostInput'
-import Input from './Input'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
 import { Spending } from '@/app/types'
+import ToggleCapsule from '@/app/components/ToggleCapsule'
+import styles from '../styles/Home.module.css'
+import { categoryList } from '@/app/lib/constants'
+
+import { memberEmailStore } from '@/stores/memberEmail'
+
+import SpendingCostInput from './SpendingCostInput'
+import CategoryInput from './CategoryInput'
+import Input from './Input'
+import TextAreaInput from './TextAreaInput'
+
+import { UpdateDeleteCheckStore } from '@/stores/updateDeleteCheck'
 
 type Props = {
   open: boolean
@@ -17,16 +27,36 @@ type Props = {
 }
 
 const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
-  console.log('여기는 디테일')
-  const [clickCate, setClickCate] = useState(false)
+  const { checkUpdateDelete, setCheckUpdateDelete } = UpdateDeleteCheckStore()
+  const { memberEmail, setMemberEmail } = memberEmailStore()
+
+  // ISO를 한국시간으로 변경하는 함수
+  function getLocalISOString(date: string) {
+    let dateDate = new Date(date)
+    let year = dateDate.getFullYear()
+    let month = String(dateDate.getMonth() + 1).padStart(2, '0')
+    let day = String(dateDate.getDate()).padStart(2, '0')
+    let hours = String(dateDate.getHours()).padStart(2, '0')
+    let minutes = String(dateDate.getMinutes()).padStart(2, '0')
+    let seconds = String(dateDate.getSeconds()).padStart(2, '0')
+    let milliseconds = String(dateDate.getMilliseconds()).padStart(3, '0')
+
+    let localISOString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`
+
+    return localISOString
+  }
+
   const [spend, setSpend] = useState<Spending>({
     spendingTitle: '',
     spendingCost: 0,
     spendingDate: '',
-    spendingCategoryId: 2,
-    // memberEmail은 zustand에서 가져오기
-    memberEmail: '',
+    spendingCategoryId: -1,
+    memberEmail: memberEmail,
   })
+  const [clickDa, setClickDa] = useState(false)
+  const clickDate = () => {
+    setClickDa(!clickDa)
+  }
 
   const fetchDetailSpending = (selectedSpendingId: number) => {
     fetch(
@@ -39,7 +69,7 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
         return res.json()
       })
       .then((data) => {
-        console.log(data)
+        console.log('백에서 받아오는 data', data)
         setSpend(data)
       })
   }
@@ -59,12 +89,13 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
     if (name === 'spendingCost') {
       newValue = parseInt(value, 10)
     }
+    if (name === 'spendingDate') {
+      newValue = new Date(value)
+      console.log('value는 => ', new Date(value))
+    }
     setSpend({ ...spend, [name]: newValue })
   }
 
-  const clickCategory = () => {
-    setClickCate(!clickCate)
-  }
   const fetchDelete = (selectedSpendingId: number) => {
     fetch(
       `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/delete/${selectedSpendingId}`,
@@ -78,10 +109,19 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
           width: 300,
           icon: 'success',
         })
+        setCheckUpdateDelete(true)
+      } else if (res.status === 403) {
+        Swal.fire({
+          title: '삭제 실패',
+          width: 300,
+          icon: 'error',
+          html: '미션에 참가중인 <br> 지출 내역입니다.',
+        })
       }
       handleToggle()
     })
   }
+  // 이건 삭제
   const clickDetele = () => {
     fetchDelete(selectedSpendingId)
   }
@@ -97,11 +137,14 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
     spendingId: selectedSpendingId,
     spendingTitle: spend.spendingTitle as string,
     spendingCost: spend.spendingCost as number,
-    spendingDate: spend.spendingDate as string,
+    spendingDate: getLocalISOString(
+      (spend.spendingDate as string) && (spend.spendingDate as string),
+    ),
     spendingMemo: spend.spendingMemo as string,
-    spendingCategoryId: 2,
-    memberEmail: 'doacha@seesaw.com',
+    spendingCategoryId: spend.spendingCategoryId as number,
+    memberEmail: memberEmail,
   }
+  console.log('내가 백으로 보내는 데이터', data)
   const fetchUpdate = (data: object) => {
     fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/update`, {
       method: 'PUT',
@@ -117,6 +160,15 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
             width: 300,
             icon: 'success',
           })
+          // Todo. setCheckUpdateDelete의 위치는?
+          setCheckUpdateDelete(true)
+        } else if (res.status === 403) {
+          Swal.fire({
+            title: '수정 실패',
+            width: 300,
+            icon: 'error',
+            html: '미션에 참가중인 <br> 지출 내역입니다.',
+          })
         }
         return res.json()
       })
@@ -128,11 +180,9 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
           spendingCost: 0,
           spendingDate: '',
           spendingMemo: '',
-          // 여기 수정이 필요합니다.
-          spendingCategoryId: 2,
-          memberEmail: 'doacha@seesaw.com',
+          spendingCategoryId: -1,
+          memberEmail: memberEmail,
         })
-        // console.log(data)
       })
   }
   const clickSave = () => {
@@ -153,7 +203,6 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
         icon: 'error',
       })
     } else {
-      // console.log(data)
       fetchUpdate(data)
     }
   }
@@ -164,10 +213,7 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
   if (open) {
     modalClass += ' modal-open'
   }
-  const [clickDa, setClickDa] = useState(false)
-  const clickDate = () => {
-    setClickDa(!clickDa)
-  }
+
   const formatDate = (date: Date): string => {
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -179,6 +225,10 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
     }
     const formatter = new Intl.DateTimeFormat('ko-KR', options)
     return formatter.format(date)
+  }
+
+  const handleCategoryClick = (idx: number) => {
+    setSpend({ ...spend, spendingCategoryId: idx })
   }
 
   return (
@@ -201,14 +251,11 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
               />
 
               {/* 카테고리 들어갈 곳 */}
-              <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
-                <div className="w-28">
-                  <p className="font-scDreamExBold text-base">카테고리</p>
-                </div>
-                <div className="flex my-auto w-full justify-between">
-                  <p className="font-scDreamLight text-base"></p>
-                  <div onClick={clickCategory} className="ml-1"></div>
-                </div>
+              <div className={`overflow-auto ${styles.delScroll}`}>
+                <CategoryInput
+                  selectedCategoryId={spend.spendingCategoryId as number}
+                  handleCategoryClick={handleCategoryClick}
+                />
               </div>
 
               <Input
@@ -254,9 +301,8 @@ const DetailModal = ({ open, handleToggle, selectedSpendingId }: Props) => {
                 </div>
               </div>
 
-              <Input
+              <TextAreaInput
                 title="메모"
-                type="text"
                 name="spendingMemo"
                 value={spend?.spendingMemo as string}
                 onChange={handleInput}

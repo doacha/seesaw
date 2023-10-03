@@ -12,21 +12,22 @@ import lombok.NoArgsConstructor;
 public class CompareWithMissionMemberResponse {
     private String missionId;
     private String memberEmail;
+    private String memberNickname;
 
     private int firstCategoryId;
-    private double firstCategoryGroupAverage;
+    private double firstCategoryMissionAverage;
     private double firstCategoryMemberAverage;
 
     private int secondCategoryId;
-    private double secondCategoryGroupAverage;
+    private double secondCategoryMissionAverage;
     private double secondCategoryMemberAverage;
 
     private int thirdCategoryId;
-    private double thirdCategoryGroupAverage;
+    private double thirdCategoryMissionAverage;
     private double thirdCategoryMemberAverage;
 
     private int frugalCategoryId;
-    private double frugalCategoryGroupAverage;
+    private double frugalCategoryMissionAverage;
     private double frugalCategoryMemberAverage;
 
 }

@@ -3,12 +3,12 @@ import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
+// 썅 오늘 날짜에 새로운 데이터 추가할때 새로 체크하는 데이터를 백엔드로 보내는 새로운 로직이 그지 같아 왜 toISOstring그지 같은 친구가 왜 작동을 안하냐
 interface Props {
   value: Date
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 const DateInput = ({ value, onChange }: Props) => {
-  console.log('여기는 날짜 인풋받기')
   const [clickDa, setClickDa] = useState(false)
   const clickDate = () => {
     setClickDa(!clickDa)

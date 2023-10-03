@@ -4,6 +4,9 @@ import { useState } from 'react'
 import Button from '@/app/components/Button'
 import Birth from '@/app/regist/components/Birth'
 import { profileEditInfoStore } from '@/stores/profileEditInfo'
+import { memberEmailStore } from '@/stores/memberEmail'
+import { profile } from 'console'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   setOpenEditPage: () => void
@@ -14,7 +17,13 @@ const ProfileEditCard = (props: Props) => {
   const [nicknameChecked, setNicknameChecked] = useState<number>(0)
 
   const {
+    newImg,
+    memberName,
+    memberImgUrl,
+    memberGender,
+    prevNickname,
     newNickname,
+    prevPassword,
     newPassword,
     confirmPassword,
     phoneNumber,
@@ -22,6 +31,8 @@ const ProfileEditCard = (props: Props) => {
     setProfileEditInfo,
     setBirthInfo,
   } = profileEditInfoStore()
+
+  const { memberEmail } = memberEmailStore()
 
   const onInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.name, e.target.value)
@@ -32,9 +43,100 @@ const ProfileEditCard = (props: Props) => {
     setBirthInfo(e)
   }
 
-  const onNicknameCheckClick = () => {}
+  const onNicknameCheckClick = async () => {
 
-  const onSubmitButtonClick = () => {}
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/nicknamecheck`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: newNickname,
+        },
+      )
+      const data = await res.json()
+      if(typeof data === 'object'){
+        setNicknameChecked(2)
+      }else{
+        setNicknameChecked(1)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+
+  }
+
+  const onSubmitButtonClick = async () => {
+    const formData = new FormData()
+    const profileData = {
+      memberEmail: memberEmail,
+      memberPassword: newPassword === ''? null : prevPassword,  
+      memberNewPassword: newPassword === ''? null : newPassword,
+      memberName: memberName,
+      memberNickname: newNickname,
+      memberBirth: birth[0] + birth[1] + birth[2],
+      memberGender: memberGender,
+      memberImgUrl: newImg.url,
+      memberPhoneNumber: phoneNumber,
+    }
+
+    console.log(profileData)
+
+    if (newImg?.file !== undefined) {
+      console.log(newImg.file)
+      formData.append('image', newImg.file)
+
+
+      formData.append(
+        'changeInfoRequest',
+        new Blob(
+          [
+            JSON.stringify(profileData),
+          ],
+          { type: 'application/json' },
+        ),
+        // JSON.stringify(profileData)
+      )
+        
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/modify`,
+          {
+            method: 'POST',
+            body: formData,
+          },
+        )
+        const data = await res.json()
+        props.setOpenEditPage()
+      } catch (err) {
+        console.log(err)
+      }
+    }else{
+      console.log('이미지 없을경우')
+        
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/modify-noimg`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(profileData),
+          },
+        )
+        const data = await res.json()
+        console.log(data)
+        props.setOpenEditPage()
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    
+  }
 
   return (
     <div
@@ -42,6 +144,7 @@ const ProfileEditCard = (props: Props) => {
       onClick={props.handleModalClick}
     >
       <ImageUpload />
+      <div>
       <Input
         interval="5"
         placeholder="새로운 닉네임을 입력하세요."
@@ -56,6 +159,7 @@ const ProfileEditCard = (props: Props) => {
             label="중복 확인"
             size="xs"
             onClick={onNicknameCheckClick}
+            disabled={prevNickname === newNickname? true : false}
           />
         }
       />
@@ -72,6 +176,7 @@ const ProfileEditCard = (props: Props) => {
           </div>
         </div>
       )}
+      </div>
       <div className="flex flex-col gap-4">
         <Input
           label="비밀번호"
@@ -82,7 +187,6 @@ const ProfileEditCard = (props: Props) => {
           name="newPassword"
           onChange={onInfoChange}
         />
-
         <div>
           <Input
             interval="5"
@@ -134,8 +238,7 @@ const ProfileEditCard = (props: Props) => {
             onClick={onSubmitButtonClick}
             disabled={
               confirmPassword !== newPassword ||
-              confirmPassword === '' ||
-              nicknameChecked !== 1
+              nicknameChecked === 2 || (nicknameChecked === 0 && prevNickname !== newNickname)
                 ? true
                 : false
             }

@@ -1,8 +1,9 @@
-import { faChevronLeft, faPlus } from '@fortawesome/free-solid-svg-icons'
+'use client'
+
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-
+import Backbutton from './Backbutton'
 interface Props {
   title: string
   backButton?: boolean
@@ -11,18 +12,10 @@ interface Props {
 
 const Header = (props: Props) => {
   //add 버그 있음.
-  const router = useRouter()
   return (
     <div className="navbar bg-white fixed top-0 z-40">
       <div className="flex-1">
-        {props.backButton ? (
-          <button
-            className="btn btn-ghost normal-case text-xl"
-            onClick={() => router.back()}
-          >
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </button>
-        ) : null}
+        {props.backButton && <Backbutton />}
         <div
           className={
             props.backButton

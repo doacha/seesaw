@@ -24,18 +24,18 @@ const Capsule = ({
   isHasBorder?: boolean
   isSmall?: boolean
   onClick?: any
-  children: string
+  children: string | JSX.Element
   className?: string
   value?: number
 }) => {
   const tailwindBorder = isHasBorder ? 'border-[0.5px]' : 'border-0'
   const tailwindFontSize = isSmall
-    ? 'text-[10px] h-4 py-[3px]'
-    : 'text-sm h-[30px] py-2'
+    ? 'text-[10px] h-4 py-[3px] px-[15px]'
+    : 'text-sm h-[30px] py-2 px-[10px]'
 
   return (
     <span
-      className={`badge px-[15px] ${capsuleColor.bg[bgColor]} ${capsuleColor.text[textColor]} ${tailwindBorder} ${tailwindFontSize} ${className}`}
+      className={`badge ${capsuleColor.bg[bgColor]} ${capsuleColor.text[textColor]} ${tailwindBorder} ${tailwindFontSize} ${className}`}
       onClick={onClick}
     >
       {children}

@@ -49,6 +49,9 @@ dependencies {
     // mail
     implementation group: 'jakarta.mail', name: 'jakarta.mail-api', version: '2.1.0'
     implementation group: 'org.springframework', name: 'spring-context-support', version: '6.0.4'
+    implementation group: 'org.eclipse.angus', name: 'jakarta.mail', version: '2.0.2'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.6.7'
+    implementation group: 'com.sun.mail', name: 'jakarta.mail', version: '2.0.1'
 
     // WebClient
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
@@ -56,6 +59,11 @@ dependencies {
     // S3
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.556'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+
+    // social login
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 }
 

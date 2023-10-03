@@ -2,11 +2,16 @@ package com.doacha.seesaw.repository;
 
 import com.doacha.seesaw.model.dto.MemberMissionId;
 import com.doacha.seesaw.model.dto.SavingList;
+import com.doacha.seesaw.model.dto.mission.MissionListResponse;
+import com.doacha.seesaw.model.dto.mission.MissionMemberResponse;
 import com.doacha.seesaw.model.dto.mission.MyPageMissionListResponse;
 import com.doacha.seesaw.model.dto.mission.ReturnDepositList;
+import com.doacha.seesaw.model.dto.spending.GetCardTransactionDto;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.MemberMission;
+import com.doacha.seesaw.model.entity.Mission;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -59,7 +64,22 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Me
             "FROM member_mission mm " +
             "INNER JOIN member m ON mm.member_email = m.member_email " +
             "INNER JOIN mission msn ON mm.mission_id = msn.mission_id " +
-            "WHERE DATE_ADD(msn.mission_start_date, INTERVAL msn.mission_total_cycle * msn.mission_period DAY) = CURRENT_DATE", nativeQuery = true)
+            "WHERE DATE_ADD(msn.mission_start_date, INTERVAL msn.mission_total_cycle * msn.mission_period DAY) = CURRENT_DATE" +
+            "AND mm.member_mission_refund > 0", nativeQuery = true)
     List<ReturnDepositList> findReturnDepositList();
 
+    @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionMemberResponse( " +
+            "mm.member.memberNickname, " +
+            "mm.member.memberImgUrl) " +
+            "FROM MemberMission mm " +
+            "WHERE mm.mission.missionId = :missionId " )
+    List<MissionMemberResponse> findMissionMemberResponseByMissionId(@Param("missionId") String missionId);
+
+    @Query("SELECT DISTINCT new com.doacha.seesaw.model.dto.spending.GetCardTransactionDto( " +
+            "mm.member.memberEmail, " +
+            "mm.member.memberBankId, " +
+            "(SELECT MAX(s.spendingDate) FROM Spending s WHERE s.member.memberEmail = mm.member.memberEmail AND s.spendingType=0)) " +
+            "FROM MemberMission mm " +
+            "WHERE mm.mission.missionStatus = 1")
+    List<GetCardTransactionDto> findGetCardTransactionDto();
 }
