@@ -1,5 +1,6 @@
 package com.doacha.seesaw.config;
 
+import com.doacha.seesaw.config.auth.CustomOAuth2UserService;
 import com.doacha.seesaw.jwt.JwtAuthenticationFilter;
 import com.doacha.seesaw.jwt.JwtProvider;
 import com.doacha.seesaw.jwt.MemberDetailService;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Service;
 
 @Configuration
 @EnableWebSecurity
@@ -24,6 +26,7 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private final MemberDetailService memberDetailService;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     // TODO: 나중에 PasswordEncoder 다시 설정 해주기
     @Bean
