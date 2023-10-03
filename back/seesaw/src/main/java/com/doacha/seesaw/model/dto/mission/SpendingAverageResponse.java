@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MissionSavingResponse {
-    private String missionId;
-    private Long pastTotalCost;
-    private Long missionTotalCost;
-    private Long difference;
+public class SpendingAverageResponse {
+    private String memberEmail;
+    private int categoryId;
+    private double average;
 }

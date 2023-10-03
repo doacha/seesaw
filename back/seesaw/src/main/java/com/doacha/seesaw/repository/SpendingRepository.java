@@ -23,6 +23,8 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
             "CASE WHEN :condition ='spendingCost' THEN s.spendingCost END DESC")
     List<MonthSpendingResponse> findAllByMemberEmailAndSpendingYearAndSpendingMonth(@Param("memberEmail") String memberEmail, @Param("SpendingYear") int SpendingYear, @Param("SpendingMonth") int SpendingMonth,@Param("condition") String condition);
 
+//    @Query("SELECT AVG(s.spendingCost) FROM Spending s WHERE s.member.memberEmail= :memberEmail AND s.spendingCategoryId = :categoryId ")
+//    List<Long> spendingAverageByCategoryId;
     // 미션 기간만큼 과거 해당 카테고리 소비 합
     @Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.member.memberEmail= :memberEmail AND s.spendingCategoryId= :categoryId AND s.spendingDate BETWEEN :start AND :end " )
     Long findPastSum(@Param("memberEmail") String memberEmail, @Param("categoryId") int categoryId, @Param("start") Date start, @Param("end")Date end);
@@ -47,7 +49,9 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
 
     @Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.spendingCategoryId= :categoryId AND s.member.memberEmail=:memberEmail AND s.spendingDate BETWEEN :start AND :end ")
     Long findSumByPeriodAndCategory(@Param("categoryId")int categoryId, @Param("memberEmail") String memberEmail, @Param("start")LocalDateTime start, @Param("end")LocalDateTime end);
-//    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.CompareMissionDto(" +
+    //@Query("SELECT SUM(s.spendingCost) FROM Spending s WHERE s.spendingCategoryId = :categoryId AND s.member.memberEmail = :memberEmail AND s.spendingDate <= :end")
+    //Long findSumByCategoryAndEnd(@Param("categoryId") int categoryId, @Param("memberEmail") String memberEmail, @Param("end") LocalDateTime end);
+    //    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.CompareMissionDto(" +
 //            "mm.mission.missionId AS missionId, " +
 //            "AVG(r.recordTotalCost) AS missionAverage) " +
 //            "FROM Record r " +
@@ -61,6 +65,9 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
     @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MonthCategoryResponse(SUM(s.spendingCost) AS spendingCostSum, MONTH(s.spendingDate) AS spendingMonth,s.member.memberEmail,s.spendingCategoryId)FROM Spending s WHERE s.member.memberEmail= :memberEmail AND YEAR(s.spendingDate)=:spendingYear AND MONTH(s.spendingDate)=:spendingMonth GROUP BY s.spendingCategoryId, s.member.memberEmail ORDER BY SUM(s.spendingCost) DESC ")
     List<MonthCategoryResponse> findMonthSumByCategory(@Param("memberEmail")String memberEmail, @Param("spendingYear") int spendingYear, @Param("spendingMonth")int spendingMonth);
 
+    // 제일 첫번째 지출이 발생한 날짜 반환
+    @Query("SELECT MIN(s.spendingDate) From Spending s WHERE s.member.memberEmail =:memberEmail")
+    LocalDateTime findFirstSpending(@Param("memberEmail") String memberEmail);
     @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MissionStatsResponse(s.member.memberEmail, SUM(s.spendingCost) AS sum, " +
             "(SELECT AVG(s2.spendingCost) FROM Spending s2 WHERE s2.spendingCategoryId = s.spendingCategoryId AND s2.record.memberMission.mission.missionId = :missionId ) AS missionAvg, " +
             "s.spendingCategoryId AS categoryId) " +

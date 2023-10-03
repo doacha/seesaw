@@ -4,7 +4,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type { SearchState } from '@/app/types'
 import { missionListStore } from '@/stores/missionList'
-import { useRef } from 'react'
+import { KeyboardEventHandler, useRef } from 'react'
 
 const SearchBar = ({
   state,
@@ -21,6 +21,11 @@ const SearchBar = ({
     })
   }
 
+  const handleEnter = (event: any) => {
+    if (event.key === 'Enter') {
+      handleSubmit()
+    }
+  }
   const inputRef = useRef<HTMLInputElement>(null)
 
   return (
@@ -33,6 +38,7 @@ const SearchBar = ({
           defaultValue={state.inputText}
           ref={inputRef}
           onChange={() => {}}
+          onKeyDown={handleEnter}
         />
       </div>
     </div>

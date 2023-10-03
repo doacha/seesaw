@@ -8,16 +8,25 @@ interface MissionCardProps {
   missionPeriod: number
   missionTotalCycle: number
   missionStartDate: string
+  missionCategoryId: number
 }
-import { missionCardDummy as dummyMissionCard } from '@/app/dummies'
 import Image from 'next/image'
 import { missionCycleArray } from '@/app/lib/constants'
 import Capsule from '@/app/components/Capsule'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faPiggyBank, faFlag } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
-const MissionCard = ({ data }: { data: MissionCardProps }) => {
-  // console.log('미션카드 데이터 체크', data)
+const MissionCard = ({
+  data,
+  isStarted,
+  category,
+}: {
+  data: MissionCardProps
+  isStarted: boolean
+  category: string
+}) => {
+  console.log('미션카드 데이터 체크', data)
+  console.log(data.missionCategoryId)
   return (
     <Link
       href={`/mission/${data.missionId}`}
@@ -31,29 +40,54 @@ const MissionCard = ({ data }: { data: MissionCardProps }) => {
                 ? '/default_profile.svg'
                 : data.missionImgUrl
             }
-            width={100}
+            width={200}
             height={100}
             alt="mission Image"
             className="object-cover"
-            style={{ width: 'calc(100%)', objectFit: 'cover' }}
+            style={{ height: '100px', objectFit: 'cover' }}
           />
-          <div className="absolute top-3 left-3 bg-primary-container/80 rounded text-[10px] px-1">{`D - ${getDueDate(
-            data.missionStartDate,
-          )}`}</div>
+          {!isStarted && (
+            <div className="absolute top-3 left-3 bg-primary-container/80 rounded text-[10px] px-1 leading-[18px]">{`D - ${getDueDate(
+              data.missionStartDate,
+            )}`}</div>
+          )}
           {/* 듀데이트 */}
-          <div className="flex absolute top-3 right-3 bg-primary-container/80 rounded text-[10px] px-1">
+          <div className="flex absolute top-3 right-3 bg-primary-container/80 rounded text-[10px] px-1 items-center leading-[18px]">
             <FontAwesomeIcon
               icon={faUser}
               size="xs"
-              className="text-primary mr-1 mt-1 mb-1"
+              className="text-blue-600 mr-1 mt-1 mb-1"
             />
             {`${data.missionMemberCount}/${data.missionMaxCount}`}
           </div>
           {/* 제한인원 */}
         </figure>
-        <div className="p-2.5 h-[84px]">
+        <div className="p-2.5">
           <div className="text-xs card-title mb-2.5">{data.missionTitle}</div>
           <div className="flex gap-2.5 mb-2.5">
+            {/* 카테고리 */}
+            <Capsule
+              bgColor={`${data.missionCategoryId}`}
+              textColor="background"
+              isSmall={true}
+              className="truncate"
+            >
+              {category}
+            </Capsule>
+            {/* target price */}
+            <Capsule
+              bgColor="background-fill"
+              textColor="black"
+              isSmall={true}
+              className="truncate"
+            >
+              <span>
+                <FontAwesomeIcon icon={faFlag} className="mr-2" />
+                {data.missionTargetPrice.toLocaleString()}
+              </span>
+            </Capsule>
+          </div>
+          <div className="flex gap-2.5">
             <Capsule
               bgColor="background-fill"
               textColor="black"
@@ -75,20 +109,25 @@ const MissionCard = ({ data }: { data: MissionCardProps }) => {
               }`}
             </Capsule>
           </div>
-          <div className="text-[10px] text-outline mb-2.5">
-            {data.missionTargetPrice &&
-              `${data.missionTargetPrice.toLocaleString()} 원`}
-          </div>
         </div>
       </div>
     </Link>
   )
 }
 
+const SECOND = 1
+const MINUTE = SECOND * 60
+const HOUR = MINUTE * 60
+const DAY = HOUR * 24
+
 const getDueDate = (date: string) => {
   const start = new Date(date)
   const current = new Date()
-  return start.getDate() - current.getDate()
+
+  const passedSeconds = Math.trunc(
+    (start.getTime() - current.getTime() - 9000 * HOUR) / 1000 + HOUR * 9,
+  )
+  return Math.trunc(passedSeconds / DAY)
 }
 
 export default MissionCard

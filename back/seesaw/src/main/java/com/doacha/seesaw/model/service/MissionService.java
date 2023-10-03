@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
@@ -110,7 +112,7 @@ public class MissionService {
     public Optional<Mission> getMissionDetail(String missionId) {
         log.info("미션 아이디 : {}", missionId);
         Optional<Mission> mission = missionRepository.findById(missionId);
-        if (!mission.isPresent()) throw new NoContentException();
+        if (!mission.isPresent()) throw new NoContentException(missionId+"에 해당하는 미션 없음");
         return mission;
     }
 
@@ -139,6 +141,20 @@ public class MissionService {
         return missionRepository.save(updatedMission);
     }
 
+    // 미션의 카테고리에 해당하는 개인 지출 월 평균
+    public SpendingAverageResponse getSpendingAverage(int categoryId, String memberEmail){
+        YearMonth endMonth = YearMonth.from(LocalDateTime.now().minusMonths(1));
+        LocalDateTime end = endMonth.atEndOfMonth().atTime(LocalTime.MAX);
+        LocalDateTime start = LocalDateTime.now().minusMonths(12).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
+        Long sum = spendingRepository.findSumByPeriodAndCategory(categoryId,memberEmail,start,end);
+        double average = (double)sum/12.0;
+        SpendingAverageResponse spendingAverageResponse = SpendingAverageResponse.builder()
+                .memberEmail(memberEmail)
+                .categoryId(categoryId)
+                .average(average)
+                .build();
+        return spendingAverageResponse;
+    }
 
     // 미션 삭제
     public void deleteMission(String missionId){
@@ -198,6 +214,7 @@ public class MissionService {
                 .missionId(missionId)
                 .pastTotalCost(pastTotalCost)
                 .missionTotalCost(missionTotalCost)
+                .difference(missionTotalCost-pastTotalCost)
                 .build();
         return missionSavingResponse;
     }
@@ -227,7 +244,7 @@ public class MissionService {
             return myMissionStatsResponse;
         }
         else{
-            throw new NoContentException();
+            throw new NoContentException("데이터 없음");
         }
     }
     public CompareMissionResponse getCompareMissionAverage(String missionId){
@@ -258,7 +275,7 @@ public class MissionService {
             return realCompareMissionResponse;
         }
         else{
-            throw new NoContentException();
+            throw new NoContentException(missionId+"에 해당하는 미션 없음");
         }
     }
 
