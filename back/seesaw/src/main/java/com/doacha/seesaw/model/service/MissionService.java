@@ -222,7 +222,7 @@ public class MissionService {
         return mySpendingSum.get();
         }
         else{
-            throw new NoContentException();
+            throw new NoContentException("해당하는 데이터 없음");
         }
     }
     // 미션 기간만큼 과거 소비와 미션 비교
