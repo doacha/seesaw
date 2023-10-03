@@ -6,12 +6,16 @@ import { useRouter } from 'next/navigation'
 import { GroupStatusProps } from '@/app/types'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { recordListStore } from '@/stores/recordListStore'
+
+const DUMMY_NICKNAME = '지원'
 interface TodayStatus {
   memberImgUrl: string
   memberNickname: string
   recordSuccessCount: number
   recordTotalCost: number
   recordStatus: number
+  recordId: number
 }
 const getTodayMission = async (input: {
   missionId: string
@@ -35,7 +39,8 @@ const getTodayMission = async (input: {
 
 const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
   const router = useRouter()
-
+  const { recordStatus, recordMap, setTodayRecordId, setRecordMap } =
+    recordListStore()
   const { data: todayMission, mutate, isSuccess } = useMutation(getTodayMission)
 
   useEffect(() => {
@@ -45,8 +50,18 @@ const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
         currentCycle: data.missionCurrentCycle,
       },
       {
-        onSuccess: (res) => {
-          console.log('answerasdfas', res)
+        onSuccess: (res: TodayStatus[]) => {
+          const targetIdx = res.findIndex(
+            (element) => element.memberNickname === DUMMY_NICKNAME,
+          )
+          console.log('투데이미션 레코드 확인', res[targetIdx].recordId, res)
+          const recordNumber = data.missionCurrentCycle
+          console.log(recordNumber, res[targetIdx].recordId)
+          setTodayRecordId(res[targetIdx].recordId, recordStatus)
+          setRecordMap({
+            ...recordMap,
+            [recordNumber]: res[targetIdx].recordId,
+          })
         },
         onError: (err) => console.log('에러sdsd', err),
       },
@@ -64,7 +79,9 @@ const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
             <GroupStatusTodayCard
               data={element}
               targetPrice={todayMission.missionTargetPrice}
-              onClick={() => router.push('ndU1ZQjkV8/1')}
+              onClick={() =>
+                router.push(`${data.missionId}/${element.recordId}`)
+              }
               key={idx}
             />
           ))}

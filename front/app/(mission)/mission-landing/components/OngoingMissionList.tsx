@@ -2,7 +2,8 @@
 import MissionCard from '../../components/MissionCard'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
-
+import { categoryList } from '@/app/lib/constants'
+import { isStarted } from '../../util'
 interface MissionCardProps {
   missionId: string
   missionTitle: string
@@ -13,6 +14,7 @@ interface MissionCardProps {
   missionPeriod: number
   missionTotalCycle: number
   missionStartDate: string
+  missionCategoryId: number
 }
 
 const getOngoingList = async ({
@@ -58,7 +60,12 @@ const OngoingMissionList = () => {
       <div className="font-scDreamExBold mb-5 ">참여중인 미션</div>
       <div className="flex flex-wrap gap-5">
         {(data as MissionCardProps[])?.map((element, idx) => (
-          <MissionCard data={element} key={idx} />
+          <MissionCard
+            data={element}
+            key={idx}
+            isStarted={isStarted(element.missionStartDate)}
+            category={categoryList[element.missionCategoryId]}
+          />
         ))}
       </div>
     </div>

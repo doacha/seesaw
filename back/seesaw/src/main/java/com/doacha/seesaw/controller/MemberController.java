@@ -12,11 +12,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.result.view.RedirectView;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -27,6 +29,7 @@ import java.util.Map;
 @RequestMapping("/member")
 @RequiredArgsConstructor
 @CrossOrigin(origins="*", allowedHeaders = "*", methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.HEAD, RequestMethod.OPTIONS, RequestMethod.POST, RequestMethod.PUT})
+@Slf4j
 public class MemberController {
     private final MemberService memberService;
     private final MemberMissionService memberMissionService;
@@ -38,10 +41,14 @@ public class MemberController {
         return memberService.signUp(signUpRequest);
     }
 
-    @GetMapping(value="registerEmail")
-    public String emailConfirm(@RequestParam String memberEmail)throws Exception{
-        memberService.memberAuth(memberEmail);
-        return "/member/registerEmail";
+    // 이메일 인증
+    @GetMapping("/registerEmail")
+    public RedirectView emailConfirm(@RequestParam String memberEmail, String key)throws Exception{
+        log.info("인증 요청 온 이메일: " + memberEmail);
+        memberService.memberAuth(memberEmail, key);
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://j9a409.p.ssafy.io:3000/login");
+        return redirectView;
     }
     // 로그인
     @PostMapping("/login")

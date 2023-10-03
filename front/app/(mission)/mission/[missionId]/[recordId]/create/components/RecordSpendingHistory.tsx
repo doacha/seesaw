@@ -8,7 +8,7 @@ const BoardSpendingHistory = ({
   balance,
   textColor,
 }: {
-  history: Array<{ recordHistory: string; recordPrice: number }>
+  history: Array<{ recordName: string; recordCost: number }>
   targetPrice: number
   balance: number
   textColor: string
@@ -26,8 +26,8 @@ const BoardSpendingHistory = ({
       <hr className="border-outline mb-2" />
       {history.map((element, idx) => (
         <div className="flex justify-between mb-2 text-sm" key={idx}>
-          <span>{element.recordHistory}</span>
-          <span>{element.recordPrice.toLocaleString('ko-KR')}</span>
+          <span>{element.recordName}</span>
+          <span>{element.recordCost.toLocaleString('ko-KR')}</span>
         </div>
       ))}
       <hr className="border-outline" />

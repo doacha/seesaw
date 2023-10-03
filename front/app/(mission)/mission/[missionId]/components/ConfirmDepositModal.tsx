@@ -14,9 +14,11 @@ import Capsule from '@/app/components/Capsule'
 const ConfirmDepositModal = ({
   modalRef,
   changeModal,
+  missionTargetPrice,
 }: {
   modalRef: React.RefObject<HTMLDialogElement>
   changeModal: (processLivel: number) => void
+  missionTargetPrice: number
 }) => {
   const cancelButtonRef = useRef<HTMLButtonElement>(null)
   return (
@@ -57,7 +59,7 @@ const ConfirmDepositModal = ({
             </div>
           </div>
           <div className="text-center text-[20px] my-5">
-            예치금 n원 입금하여 <br />
+            예치금 {missionTargetPrice}원 입금하여 <br />
             미션에 참가하시겠어요?
           </div>
         </div>
@@ -68,7 +70,7 @@ const ConfirmDepositModal = ({
               <button
                 // onClick={() => handleMonthClick(-2)}
                 ref={cancelButtonRef}
-                className="font-scDreamExBold text-[18px] w-full mb-2.5 btn btn-outline text-gray outline-transparent "
+                className="font-scDreamExBold text-[18px] w-full h-10 min-h-10 mb-2.5 btn btn-outline text-gray outline-transparent "
               >
                 안할래요
               </button>

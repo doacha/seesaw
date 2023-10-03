@@ -111,7 +111,7 @@ public class MissionService {
     public Optional<Mission> getMissionDetail(String missionId) {
         log.info("미션 아이디 : {}", missionId);
         Optional<Mission> mission = missionRepository.findById(missionId);
-        if (!mission.isPresent()) throw new NoContentException();
+        if (!mission.isPresent()) throw new NoContentException(missionId+"에 해당하는 미션 없음");
         return mission;
     }
 
@@ -271,7 +271,7 @@ public class MissionService {
             return myMissionStatsResponse;
         }
         else{
-            throw new NoContentException();
+            throw new NoContentException("데이터 없음");
         }
     }
     public CompareMissionResponse getCompareMissionAverage(String missionId){
@@ -302,7 +302,7 @@ public class MissionService {
             return realCompareMissionResponse;
         }
         else{
-            throw new NoContentException();
+            throw new NoContentException(missionId+"에 해당하는 미션 없음");
         }
     }
 
