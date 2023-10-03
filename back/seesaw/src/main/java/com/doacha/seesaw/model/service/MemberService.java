@@ -276,7 +276,7 @@ public class MemberService {
 
         Member update;
 
-        if(changeInfoRequest.getMemberPassword()!=null || "".equals(changeInfoRequest.getMemberPassword()) || changeInfoRequest.getMemberNewPassword()!=null || !"".equals(changeInfoRequest.getMemberNewPassword())){ // 비번 새로 바꾸려고 하면
+        if(changeInfoRequest.getMemberPassword()!=null && !"".equals(changeInfoRequest.getMemberPassword()) && changeInfoRequest.getMemberNewPassword()!=null && !"".equals(changeInfoRequest.getMemberNewPassword())){ // 비번 새로 바꾸려고 하면
             if(!passwordEncoder.matches( changeInfoRequest.getMemberPassword(), member.get().getMemberPassword())){ // 비번 확인
                 throw new BadRequestException("비밀번호를 확인하세요."); // 비번 다르면 익셉션
             }
