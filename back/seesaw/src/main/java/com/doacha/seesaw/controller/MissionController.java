@@ -175,13 +175,12 @@ public class MissionController {
     public ResponseEntity<?> getCompareStats (@RequestBody QuitMissionRequest quitMissionRequest){
         try{
             CompareWithMissionMemberResponse compareWithMissionMemberResponse = missionService.getCompareMissionMemberStats(quitMissionRequest.getMemberEmail(),quitMissionRequest.getMissionId());
-            return null;
+            return new ResponseEntity<>(compareWithMissionMemberResponse,HttpStatus.OK);
         }
         catch(Exception e ){
-            return null;
+            return new ResponseEntity<String>(FAIL,HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 
     @Operation(summary = "미션 총 사용 금액 중 최근 5개")
