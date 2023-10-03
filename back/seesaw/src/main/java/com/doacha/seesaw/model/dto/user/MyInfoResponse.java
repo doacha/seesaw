@@ -1,9 +1,12 @@
 package com.doacha.seesaw.model.dto.user;
 
 import com.doacha.seesaw.model.entity.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+
 @Getter
+//@AllArgsConstructor
 public class MyInfoResponse {
     private final String memberEmail;
 
