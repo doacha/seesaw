@@ -27,7 +27,6 @@ const MissionDetailContents = ({ data }: { data: GroupStatusProps }) => {
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
   }
-  console.log('맵에뭐있니', recordMap)
   if (recordStatus.missionId !== data.missionId) {
     setRecordStatus({
       missionId: data.missionId,

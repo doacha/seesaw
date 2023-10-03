@@ -26,7 +26,6 @@ const MissionCard = ({
   category: string
 }) => {
   console.log('미션카드 데이터 체크', data)
-  console.log(data.missionCategoryId)
   return (
     <Link
       href={`/mission/${data.missionId}`}
