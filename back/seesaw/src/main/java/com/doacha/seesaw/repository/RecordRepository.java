@@ -16,13 +16,6 @@ import java.util.Optional;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
 
-//    @Query("SELECT new com.doacha.seesaw.model.dto.record.RecordListResponse(r.recordId, mm.member.memberNickname, mm.member.memberImgUrl, r.recordTotalCost, r.recordStatus) " +
-//            "FROM Record r " +
-//            "JOIN r.memberMission mm " +
-//            "WHERE mm.mission.missionId = :missionId AND r.recordNumber = :recordNumber " +
-//            "ORDER BY r.recordTotalCost ASC")
-//    List<RecordListResponse> getRecordListResponseByMissionId(@Param("missionId") String missionId, @Param("recordNumber") int recordNumber);
-
     @Query("SELECT new com.doacha.seesaw.model.dto.record.RecordListResponse(r.recordId, mm.member.memberNickname, mm.member.memberImgUrl, r.recordTotalCost, r.recordStatus, (SELECT COUNT(subR) FROM Record subR WHERE subR.memberMission = mm AND subR.recordStatus = 1)) " +
             "FROM Record r " +
             "JOIN r.memberMission mm " +
@@ -43,41 +36,32 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
             "ORDER BY r.recordTotalCost ASC")
     List<MemberHistory> getMemberHistoryByMissionId(@Param("missionId") String missionId, @Param("currentCycle") int currentCycle);
 
-//    @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionTopSpendingResponse(mm.member.memberNickname AS missionTopSpender, SUM(r.recordTotalCost) AS missionTopSpending) " +
-//            "FROM Record r " +
-//            "JOIN r.memberMission mm " +
-//            "WHERE mm.mission.missionId = :missionId " +
-//            "GROUP BY mm.member.memberNickname " +
-//            "HAVING SUM(r.recordTotalCost) = (SELECT MAX(totalCost) FROM (SELECT SUM(r2.recordTotalCost) AS totalCost " +
-//            "FROM Record r2 " +
-//            "JOIN r2.memberMission mm2 " +
-//            "WHERE mm2.mission.missionId = :missionId " +
-//            "GROUP BY mm2.member.memberNickname))")
-//    MissionTopSpendingResponse getMissionTopSpender(@Param("missionId") String missionId);
-//
-//    @Query("SELECT new com.doacha.seesaw.model.dto.mission.MissionFrugalSpendingResponse(mm.member.memberNickname AS missionTopSpender, SUM(r.recordTotalCost) AS missionTopSpending) " +
-//            "FROM Record r " +
-//            "JOIN r.memberMission mm " +
-//            "WHERE mm.mission.missionId = :missionId " +
-//            "GROUP BY mm.member.memberNickname " +
-//            "HAVING SUM(r.recordTotalCost) = (SELECT MIN(totalCost) FROM (SELECT SUM(r2.recordTotalCost) AS totalCost " +
-//            "FROM Record r2 " +
-//            "JOIN r2.memberMission mm2 " +
-//            "WHERE mm2.mission.missionId = :missionId " +
-//            "GROUP BY mm2.member.memberNickname))")
-//    MissionFrugalSpendingResponse getMissionFrugalSpender(@Param("missionId") String missionId);
-//
-//
-//    @Query("SELECT new com.doacha.seesaw.model.dto.mission.DailyTopSpendingResponse(mm.member.memberNickname AS dailyTopSpender, MAX(r.recordTotalCost) AS dailyTopSpending, r.recordNumber AS dailyTopSpendingNum) " +
-//            "FROM Record r " +
-//            "JOIN r.memberMission mm " +
-//            "WHERE mm.mission.missionId = :missionId " +
-//            "GROUP BY r.recordTotalCost " )
-//    DailyTopSpendingResponse getDailyTopSpender(@Param("missionId") String missionId);
+    @Query("SELECT rm.member.memberNickname, SUM(r.recordTotalCost) " +
+            "FROM Record r " +
+            "INNER JOIN r.memberMission rm " +
+            "WHERE rm.mission.missionId = :missionId " +
+            "GROUP BY rm " +
+            "ORDER BY SUM(r.recordTotalCost) ASC")
+    List<Object[]> findMinTotalCostByMissionId(@Param("missionId") String missionId);
 
+    @Query("SELECT rm.member.memberNickname, SUM(r.recordTotalCost) " +
+            "FROM Record r " +
+            "INNER JOIN r.memberMission rm " +
+            "WHERE rm.mission.missionId = :missionId " +
+            "GROUP BY rm " +
+            "ORDER BY SUM(r.recordTotalCost) DESC " +
+            "LIMIT 1")
+    List<Object[]> findMaxTotalCostByMissionId(@Param("missionId") String missionId);
 
+    @Query("SELECT rm.member.memberNickname, r.recordTotalCost, r.recordNumber " +
+            "FROM Record r " +
+            "INNER JOIN r.memberMission rm " +
+            "WHERE rm.mission.missionId = :missionId " +
+            "ORDER BY r.recordTotalCost DESC " +
+            "LIMIT 1")
+    List<Object[]> findMaxTotalCostRecordByMissionId(@Param("missionId") String missionId);
 
-@Query("SELECT NEW com.doacha.seesaw.model.dto.mission.RecentMissionResponse(" +
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.RecentMissionResponse(" +
         "m.missionId, " +
         "mm.member.memberEmail, " +
         "r.recordTotalCost AS recordTotalCost, " +
@@ -88,7 +72,7 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
         "WHERE m.missionId = :missionId AND mm.member.memberEmail = :memberEmail " +
         "GROUP BY r.recordNumber " +
         "ORDER BY r.recordNumber DESC ")
-List<RecentMissionResponse> getRecentMissionStats(@Param("missionId") String missionId , @Param("memberEmail")String memberEmail, Pageable pageable);
+    List<RecentMissionResponse> getRecentMissionStats(@Param("missionId") String missionId , @Param("memberEmail")String memberEmail, Pageable pageable);
 
     @Query("SELECT COUNT(r) FROM Record r WHERE r.memberMission.mission.missionId = :missionId AND r.memberMission.member.memberEmail = :memberEmail AND r.recordStatus = 2")
     int countFail(@Param("missionId") String missionId, @Param("memberEmail") String memberEmail);
