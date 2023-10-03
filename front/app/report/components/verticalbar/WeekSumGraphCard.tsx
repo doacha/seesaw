@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from 'react'
 import ReportVerticalGraphBar from './ReportVerticalGraphBar'
 
@@ -10,8 +12,8 @@ const WeekSumGraphCard = ({
   activeCalendarTab,
   groupedSpending,
 }: WeekSumGraphCardProps) => {
-  console.log(groupedSpending)
   let valuesArray: number[] = Object.values(groupedSpending)
+  console.log(valuesArray)
 
   const averageAmount = () => {
     let sum = 0
@@ -22,7 +24,6 @@ const WeekSumGraphCard = ({
   }
 
   const [lengthList, setLengthList] = useState<string[]>([])
-  const [meanLength, setMeanLength] = useState<string>('')
 
   useEffect(() => {
     let mean = 0
@@ -34,6 +35,7 @@ const WeekSumGraphCard = ({
         tmpLengthList.push(tmp)
       }
     }
+    setLengthList(tmpLengthList)
   }, [])
 
   return (
