@@ -4,15 +4,14 @@ import MyStatisticDetailCard from './MyStatisticDetailCard'
 import { memberEmailStore } from '@/stores/memberEmail'
 import TransactionLoading from '@/app/member/components/account/TransactionLoading'
 import Loading from '@/app/components/Loading'
-import { Record } from '@/app/types'
+import { Record, SavedAmount } from '@/app/types'
+import { currentMissionIdStore } from '@/stores/currentMissionId'
 
-interface Props {
-  missionId: string
-}
 
-const MystatisticCard = (props: Props) => {
+
+const MystatisticCard = () => {
   const { memberEmail } = memberEmailStore()
-
+  const {currentMissionId} = currentMissionIdStore()
   const getCompleteMissionStat = async () => {
     try {
       const res = await fetch(
@@ -22,11 +21,11 @@ const MystatisticCard = (props: Props) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          // body: JSON.stringify({missionId : props.missionId, memberEmail: memberEmail})
-          body: JSON.stringify({
-            missionId: 'yzn5LMDMCG',
-            memberEmail: 'doacha@seesaw.com',
-          }),
+          body: JSON.stringify({missionId : currentMissionId, memberEmail: memberEmail})
+          // body: JSON.stringify({
+          //   missionId: 'yzn5LMDMCG',
+          //   memberEmail: 'doacha@seesaw.com',
+          // }),
         },
       )
       const data = await res.json()
@@ -45,11 +44,11 @@ const MystatisticCard = (props: Props) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          // body: JSON.stringify({missionId : props.missionId, memberEmail: memberEmail})
-          body: JSON.stringify({
-            missionId: 'yzn5LMDMCG',
-            memberEmail: 'doacha@seesaw.com',
-          }),
+          body: JSON.stringify({missionId : currentMissionId, memberEmail: memberEmail})
+          // body: JSON.stringify({
+          //   missionId: 'yzn5LMDMCG',
+          //   memberEmail: 'doacha@seesaw.com',
+          // }),
         },
       )
       const data: Record[] = await res.json()
@@ -68,14 +67,37 @@ const MystatisticCard = (props: Props) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          // body: JSON.stringify({missionId : props.missionId, memberEmail: memberEmail})
-          body: JSON.stringify({
-            missionId: 'yzn5LMDMCG',
-            memberEmail: 'doacha@seesaw.com',
-          }),
+          body: JSON.stringify({missionId : currentMissionId, memberEmail: memberEmail})
+          // body: JSON.stringify({
+          //   missionId: 'yzn5LMDMCG',
+          //   memberEmail: 'doacha@seesaw.com',
+          // }),
         },
       )
       const data: number = await res.json()
+      return data
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const getSavedAmount = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/saving`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({missionId : currentMissionId, memberEmail: memberEmail})
+          // body: JSON.stringify({
+          //   missionId: 'yzn5LMDMCG',
+          //   memberEmail: 'doacha@seesaw.com',
+          // }),
+        },
+      )
+      const data: SavedAmount = await res.json()
       return data
     } catch (err) {
       console.log(err)
@@ -96,6 +118,11 @@ const MystatisticCard = (props: Props) => {
   const { isLoading: graphCurrentInfoLoading, data: currentAmount } = useQuery(
     ['getCurrentAmount'],
     getCurrentAmount,
+  )
+
+  const { isLoading: savedAmountLoading, data: savedAmount } = useQuery(
+    ['getSavedAmount'],
+    getSavedAmount,
   )
 
   return (
@@ -137,14 +164,38 @@ const MystatisticCard = (props: Props) => {
           textAfter="을 썼어요."
         />
       )}
-
-      {/* <GraphCard
+      {savedAmountLoading? <Loading /> :  <GraphCard
         type="horizontal"
         textBefore="미션으로&nbsp;"
-        amountList={averageAmountList}
-        textAfter="원을 절약했어요."
-        comment="잘하셨어요! 꾸준히 아껴보자구요!"
-      /> */}
+        savedAmount={savedAmount}
+        currentAmount={
+          savedAmount?.difference
+            ? savedAmount.difference > 0
+              ? Math.round(savedAmount.difference)
+              : -Math.round(savedAmount.difference)
+            : 0
+        }
+        textAfter={
+          savedAmount?.difference
+            ? savedAmount?.difference < 0
+              ? ' 만큼 절약하셨어요!'
+              : ' 만큼 더 쓰셨네요.'
+            : ''
+        }
+        comment={
+          savedAmount?.difference
+            ? savedAmount.difference < 0
+              ? '미션을 성공적으로 수행하셨어요!'
+              : '다음 번엔 조금 더 열심히 해보자구요.'
+            : ''
+        }
+      />
+      
+      
+      
+      
+      }
+     
     </div>
   )
 }

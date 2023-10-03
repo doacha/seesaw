@@ -9,6 +9,7 @@ interface Props {
 }
 
 const NavbarButton = (props: Props) => {
+  
   return (
     <button
       onClick={props.onTabClick}
