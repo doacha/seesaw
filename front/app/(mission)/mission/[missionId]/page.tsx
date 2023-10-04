@@ -1,4 +1,3 @@
-'use client'
 import MissionDetailContainer from './components/MissionDetailContainer'
 import MissionDetailContents from './components/MissionDetailContents'
 import MissionWaitingList from './components/MissionWaitingList'
