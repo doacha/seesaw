@@ -21,8 +21,8 @@ import { useRef } from 'react'
 import { categoryList } from '@/app/lib/constants'
 import Swal from 'sweetalert2'
 import SelectMaxMemberInput from './SelectMaxMemberInput'
+import { memberEmailStore } from '@/stores/memberEmail'
 const DUMMY_EMAIL = 'doacha@seesaw.com'
-const DUMMY_CATEGORYSAVEMONEY = 10000
 const DUMMY_ACCOUNT_NUM = '457899-01-655239'
 
 interface DepositRequest {
@@ -33,6 +33,7 @@ interface DepositRequest {
 }
 
 const CreateMissionContainer = () => {
+  const { memberEmail } = memberEmailStore()
   const [input, setInput] = useState<MissionCreate>({
     imgFile: { id: '', url: '' },
     missionTitle: '', //
@@ -44,7 +45,7 @@ const CreateMissionContainer = () => {
     missionPeriod: -1, //
     missionTotalCycle: 0, //
     missionStartDate: { month: -1, day: -1 }, //
-    missionHostEmail: DUMMY_EMAIL, // hostemail이 필요가 없네
+    missionHostEmail: memberEmail, // hostemail이 필요가 없네
     missionCategoryId: -1,
     missionTargetPrice: 0,
   })
@@ -206,7 +207,7 @@ const CreateMissionContainer = () => {
         state={input}
         handleClick={handleCapsuleClick}
         getSpendMoney={controlSpendMoney}
-        memberEmail={DUMMY_EMAIL}
+        memberEmail={memberEmail}
       />
       {/* 미션 빈도 */}
       <PeriodInput

@@ -3,16 +3,16 @@ import Button from '@/app/components/Button'
 import { useRef } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-
-const DUMMY_EMAIL = 'doacha@seesaw.com'
+import { memberEmailStore } from '@/stores/memberEmail'
 
 const MissionExitButton = ({ missionId }: { missionId: string }) => {
+  const { memberEmail /**/ } = memberEmailStore()
   const modalRef = useRef<HTMLDialogElement>(null)
   const router = useRouter()
   const { mutate } = useMutation(postQuitMission)
   const handleSubmit = () => {
     mutate(
-      { missionId, memberEmail: DUMMY_EMAIL },
+      { missionId, memberEmail: memberEmail },
       {
         onSuccess: (res) => router.push('/mission-landing'),
       },
