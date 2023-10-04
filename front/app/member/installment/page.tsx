@@ -39,9 +39,10 @@ const InstallmentPage = () => {
   }
 
   const createNewAccount = async () => {
+    console.log(accountName, password, memberEmail)
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SEESAW_BANK_API_URL}/account/create`,
+        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/create-account`,
         {
           method: 'POST',
           headers: {
@@ -49,13 +50,18 @@ const InstallmentPage = () => {
           },
           body: JSON.stringify({
             accountName: accountName,
-            accountPassword: password,
-            merberEmail: memberEmail,
+            memberEmail: memberEmail,
+            accountPassword:
+              password[0] + password[1] + password[2] + password[3],
           }),
         },
       )
-      setInstallmentAccount(await res.json())
-      router.push('./user')
+      if (res.status == 200) {
+        setInstallmentAccount(await res.json())
+        router.replace('/member')
+      } else {
+        console.log(res)
+      }
     } catch (err) {
       console.log(err)
     }
