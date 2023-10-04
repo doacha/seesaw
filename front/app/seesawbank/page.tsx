@@ -22,13 +22,14 @@ const SeesawBankPage = () => {
         },
       )
       const data = await res.json()
+      console.log(data)
       return data
     } catch (err) {
       console.log(err)
     }
   }
 
-  const { data: accountListData } = useQuery(
+  const { isLoading, data: accountListData } = useQuery(
     ['accountListInfo'],
     getAccountListInfo,
   )
@@ -38,11 +39,13 @@ const SeesawBankPage = () => {
       <Header title="시소뱅크" />
 
       <div className="flex flex-col h-full py-16 px-5">
-        <div className="flex flex-col py-5 gap-5">
-          {accountListData.map((account: Account) => (
-            <AccountCard account={account} />
-          ))}
-        </div>
+        {isLoading ? null : (
+          <div className="flex flex-col py-5 gap-5">
+            {accountListData.map((account: Account, index: number) => (
+              <AccountCard account={account} key={index} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
