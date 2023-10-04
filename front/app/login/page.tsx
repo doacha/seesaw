@@ -11,6 +11,11 @@ import GoogleBtn from './components/googleBtn'
 import { memberEmailStore } from '@/stores/memberEmail'
 import { currentTabStore } from '@/stores/currentTab'
 
+interface Member {
+  memberEmail: string
+  memberNickname: string
+}
+
 const Login = () => {
   const [memberInput, setmemberInput] = useState({
     email: '',
@@ -18,7 +23,7 @@ const Login = () => {
   })
 
   const { email, pw } = memberInput
-  const { memberEmail, setMemberEmail } = memberEmailStore()
+  const { memberEmail, setMember } = memberEmailStore()
   const { setCurrentTab } = currentTabStore()
   const handleInput = (e: any) => {
     const { name, value } = e.target
@@ -56,7 +61,6 @@ const Login = () => {
       .then((res) => {
         if (res.status === 200) {
           // 홈으로 이동하기 전에 loading이 필요하려나?
-          setMemberEmail(email)
           setCurrentTab('home')
           router.push('/home')
         } else if (res.status === 400) {
@@ -78,7 +82,10 @@ const Login = () => {
       })
       .then((data) =>
         // Todo 여기에서 백에서 받은 accessToken 저장해야
-        console.log(data),
+        {
+          setMember(data.memberEmail, data.memberNickname)
+          console.log(data)
+        },
       )
       // 이 catch의 사용성을 솔직히 모르게썽
       .catch((err) => Swal.showValidationMessage(`Request failed: ${err}`))
