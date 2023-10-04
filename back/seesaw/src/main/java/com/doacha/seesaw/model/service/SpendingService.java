@@ -117,8 +117,6 @@ public class SpendingService {
                 int categoryId = categoryMapping(response.getCardStoreCategory());
                 Record record = checkRecord(memberEmail, categoryId, response.getCardTransactionTime());
 
-                if (record == null) continue;
-
                 Spending spending = Spending.builder()
                         .spendingTitle(response.getCardStoreName())
                         .spendingCost(response.getCardApprovalAmount())
@@ -130,11 +128,13 @@ public class SpendingService {
                         .record(record)
                         .build();
 
-                log.info("가계부와 미션 연동");
-                linkSpendingToRecord(record, spending);
-
                 log.info("카드 내역 가계부에 저장");
                 spendingRepository.save(spending);
+
+                if (record == null) continue;
+
+                log.info("가계부와 미션 연동");
+                linkSpendingToRecord(record, spending);
             }
         });
     }
