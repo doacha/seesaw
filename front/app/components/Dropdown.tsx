@@ -1,14 +1,12 @@
-'use client'
-import { useState } from 'react'
 import '../member/styles/style.css'
 
 interface Props {
-  sortType: 0 | 1 | 2
-  onSortTypeChange: (value: 0 | 1 | 2) => void
+  sortType: 1 | 2 | 3
+  onSortTypeChange: (value: 1 | 2 | 3) => void
 }
 
 const Dropdown = (props: Props) => {
-  const onSortButtonClick = (value: 0 | 1 | 2) => {
+  const onSortButtonClick = (value: 1 | 2 | 3) => {
     props.onSortTypeChange(value)
     const box = document.getElementById('sortOpen') as HTMLInputElement
     box.checked = false
@@ -26,9 +24,9 @@ const Dropdown = (props: Props) => {
         id="sortOpen"
       />
       <div className="collapse-title text-base h-[40px] min-h-0 w-full text-left px-3 py-2">
-        {props.sortType === 0
+        {props.sortType === 1
           ? '최신순'
-          : props.sortType === 1
+          : props.sortType === 2
           ? '성공'
           : '실패'}
       </div>
@@ -36,15 +34,15 @@ const Dropdown = (props: Props) => {
         <p
           className="text-left"
           onClick={() => {
-            onSortButtonClick(0)
+            onSortButtonClick(1)
           }}
         >
           최신순
         </p>
-        <p className="text-left" onClick={() => onSortButtonClick(1)}>
+        <p className="text-left" onClick={() => onSortButtonClick(2)}>
           성공
         </p>
-        <p className="text-left" onClick={() => onSortButtonClick(2)}>
+        <p className="text-left" onClick={() => onSortButtonClick(3)}>
           실패
         </p>
       </div>

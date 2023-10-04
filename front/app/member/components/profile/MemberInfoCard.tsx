@@ -21,12 +21,27 @@ const memberInfoCard = (props: Props) => {
           ></TextButton>
         </div>
         <MemberDetailInfo member={props.member} />
-        <div className="flex self-center text-lg font-scDreamLight whitespace-nowrap">
-          현재까지&nbsp;
-          <div className="font-scDreamExBold text-primary">
-            {props.member.savings.toLocaleString()}
+        <div className="flex flex-col self-center text-lg font-scDreamLight whitespace-nowrap">
+          <div className="flex">
+            미션으로&nbsp;
+            <div
+              className={
+                props.member.savings < 0
+                  ? 'font-scDreamExBold text-error'
+                  : 'font-scDreamExBold text-primary'
+              }
+            >
+              {props.member.savings < 0
+                ? (-props.member.savings).toLocaleString()
+                : props.member.savings.toLocaleString()}
+            </div>
+            {props.member.savings < 0
+              ? '원 더 쓰셨습니다.'
+              : '원 절약하셨습니다.'}
           </div>
-          원 절약하셨습니다.
+          {props.member.savings < 0 ? (
+            <div className="self-center">조금 더 적극적으로 참여해보아요</div>
+          ) : null}
         </div>
       </div>
     </div>

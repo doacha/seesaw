@@ -1,7 +1,6 @@
 import HorizontalGarphBar from '@/app/components/HorizontalGraphBar'
 import { categoryIcon, categoryList, iconColors } from '@/app/lib/constants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { group } from 'console'
 
 interface Props {
   category: number
@@ -23,8 +22,8 @@ const CategorizedGraph = (props: Props) => {
       <div>
         <HorizontalGarphBar
           height="small"
-          amount={props.group}
-          length={`${props.group * 10}px`}
+          amount={Math.round(props.group)}
+          length={`${props.group * 7}px`}
           title="그룹"
           bgColor="bg-white"
           txtColor="text-surface"
@@ -32,8 +31,8 @@ const CategorizedGraph = (props: Props) => {
         ></HorizontalGarphBar>
         <HorizontalGarphBar
           height="small"
-          amount={props.me}
-          length={`${props.me * 10}px`}
+          amount={Math.round(props.me)}
+          length={`${props.me * 7}px`}
           title="나"
           bgColor={
             props.highlight === 'most'

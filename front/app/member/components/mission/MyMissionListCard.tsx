@@ -3,7 +3,6 @@
 import { Mission, MissionCardProps } from '@/app/types'
 import MyMissionInfoCard from './MyMissionInfoCard'
 import Dropdown from '@/app/components/Dropdown'
-import { missionList } from '@/app/dummies'
 import { useState } from 'react'
 import MissionEmptyAlert from './MissionEmptyAlert'
 
@@ -12,9 +11,9 @@ interface Props {
 }
 
 const MyMissionListCard = (props: Props) => {
-  const [sortType, setSortType] = useState<0 | 1 | 2>(0)
+  const [sortType, setSortType] = useState<1 | 2 | 3>(1)
 
-  const onSortTypeChange = (value: 0 | 1 | 2) => {
+  const onSortTypeChange = (value: 1 | 2 | 3) => {
     setSortType(value)
   }
 
@@ -29,7 +28,7 @@ const MyMissionListCard = (props: Props) => {
       <div className="flex flex-col gap-3 h-auto max-h-[480px] overflow-auto">
         {props.missionList.length > 0 ? (
           props.missionList.map((mission) =>
-            sortType === 0 ? (
+            sortType === 1 ? (
               <MyMissionInfoCard mission={mission} key={mission.missionId} />
             ) : sortType === mission.memberMissionStatus ? (
               <MyMissionInfoCard mission={mission} key={mission.missionId} />

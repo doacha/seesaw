@@ -8,13 +8,11 @@ import Tab from '../components/Tab'
 import AccountCard from './components/account/AccountCard'
 import AccountRegistModal from './components/account/AccountRegistModal'
 import Loading from '../components/Loading'
-import { QueryKey, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import PasswordConfirmCard from './components/edit/PasswordConfirmCard'
 import InstallmentCreateButton from './installment/components/InstallmentCreateButton'
 import { redirect, useRouter } from 'next/navigation'
 import { accountListStore } from '@/stores/accountList'
-import { profileEditInfoStore } from '@/stores/profileEditInfo'
-import MemberProfileImg from './components/profile/MemberProfileImg'
 import { memberEmailStore } from '@/stores/memberEmail'
 
 const memberPage = () => {
@@ -32,7 +30,6 @@ const memberPage = () => {
     setAccountList,
   } = accountListStore()
 
-  const { setProfileEditInfo } = profileEditInfoStore()
   const { memberEmail } = memberEmailStore()
 
   const handleTabChange = (tab: string) => {
@@ -48,6 +45,7 @@ const memberPage = () => {
   }
 
   const getProfileInfo = async () => {
+    console.log(memberEmail)
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/mypage`,
@@ -60,6 +58,7 @@ const memberPage = () => {
         },
       )
       const tmp = await res.json()
+      console.log(tmp)
       return tmp
     } catch (err) {
       console.log(err)
