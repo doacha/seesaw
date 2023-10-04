@@ -7,8 +7,8 @@ import ConfirmDepositModal from './ConfirmDepositModal'
 import MoneyTransferModal from './MoneyTransferModal'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { memberEmailStore } from '@/stores/memberEmail'
 
-const DUMMY_EMAIL = 'doacha@seesaw.com'
 const dummyCategorySaveMoney = 10000
 const MissionJoinButton = ({
   isSaveMission,
@@ -26,6 +26,7 @@ const MissionJoinButton = ({
   const [processLevel, setProcessLevel] = useState(isSaveMission ? 0 : 1)
   const [savingMoney, setSavingMoney] = useState(dummyCategorySaveMoney)
   const [password, setPassword] = useState<string[]>(['', '', '', ''])
+  const { memberEmail } = memberEmailStore()
   const { mutate, data } = useMutation(getCategorySpendMoney)
   const refList = [
     useRef<HTMLDialogElement>(null),
@@ -36,7 +37,7 @@ const MissionJoinButton = ({
     mutate(
       {
         categoryId: missionCategoryId,
-        memberEmail: DUMMY_EMAIL,
+        memberEmail: memberEmail,
       },
       {
         onSuccess: (res) => {

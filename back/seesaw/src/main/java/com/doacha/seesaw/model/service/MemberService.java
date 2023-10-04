@@ -2,22 +2,20 @@ package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.BadRequestException;
 import com.doacha.seesaw.mail.TempKey;
-import com.doacha.seesaw.model.dto.SavingRequest;
 import com.doacha.seesaw.model.dto.account.AccountResponse;
-import com.doacha.seesaw.model.dto.account.AccountTransactionListResponse;
 import com.doacha.seesaw.model.dto.account.CreateAccountRequest;
 import com.doacha.seesaw.model.dto.account.CreateAccountToSeesawRequest;
-import com.doacha.seesaw.model.dto.mission.MissionListResponse;
 import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.entity.Member;
+import com.doacha.seesaw.model.entity.MemberMission;
 import com.doacha.seesaw.redis.RedisDao;
 import com.doacha.seesaw.repository.MemberMissionRepository;
 import com.doacha.seesaw.repository.MemberRepository;
 //import jakarta.transaction.Transactional;
+import com.doacha.seesaw.repository.SpendingRepository;
 import com.doacha.seesaw.util.MailUtils;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.service.spi.InjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -31,26 +29,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Mono;
-import org.springframework.mail.javamail.JavaMailSender;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static org.hibernate.sql.ast.SqlTreeCreationLogger.LOGGER;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final SpendingRepository spendingRepository;
     private final MemberMissionRepository memberMissionRepository;
     private final PasswordEncoder passwordEncoder;
     private final RedisDao redisDao;
@@ -260,16 +255,58 @@ public class MemberService {
         Member member = memberRepository
                 .findByMemberEmail(memberEmail)
                 .orElseThrow(() -> new BadRequestException("유효하지 않은 사용자입니다."));
+        // 모든 미션에 해당하는 카테고리의 // 해당 미션 기간(1달?) 이전에 쓰던 금액 - 미션 기간 쓴 금액
+        List<MemberMission> memberMissions = memberMissionRepository.findMemberMissionByMember(member);
+        long sum = 0; long before = 0; long after = 0;
+        // 카테고리 아이디, 이메일, 시작일, 끝일
+        for( MemberMission mm : memberMissions){
+            before = 0; after = 0;
+            String str = mm.getMission().getMissionStartDate() + " 00:00:00.000";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+            LocalDateTime startDateTime = LocalDateTime.parse(str, formatter);
+            if(spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), startDateTime.minusDays(mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle()), startDateTime)!=null) {
+                before = spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), startDateTime.minusDays(mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle()), startDateTime).get();
+            }
+            if(spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), startDateTime, startDateTime.plusDays(mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle()))!=null){
+                after = spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), startDateTime, startDateTime.plusDays(mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle())).get();
+            }
+            sum += before-after;
+//            sum += spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), dateAdd(mm.getMission().getMissionStartDate(), (-1)*mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle()), changeLocalDateTime(mm.getMission().getMissionStartDate()))
+//                    -spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), changeLocalDateTime(mm.getMission().getMissionStartDate()), dateAdd(mm.getMission().getMissionStartDate(), mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle()));
+        }
 
        MyPageInfoResponse myPageInfoResponse = new MyPageInfoResponse(
                member.getMemberNickname(),
                member.getMemberImgUrl(),
                memberMissionRepository.countMissionsByMemberIdAndMissionStatus(memberEmail, 2),
                memberMissionRepository.countMissionsByMemberIdAndMissionStatus(memberEmail, 3),
-               memberMissionRepository.countMissionsByMemberIdAndMissionStatus(memberEmail, 1)
+               memberMissionRepository.countMissionsByMemberIdAndMissionStatus(memberEmail, 1),
+               sum
        );
         return myPageInfoResponse;
     }
+    // 시간 계산 법
+//    Calendar cal1 = Calendar.getInstance();
+//      cal1.add(Calendar.DATE, 6); // 일 계산
+//      cal1.add(Calendar.MONTH, 4); // 월 연산
+//      cal1.add(Calendar.DATE, -3); // 빼고 싶다면 음수 입력
+//    Date date = new Date(cal1.getTimeInMillis());
+//    public LocalDateTime dateAdd(Date startDate, int plus){
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(startDate);
+//        cal.add(Calendar.DATE, plus); // 일 계산
+//        Date date = new Date(cal.getTimeInMillis());
+//        return changeLocalDateTime(date);
+//    }
+//    public LocalDateTime changeLocalDateTime(Date date){
+//        Instant instant = date.toInstant();
+//        ZoneId zoneId = ZoneId.systemDefault();
+//        LocalDateTime localDateTime = instant.atZone(zoneId).toLocalDateTime();
+////        LocalDateTime localDateTime = date.toInstant() // Date -> Instant
+////                .atZone(ZoneId.systemDefault()) // Instant -> ZonedDateTime
+////                .toLocalDateTime();
+//        return localDateTime;
+//    }
 
     // 회원 정보 수정
     @Transactional
@@ -456,5 +493,28 @@ public class MemberService {
             }
         }
 
+    }
+
+    // 시소 뱅크 연동
+    public void linkMemberToSeesawBank(LinkMemberToSeesawBankRequest request) {
+        Member member = memberRepository.findById(request.getMemberEmail()).get();
+        Member updatedMember = Member.builder()
+                .memberEmail(request.getMemberEmail())
+                .memberPassword(member.getMemberPassword())
+                .memberName(member.getMemberName())
+                .memberNickname(member.getMemberNickname())
+                .memberBirth(member.getMemberBirth())
+                .memberGender(member.isMemberGender())
+                .memberPhoneNumber(member.getMemberPhoneNumber())
+                .memberIsSocial(member.isMemberIsSocial())
+                .memberState(member.getMemberState())
+                .memberImgUrl(member.getMemberImgUrl())
+                .memberRefreshToken(member.getMemberRefreshToken())
+                .memberSavingAccount(member.getMemberSavingAccount())
+                .memberMainAccount(request.getMemberMainAccount())// 대표 계정 저장
+                .memberBankId(request.getMemberBankId())// 시소 뱅크 아이디 저장
+                .memberAuthKey(member.getMemberAuthKey())
+                .build();
+        memberRepository.save(updatedMember);
     }
 }

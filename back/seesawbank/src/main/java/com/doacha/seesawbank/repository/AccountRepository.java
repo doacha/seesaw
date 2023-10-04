@@ -23,6 +23,9 @@ public interface AccountRepository extends JpaRepository<Account, String>, JpaSp
             )
     List<AccountListResponse> findAccountListResponseByMemberId(String memberId);
 
+    @Query("SELECT a.member.memberId FROM Account a WHERE a.accountNum = :accountNum ")
+    String findMemberIdByAccountNumber(@Param("accountNum") String accountNum);
+
 //    @Modifying
 //    @Query("UPDATE Account a set a.accountNum = :accountNum WHERE a.accountId = :accountId and a.member.memberId = :memberId")
 //    void updateAccountNumByAccountIdAndMemberId(@Param("accountId") int accountId, @Param("memberId") String memberId, @Param("accountNum") String accountNum);

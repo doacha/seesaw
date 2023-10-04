@@ -12,6 +12,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -154,9 +155,9 @@ public class AccountTransactionService {
 
         String accountDealNum = createAccountDealNum();//계좌 거래 번호 생성
         Optional<AccountTransaction> recentTransaction = accountTransactionRepository.findTopByAccountOrderByAccountTransactionTimeDesc(account.get());
-        int recentBalance = 0;
-        if(!recentTransaction.isPresent()) recentBalance = 0; //이전 거래 내역 없으면 기존 잔액 0
-        else recentBalance = recentTransaction.get().getAccountBalance();// 이전 거래 내역 있으면 최근 거래의 잔액 가져오기
+        int recentBalance = account.get().getAccountRecentBalance();
+//        if(!recentTransaction.isPresent()) recentBalance = 0; //이전 거래 내역 없으면 기존 잔액 0
+//        else recentBalance = recentTransaction.get().getAccountBalance();// 이전 거래 내역 있으면 최근 거래의 잔액 가져오기
 
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
@@ -196,7 +197,7 @@ public class AccountTransactionService {
     }
 
     // 1원 인증 확인
-    public void checkAuthentication (CheckAuthenticationRequest request){
+    public String checkAuthentication (CheckAuthenticationRequest request){
         AccountTransaction accountTransaction = accountTransactionRepository.findByAccountDealNum(request.getAccountDealNum());
 
         String accountTransactionName = accountTransaction.getAccountTransactionName();
@@ -206,7 +207,10 @@ public class AccountTransactionService {
         String authenticationNum = request.getAuthenticationNum();
         log.info("입력한 번호: {}", authenticationNum);
         if(!number.equals(authenticationNum)) throw new BadRequestException("인증번호 불일치");
+
+        return accountRepository.findMemberIdByAccountNumber(accountTransaction.getAccount().getAccountNum());
     }
+
 
     // 적금 계좌 이체
     public void savingAccountTransfer(SavingAccountTransferRequest savingAccountTransferRequest) {
