@@ -83,7 +83,7 @@ const CreateMissionContainer = () => {
       }
       request[value] = input[value]
     }
-    request.memberMissionSavingMoney = savingMoney
+    request.missionMaxCount = savingMoney
     console.log('리퀘스트체크', request)
     const formData = new FormData()
     if (input.imgFile.file !== undefined) {
@@ -264,7 +264,7 @@ const CreateMissionContainer = () => {
         modalRef={refList[2]}
         password={password}
         setPassword={setPassword}
-        missionTargetPrice={input.missionTargetPrice}
+        missionTargetPrice={input.missionDeposit}
       />
     </div>
   )
