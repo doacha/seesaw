@@ -47,11 +47,9 @@ public class Prediction {
 
     @Column(name = "prediction_transportation", nullable = false)
     private int predictionTransportation;
+
     @Column(name = "prediction_car", nullable = false)
     private int predictionCar;
-
-    @Column(name = "prediction_dues", nullable = false)
-    private int predictionDues;
 
     @Column(name = "prediction_medical_health", nullable = false)
     private int predictionMedicalHealth;
