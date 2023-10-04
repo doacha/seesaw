@@ -34,7 +34,7 @@ const MyMissionHistoryContainer = ({
   console.log('맵확인', recordMap)
   return (
     <div className="bg-background p-5 rounded-lg mx-5">
-      <div className="font-scDreamMedium">미션 기록</div>
+      <div className="font-scDreamMedium mb-[7.5px]">미션 기록</div>
       <hr />
       {data &&
         (data as Array<any>[]).map((element, idx) => (
