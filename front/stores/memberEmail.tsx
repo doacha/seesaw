@@ -4,7 +4,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 interface MemberEmail {
   memberEmail: string
   memberNickname: string
-  setMemberEmail: (email: string) => void
+  setMember: (memberEmail: string, memberNickname: string) => void
 }
 
 export const memberEmailStore = create(
@@ -12,7 +12,8 @@ export const memberEmailStore = create(
     (set) => ({
       memberEmail: '',
       memberNickname: '',
-      setMemberEmail: (email: string) => set({ memberEmail: email }),
+      setMember: (memberEmail: string, memberNickname: string) =>
+        set({ memberEmail, memberNickname }),
     }),
     {
       name: 'memberEmail', // unique name
