@@ -25,7 +25,7 @@ const memberInfoCard = (props: Props) => {
         <div className="flex self-center text-lg font-scDreamLight whitespace-nowrap">
           현재까지&nbsp;
           <div className="font-scDreamExBold text-primary">
-            {member.savedMoney.toLocaleString()}
+            {member.saving?.toLocaleString()}
           </div>
           원 절약하셨습니다.
         </div>

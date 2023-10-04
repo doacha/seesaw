@@ -37,7 +37,7 @@ export interface Member {
   successMissionCnt?: number
   failMissionCnt?: number
   ingMissionCnt?: number
-  savedMoney: number
+  saving?: number
 }
 
 export interface Mission {
