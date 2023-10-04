@@ -16,7 +16,7 @@ import { Spending } from '../types'
 
 const HomePage = () => {
   const router = useRouter()
-  const { memberEmail, setMemberEmail } = memberEmailStore()
+  const { memberEmail } = memberEmailStore()
   const { checkUpdateDelete, setCheckUpdateDelete } = UpdateDeleteCheckStore()
 
   const [sort, setSort] = useState('최신순')
@@ -223,6 +223,12 @@ const HomePage = () => {
       // "전체" 카테고리 선택 해제
       newState[0] = false
     }
+
+    // state 배열이 전부 false인 경우 "전체" 카테고리를 강제로 true로 설정
+    if (newState.every((value) => !value)) {
+      newState[0] = true
+    }
+
     setState(newState)
   }
 
@@ -271,19 +277,21 @@ const HomePage = () => {
           <SortButtons clickText={clickText} sort={sort} />
         </div>
         <div className="overflow-auto">
-          <div className="mx-5 mt-5 pb-20">
-            <SpendingList
-              // 이건 사용자에게 보여질 날짜 데이터 처리
-              formatTime={formatTime}
-              // 최신순 고액순
-              sort={sort}
-              // 사용자에게 보여질 날짜 데이터 처리
-              formatDayTime={formatDayTime}
-              // 소비 내역 전체 리스트
-              spendingList={spendingList}
-              // 카테고리 선택 관련
-              newSelected={newSelected}
-            />
+          <div>
+            <div className="mx-5 mt-5 pb-20">
+              <SpendingList
+                // 이건 사용자에게 보여질 날짜 데이터 처리
+                formatTime={formatTime}
+                // 최신순 고액순
+                sort={sort}
+                // 사용자에게 보여질 날짜 데이터 처리
+                formatDayTime={formatDayTime}
+                // 소비 내역 전체 리스트
+                spendingList={spendingList}
+                // 카테고리 선택 관련
+                newSelected={newSelected}
+              />
+            </div>
           </div>
         </div>
         <div className="fixed top-[690px] right-[20px]">

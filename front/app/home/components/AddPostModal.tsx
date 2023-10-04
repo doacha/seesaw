@@ -12,8 +12,6 @@ import CategoryInput from './CategoryInput'
 
 import { memberEmailStore } from '@/stores/memberEmail'
 
-import DateInput from './DateInput'
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 
@@ -23,7 +21,7 @@ type Props = {
 }
 
 const AddPostModal = ({ open, handleToggle }: Props) => {
-  const { memberEmail, setMemberEmail } = memberEmailStore()
+  const { memberEmail } = memberEmailStore()
   let modalClass = 'modal sm:modal-middle'
 
   // open 속성이 true인 경우 'modal-open' 클래스를 추가합니다.
@@ -33,16 +31,11 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
 
   // Todo.. 날짜 해결필요
   const today = new Date()
-  // console.log('today.toUTCString()는 =>', today.toUTCString())
-  // console.log('today.toISOString()는 =>', today.toISOString())
-  // console.log('today.toLocalDateString()는 => ', today.toLocaleString())
-  // console.log('today는 =>', today)
 
   const handleInput = (e: any) => {
     const { name, value } = e.target
     // 0으로 시작못하게 처리
     let newValue = value
-    console.log(name, value)
     if (name === 'spendingCost' && /^0/.test(value)) {
       newValue = value.substring(1)
     }
@@ -52,31 +45,14 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     }
     if (name === 'spendingDate') {
       newValue = new Date(value)
-      console.log('value는 => ', new Date(value))
     }
     setPostInput({ ...postInput, [name]: newValue })
-  }
-
-  // ISO를 한국시간으로 변경하는 함수
-  function getLocalISOString(date: string) {
-    let dateDate = new Date(date)
-    let year = dateDate.getFullYear()
-    let month = String(dateDate.getMonth() + 1).padStart(2, '0')
-    let day = String(dateDate.getDate()).padStart(2, '0')
-    let hours = String(dateDate.getHours()).padStart(2, '0')
-    let minutes = String(dateDate.getMinutes()).padStart(2, '0')
-    let seconds = String(dateDate.getSeconds()).padStart(2, '0')
-    let milliseconds = String(dateDate.getMilliseconds()).padStart(3, '0')
-
-    let localISOString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`
-
-    return localISOString
   }
 
   const [postInput, setPostInput] = useState({
     spendingTitle: '',
     spendingCost: 0,
-    spendingDate: getLocalISOString(today.toISOString()),
+    spendingDate: today.toUTCString(),
     spendingMemo: '',
     spendingCategoryId: 20,
     memberEmail: memberEmail,
@@ -90,7 +66,6 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
     spendingCategoryId,
   } = postInput
 
-  // 왜 여기선 data를 Date 자료형으로 보내야 하는거지? 어휴 이씨 짜증나네
   const data: {
     spendingTitle: string
     spendingCost: number
@@ -131,7 +106,7 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
         setPostInput({
           spendingTitle: '',
           spendingCost: 0,
-          spendingDate: getLocalISOString(today.toISOString()),
+          spendingDate: today.toUTCString(),
           spendingMemo: '',
           spendingCategoryId: 20,
           memberEmail: memberEmail,
@@ -198,7 +173,6 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
         <form id="addPostForm" className="py-4">
           <SpendingCostInput value={spendingCost} onChange={handleInput} />
 
-          {/* 카테고리 들어갈 곳 */}
           <div className={`overflow-auto ${styles.delScroll}`}>
             <CategoryInput
               selectedCategoryId={spendingCategoryId}
@@ -215,9 +189,6 @@ const AddPostModal = ({ open, handleToggle }: Props) => {
             placeholder="거래처를 입력하세요"
           />
 
-          {/* 날짜 입력 */}
-          {/* <DateInput value={spendingDate} onChange={handleInput} /> */}
-          {/* 하.. 날짜가 사람을 힘들게 하네.. */}
           <div className="w-full flex flex-row gap-1 py-4 border-b-2 border-outline-container">
             <div className="w-28">
               <p className="font-scDreamExBold text-base">날짜</p>
