@@ -11,7 +11,7 @@ import Loading from '../components/Loading'
 import { QueryKey, useQuery } from '@tanstack/react-query'
 import PasswordConfirmCard from './components/edit/PasswordConfirmCard'
 import InstallmentCreateButton from './installment/components/InstallmentCreateButton'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { accountListStore } from '@/stores/accountList'
 import { profileEditInfoStore } from '@/stores/profileEditInfo'
 import MemberProfileImg from './components/profile/MemberProfileImg'
@@ -33,8 +33,8 @@ const memberPage = () => {
   } = accountListStore()
 
   const { setProfileEditInfo } = profileEditInfoStore()
-  const {memberEmail} = memberEmailStore()
-  console.log(memberEmail)
+  const { memberEmail } = memberEmailStore()
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
   }
@@ -99,15 +99,19 @@ const memberPage = () => {
   )
 
   useEffect(() => {
-    if(accountList){
-    accountList.forEach((account) => {
-      if (account.accountType === 1) {
-        setInstallmentAccount(account)
-      } else if (account.accountNum === mainAccountNum) {
-        setMainAccount(account)
-      }
-    })
-  }
+    if (memberEmail === '') redirect('./login')
+  }, [])
+
+  useEffect(() => {
+    if (accountList) {
+      accountList.forEach((account) => {
+        if (account.accountType === 1) {
+          setInstallmentAccount(account)
+        } else if (account.accountNum === mainAccountNum) {
+          setMainAccount(account)
+        }
+      })
+    }
   }, [accountListData])
 
   return (
