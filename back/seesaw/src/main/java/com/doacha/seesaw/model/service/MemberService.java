@@ -2,9 +2,7 @@ package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.BadRequestException;
 import com.doacha.seesaw.mail.TempKey;
-import com.doacha.seesaw.model.dto.account.AccountResponse;
-import com.doacha.seesaw.model.dto.account.CreateAccountRequest;
-import com.doacha.seesaw.model.dto.account.CreateAccountToSeesawRequest;
+import com.doacha.seesaw.model.dto.account.*;
 import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.entity.Member;
 import com.doacha.seesaw.model.entity.MemberMission;
@@ -216,7 +214,36 @@ public class MemberService {
         return map;
     }
 
+    // 백에 예치금 이체 api 요청
+    public ResponseEntity<AccountTransferResponse> balanceTransfer (BalanceTransferRequest balanceTransferRequest){
 
+        Member member = memberRepository
+                .findByMemberEmail(balanceTransferRequest.getMemberEmail())
+                .orElseThrow(() -> new BadRequestException("아이디를 확인하세요."));
+
+        AccountTransferRequest accountTransferRequest = new AccountTransferRequest(
+                member.getMemberMainAccount(),
+                "457899-01-296336",
+                balanceTransferRequest.getAccountApprovalAmount(),
+                balanceTransferRequest.getAccountPassword()
+        );
+
+        URI uri = UriComponentsBuilder
+                .fromUriString(seesawBank_api)
+                .path("/account-transactional/transfer")
+                .build()
+                .toUri();
+
+
+        RequestEntity<AccountTransferRequest> requestEntity = RequestEntity
+                .post(uri)
+                .body(accountTransferRequest);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<AccountTransferResponse> result = restTemplate.exchange(requestEntity, AccountTransferResponse.class);
+
+        return result;
+    }
 
     // 로그아웃
     @Transactional
