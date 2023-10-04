@@ -26,7 +26,7 @@ const Collapse = (props: Props) => {
           }
         />
       </div>
-      <div className="collapse-content p-x5">{props.content}</div>
+      <div className="collapse-content p-x5"></div>
     </div>
   )
 }

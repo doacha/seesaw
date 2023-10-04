@@ -18,7 +18,7 @@ import { currentMissionIdStore } from '@/stores/currentMissionId'
 const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1')
   const { memberEmail } = memberEmailStore()
-  const { currentMissionId, setCurrentMissionId} = currentMissionIdStore()
+  const { currentMissionId, setCurrentMissionId } = currentMissionIdStore()
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
   }
@@ -32,11 +32,11 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({memberEmail : memberEmail, missionId : params.missionId})
-          // body: JSON.stringify({
-          //   missionId: 'Ch58ZYwiI3',
-          //   memberEmail: 'tldnjs324@naver.com',
-          // }),
+          // body: JSON.stringify({memberEmail : memberEmail, missionId : params.missionId})
+          body: JSON.stringify({
+            missionId: 'Ch58ZYwiI3',
+            memberEmail: 'tldnjs324@naver.com',
+          }),
         },
       )
       const data = await res.json()
@@ -55,7 +55,10 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({memberEmail : memberEmail, missionId : params.missionId})
+          body: JSON.stringify({
+            memberEmail: memberEmail,
+            missionId: params.missionId,
+          }),
         },
       )
       const data = await res.json()
@@ -75,12 +78,11 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
   useEffect(() => {
     setCurrentMissionId(params.missionId)
   }, [])
-  
-  
+
   return (
     <div className="w-screen h-screen bg-background-fill">
       {isLoading ? (
-        <Loading/>
+        <Loading />
       ) : (
         <div>
           <Header title={mission.missionTitle} backButton />
@@ -96,13 +98,13 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
             {activeTab === 'tab1' ? (
               <div className="flex flex-col p-5 gap-5">
                 <MystatisticCard />
-                <GroupStatisticCard/>
+                <GroupStatisticCard />
               </div>
             ) : (
               <div className="flex flex-col p-5 gap-5">
                 <Card
-                  content={recordList.map((record: Record, index : number) => (
-                    <RecordCard record={record} key={index}/>
+                  content={recordList.map((record: Record, index: number) => (
+                    <RecordCard record={record} key={index} />
                   ))}
                 />
               </div>
