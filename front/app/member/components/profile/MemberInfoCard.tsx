@@ -3,7 +3,6 @@ import { useState } from 'react'
 import MemberDetailInfo from './MemberDetailInfo'
 import TextButton from '@/app/components/TextButton'
 import { Member } from '@/app/types'
-import { member } from '@/app/dummies'
 
 interface Props {
   member: Member
@@ -25,7 +24,7 @@ const memberInfoCard = (props: Props) => {
         <div className="flex self-center text-lg font-scDreamLight whitespace-nowrap">
           현재까지&nbsp;
           <div className="font-scDreamExBold text-primary">
-            {member.savedMoney.toLocaleString()}
+            {props.member.savings.toLocaleString()}
           </div>
           원 절약하셨습니다.
         </div>
