@@ -9,7 +9,6 @@ import MystatisticCard from './components/MyStatisticCard'
 import GroupStatisticCard from './components/GroupStatisticCard'
 import Card from '@/app/components/Card'
 import RecordCard from './components/RecordCard'
-import { recordList, mission } from '@/app/dummies'
 import { useQuery } from '@tanstack/react-query'
 import { memberEmailStore } from '@/stores/memberEmail'
 import Loading from '@/app/components/Loading'
@@ -32,10 +31,9 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          // body: JSON.stringify({memberEmail : memberEmail, missionId : params.missionId})
           body: JSON.stringify({
-            missionId: 'Ch58ZYwiI3',
-            memberEmail: 'tldnjs324@naver.com',
+            memberEmail: memberEmail,
+            missionId: params.missionId,
           }),
         },
       )

@@ -1,7 +1,4 @@
-import { categoryIcon, categoryList } from '@/app/lib/constants'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
+import { categoryList } from '@/app/lib/constants'
 import CategorizedGraph from './CategorizedGraph'
 import GraphCardText from './GraphCardText'
 import { useQuery } from '@tanstack/react-query'
@@ -15,7 +12,7 @@ const GroupGraphInfo = () => {
   const getMissionCompareList = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/comparelist`,
+        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/comparestats`,
         {
           method: 'POST',
           headers: {
@@ -25,13 +22,10 @@ const GroupGraphInfo = () => {
             missionId: currentMissionId,
             memberEmail: memberEmail,
           }),
-          // body: JSON.stringify({
-          //   missionId: 'yzn5LMDMCG',
-          //   memberEmail: 'doacha@seesaw.com',
-          // }),
         },
       )
       const data: MissionCompareList = await res.json()
+      console.log(data)
       return data
     } catch (err) {
       console.log(err)
@@ -42,40 +36,44 @@ const GroupGraphInfo = () => {
     useQuery(['getMissionCompareList'], getMissionCompareList)
   return (
     <div className="w-full flex flex-col gap-5">
-      <GraphCardText
-        comment={`${
-          categoryList[missionCompareList?.firstCategoryId ?? 0]
-        } 에서 동료보다 많은 소비를 하셨어요. 새로운 미션을 시작해볼까요?`}
-        textBefore="멤버들의 소비 패턴을&nbsp;"
-        textAfter=" 확인해보세요."
-        txtColor="text-surface"
-      />
-      <div className="flex flex-col gap-2">
-        <CategorizedGraph
-          category={missionCompareList?.firstCategoryId ?? 0}
-          group={missionCompareList?.firstCategoryMissionAverage ?? 0}
-          me={missionCompareList?.firstCategoryMemberAverage ?? 0}
-          highlight="most"
-        />
-        <CategorizedGraph
-          category={missionCompareList?.secondCategoryId ?? 0}
-          group={missionCompareList?.secondCategoryMissionAverage ?? 0}
-          me={missionCompareList?.secondCategoryMemberAverage ?? 0}
-          highlight=""
-        />
-        <CategorizedGraph
-          category={missionCompareList?.thirdCategoryId ?? 0}
-          group={missionCompareList?.thirdCategoryMissionAverage ?? 0}
-          me={missionCompareList?.thirdCategoryMemberAverage ?? 0}
-          highlight=""
-        />
-        <CategorizedGraph
-          category={missionCompareList?.frugalCategoryId ?? 0}
-          group={missionCompareList?.frugalCategoryMissionAverage ?? 0}
-          me={missionCompareList?.frugalCategoryMemberAverage ?? 0}
-          highlight="least"
-        />
-      </div>
+      {missionCompareListLoading ? null : (
+        <div>
+          <GraphCardText
+            comment={`${
+              categoryList[missionCompareList?.firstCategoryId ?? 0]
+            } 에서 동료보다 많은 소비를 하셨어요. 새로운 미션을 시작해볼까요?`}
+            textBefore="멤버들의 소비 패턴을&nbsp;"
+            textAfter=" 확인해보세요."
+            txtColor="text-surface"
+          />
+          <div className="flex flex-col gap-2">
+            <CategorizedGraph
+              category={missionCompareList?.firstCategoryId ?? 0}
+              group={missionCompareList?.firstCategoryMissionAverage ?? 0}
+              me={missionCompareList?.firstCategoryMemberAverage ?? 0}
+              highlight="most"
+            />
+            <CategorizedGraph
+              category={missionCompareList?.secondCategoryId ?? 0}
+              group={missionCompareList?.secondCategoryMissionAverage ?? 0}
+              me={missionCompareList?.secondCategoryMemberAverage ?? 0}
+              highlight=""
+            />
+            <CategorizedGraph
+              category={missionCompareList?.thirdCategoryId ?? 0}
+              group={missionCompareList?.thirdCategoryMissionAverage ?? 0}
+              me={missionCompareList?.thirdCategoryMemberAverage ?? 0}
+              highlight=""
+            />
+            <CategorizedGraph
+              category={missionCompareList?.frugalCategoryId ?? 0}
+              group={missionCompareList?.frugalCategoryMissionAverage ?? 0}
+              me={missionCompareList?.frugalCategoryMemberAverage ?? 0}
+              highlight="least"
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

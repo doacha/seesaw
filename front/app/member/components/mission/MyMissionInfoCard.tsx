@@ -10,7 +10,11 @@ const MyMissionInfoCard = (props: Props) => {
   const router = useRouter()
 
   const onClickMyMissionInfoCard = () => {
-    router.push(`member/complete-mission/${props.mission.missionId}`)
+    if (props.mission.memberMissionStatus === 0) {
+      router.push(`mission/${props.mission.missionId}`)
+    } else {
+      router.push(`member/complete-mission/${props.mission.missionId}`)
+    }
   }
 
   return (
