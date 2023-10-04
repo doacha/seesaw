@@ -2,16 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import GraphCard from './GraphCard'
 import MyStatisticDetailCard from './MyStatisticDetailCard'
 import { memberEmailStore } from '@/stores/memberEmail'
-import TransactionLoading from '@/app/member/components/account/TransactionLoading'
 import Loading from '@/app/components/Loading'
 import { Record, SavedAmount } from '@/app/types'
 import { currentMissionIdStore } from '@/stores/currentMissionId'
 
-
-
 const MystatisticCard = () => {
   const { memberEmail } = memberEmailStore()
-  const {currentMissionId} = currentMissionIdStore()
+  const { currentMissionId } = currentMissionIdStore()
   const getCompleteMissionStat = async () => {
     try {
       const res = await fetch(
@@ -21,11 +18,10 @@ const MystatisticCard = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({missionId : currentMissionId, memberEmail: memberEmail})
-          // body: JSON.stringify({
-          //   missionId: 'yzn5LMDMCG',
-          //   memberEmail: 'doacha@seesaw.com',
-          // }),
+          body: JSON.stringify({
+            missionId: currentMissionId,
+            memberEmail: memberEmail,
+          }),
         },
       )
       const data = await res.json()
@@ -44,11 +40,10 @@ const MystatisticCard = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({missionId : currentMissionId, memberEmail: memberEmail})
-          // body: JSON.stringify({
-          //   missionId: 'yzn5LMDMCG',
-          //   memberEmail: 'doacha@seesaw.com',
-          // }),
+          body: JSON.stringify({
+            missionId: currentMissionId,
+            memberEmail: memberEmail,
+          }),
         },
       )
       const data: Record[] = await res.json()
@@ -67,11 +62,10 @@ const MystatisticCard = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({missionId : currentMissionId, memberEmail: memberEmail})
-          // body: JSON.stringify({
-          //   missionId: 'yzn5LMDMCG',
-          //   memberEmail: 'doacha@seesaw.com',
-          // }),
+          body: JSON.stringify({
+            missionId: currentMissionId,
+            memberEmail: memberEmail,
+          }),
         },
       )
       const data: number = await res.json()
@@ -90,11 +84,10 @@ const MystatisticCard = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({missionId : currentMissionId, memberEmail: memberEmail})
-          // body: JSON.stringify({
-          //   missionId: 'yzn5LMDMCG',
-          //   memberEmail: 'doacha@seesaw.com',
-          // }),
+          body: JSON.stringify({
+            missionId: currentMissionId,
+            memberEmail: memberEmail,
+          }),
         },
       )
       const data: SavedAmount = await res.json()
@@ -128,7 +121,9 @@ const MystatisticCard = () => {
   return (
     <div className="w-full flex flex-col bg-white rounded-lg p-5 gap-5">
       <div>
-        <div className="self-start text-lg font-scDreamMedium mb-1">내 통계</div>
+        <div className="self-start text-lg font-scDreamMedium mb-1">
+          내 통계
+        </div>
         <hr />
       </div>
       {isLoading ? (
@@ -148,7 +143,7 @@ const MystatisticCard = () => {
         <MyStatisticDetailCard
           title="평균 소비 금액"
           content={`총 ${completeMissionStat.count}회`}
-          amount={completeMissionStat.average}
+          amount={Math.round(completeMissionStat.average)}
           icon="faMoneyBill1"
           iconColor="bg-secondary-container"
         />
@@ -164,38 +159,36 @@ const MystatisticCard = () => {
           textAfter="을 썼어요."
         />
       )}
-      {savedAmountLoading? <Loading /> :  <GraphCard
-        type="horizontal"
-        textBefore="미션으로&nbsp;"
-        savedAmount={savedAmount}
-        currentAmount={
-          savedAmount?.difference
-            ? savedAmount.difference > 0
-              ? Math.round(savedAmount.difference)
-              : -Math.round(savedAmount.difference)
-            : 0
-        }
-        textAfter={
-          savedAmount?.difference
-            ? savedAmount?.difference < 0
-              ? ' 만큼 절약하셨어요!'
-              : ' 만큼 더 쓰셨네요.'
-            : ''
-        }
-        comment={
-          savedAmount?.difference
-            ? savedAmount.difference < 0
-              ? '미션을 성공적으로 수행하셨어요!'
-              : '다음 번엔 조금 더 열심히 해보자구요.'
-            : ''
-        }
-      />
-      
-      
-      
-      
-      }
-     
+      {savedAmountLoading ? (
+        <Loading />
+      ) : (
+        <GraphCard
+          type="horizontal"
+          textBefore="미션으로&nbsp;"
+          savedAmount={savedAmount}
+          currentAmount={
+            savedAmount?.difference
+              ? savedAmount.difference > 0
+                ? Math.round(savedAmount.difference)
+                : -Math.round(savedAmount.difference)
+              : 0
+          }
+          textAfter={
+            savedAmount?.difference
+              ? savedAmount?.difference < 0
+                ? ' 만큼 절약하셨어요!'
+                : ' 만큼 더 쓰셨네요.'
+              : ''
+          }
+          comment={
+            savedAmount?.difference
+              ? savedAmount.difference < 0
+                ? '미션을 성공적으로 수행하셨어요!'
+                : '다음 번엔 조금 더 열심히 해보자구요.'
+              : ''
+          }
+        />
+      )}
     </div>
   )
 }
