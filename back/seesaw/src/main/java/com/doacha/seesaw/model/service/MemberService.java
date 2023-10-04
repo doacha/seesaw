@@ -494,4 +494,27 @@ public class MemberService {
         }
 
     }
+
+    // 시소 뱅크 연동
+    public void linkMemberToSeesawBank(LinkMemberToSeesawBankRequest request) {
+        Member member = memberRepository.findById(request.getMemberEmail()).get();
+        Member updatedMember = Member.builder()
+                .memberEmail(request.getMemberEmail())
+                .memberPassword(member.getMemberPassword())
+                .memberName(member.getMemberName())
+                .memberNickname(member.getMemberNickname())
+                .memberBirth(member.getMemberBirth())
+                .memberGender(member.isMemberGender())
+                .memberPhoneNumber(member.getMemberPhoneNumber())
+                .memberIsSocial(member.isMemberIsSocial())
+                .memberState(member.getMemberState())
+                .memberImgUrl(member.getMemberImgUrl())
+                .memberRefreshToken(member.getMemberRefreshToken())
+                .memberSavingAccount(member.getMemberSavingAccount())
+                .memberMainAccount(request.getMemberMainAccount())// 대표 계정 저장
+                .memberBankId(request.getMemberBankId())// 시소 뱅크 아이디 저장
+                .memberAuthKey(member.getMemberAuthKey())
+                .build();
+        memberRepository.save(updatedMember);
+    }
 }
