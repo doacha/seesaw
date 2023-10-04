@@ -7,10 +7,9 @@ import GraphCard from './GraphCard'
 import { memberEmailStore } from '@/stores/memberEmail'
 import { currentMissionIdStore } from '@/stores/currentMissionId'
 
-
 const GroupStatisticCard = () => {
   const { memberEmail } = memberEmailStore()
-  const {currentMissionId} = currentMissionIdStore()
+  const { currentMissionId } = currentMissionIdStore()
   const getGroupAverageInfo = async () => {
     try {
       const res = await fetch(
@@ -68,28 +67,28 @@ const GroupStatisticCard = () => {
         <hr />
       </div>
       {missionRankingLoading ? null : (
-        <div className='flex flex-col gap-5'>
+        <div className="flex flex-col gap-5">
           <MyStatisticDetailCard
             icon="faCrown"
             iconColor="bg-secondary"
             title="알뜰왕"
-            amount={missionRanking?.missionFrugalSpendingCost??0}
-            content={missionRanking?.missionFrugalSpender??'닉네임'}
+            amount={missionRanking?.missionFrugalSpending ?? 0}
+            content={missionRanking?.missionFrugalSpender ?? '닉네임'}
           />
           <MyStatisticDetailCard
             icon="faSackDollar"
             iconColor="bg-primary"
             title="큰손"
-            amount={missionRanking?.missionTopSpendingCost??0}
-            content={missionRanking?.missionTopSpender??'닉네임'}
+            amount={missionRanking?.missionTopSpending ?? 0}
+            content={missionRanking?.missionTopSpender ?? '닉네임'}
           />
           <MyStatisticDetailCard
             icon="faFire"
             iconColor="bg-error"
             title="과소비 대장"
-            amount={missionRanking?.recordTopSpendingCost??0}
-            content={missionRanking?.recordTopSpender??'닉네임'}
-            round={missionRanking?.recordTopSpendingNum?? 0}
+            amount={missionRanking?.recordTopSpending ?? 0}
+            content={missionRanking?.recordTopSpender ?? '닉네임'}
+            round={missionRanking?.recordTopSpendingNum ?? 0}
           />
         </div>
       )}
@@ -124,7 +123,7 @@ const GroupStatisticCard = () => {
           groupAverageInfo={groupAverageInfo}
         />
       )}
-      <GroupGraphCard/>
+      <GroupGraphCard />
     </div>
   )
 }
