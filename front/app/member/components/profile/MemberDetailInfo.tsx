@@ -8,7 +8,7 @@ interface Props {
 const MemberDetailInfo = (props: Props) => {
   return (
     <div className="flex gap-2 items-center">
-      <MemberProfileImg src={props.member.memberImgUrl}></MemberProfileImg>
+      <MemberProfileImg src={props.member.memberImgUrl??'./default_profile.svg'}></MemberProfileImg>
       <div className="flex flex-col">
         <div className="text-lg font-scDreamExBold mb-1">
           {props.member.memberNickname}

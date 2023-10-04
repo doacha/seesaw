@@ -54,7 +54,7 @@ public class RecordService {
             return recordResponse;
         } else {
             //존재하지 않는 RecordId인 경우
-            throw new NoContentException();
+            throw new NoContentException(recordRequest.getRecordId()+"에 해당하는 레코드 없음");
         }
     }
 
@@ -80,7 +80,7 @@ public class RecordService {
             return recordResponse;
         } else {
             //존재하지 않는 RecordId인 경우
-            throw new NoContentException();
+            throw new NoContentException(recordRequest.getRecordId()+"에 해당하는 레코드 없음");
         }
     }
 
@@ -103,14 +103,14 @@ public class RecordService {
             recordRepository.save(deletedRecord);
         } else {
             //존재하지 않는 RecordId인 경우
-            throw new NoContentException();
+            throw new NoContentException(recordId+"에 해당하는 레코드 없음");
         }
     }
 
     // 글 상세
     public RecordResponse getRecordDetail(long recordId) {
         if(!recordRepository.existsById(recordId)){
-            throw new NoContentException();
+            throw new NoContentException(recordId+"에 해당하는 레코드 없음");
         }
         RecordResponse recordResponse = recordRepository.findRecordResponseById(recordId);
         return recordResponse;

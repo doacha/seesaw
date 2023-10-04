@@ -1,11 +1,11 @@
 import Image from 'next/image'
-
 interface TodayStatus {
   memberImgUrl: string
   memberNickname: string
   recordSuccessCount: number
   recordTotalCost: number
   recordStatus: number
+  recordId: number
 }
 
 const GroupStatusTodayCard = ({

@@ -1,5 +1,6 @@
 package com.doacha.seesaw.model.service;
 
+import com.doacha.seesaw.exception.ForbiddenException;
 import com.doacha.seesaw.exception.NoContentException;
 import com.doacha.seesaw.model.dto.spending.*;
 import com.doacha.seesaw.model.entity.*;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.YearMonth;
 import java.util.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -40,10 +42,28 @@ public class SpendingService {
     private String seesawBank_api;
 
     // 등록 save
-    public void save(SpendingDto spendingdto) {
-        Optional<Member> member = memberRepository.findById(spendingdto.getMemberEmail());
-        Spending spending = Spending.builder().spendingTitle(spendingdto.getSpendingTitle()).spendingCost(spendingdto.getSpendingCost()).spendingDate(spendingdto.getSpendingDate()).spendingMemo(spendingdto.getSpendingMemo()).spendingCategoryId(spendingdto.getSpendingCategoryId()).member(member.get()).build();
+    public void save(SpendingDto spendingDto) {
+        log.info("등록한 내역과 카테고리 & 기간 일치하는 미션에 참여중인지 확인");
+        Record record = checkRecord(spendingDto.getMemberEmail(), spendingDto.getSpendingCategoryId(), spendingDto.getSpendingDate());
+
+        Optional<Member> member = memberRepository.findById(spendingDto.getMemberEmail());
+        Spending spending = Spending.builder()
+                .spendingTitle(spendingDto.getSpendingTitle())
+                .spendingCost(spendingDto.getSpendingCost())
+                .spendingDate(spendingDto.getSpendingDate())
+                .spendingMemo(spendingDto.getSpendingMemo())
+                .spendingCategoryId(spendingDto.getSpendingCategoryId())
+                .spendingType(1)
+                .member(member.get())
+                .record(record)
+                .build();
+
         spendingRepository.save(spending);
+
+        if (record == null) return;
+
+        log.info("가계부와 미션 연동");
+        linkSpendingToRecord(record, spending);
     }
 
 
@@ -62,7 +82,11 @@ public class SpendingService {
 
         for (GetCardTransactionDto dto : list) {
 
-            GetCardTransactionRequest request = GetCardTransactionRequest.builder().memberId(dto.getMemberBankId()).startDateTime(dto.getLastSpendingTime()).endDateTime(Timestamp.valueOf(yesterdayLastDateTime)).build();
+            GetCardTransactionRequest request = GetCardTransactionRequest.builder()
+                    .memberId(dto.getMemberBankId())
+                    .startDateTime(dto.getLastSpendingTime())
+                    .endDateTime(Timestamp.valueOf(yesterdayLastDateTime))
+                    .build();
 
             getCardTransactionFromSeeSawBank(request, dto.getMemberEmail());
         }
@@ -75,49 +99,75 @@ public class SpendingService {
         return monthSpendingResponses;
     }
 
+
     // 시소 뱅크에서 카드내역 받아오기
     public void getCardTransactionFromSeeSawBank(GetCardTransactionRequest request, String memberEmail) {
         log.info("시소 뱅크에 카드 내역 요청");
-        Mono<GetCardTransactionResponse[]> mono = WebClient.create().post().uri(seesawBank_api + "/card-transaction/list").bodyValue(request).retrieve().bodyToMono(GetCardTransactionResponse[].class);
+        Mono<GetCardTransactionResponse[]> mono = WebClient.create()
+                .post()
+                .uri(seesawBank_api + "/card-transaction/list")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(GetCardTransactionResponse[].class);
 
         mono.subscribe(cardTransactionResponses -> {
             for (GetCardTransactionResponse response : cardTransactionResponses) {
-                SpendingDto spendingDto = SpendingDto.builder().spendingTitle(response.getCardStoreName()).spendingCategoryId(categoryMapping(response.getCardStoreCategory())).spendingDate(response.getCardTransactionTime()).spendingCost(response.getCardApprovalAmount()).spendingMemo(null).memberEmail(memberEmail).build();
+
+                log.info("카테고리 & 기간 일치하는 미션에 참여중인지 확인");
+                int categoryId = categoryMapping(response.getCardStoreCategory());
+                Record record = checkRecord(memberEmail, categoryId, response.getCardTransactionTime());
+
+                if (record == null) continue;
+
+                Spending spending = Spending.builder()
+                        .spendingTitle(response.getCardStoreName())
+                        .spendingCost(response.getCardApprovalAmount())
+                        .spendingDate(response.getCardTransactionTime())
+                        .spendingMemo(null)
+                        .spendingCategoryId(categoryMapping(response.getCardStoreCategory()))
+                        .spendingType(0)
+                        .member(memberRepository.findById(memberEmail).get())
+                        .record(record)
+                        .build();
+
+                log.info("가계부와 미션 연동");
+                linkSpendingToRecord(record, spending);
 
                 log.info("카드 내역 가계부에 저장");
-                save(spendingDto);
-
-                log.info("소비내역과 카테고리가 같은 미션에 참여중인지 확인");
-                Record record = recordRepository.findRecordByMemberEmailAndCategoryId(memberEmail, spendingDto.getSpendingCategoryId());
-
-                if (record == null) {
-                    log.info("카테고리같은 미션에 참여 X");
-                    continue;
-                }
-
-                Date date = new Date(spendingDto.getSpendingDate().getTime());
-
-                if (date.before(record.getRecordStartDate()) || date.after(record.getRecordEndDate())) {
-                    log.info("기간 일치하지 않음");
-                    continue;
-                }
-
-                log.info("카테고리같고 기간 일치하는 미션에 참여중");
-                linkSpendingToRecord(record, spendingDto);
-                spendingRepository.findById(record.getRecordId());
+                spendingRepository.save(spending);
             }
         });
     }
 
+    // 소비 내역의 카테고리에 해당하는 미션에 참여중인지 확인
+    private Record checkRecord(String memberEmail, int categoryId, Timestamp spendingDate) {
+        Record record = recordRepository.findRecordByMemberEmailAndCategoryId(memberEmail, categoryId);
+
+        if (record == null) {
+            log.info("카테고리에 해당하는 미션에 참여하지 않음");
+            return null;
+        }
+
+        Date date = new Date(spendingDate.getTime()); // 소비 날짜
+        if (date.before(record.getRecordStartDate()) || date.after(record.getRecordEndDate())) {
+            log.info("소비 날짜와 참여중인 미션의 기간 일치하지 않음");
+            return null;
+        }
+
+        log.info("카테고리 & 기간 일치하는 미션에 참여중");
+
+        return record;
+    }
+
     // 가계부와 미션 연동
-    public void linkSpendingToRecord(Record record, SpendingDto spendingDto) {
+    public void linkSpendingToRecord(Record record, Spending spending) {
         Mission mission = record.getMemberMission().getMission();
         MemberMission memberMission = record.getMemberMission();
 
         log.info("해당 미션의 레코드 업데이트");
         // recordTotalCost에 spendingDto.getSpegingCost 더해주기
         // 업데이트된 recordTotalCost가 missionTargetPrice 넘었으면 record_status 2(실패)로 변경
-        Record updatedRecord = Record.builder().recordId(record.getRecordId()).recordContent(record.getRecordContent()).recordWriteTime(record.getRecordWriteTime()).recordStartDate(record.getRecordStartDate()).recordEndDate(record.getRecordEndDate()).recordTotalCost(record.getRecordTotalCost() + spendingDto.getSpendingCost()).recordNumber(record.getRecordNumber()).recordStatus(record.getRecordTotalCost() + spendingDto.getSpendingCost() > mission.getMissionTargetPrice() ? 2 : record.getRecordStatus()).memberMission(record.getMemberMission()).spendingList(record.getSpendingList()).build();
+        Record updatedRecord = Record.builder().recordId(record.getRecordId()).recordContent(record.getRecordContent()).recordWriteTime(record.getRecordWriteTime()).recordStartDate(record.getRecordStartDate()).recordEndDate(record.getRecordEndDate()).recordTotalCost(record.getRecordTotalCost() + spending.getSpendingCost()).recordNumber(record.getRecordNumber()).recordStatus(record.getRecordTotalCost() + spending.getSpendingCost() > mission.getMissionTargetPrice() ? 2 : record.getRecordStatus()).memberMission(record.getMemberMission()).spendingList(record.getSpendingList()).build();
 
         recordRepository.save(updatedRecord);
 
@@ -126,7 +176,7 @@ public class SpendingService {
             return;
         }
 
-        int myFailCnt = recordRepository.countFail(record.getMemberMission().getMission().getMissionId(), spendingDto.getMemberEmail()); // 나의 실패 횟수
+        int myFailCnt = recordRepository.countFail(record.getMemberMission().getMission().getMissionId(), spending.getMember().getMemberEmail()); // 나의 실패 횟수
         int penalty = 0;
         int cnt = mission.getMissionTotalCycle() - (int) (mission.getMissionTotalCycle() * 0.2);
 
@@ -216,19 +266,40 @@ public class SpendingService {
     public void update(SpendingUpdateRequest spendingUpdateRequest) {
         // spendingId로 지출 찾기
         Optional<Spending> spending = spendingRepository.findById(spendingUpdateRequest.getSpendingId());
-        if (!spending.isPresent()) throw new NoContentException();
-        else {
-            // 이메일로 멤버 찾기
-            Optional<Member> member = memberRepository.findById(spendingUpdateRequest.getMemberEmail());
+        if (!spending.isPresent()) throw new NoContentException(spendingUpdateRequest.getSpendingId()+"에 해당하는 지출없음");
 
-            // 변경할 지출 새로 저장
-            Spending update = Spending.builder().spendingId(spending.get().getSpendingId()).spendingTitle(spendingUpdateRequest.getSpendingTitle()).spendingCost(spendingUpdateRequest.getSpendingCost()).spendingDate(spendingUpdateRequest.getSpendingDate()).spendingMemo(spendingUpdateRequest.getSpendingMemo()).spendingCategoryId(spendingUpdateRequest.getSpendingCategoryId()).member(member.get()).build();
-            spendingRepository.save(update);
-        }
+        // 카테고리에 해당하는 미션에 참여중인지 확인 => 참여중이면 수정 불가능
+        Record record = checkRecord(spendingUpdateRequest.getMemberEmail(), spendingUpdateRequest.getSpendingCategoryId(), spendingUpdateRequest.getSpendingDate());
+        if (record != null) throw new ForbiddenException("카테고리가 일치하는 미션에 참여중입니다.");
+
+        // 이메일로 멤버 찾기
+        Optional<Member> member = memberRepository.findById(spendingUpdateRequest.getMemberEmail());
+
+        // 변경할 지출 새로 저장
+        Spending update = Spending.builder()
+                .spendingId(spending.get().getSpendingId())
+                .spendingTitle(spendingUpdateRequest.getSpendingTitle())
+                .spendingCost(spendingUpdateRequest.getSpendingCost())
+                .spendingDate(spendingUpdateRequest.getSpendingDate())
+                .spendingMemo(spendingUpdateRequest.getSpendingMemo())
+                .spendingCategoryId(spendingUpdateRequest.getSpendingCategoryId())
+                .spendingType(spending.get().getSpendingType())
+                .record(spending.get().getRecord())
+                .member(member.get()).build();
+        spendingRepository.save(update);
+
     }
 
     // 지출 삭제
     public void delete(Long spendingId) {
+        // 해당하는 spending 내역 가져오기
+        Optional<Spending> spending = spendingRepository.findById(spendingId);
+        if (!spending.isPresent()) throw new NoContentException(spendingId+"에 해당하는 지출 없음");
+
+        // 카테고리에 해당하는 미션에 참여중인지 확인 => 참여중이면 삭제 불가능
+        Record record = checkRecord(spending.get().getMember().getMemberEmail(), spending.get().getSpendingCategoryId(), spending.get().getSpendingDate());
+        if (record != null) throw new ForbiddenException("카테고리가 일치하는 미션에 참여중입니다.");
+
         spendingRepository.deleteById(spendingId);
     }
 
@@ -238,15 +309,10 @@ public class SpendingService {
         Optional<Spending> spending = spendingRepository.findById(spendingId);
         String memo = "";
         if (spending.isPresent()) {
-            if (spending.get().getSpendingMemo() == null) {
-                memo = "";
-            } else {
-                memo = spending.get().getSpendingMemo();
-            }
-            SpendingDetailResponse spendingDetailResponse = SpendingDetailResponse.builder().spendingId(spending.get().getSpendingId()).spendingTitle(spending.get().getSpendingTitle()).spendingCost(spending.get().getSpendingCost()).spendingDate(spending.get().getSpendingDate()).spendingMemo(memo).spendingCategoryId(spending.get().getSpendingCategoryId()).build();
+            SpendingDetailResponse spendingDetailResponse = SpendingDetailResponse.builder().spendingId(spending.get().getSpendingId()).spendingTitle(spending.get().getSpendingTitle()).spendingCost(spending.get().getSpendingCost()).spendingDate(spending.get().getSpendingDate()).spendingMemo(spending.get().getSpendingMemo()).spendingCategoryId(spending.get().getSpendingCategoryId()).build();
             return spendingDetailResponse;
         } else {
-            throw new NoContentException();
+            throw new NoContentException(spendingId+"에 해당하는 지출 없음");
         }
     }
 
@@ -290,6 +356,80 @@ public class SpendingService {
         return entireDailySpendingSumResponses;
     }
 
+//     입력 받은 월 1년간 합계
+//    public List<MonthSpendingSumResponse> getMonthSumList(String memberEmail, int spendingYear, int spendingMonth) {
+//        LocalDateTime start = LocalDateTime.of(spendingYear - 1, spendingMonth + 1, 1, 0, 0);
+//        LocalDateTime end = LocalDateTime.of(spendingYear, spendingMonth, 1, 0, 0).plusMonths(1).minusSeconds(1);
+//        List<MonthSpendingSumResponse> monthSpendingSumResponseList = spendingRepository.getMonthSumList(memberEmail, start, end);
+//        List<MonthSpendingSumResponse> entireMonthSpendingSumResponses = new ArrayList<>();
+//        int a = spendingMonth;
+//        int count = 0;
+//        while (count != 12) {
+//            boolean visit = false;
+//            for (MonthSpendingSumResponse m : monthSpendingSumResponseList) {
+//                if (m.getSpendingCostSum() != 0) {
+//                    entireMonthSpendingSumResponses.add(m);
+//                    visit = true;
+//                    count++;
+//                    spendingMonth++;
+//                    break;
+//                }
+//            }
+//            if (!visit) {
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.set(spendingYear, spendingMonth, 1);
+//                Date newDate = calendar.getTime();
+//                Timestamp date = new Timestamp(newDate.getTime());
+//                MonthSpendingSumResponse monthSpendingSumResponse = MonthSpendingSumResponse.builder()
+//                        .spendingCostSum(0L)
+//                        .spendingYear(date.getYear())
+//                        .spendingMonth(date.getMonth())
+//                        .memberEmail(memberEmail)
+//                        .build();
+//                entireMonthSpendingSumResponses.add(monthSpendingSumResponse);
+//                count++;
+//                spendingMonth--;
+//            }
+//        }
+//        return entireMonthSpendingSumResponses;
+//    }
+
+    public List<MonthSpendingSumResponse> getMonthSumList(String memberEmail, int spendingYear, int spendingMonth) {
+        YearMonth yearMonth = YearMonth.of(spendingYear, spendingMonth);
+        int lastDayOfMonth = yearMonth.lengthOfMonth();
+        LocalDateTime start = LocalDateTime.of(spendingYear-1, spendingMonth+1, 1, 0, 0);
+        LocalDateTime end = LocalDateTime.of(spendingYear, spendingMonth, lastDayOfMonth, 23, 59, 59);
+        List<MonthSpendingSumResponse> monthSpendingSumResponseList = spendingRepository.getMonthSumList(memberEmail, start, end);
+        List<MonthSpendingSumResponse> entireMonthSpendingSumResponses = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            boolean visit = false;
+            for(MonthSpendingSumResponse m : monthSpendingSumResponseList){
+                if (m.getSpendingYear() == spendingYear && m.getSpendingMonth() == spendingMonth && m.getSpendingCostSum() != 0) {
+                    entireMonthSpendingSumResponses.add(m);
+                    visit = true;
+                    break;
+                }
+            }
+            if (!visit) {
+                MonthSpendingSumResponse monthSpendingSumResponse = MonthSpendingSumResponse.builder()
+                        .spendingCostSum(0L)
+                        .spendingYear(spendingYear)
+                        .spendingMonth(spendingMonth)
+                        .memberEmail(memberEmail)
+                        .build();
+                entireMonthSpendingSumResponses.add(monthSpendingSumResponse);
+            }
+            spendingMonth--;
+            if (spendingMonth == 0) {
+                spendingMonth = 12;
+                spendingYear--;
+            }
+        }
+        entireMonthSpendingSumResponses.sort(Comparator
+                .comparing(MonthSpendingSumResponse::getSpendingYear)
+                .thenComparing(MonthSpendingSumResponse::getSpendingMonth));
+        return entireMonthSpendingSumResponses;
+    }
     // 지출 월별 합계
     public MonthSpendingSumResponse findAllMonthSumByMemberEmailAndSpendingYear(String memberEmail, int spendingYear, int spendingMonth) {
         MonthSpendingSumResponse monthSpendingSumResponses = spendingRepository.findMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail, spendingYear, spendingMonth);
@@ -326,6 +466,8 @@ public class SpendingService {
     // 가계부에 카드내역 받아오기
     public void refreshSpending(String memberEmail) {
         GetCardTransactionDto dto = memberRepository.findGetCardTransactionDtoByMemberEmail(memberEmail);
+
+        if(dto.getMemberBankId() == null) throw new NoContentException("연결된 시소 뱅크 계정이 없습니다");
 
         GetCardTransactionRequest request = GetCardTransactionRequest.builder().memberId(dto.getMemberBankId()).startDateTime(dto.getLastSpendingTime()).endDateTime(null).build();
 

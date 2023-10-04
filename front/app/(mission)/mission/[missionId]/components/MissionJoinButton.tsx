@@ -5,49 +5,59 @@ import { DialogHTMLAttributes, useState, useRef } from 'react'
 import SetSaveMoneyModal from './SetSaveMoneyModal'
 import ConfirmDepositModal from './ConfirmDepositModal'
 import MoneyTransferModal from './MoneyTransferModal'
-import { mission } from '@/app/dummies'
+import { useMutation } from '@tanstack/react-query'
+import { useEffect } from 'react'
 
+const DUMMY_EMAIL = 'doacha@seesaw.com'
 const dummyCategorySaveMoney = 10000
 const MissionJoinButton = ({
   isSaveMission,
   missionCategory,
+  missionTargetPrice,
+  missionCategoryId,
+  missionPeriod,
 }: {
   isSaveMission: boolean
   missionCategory: string
+  missionTargetPrice: number
+  missionCategoryId: number
+  missionPeriod: number
 }) => {
   const [processLevel, setProcessLevel] = useState(isSaveMission ? 0 : 1)
   const [savingMoney, setSavingMoney] = useState(dummyCategorySaveMoney)
+  const [password, setPassword] = useState<string[]>(['', '', '', ''])
+  const { mutate, data } = useMutation(getCategorySpendMoney)
   const refList = [
     useRef<HTMLDialogElement>(null),
     useRef<HTMLDialogElement>(null),
     useRef<HTMLDialogElement>(null),
   ]
+  useEffect(() => {
+    mutate(
+      {
+        categoryId: missionCategoryId,
+        memberEmail: DUMMY_EMAIL,
+      },
+      {
+        onSuccess: (res) => {
+          const spendMoney = convertMonthlyToUserSet(res.average, missionPeriod)
+          setSavingMoney(
+            deleteChange(
+              spendMoney - missionTargetPrice > 0
+                ? spendMoney - missionTargetPrice
+                : 0,
+            ),
+          )
+        },
+      },
+    )
+  }, [])
   const handleJoinButton = (processLevel: number) => {
     if (processLevel === 2) {
       return
     }
     refList[processLevel + 1].current?.showModal()
   }
-  const modalList = [
-    <SetSaveMoneyModal
-      setState={setProcessLevel}
-      modalRef={refList[0]}
-      setSavingMoney={setSavingMoney}
-      savingMoney={savingMoney}
-      missionCategory={missionCategory}
-      changeModal={handleJoinButton}
-    />,
-    <ConfirmDepositModal
-      changeModal={handleJoinButton}
-      modalRef={refList[1]}
-    />,
-    <MoneyTransferModal changeModal={handleJoinButton} modalRef={refList[2]} />,
-  ]
-  // 버튼 누르면
-  // 적금 미션이면 적금 금액 세팅
-  // 세팅 끝나고 나서 n회 실패부터 반환되는 예치금이 줄어듭니다. 예치금 입금 및 미션 참가하 하시겠습니까?
-  // 계좌이체 절차
-  //
 
   return (
     <div>
@@ -66,17 +76,63 @@ const MissionJoinButton = ({
         savingMoney={savingMoney}
         missionCategory={missionCategory}
         changeModal={handleJoinButton}
+        missionTargetPrice={missionTargetPrice}
+        period={missionPeriod}
+        spendMoney={Math.trunc(data?.average ?? 0)}
       />
       <ConfirmDepositModal
         changeModal={handleJoinButton}
         modalRef={refList[1]}
+        missionTargetPrice={missionTargetPrice}
       />
       <MoneyTransferModal
         changeModal={handleJoinButton}
         modalRef={refList[2]}
+        password={password}
+        setPassword={setPassword}
+        missionTargetPrice={missionTargetPrice}
       />
     </div>
   )
 }
 
+const getCategorySpendMoney = async ({
+  categoryId,
+  memberEmail,
+}: {
+  categoryId: number
+  memberEmail: string
+}) => {
+  const { mutate: categorySpendMoney, data: spendMoney } = useMutation(
+    getCategorySpendMoney,
+  )
+  return await fetch(
+    `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/monthaverage`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        categoryId,
+        memberEmail,
+      }),
+    },
+  ).then((res) => res.json())
+}
+
+const convertMonthlyToUserSet = (
+  spendMoney: number | undefined,
+  period: number,
+) => {
+  if (spendMoney === undefined) return 0
+  return Math.trunc((spendMoney / 30) * period)
+}
+
+// 1000원단위로 바꿔주기
+const deleteChange = (money: number) => {
+  if (money === 0) return 0
+  let temp = Math.ceil(money / 1000) * 1000
+  return temp
+}
 export default MissionJoinButton

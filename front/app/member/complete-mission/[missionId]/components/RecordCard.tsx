@@ -35,13 +35,17 @@ const RecordCard = (props: Props) => {
           </div>
         </div>
         <div className="text-xs text-outline">
-          {props.record.recordWriteTime}
+          {props.record.startDate} ~ {props.record.endDate}
         </div>
         {props.record.recordContent ? (
           <div className="text-sm text-outline">
             {props.record.recordContent}
           </div>
-        ) : null}
+        ) : (
+          <div className="text-sm text-outline">
+            게시글이 작성되지 않은 회차입니다.
+          </div>
+        )}
       </div>
       <div className={getTxtColor(props.record.recordStatus)}>
         {getStatus(props.record.recordStatus)}
