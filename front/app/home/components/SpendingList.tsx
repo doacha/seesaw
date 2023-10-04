@@ -8,14 +8,13 @@ import { categoryIcon } from '@/app/lib/constants'
 import { Spending } from '@/app/types'
 
 import DetailModal from './DetailModal'
+import EmptyAlert from './EmptyAlert'
 
 interface SpendingListProps {
   sort: string
   formatTime: (date: Date) => string
   formatDayTime: (date: Date) => string
   newSelected?: Number[]
-  // Todo 날짜 처리가 이상하다
-  // spendingList를 page에서 처리해서 데이터를 보내줄게
   spendingList: Spending[]
 }
 
@@ -69,29 +68,114 @@ const SpendingList = ({
   // 'spendingList'를 일자별로 그룹화!
   const groupedSpending = groupSpendingByDay(spendingList, newSelected)
 
+  // 데이터 없는걸 처리하기 위한 변수
+  const [isEmpty, setIsEmpty] = useState<boolean>(false)
+
+  useEffect(() => {
+    // sort가 '최신순'인 경우
+    if (sort === '최신순') {
+      if (Object.entries(groupedSpending).length === 0) {
+        setIsEmpty(true)
+      } else {
+        setIsEmpty(false)
+      }
+    }
+    // sort가 '고액순'인 경우
+    else {
+      const hasData = spendingList.some(
+        (element) =>
+          newSelected?.includes(0) ||
+          newSelected?.includes(element.spendingCategoryId as number),
+      )
+      setIsEmpty(!hasData)
+    }
+  }, [newSelected])
+
   return (
     <>
-      {sort === '최신순' ? (
+      {isEmpty ? (
+        <EmptyAlert />
+      ) : (
         <>
-          {/* Object.entries가 그룹화된 데이터를 배열로 변환하는 과정 */}
-          {Object.entries(groupedSpending) ? (
-            Object.entries(groupedSpending).map(([day, data]) => (
-              <div className="mb-2" key={day}>
-                <Card
-                  title={day}
-                  content={
-                    // if works!
-                    <>
-                      {data.map((spending, key) => (
+          {sort === '최신순' ? (
+            <>
+              {/* Object.entries가 그룹화된 데이터를 배열로 변환하는 과정 */}
+              {Object.entries(groupedSpending).map(([day, data]) => (
+                <div className="mb-2" key={day}>
+                  <Card
+                    title={day}
+                    content={
+                      // if works!
+                      <>
+                        {data.map((spending, key) => (
+                          <div
+                            key={spending.spendingId}
+                            // 화살표 함수 쓴이유..? 안쓰면 어떻게 되는데? Todo. 화살표 함수 쓴 이유 정리하기
+                            onClick={() =>
+                              handleToggle(spending.spendingId as number)
+                            }
+                            className="h-9 flex w-full flex-row gap-5"
+                          >
+                            <div className="flex my-auto w-6 ml-1">
+                              {spending.spendingCategoryId && (
+                                <FontAwesomeIcon
+                                  icon={
+                                    categoryIcon[spending.spendingCategoryId]
+                                  }
+                                  style={{
+                                    color:
+                                      iconColors[spending.spendingCategoryId],
+                                  }}
+                                  size="xl"
+                                />
+                              )}
+                            </div>
+                            <div className="flex w-full justify-between">
+                              <div className="flex flex-col">
+                                <span className=" overflow-hidden font-scDreamRegular text-xs ">
+                                  {spending.spendingTitle}
+                                </span>
+                                <span className="font-scDreamRegular text-xs text-outline">
+                                  {spending.spendingDate &&
+                                    formatTime(new Date(spending.spendingDate))}
+                                </span>
+                              </div>
+                              <div>
+                                <p className=" whitespace-nowrap font-scDreamExBold text-sm">
+                                  {spending.spendingCost &&
+                                    spending.spendingCost.toLocaleString(
+                                      'ko-KR',
+                                    )}
+                                  원
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </>
+                    }
+                  />
+                </div>
+              ))}
+            </>
+          ) : (
+            <div className="w-full h-fit rounded-lg bg-background">
+              <div className="px-5 pt-5 pb-2">
+                {spendingList.map((spending, idx) => (
+                  <div key={idx}>
+                    {newSelected?.includes(0) ||
+                    newSelected?.includes(
+                      spending.spendingCategoryId as number,
+                    ) ? (
+                      <>
                         <div
-                          key={spending.spendingId}
-                          // 화살표 함수 쓴이유..? 안쓰면 어떻게 되는데? Todo. 화살표 함수 쓴 이유 정리하기
+                          key={idx}
                           onClick={() =>
                             handleToggle(spending.spendingId as number)
                           }
-                          className="h-9 flex w-full flex-row gap-5"
+                          className="h-9 flex w-full flex-row gap-5 mb-3"
                         >
-                          <div className="flex my-auto w-6 ml-1">
+                          <div className="flex my-auto ml-1 w-6 ">
                             {spending.spendingCategoryId && (
                               <FontAwesomeIcon
                                 icon={categoryIcon[spending.spendingCategoryId]}
@@ -105,16 +189,18 @@ const SpendingList = ({
                           </div>
                           <div className="flex w-full justify-between">
                             <div className="flex flex-col">
-                              <span className=" overflow-hidden font-scDreamRegular text-xs ">
+                              <span className=" overflow-hidden font-scDreamRegular text-xs">
                                 {spending.spendingTitle}
                               </span>
                               <span className="font-scDreamRegular text-xs text-outline">
                                 {spending.spendingDate &&
-                                  formatTime(new Date(spending.spendingDate))}
+                                  formatDayTime(
+                                    new Date(spending.spendingDate),
+                                  )}
                               </span>
                             </div>
                             <div>
-                              <p className=" whitespace-nowrap font-scDreamExBold text-sm">
+                              <p className="whitespace-nowrap font-scDreamExBold text-xl">
                                 {spending.spendingCost &&
                                   spending.spendingCost.toLocaleString('ko-KR')}
                                 원
@@ -122,75 +208,21 @@ const SpendingList = ({
                             </div>
                           </div>
                         </div>
-                      ))}
-                    </>
-                  }
-                />
+                      </>
+                    ) : null}
+                  </div>
+                ))}
               </div>
-            ))
-          ) : (
-            // Todo 없는 데이터 처리
-            <div>데이터가 없습니다!</div>
+            </div>
+          )}
+          {open && (
+            <DetailModal
+              open={open}
+              handleToggle={() => handleToggle(selectedSpendingId)}
+              selectedSpendingId={selectedSpendingId}
+            />
           )}
         </>
-      ) : (
-        <div className="w-full h-fit rounded-lg bg-background">
-          <div className="p-5">
-            {spendingList.map((spending, idx) => (
-              <div key={idx}>
-                {newSelected?.includes(0) ||
-                newSelected?.includes(spending.spendingCategoryId as number) ? (
-                  <>
-                    <div
-                      key={idx}
-                      onClick={() =>
-                        handleToggle(spending.spendingId as number)
-                      }
-                      className="h-9 flex w-full flex-row gap-5 mb-3"
-                    >
-                      <div className="flex my-auto ml-1 w-6 ">
-                        {spending.spendingCategoryId && (
-                          <FontAwesomeIcon
-                            icon={categoryIcon[spending.spendingCategoryId]}
-                            style={{
-                              color: iconColors[spending.spendingCategoryId],
-                            }}
-                            size="xl"
-                          />
-                        )}
-                      </div>
-                      <div className="flex w-full justify-between">
-                        <div className="flex flex-col">
-                          <span className=" overflow-hidden font-scDreamRegular text-xs">
-                            {spending.spendingTitle}
-                          </span>
-                          <span className="font-scDreamRegular text-xs text-outline">
-                            {spending.spendingDate &&
-                              formatDayTime(new Date(spending.spendingDate))}
-                          </span>
-                        </div>
-                        <div>
-                          <p className="whitespace-nowrap font-scDreamExBold text-xl">
-                            {spending.spendingCost &&
-                              spending.spendingCost.toLocaleString('ko-KR')}
-                            원
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      {open && (
-        <DetailModal
-          open={open}
-          handleToggle={() => handleToggle(selectedSpendingId)}
-          selectedSpendingId={selectedSpendingId}
-        />
       )}
     </>
   )

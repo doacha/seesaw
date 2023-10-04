@@ -7,8 +7,13 @@ import OneCoinInputStep from './OneCoinInputStep'
 import { account } from '@/app/dummies'
 import { accountListStore } from '@/stores/accountList'
 import { redirect, useRouter } from 'next/navigation'
+import { memberEmailStore } from '@/stores/memberEmail'
 
-const AccountRegistModal = () => {
+interface Props {
+  getAccountListInfo: () => Promise<any>
+}
+
+const AccountRegistModal = (props: Props) => {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState<number>(1)
   const [selectedBank, setSelectedBank] = useState<string>('')
@@ -24,6 +29,7 @@ const AccountRegistModal = () => {
   ])
   const [wrongCode, setWrongCode] = useState<boolean>(false)
   const { setAccountList } = accountListStore()
+  const { memberEmail } = memberEmailStore()
 
   const onAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAccountNumber(e.target.value)
@@ -128,15 +134,38 @@ const AccountRegistModal = () => {
           },
         )
         const data = await res.text()
-        if (data === 'success') {
-          ;(
-            document.getElementById('modal') as HTMLDialogElement | null
-          )?.close()
-          setSelectedBank('')
-          setAccountChecked(0)
-          setAccountNumber('')
-          setCurrentStep(1)
-          router.refresh()
+        console.log(data)
+        if (data !== 'fail') {
+          try {
+            const res = await fetch(
+              `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/link-seesawbank`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  memberEmail: memberEmail,
+                  memberBankId: data,
+                  memberMainAccount: accountNumber,
+                }),
+              },
+            )
+            const secondData = await res.text()
+            // console.log('second', secondData)
+            if (secondData === 'success') {
+              ;(
+                document.getElementById('modal') as HTMLDialogElement | null
+              )?.close()
+              setSelectedBank('')
+              setAccountChecked(0)
+              setAccountNumber('')
+              setCurrentStep(1)
+              props.getAccountListInfo()
+            } else {
+              console.log('계좌 등록에 오류가 있습니다.')
+            }
+          } catch (error) {}
         } else {
           setWrongCode(true)
         }
