@@ -171,14 +171,10 @@ interface DepositRequest {
 
 const postDepositMoney = async (depositRequset: DepositRequest) => {
   return await fetch(
-    `${
-      process.env.NEXT_PUBLIC_SEESAW_API_URL
-    }/member/balance-transfer?${new URLSearchParams(
-      depositRequset,
-    ).toString()}`,
+    `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/balance-transfer`,
     {
       method: 'POST',
-      // body: JSON.stringify(depositRequset),
+      body: JSON.stringify(depositRequset),
       headers: {
         'Content-Type': 'application/json',
       },
