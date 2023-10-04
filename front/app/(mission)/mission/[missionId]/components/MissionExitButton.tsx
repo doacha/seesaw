@@ -7,20 +7,21 @@ import { memberEmailStore } from '@/stores/memberEmail'
 
 const MissionExitButton = ({
   missionId,
-  setIsJoined,
+  refetch,
 }: {
   missionId: string
-  setIsJoined: any
+  refetch: any
 }) => {
-  const { memberEmail /**/ } = memberEmailStore()
+  const { memberEmail } = memberEmailStore()
   const modalRef = useRef<HTMLDialogElement>(null)
   const router = useRouter()
   const { mutate } = useMutation(postQuitMission)
   const handleSubmit = () => {
+    console.log(missionId, memberEmail)
     mutate(
-      { missionId, memberEmail: memberEmail },
+      { missionId: missionId, memberEmail: memberEmail },
       {
-        onSuccess: (res) => setIsJoined(false),
+        onSuccess: (res) => refetch(),
       },
     )
   }
@@ -82,8 +83,8 @@ const postQuitMission = async ({
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      missionId,
-      memberEmail,
+      missionId: missionId,
+      memberEmail: memberEmail,
     }),
   })
 }
