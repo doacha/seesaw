@@ -29,7 +29,7 @@ const GroupStatusTodayCard = ({
         } rounded-t-[25px] pt-[25px] pb-2 h-[140px]"`}
       >
         <Image
-          src={data.memberImgUrl ?? '/차차_군침이.jpg'}
+          src={data.memberImgUrl ?? '/default_profile.svg'}
           width={65}
           height={65}
           alt="member profile image"
