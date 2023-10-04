@@ -154,9 +154,9 @@ public class AccountTransactionService {
 
         String accountDealNum = createAccountDealNum();//계좌 거래 번호 생성
         Optional<AccountTransaction> recentTransaction = accountTransactionRepository.findTopByAccountOrderByAccountTransactionTimeDesc(account.get());
-        int recentBalance = 0;
-        if(!recentTransaction.isPresent()) recentBalance = 0; //이전 거래 내역 없으면 기존 잔액 0
-        else recentBalance = recentTransaction.get().getAccountBalance();// 이전 거래 내역 있으면 최근 거래의 잔액 가져오기
+        int recentBalance = account.get().getAccountRecentBalance();
+//        if(!recentTransaction.isPresent()) recentBalance = 0; //이전 거래 내역 없으면 기존 잔액 0
+//        else recentBalance = recentTransaction.get().getAccountBalance();// 이전 거래 내역 있으면 최근 거래의 잔액 가져오기
 
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
