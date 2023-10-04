@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import FaskMakeButton from '../components/FastMakeButton'
 import HomeHeader from './components/HomeHeader'
 import SortButtons from './components/SortButton'
@@ -245,6 +245,10 @@ const HomePage = () => {
 
   // monthTotalSum을 계산하기 위한 state 변수
   const [monthTotalSum, setMonthTotalSum] = useState<number>(0)
+
+  useEffect(() => {
+    if (memberEmail === '') redirect('./login')
+  }, [])
 
   useEffect(() => {
     fetchRefresh()

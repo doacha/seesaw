@@ -10,14 +10,6 @@ import { memberEmailStore } from '@/stores/memberEmail'
 import { currentMissionIdStore } from '@/stores/currentMissionId'
 import { MissionCompareList } from '@/app/types'
 
-const statisticList: Array<{ category: number; group: number; me: number }> = [
-  { category: 7, group: 10, me: 15 },
-  { category: 10, group: 7, me: 8 },
-  { category: 3, group: 6, me: 4 },
-  { category: 8, group: 12, me: 7 },
-  { category: 5, group: 4, me: 8 },
-]
-
 const GroupGraphInfo = () => {
   const { memberEmail } = memberEmailStore()
   const { currentMissionId } = currentMissionIdStore()
