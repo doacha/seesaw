@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react'
 import { GroupStatusProps } from '@/app/types'
 import { RecordDetail } from '@/app/types'
 import { recordListStore } from '@/stores/recordListStore'
-const DUMMY_NICKNAME = '지원'
+import { memberEmailStore } from '@/stores/memberEmail'
+
 const getPastRecord = async (input: {
   missionId: string
   pageNumber: number
@@ -32,6 +33,7 @@ const getPastRecord = async (input: {
 const GroupMissionHistoryContainer = ({ data }: { data: GroupStatusProps }) => {
   const { mutate, data: groupMissionHistory } = useMutation(getPastRecord)
   const { recordMap, setRecordMap } = recordListStore()
+  const { memberNickname } = memberEmailStore()
   useEffect(() => {
     mutate(
       {
@@ -43,7 +45,7 @@ const GroupMissionHistoryContainer = ({ data }: { data: GroupStatusProps }) => {
           const newRecordMap: { [key: number]: any } = { ...recordMap }
           res.forEach((recordListByRecordNumber) => {
             let idx = recordListByRecordNumber.findIndex((record) => {
-              record.memberNickname === DUMMY_NICKNAME
+              record.memberNickname === memberNickname
             })
             const number = recordListByRecordNumber[idx].recordNumber
             const id = recordListByRecordNumber[idx].recordId
