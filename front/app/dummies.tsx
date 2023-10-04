@@ -1,12 +1,5 @@
 import * as type from './types'
 
-export const member: type.Member = {
-  memberNickname: '차차아버님',
-  memberImgUrl: './차차_군침이.jpg',
-  successMissionCnt: 2,
-  failMissionCnt: 3,
-}
-
 export const mission: type.Mission = {
   missionTitle: '술 그만마셔 그러다 뒤져',
   missionCurrentCycle: 1,
