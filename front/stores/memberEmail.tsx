@@ -3,15 +3,21 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 
 interface MemberEmail {
   memberEmail: string
-  setMemberEmail: (email: string) => void
+  memberNickname: string
+  setMember: (memberEmail: string, memberNickname: string) => void
 }
 
-export const memberEmailStore = create(persist<MemberEmail>((set) => ({
-  memberEmail: '',
-  setMemberEmail: (email: string) => set({ memberEmail: email }),
-}),{
-  name: 'memberEmail', // unique name
-  storage : createJSONStorage(() => sessionStorage)
-}
-
-))
+export const memberEmailStore = create(
+  persist<MemberEmail>(
+    (set) => ({
+      memberEmail: '',
+      memberNickname: '',
+      setMember: (memberEmail: string, memberNickname: string) =>
+        set({ memberEmail, memberNickname }),
+    }),
+    {
+      name: 'memberEmail', // unique name
+      storage: createJSONStorage(() => sessionStorage),
+    },
+  ),
+)

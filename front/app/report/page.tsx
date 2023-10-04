@@ -18,6 +18,7 @@ import { Spending } from '@/app/types'
 import Loading from '@/app//components/Loading'
 
 import { memberEmailStore } from '@/stores/memberEmail'
+import { redirect } from 'next/navigation'
 
 const ReportPage = () => {
   const { memberEmail, setMemberEmail } = memberEmailStore()
@@ -130,6 +131,9 @@ const ReportPage = () => {
         }
       })
   }
+  useEffect(() => {
+    if (memberEmail === '') redirect('./login')
+  }, [])
 
   // 화살표 날짜의 변화가 감지가 된다면 페이지 이동하는 걸로 가자
   useEffect(() => {

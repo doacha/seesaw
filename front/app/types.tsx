@@ -105,13 +105,12 @@ export interface GroupAverageInfo {
 }
 
 export interface MissionRanking {
-  memberEmail: string
   missionTopSpender: string
-  missionTopSpendingCost: number
+  missionTopSpending: number
   missionFrugalSpender: string
-  missionFrugalSpendingCost: number
+  missionFrugalSpending: number
   recordTopSpender: string
-  recordTopSpendingCost: number
+  recordTopSpending: number
   recordTopSpendingNum: number
 }
 

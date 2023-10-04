@@ -8,6 +8,7 @@ interface Props {
     e: React.ChangeEvent<HTMLInputElement>,
     index: number,
   ) => void
+  wrongCode: boolean
 }
 
 const OneCoinInputStep = (props: Props) => {
@@ -18,12 +19,17 @@ const OneCoinInputStep = (props: Props) => {
         <div>
           입력하신 계좌로 1원이 입금되었어요.
           <br />
-          '시소' 앞 텍스트 네자리를 입력해주세요.
+          '시소뱅크' 뒤 번호 네자리를 입력해주세요.
         </div>
         <OneCoinCodeInput
           code={props.authenticationCode}
           onCodeChange={props.onAuthenticationCodeChange}
         />
+        {props.wrongCode ? (
+          <div className="text-xs text-error">
+            인증번호가 일치하지 않습니다.
+          </div>
+        ) : null}
       </div>
     </div>
   )

@@ -47,14 +47,15 @@ public class MemberController {
         log.info("인증 요청 온 이메일: " + memberEmail);
         memberService.memberAuth(memberEmail, key);
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://j9a409.p.ssafy.io:3000/login");
+        redirectView.setUrl("https://j9a409.p.ssafy.io/login");
         return redirectView;
     }
     // 로그인
     @PostMapping("/login")
-    public TokenResponse login(@RequestBody LoginRequest loginRequest) throws JsonProcessingException {
+    public MemberResponse login(@RequestBody LoginRequest loginRequest) throws JsonProcessingException {
         MemberResponse memberResponse = memberService.login(loginRequest);
-        return jwtProvider.createTokensByLogin(memberResponse);
+//        TokenResponse tokenResponse = jwtProvider.createTokensByLogin(memberResponse)
+        return memberResponse;
     }
 
     //로그아웃

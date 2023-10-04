@@ -6,7 +6,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRouter } from 'next/navigation'
 import { commentRefetchStore } from '@/stores/commenRefetch'
-const DUMMY_EMAIL = 'doacha@seesaw.com'
+import { memberEmailStore } from '@/stores/memberEmail'
 
 interface CommentRequest {
   recordId: number
@@ -15,9 +15,10 @@ interface CommentRequest {
 }
 
 const CommentInput = ({ recordId }: { recordId: number }) => {
+  const { memberEmail /*memberNickname */ } = memberEmailStore()
   const data = {
     memberNickname: '도아차차',
-    memberEmail: 'doacha@seesaw.com',
+    memberEmail: memberEmail,
     memberImgUrl: '/차차_군침이.jpg',
   }
   const { refetch } = commentRefetchStore()
@@ -28,9 +29,8 @@ const CommentInput = ({ recordId }: { recordId: number }) => {
     const request = {
       recordId,
       commentContent,
-      memberEmail: DUMMY_EMAIL,
+      memberEmail: memberEmail,
     }
-    console.log('flzndptmxm', request)
     mutate(request, {
       onSuccess: (res) => {
         console.log('댓글 등록 결과', res)

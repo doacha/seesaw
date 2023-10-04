@@ -68,13 +68,13 @@ const AccountCard = (props: Props) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            accountNum: '457899-01-655239',
+            accountNum: props.account.accountNum,
             pageNum: page,
           }),
           // body : '457899-01-360844'
         },
       )
-      const newestData : Transaction[] = await res.json()
+      const newestData: Transaction[] = await res.json()
       setAccountTransactionList(newestData)
     } catch (err) {
       console.log(err)
@@ -97,18 +97,16 @@ const AccountCard = (props: Props) => {
           // body : '457899-01-360844'
         },
       )
-      const newestData : Transaction[] = await res.json()
-      if(newestData.length === 0){
+      const newestData: Transaction[] = await res.json()
+      if (newestData.length === 0) {
         setNothingToLoad(true)
       }
-      setAccountTransactionList(prev => prev.concat(newestData))
+      setAccountTransactionList((prev) => prev.concat(newestData))
       setIsLoading(true)
-      
     } catch (err) {
       console.log(err)
     }
   }
-
 
   const detailButtonClick = () => {
     setPage(0)
@@ -126,34 +124,44 @@ const AccountCard = (props: Props) => {
   useEffect(() => {
     if (isLoading) {
       const observer = new IntersectionObserver(
-        entries => {
+        (entries) => {
           if (entries[0].isIntersecting) {
-            loadMore();
+            loadMore()
           }
         },
-        { threshold: 1 }
-      );
+        { threshold: 1 },
+      )
       //옵져버 탐색 시작
-      if (target.current) observer.observe(target.current);
+      if (target.current) observer.observe(target.current)
     }
-  }, [isLoading]);
+  }, [isLoading])
 
   useEffect(() => {
-    getMoreAccountDetailInfo();
-  }, [page]);
+    getMoreAccountDetailInfo()
+  }, [page])
 
   const loadMore = () => {
-    setPage(prev=>prev+1);
-  };
+    setPage((prev) => prev + 1)
+  }
 
-  const target = useRef<HTMLDivElement>(null);
+  const target = useRef<HTMLDivElement>(null)
 
   return (
-    <div className={isOpened && opentAccountNum === props.account.accountNum ? 'collapse absolute top-[105px] left-0 w-full h-[calc(100vh-168px)] z-50 transition-all rounded-none bg-background' : 'collapse bg-background rounded-lg' }>
+    <div
+      className={
+        isOpened && opentAccountNum === props.account.accountNum
+          ? 'collapse absolute top-[105px] left-0 w-full h-[calc(100vh-168px)] z-50 transition-all rounded-none bg-background'
+          : 'collapse bg-background rounded-lg'
+      }
+    >
       <input type="checkbox" onClick={() => detailButtonClick()} />
-      <div className={
-        props.bgColor === 'installment'
-          ? "collapse-title text-xl font-medium p-5 pb-3 flex flex-col gap-2 bg-primary" : "collapse-title text-xl font-medium p-5 pb-3 flex flex-col gap-2"}>
+      <div
+        className={
+          props.bgColor === 'installment'
+            ? 'collapse-title text-xl font-medium p-5 pb-3 flex flex-col gap-2 bg-primary'
+            : 'collapse-title text-xl font-medium p-5 pb-3 flex flex-col gap-2'
+        }
+      >
         <AccountInfo account={props.account} type={props.bgColor} />
         <div
           className={
@@ -184,7 +192,7 @@ const AccountCard = (props: Props) => {
             </div>
           </div>
         ))}
-        {nothingToLoad? <EndAlert/> :<TransactionLoading target={target}/>}
+        {nothingToLoad ? <EndAlert /> : <TransactionLoading target={target} />}
       </div>
     </div>
   )
