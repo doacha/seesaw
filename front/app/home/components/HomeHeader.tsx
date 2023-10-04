@@ -55,14 +55,89 @@ const HomeHeader = ({
           {spendSum.toLocaleString('ko-KR')}원
         </p>
       </div>
-      <div className="mx-2 my-auto flex-col">
-        <div className="mb-3">
-          <Button
-            color="primary"
-            label="소비 예측"
-            onClick={clickReport}
-            size="xl"
-          />
+      <div className="flex mx-2 mt-2 mb-2 my-auto flex-col">
+        <div className="mb-3 flex flex-row mx-auto items-end">
+          <p
+            className="tracking-wide font-envR text-base animate-bounceInfinite "
+            style={{
+              animationDelay: '0.1s',
+              animationIterationCount: 'infinite',
+              color: '#6161AF',
+            }}
+          >
+            시
+          </p>
+          <p
+            className="tracking-wide font-envR text-sm animate-bounceInfinite "
+            style={{
+              animationDelay: '0.2s',
+              animationIterationCount: 'infinite',
+              color: '#B7B2FF',
+            }}
+          >
+            작
+          </p>
+          <p
+            className="tracking-wide font-envR text-sm animate-bounceInfinite "
+            style={{
+              animationDelay: '0.3s',
+              animationIterationCount: 'infinite',
+              color: '#B7B2FF',
+            }}
+          >
+            하
+          </p>
+          <p
+            className="tracking-wide font-envR text-sm animate-bounceInfinite "
+            style={{
+              animationDelay: '0.4s',
+              animationIterationCount: 'infinite',
+              color: '#B7B2FF',
+            }}
+          >
+            자&nbsp;
+          </p>
+
+          <p
+            className="tracking-wide font-envR text-base animate-bounceInfinite "
+            style={{
+              animationDelay: '0.6s',
+              animationIterationCount: 'infinite',
+              color: '#539CE5',
+            }}
+          >
+            소
+          </p>
+          <p
+            className="tracking-wide font-envR text-sm animate-bounceInfinite "
+            style={{
+              animationDelay: '0.7s',
+              animationIterationCount: 'infinite',
+              color: '#B7B2FF',
+            }}
+          >
+            비
+          </p>
+          <p
+            className="tracking-wide font-envR text-sm animate-bounceInfinite "
+            style={{
+              animationDelay: '0.8s',
+              animationIterationCount: 'infinite',
+              color: '#B7B2FF',
+            }}
+          >
+            절
+          </p>
+          <p
+            className="tracking-wide font-envR text-sm animate-bounceInfinite "
+            style={{
+              animationDelay: '0.9s',
+              animationIterationCount: 'infinite',
+              color: '#B7B2FF',
+            }}
+          >
+            약
+          </p>
         </div>
         <Button
           color="secondary"

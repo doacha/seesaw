@@ -22,10 +22,16 @@ const config: Config = {
           '30%': { transform: 'scale(1);' },
           '60%': { transform: 'scale(1);' },
         },
+        bounceInfinite: {
+          '0%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(10px)' },
+          '100%': { transform: 'traslateY(0)' },
+        },
       },
       animation: {
         heartBeat: 'heartBeat 3s',
         slideUp: 'slideUp 1s ease-in-out 1',
+        bounceInfinite: 'bounceInfinite 4s ease-in-out',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
