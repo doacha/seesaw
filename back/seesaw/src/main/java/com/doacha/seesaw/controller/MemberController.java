@@ -147,7 +147,7 @@ public class MemberController {
     }
 
     @PostMapping("/balance-transfer")
-    public ResponseEntity<?> balanceTransfer(BalanceTransferRequest balanceTransferRequest){
+    public ResponseEntity<?> balanceTransfer(@RequestBody BalanceTransferRequest balanceTransferRequest){
         return memberService.balanceTransfer(balanceTransferRequest);
     }
 
