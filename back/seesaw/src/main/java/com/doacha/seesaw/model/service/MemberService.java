@@ -265,10 +265,10 @@ public class MemberService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
             LocalDateTime startDateTime = LocalDateTime.parse(str, formatter);
             if(spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), startDateTime.minusDays(mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle()), startDateTime)!=null) {
-                before = spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), startDateTime.minusDays(mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle()), startDateTime);
+                before = spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), startDateTime.minusDays(mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle()), startDateTime).get();
             }
             if(spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), startDateTime, startDateTime.plusDays(mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle()))!=null){
-                after = spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), startDateTime, startDateTime.plusDays(mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle()));
+                after = spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), startDateTime, startDateTime.plusDays(mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle())).get();
             }
             sum += before-after;
 //            sum += spendingRepository.findSumByPeriodAndCategory(mm.getMission().getMissionCategoryId(), member.getMemberEmail(), dateAdd(mm.getMission().getMissionStartDate(), (-1)*mm.getMission().getMissionPeriod()*mm.getMission().getMissionCurrentCycle()), changeLocalDateTime(mm.getMission().getMissionStartDate()))
