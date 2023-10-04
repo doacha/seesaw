@@ -1,6 +1,6 @@
 'use client'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { redirect, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 
 import Input from '../components/Input'
@@ -94,6 +94,12 @@ const Login = () => {
   const clickRegist = () => {
     router.push('/regist')
   }
+
+  useEffect(() => {
+    if (memberEmail !== '') {
+      redirect('./home')
+    }
+  }, [])
 
   return (
     <div className="flex flex-col h-screen bg-background-fill">
