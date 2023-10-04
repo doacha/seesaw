@@ -27,6 +27,6 @@ public class MyPageInfoResponse {
     private final int ingMissionCnt;
 
     // TODO: 절약 금액 계산해서 넣어라
-//    @Schema(description = "절약 금액", example = "290000", required = true)
-//    private final int savings;
+    @Schema(description = "절약 금액", example = "290000", required = true)
+    private final long savings;
 }
