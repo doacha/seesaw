@@ -6,7 +6,7 @@ import AccountInputStep from './AccountInputStep'
 import OneCoinInputStep from './OneCoinInputStep'
 import { account } from '@/app/dummies'
 import { accountListStore } from '@/stores/accountList'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 
 const AccountRegistModal = () => {
   const router = useRouter()
@@ -22,6 +22,7 @@ const AccountRegistModal = () => {
     '',
     '',
   ])
+  const [wrongCode, setWrongCode] = useState<boolean>(false)
   const { setAccountList } = accountListStore()
 
   const onAccountNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +112,7 @@ const AccountRegistModal = () => {
         authenticationCode[1] +
         authenticationCode[2] +
         authenticationCode[3]
-      console.log(authNum, accountDealNum)
+      // console.log(authNum, accountDealNum)
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_SEESAW_BANK_API_URL}/account-transactional/check`,
@@ -128,9 +129,16 @@ const AccountRegistModal = () => {
         )
         const data = await res.text()
         if (data === 'success') {
-          router.replace('/member')
+          ;(
+            document.getElementById('modal') as HTMLDialogElement | null
+          )?.close()
+          setSelectedBank('')
+          setAccountChecked(0)
+          setAccountNumber('')
+          setCurrentStep(1)
+          router.refresh()
         } else {
-          console.log('비사아아아앙')
+          setWrongCode(true)
         }
       } catch (err) {
         setAccountChecked(2)
@@ -167,6 +175,7 @@ const AccountRegistModal = () => {
             <OneCoinInputStep
               authenticationCode={authenticationCode}
               onAuthenticationCodeChange={onAuthenticationCodeChange}
+              wrongCode={wrongCode}
             />
           )}
 
