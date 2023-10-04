@@ -5,14 +5,19 @@ import com.doacha.seesaw.jwt.MemberDetail;
 import com.doacha.seesaw.jwt.TokenResponse;
 import com.doacha.seesaw.model.dto.account.AccountResponse;
 import com.doacha.seesaw.model.dto.account.CreateAccountToSeesawRequest;
+import com.doacha.seesaw.model.dto.mission.MissionMemberResponse;
 import com.doacha.seesaw.model.dto.user.*;
 import com.doacha.seesaw.model.service.MemberMissionService;
 import com.doacha.seesaw.model.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +28,7 @@ import org.springframework.web.reactive.result.view.RedirectView;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,7 +40,11 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMissionService memberMissionService;
     private final JwtProvider jwtProvider;
-    
+
+    private static final String SUCCESS = "success";
+    private static final String FAIL = "fail";
+
+
     // 회원가입
     @PostMapping("/signup")
     public MemberResponse signUp(@RequestBody SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
@@ -47,14 +57,15 @@ public class MemberController {
         log.info("인증 요청 온 이메일: " + memberEmail);
         memberService.memberAuth(memberEmail, key);
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://j9a409.p.ssafy.io:3000/login");
+        redirectView.setUrl("https://j9a409.p.ssafy.io/login");
         return redirectView;
     }
     // 로그인
     @PostMapping("/login")
-    public TokenResponse login(@RequestBody LoginRequest loginRequest) throws JsonProcessingException {
+    public MemberResponse login(@RequestBody LoginRequest loginRequest) throws JsonProcessingException {
         MemberResponse memberResponse = memberService.login(loginRequest);
-        return jwtProvider.createTokensByLogin(memberResponse);
+//        TokenResponse tokenResponse = jwtProvider.createTokensByLogin(memberResponse)
+        return memberResponse;
     }
 
     //로그아웃
@@ -144,5 +155,24 @@ public class MemberController {
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void uploadImage(@RequestPart(value = "image", required = false) MultipartFile image) throws IOException{
         memberService.uploadImage(image, 0);
+    }
+
+    // 시소 뱅크 연동
+    @Operation(summary = "시소 뱅크 연동", description = "시소 뱅크 연동 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "시소 뱅크 연동 성공"),
+            @ApiResponse(responseCode = "500", description = "시소 뱅크 연동 실패 - 서버 오류")
+    })
+    @PostMapping("/link-seesawbank")
+    public ResponseEntity<?> linkMemberToSeesawBank(@RequestBody LinkMemberToSeesawBankRequest request) {
+        log.info("시소 뱅크 연동");
+        try {
+            memberService.linkMemberToSeesawBank(request);
+            log.info("시소 뱅크 연동 성공");
+            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("시소 뱅크 연동 실패 - 서버 오류");
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

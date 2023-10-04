@@ -3,6 +3,7 @@ import styles from '@/app/(mission)/mission/components/SearchContainer.module.cs
 import { useEffect, useState } from 'react'
 import { GroupStatusProps } from '@/app/types'
 import { useMutation } from '@tanstack/react-query'
+import { memberEmailStore } from '@/stores/memberEmail'
 
 interface GraphState {
   boxHeight: number
@@ -34,8 +35,8 @@ const getSavingMoney = async (input: {
   })
 }
 const HEIGHT_MAX = 100
-const DUMMY_EMAIL = 'jiwon@seesaw.com'
 const MySavingMoney = ({ propsData }: { propsData: GroupStatusProps }) => {
+  const { memberEmail } = memberEmailStore()
   const { mutate, data, isSuccess } = useMutation(getSavingMoney)
   const [graphState, setGraphState] = useState<GraphState>({
     boxHeight: 100,
@@ -46,7 +47,7 @@ const MySavingMoney = ({ propsData }: { propsData: GroupStatusProps }) => {
 
   useEffect(() => {
     mutate(
-      { missionId: propsData.missionId, memberEmail: DUMMY_EMAIL },
+      { missionId: propsData.missionId, memberEmail: memberEmail },
       {
         onSuccess: (res) => {
           const fetchedData: GraphState = { ...graphState }
