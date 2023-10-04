@@ -20,7 +20,6 @@ import Loading from '@/app//components/Loading'
 
 import { memberEmailStore } from '@/stores/memberEmail'
 import { redirect } from 'next/navigation'
-import { spend } from '../dummies'
 
 const ReportPage = () => {
   const router = useRouter()
