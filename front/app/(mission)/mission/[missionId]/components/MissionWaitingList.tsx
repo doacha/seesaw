@@ -8,13 +8,13 @@ interface MemberCard {
 const WaitingMemberCard = ({ data }: { data: MemberCard }) => {
   return (
     <div className="flex flex-row items-center relative">
-      <div className="relative w-[25px] h-[25px] rounded-ful mr-2">
+      <div className="relative w-[25px] h-[25px] rounded-ful mr-2 overflow-hidden">
         <Image
           alt="member profile image"
           src={data.memberImgUrl ?? '/default_profile.svg'}
           width={25}
           height={25}
-          className="rounded-full mr-2.5 absolute top-[50%] translate-y-[-50%]"
+          className="w-[25px] h-[25px] rounded-full mr-2.5 absolute top-[50%] translate-y-[-50%]"
         />
       </div>
       <div className="text-sm">{data.memberNickname}</div>

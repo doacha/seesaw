@@ -28,13 +28,15 @@ const GroupStatusTodayCard = ({
           data.recordStatus === 2 ? 'bg-seesaw-red-100' : 'bg-seesaw-blue-100'
         } rounded-t-[25px] pt-[25px] pb-2 h-[140px]"`}
       >
-        <Image
-          src={data.memberImgUrl ?? '/default_profile.svg'}
-          width={65}
-          height={65}
-          alt="member profile image"
-          className="rounded-full m-auto"
-        />
+        <div className="w-[65px] h-[65px] relative">
+          <Image
+            src={data.memberImgUrl ?? '/default_profile.svg'}
+            width={65}
+            height={65}
+            alt="member profile image"
+            className="rounded-full m-auto absoulte top-[50%] translate-x-[-50%]"
+          />
+        </div>
         <div className="text-sm text-center mt-[7px]">
           {data.memberNickname}
         </div>
