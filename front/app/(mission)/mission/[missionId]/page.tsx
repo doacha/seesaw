@@ -1,3 +1,4 @@
+'use client'
 import MissionDetailContainer from './components/MissionDetailContainer'
 import MissionDetailContents from './components/MissionDetailContents'
 import MissionWaitingList from './components/MissionWaitingList'
@@ -7,9 +8,9 @@ import { MissionDetail } from '@/app/types'
 import UpdateRecordButton from './components/UpdateRecordButton'
 import MissionExitButton from './components/MissionExitButton'
 import Header from '@/app/components/Header'
+import { memberEmailStore } from '@/stores/memberEmail'
 const MISSION_WAIT = 0
 const MISSION_START = 1
-const DUMMY_NICKNAME = '도아차는나야123'
 
 interface MemberCard {
   memberNickname: string
@@ -33,6 +34,7 @@ const getMissionWaitListFetch = async (missionId: string) => {
 // API 연결 이후 params를 통해 데이터를 가져와야 한다.
 const MissionDetailpage = async ({ params }: { params: any }) => {
   console.log('파라라라라파만팜ㅇㄴ팜ㅇ팡ㄴㅍ안ㅍㅁ낲만팜ㄴ판ㅇ파', params)
+  const { memberEmail, memberNickname } = memberEmailStore()
   const data = (await getMissionDetailFetch(params.missionId)) as MissionDetail
   let missionWaitList,
     isJoined = false
@@ -41,10 +43,10 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
       params.missionId,
     )) as MemberCard[]
     isJoined = missionWaitList.some(
-      (element) => element.memberNickname === DUMMY_NICKNAME,
+      (element) => element.memberNickname === memberNickname,
     )
   }
-  // data.missionImgUrl = '/차차_군침이.jpg'
+
   const contentsProps = {
     missionId: params.missionId,
     missionPeriod: data.missionPeriod,
@@ -54,8 +56,7 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
     missionDeposit: data.missionDeposit,
     missionTitle: data.missionTitle,
   }
-  data.missionIsPublic = false
-  const isStart = true
+
   return (
     <div className="bg-background-fill h-full overflow-auto py-16">
       <MissionDetailContainer data={data} />
