@@ -34,7 +34,7 @@ const RecordContentContainer = ({
   const [isOpened, setIsOpened] = useState<Boolean>(false)
   const checkRef = useRef<HTMLInputElement>(null)
   const [bgColor, textColor, successText] =
-    propsData.recordStatus === 1
+    propsData.recordStatus !== 2
       ? ['bg-seesaw-blue-100', 'text-primary', '성공']
       : ['bg-seesaw-red-100', 'text-error', '실패']
   const balance = recordStatus.missionTargetPrice - propsData.recordTotalCost

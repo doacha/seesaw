@@ -29,7 +29,7 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
           width={390}
           height={390}
           sizes="100%"
-          className=""
+          className="w-screen"
         />
       </div>
       <div className="px-5 py-[15px]">
@@ -39,7 +39,8 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
             {data.missionTitle}
           </div>
           <div className="text-sm">
-            {data.missionIsPublic && (
+            {/* 백에서는 1이 public이라 반전시켜줌 */}
+            {!data.missionIsPublic && (
               <FontAwesomeIcon icon={faLock} className="text-red-700 mr-2" />
             )}
             <FontAwesomeIcon icon={faUser} className="text-primary mr-2" />

@@ -95,13 +95,15 @@ const MySavingMoney = ({ propsData }: { propsData: GroupStatusProps }) => {
   console.log('높이확인', graphState.boxHeight, propsData.missionTargetPrice)
   return (
     <div className="bg-background rounded-lg p-5 m-5">
-      <div>절약 금액</div>
-      <hr className="my-[15px] text-outline" />
-      <div className="bg-background-fill rounded-sm p-5">
+      <div className="font-scDreamMedium">절약 금액</div>
+      <hr className="my-[7.5px] text-outline" />
+      <div className="bg-background-fill rounded-sm p-5 mt-4">
         <div className="text-sm mb-5">
           누적 금액{' '}
           <span className="text-primary font-scDreamExBold text-base mx-1">
-            {(data as number[])?.reduce((prev, curr) => prev + curr, 0)}
+            {(data as number[])
+              ?.reduce((prev, curr) => prev + curr, 0)
+              .toLocaleString()}
           </span>
           원
         </div>

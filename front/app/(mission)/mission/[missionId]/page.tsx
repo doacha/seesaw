@@ -18,6 +18,9 @@ interface MemberCard {
 const getMissionDetailFetch = async (missionId: string) => {
   return await fetch(
     `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/detail/${missionId}`,
+    {
+      method: 'get',
+    },
   ).then((res) => {
     return res.json()
   })
