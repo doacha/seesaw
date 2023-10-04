@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faAngleDown,
+  faPenToSquare,
   faEllipsis,
   faChevronDown,
   faChevronUp,
@@ -13,6 +13,8 @@ import SpendingHistory from './SpendingHistory'
 import { recordListStore } from '@/stores/recordListStore'
 import { RecordList } from '@/app/types'
 import { useRef, useState, useEffect } from 'react'
+import { memberEmailStore } from '@/stores/memberEmail'
+import { useRouter } from 'next/navigation'
 interface RecordDetailProps {
   recordId: number
   recordContent: string
@@ -30,9 +32,11 @@ const RecordContentContainer = ({
   propsData: RecordDetailProps
 }) => {
   console.log('프롭스확인', propsData)
+  const { memberEmail } = memberEmailStore()
   const { recordList, recordStatus } = recordListStore()
   const [isOpened, setIsOpened] = useState<Boolean>(false)
   const checkRef = useRef<HTMLInputElement>(null)
+  const router = useRouter()
   const [bgColor, textColor, successText] =
     propsData.recordStatus !== 2
       ? ['bg-seesaw-blue-100', 'text-primary', '성공']
@@ -55,31 +59,39 @@ const RecordContentContainer = ({
     passTime = getTimeBefore(propsData.recordWriteTime)
   })
   return (
-    <div className="rounded-lg bg-background m-5">
-      {/* 헤더 */}
-      <div className={`collapse ${bgColor} rounded-t-lg rounded-b-none p-5`}>
-        <input
-          type="checkbox"
-          ref={checkRef}
-          onClick={() => setIsOpened(!isOpened)}
-        />
-        {/* collapase title 간략 정보*/}
-        <div className="collapse-title flex flex-col items-center p-0">
-          {/* 기간 및 자세히 보기 */}
-          <div className="flex justify-between w-full mb-2.5">
-            <span>
-              <span className="font-scDreamMedium mr-[10px]">
-                {propsData.recordNumber}회차
-              </span>
-              <span className="text-[10px] text-outline">
-                {getCycleTerm(
-                  recordStatus.missionStartDate,
-                  propsData.recordNumber,
-                  recordStatus.missionPeriod,
-                )}
-              </span>
+    <div className="rounded-lg bg-background m-5 flex flex-col">
+      <div>
+        {/* 헤더 */}
+        <div className="flex justify-between w-full mb-2.5">
+          <span>
+            <span className="font-scDreamMedium mr-[10px]">
+              {propsData.recordNumber}회차
             </span>
-            <FontAwesomeIcon icon={faEllipsis} className="text-outline" />
+            <span className="text-[10px] text-outline">
+              {getCycleTerm(
+                recordStatus.missionStartDate,
+                propsData.recordNumber,
+                recordStatus.missionPeriod,
+              )}
+            </span>
+          </span>
+          {memberEmail === propsData.memberEmail && (
+            <FontAwesomeIcon
+              icon={faPenToSquare}
+              className="text-outline"
+              onClick={() => router.push('/home')}
+            />
+          )}
+        </div>
+        <div className={`collapse rounded-b-none`}>
+          <input
+            type="checkbox"
+            ref={checkRef}
+            onClick={() => setIsOpened(!isOpened)}
+          />
+          {/* collapase title 간략 정보*/}
+          <div className="collapse-title flex flex-col items-center p-0">
+            {/* 기간 및 자세히 보기 */}
           </div>
           {/* 프로필 및 등록 시간 */}
           <div className="flex justify-between items-center w-full mb-2.5">
@@ -89,7 +101,7 @@ const RecordContentContainer = ({
                 width={35}
                 height={35}
                 alt="member profile image"
-                className="rounded-full inline-block mr-[15px]"
+                className="rounded-full inline-block mr-[15px] w-[38px] h-[38px] bg-white"
               />
               <span>{propsData.memberNickname}</span>
             </span>
@@ -112,21 +124,21 @@ const RecordContentContainer = ({
             {!isOpened && <FontAwesomeIcon icon={faChevronDown} />}
           </div>
         </div>
-        {/* collpase content - 거래 내역 상세 */}
-        <SpendingHistory
-          textColor={textColor}
-          targetPrice={recordStatus.missionTargetPrice}
-          history={getRecordList(propsData.recordNumber, recordList)}
-          balance={balance}
-        />
-        {isOpened && (
-          <FontAwesomeIcon
-            icon={faChevronUp}
-            className="mx-auto"
-            onClick={() => checkRef.current?.click()}
-          />
-        )}
       </div>
+      {/* collpase content - 거래 내역 상세 */}
+      <SpendingHistory
+        textColor={textColor}
+        targetPrice={recordStatus.missionTargetPrice}
+        history={getRecordList(propsData.recordNumber, recordList)}
+        balance={balance}
+      />
+      {isOpened && (
+        <FontAwesomeIcon
+          icon={faChevronUp}
+          className="mx-auto"
+          onClick={() => checkRef.current?.click()}
+        />
+      )}
       {/* 본문 */}
       <div className="p-5">
         {propsData.recordContent ?? '입력된 메모가 없습니다.'}

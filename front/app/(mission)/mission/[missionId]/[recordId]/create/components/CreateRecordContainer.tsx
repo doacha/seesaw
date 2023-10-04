@@ -6,6 +6,7 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 import { recordListStore } from '@/stores/recordListStore'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+
 const CreateRecordContainer = ({ recordId }: { recordId: number }) => {
   const { data, isSuccess } = useQuery({
     queryKey: ['record', recordId],
@@ -30,7 +31,7 @@ const CreateRecordContainer = ({ recordId }: { recordId: number }) => {
   } else {
     history = []
   }
-  if (isSuccess && textInput.length === 0) {
+  if (isSuccess && textInput === '') {
     console.log('수정에서 받아오는거', data)
     setTextInput(data.recordContent)
   }
