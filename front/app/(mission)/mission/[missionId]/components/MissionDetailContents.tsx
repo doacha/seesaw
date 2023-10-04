@@ -7,7 +7,7 @@ import { GroupStatusProps } from '@/app/types'
 import { recordListStore } from '@/stores/recordListStore'
 import { useMutation } from '@tanstack/react-query'
 import { RecordList } from '@/app/types'
-
+import { memberEmailStore } from '@/stores/memberEmail'
 enum Property {
   'recordNumber',
   'recordStartDate',
@@ -16,10 +16,11 @@ enum Property {
   'recordList',
 }
 
-const EMAIL_DUMMY = 'jiwon@seesaw.com'
-
 const MissionDetailContents = ({ data }: { data: GroupStatusProps }) => {
+  // const [pageNumber, setPageNumber] = useState(0)
+  // const [hasNext, setHasNext] = useState(true)
   const [activeTab, setActiveTab] = useState('tab1')
+  const { memberEmail } = memberEmailStore()
   const { recordStatus, recordMap, setRecordList, setRecordStatus } =
     recordListStore()
   const { mutate, data: recordHistory } = useMutation(getMyRecordHistory)
@@ -44,7 +45,7 @@ const MissionDetailContents = ({ data }: { data: GroupStatusProps }) => {
     mutate(
       {
         missionId: data.missionId,
-        memberEmail: EMAIL_DUMMY,
+        memberEmail: memberEmail,
         pageNumber: 0,
       },
       {
