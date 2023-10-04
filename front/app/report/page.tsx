@@ -1,4 +1,5 @@
 'use client'
+import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -19,9 +20,11 @@ import Loading from '@/app//components/Loading'
 
 import { memberEmailStore } from '@/stores/memberEmail'
 import { redirect } from 'next/navigation'
+import { spend } from '../dummies'
 
 const ReportPage = () => {
-  const { memberEmail, setMemberEmail } = memberEmailStore()
+  const router = useRouter()
+  const { memberEmail } = memberEmailStore()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   // 통계 / 캘린더
   const [activeTab, setActiveTab] = useState<string>('tab1')
@@ -102,6 +105,14 @@ const ReportPage = () => {
           text: '저장된 데이터가 없습니다!',
           icon: 'error',
         })
+        // 저장된 데이터가 없을 때, 소비리포트 아예 접근 불가
+        if (
+          (spendData.spendingMonth as number) === new Date().getMonth() &&
+          spendData.spendingYear === new Date().getFullYear()
+        ) {
+          router.back()
+          return
+        }
         if (clickDirection === 0) {
           if ((spendData.spendingMonth as number) === 1) {
             setSpendData({
