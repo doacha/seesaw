@@ -45,13 +45,10 @@ const HomeHeader = ({
             type="button"
             name="right-arrow"
           >
-            {spend.spendingYear !== new Date().getFullYear() &&
-              spend.spendingMonth !== new Date().getMonth() + 1 && (
-                <FontAwesomeIcon
-                  icon={faChevronRight}
-                  style={{ color: '#001b2a' }}
-                />
-              )}
+            <FontAwesomeIcon
+              icon={faChevronRight}
+              style={{ color: '#001b2a' }}
+            />
           </button>
         </div>
         <p className="text-3xl font-envR">
