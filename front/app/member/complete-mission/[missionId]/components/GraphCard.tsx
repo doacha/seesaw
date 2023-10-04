@@ -65,7 +65,7 @@ const GraphCard = (props: Props) => {
         (props.savedAmount.pastTotalCost / averageAmount) * 100,
       )}px`
       let missionLength = `${Math.round(
-        (props.savedAmount.missionTotalCost/ averageAmount) * 100,
+        (props.savedAmount.missionTotalCost / averageAmount) * 100,
       )}px`
 
       setLengthList([pastLength, missionLength])
@@ -111,6 +111,10 @@ const GraphCard = (props: Props) => {
         txtColor={
           props.groupAverageInfo
             ? props.currentAmount > props.groupAverageInfo.missionAverage
+              ? 'text-secondary'
+              : 'text-error'
+            : props.savedAmount
+            ? averageAmount > props.savedAmount.missionTotalCost
               ? 'text-secondary'
               : 'text-error'
             : averageAmount > props.currentAmount

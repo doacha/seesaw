@@ -4,19 +4,17 @@ import MyStatisticDetailCard from './MyStatisticDetailCard'
 import { useQuery } from '@tanstack/react-query'
 import Loading from '@/app/components/Loading'
 import GraphCard from './GraphCard'
-import { memberEmailStore } from '@/stores/memberEmail'
 import { currentMissionIdStore } from '@/stores/currentMissionId'
 
 const GroupStatisticCard = () => {
-  const { memberEmail } = memberEmailStore()
   const { currentMissionId } = currentMissionIdStore()
   const getGroupAverageInfo = async () => {
     try {
       const res = await fetch(
-        // `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/compare/${currentMissionId}`,
-        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/compare/yzn5LMDMCG`,
+        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/compare/${currentMissionId}`,
       )
       const data: GroupAverageInfo = await res.json()
+      console.log(data)
       return data
     } catch (err) {
       console.log(err)
@@ -26,21 +24,7 @@ const GroupStatisticCard = () => {
   const getMissionRanking = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/ranking`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            missionId: currentMissionId,
-            memberEmail: memberEmail,
-          }),
-          // body: JSON.stringify({
-          //   missionId: 'yzn5LMDMCG',
-          //   memberEmail: 'doacha@seesaw.com',
-          // }),
-        },
+        `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/ranking/${currentMissionId}`,
       )
       const data: MissionRanking = await res.json()
       return data
