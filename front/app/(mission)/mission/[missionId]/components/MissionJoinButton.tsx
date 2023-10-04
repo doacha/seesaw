@@ -16,16 +16,22 @@ const MissionJoinButton = ({
   missionTargetPrice,
   missionCategoryId,
   missionPeriod,
+  missionId,
+  setIsJoined,
 }: {
   isSaveMission: boolean
   missionCategory: string
   missionTargetPrice: number
   missionCategoryId: number
   missionPeriod: number
+  missionId: string
+  setIsJoined: any
 }) => {
   const [processLevel, setProcessLevel] = useState(isSaveMission ? 0 : 1)
   const [savingMoney, setSavingMoney] = useState(dummyCategorySaveMoney)
   const [password, setPassword] = useState<string[]>(['', '', '', ''])
+  const { mutate: depositMoney } = useMutation(postDepositMoney)
+  const { mutate: joinMission } = useMutation(putJoinMission)
   const { memberEmail } = memberEmailStore()
   const { mutate, data } = useMutation(getCategorySpendMoney)
   const refList = [
@@ -33,6 +39,8 @@ const MissionJoinButton = ({
     useRef<HTMLDialogElement>(null),
     useRef<HTMLDialogElement>(null),
   ]
+
+  // 카테고리별 소비금액, 적금금액 초기값
   useEffect(() => {
     mutate(
       {
@@ -53,8 +61,39 @@ const MissionJoinButton = ({
       },
     )
   }, [])
+
+  // 참여하기 최종버튼 통과
   const handleJoinButton = (processLevel: number) => {
     if (processLevel === 2) {
+      const depositeRequest = {
+        // accountTransactionNum: `${process.env.NEXT_PUBLIC_SEESAWBANK_ACCOUNT_NUM}`,
+        accountApprovalAmount: savingMoney,
+        accountPassword: password.join(''),
+        accountEmail: memberEmail,
+        // accountNum: DUMMY_ACCOUNT_NUM,
+      }
+      console.log('예치금요청', depositeRequest)
+
+      depositMoney(depositeRequest, {
+        onSuccess: (res) => {
+          if (res.status === 500) {
+            console.log('에치금입금실패')
+            return
+          }
+          joinMission(
+            {
+              missionId,
+              memberEmail,
+              memberMissionSavingMoney: savingMoney,
+            },
+            {
+              onSuccess: (res) => setIsJoined(true),
+              onError: (err) => console.log('미션 참가 에러', err),
+            },
+          )
+        },
+        onError: (err) => console.log('예치금입금실패', err),
+      })
       return
     }
     refList[processLevel + 1].current?.showModal()
@@ -104,9 +143,6 @@ const getCategorySpendMoney = async ({
   categoryId: number
   memberEmail: string
 }) => {
-  const { mutate: categorySpendMoney, data: spendMoney } = useMutation(
-    getCategorySpendMoney,
-  )
   return await fetch(
     `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/monthaverage`,
     {
@@ -120,6 +156,55 @@ const getCategorySpendMoney = async ({
       }),
     },
   ).then((res) => res.json())
+}
+
+interface DepositRequest {
+  accountApprovalAmount: number
+  accountPassword: string
+  accountEmail: string
+}
+
+const postDepositMoney = async (depositRequset: DepositRequest) => {
+  return await fetch(
+    `${process.env.NEXT_PUBLIC_SEESAW_BANK_API_URL}/account-transactional/transfer`,
+    {
+      method: 'POST',
+      body: JSON.stringify(depositRequset),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  ).then((res) => {
+    let js = res.json()
+    console.log('입금 결과', js)
+    return js
+  })
+}
+
+const putJoinMission = async ({
+  missionId,
+  memberEmail,
+  memberMissionSavingMoney,
+}: {
+  missionId: string
+  memberEmail: string
+  memberMissionSavingMoney: number
+}) => {
+  return await fetch(`${process.env.NEXT_PUBLIC_SEESAW_BANK_API_URL}/mission`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      missionId,
+      memberEmail,
+      memberMissionSavingMoney,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((res) => {
+    let js = res.json()
+    console.log('입금 결과', js)
+    return js
+  })
 }
 
 const convertMonthlyToUserSet = (
