@@ -29,7 +29,7 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
           width={390}
           height={390}
           sizes="100%"
-          className="absolute top-[-50%]"
+          className=""
         />
       </div>
       <div className="px-5 py-[15px]">
