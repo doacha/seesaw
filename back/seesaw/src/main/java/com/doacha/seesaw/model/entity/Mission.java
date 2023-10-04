@@ -90,7 +90,7 @@ public class Mission {
     @Column(name = "mission_start_date", nullable = false)
     @Schema(description = "미션 시작일", example = "2023-09-11", required = true)
     private Date missionStartDate;
-
+    // localdatetime으로 바꾸고 싶다...
     @Column(name = "mission_creation_time", nullable = false)
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Schema(description = "미션 생성일시", example = "2023-09-05 09:11:14", required = false)

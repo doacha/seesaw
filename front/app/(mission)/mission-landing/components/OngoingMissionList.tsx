@@ -59,14 +59,23 @@ const OngoingMissionList = () => {
     <div className="">
       <div className="font-scDreamExBold mb-5 ">참여중인 미션</div>
       <div className="flex flex-wrap gap-5">
-        {(data as MissionCardProps[])?.map((element, idx) => (
-          <MissionCard
-            data={element}
-            key={idx}
-            isStarted={isStarted(element.missionStartDate)}
-            category={categoryList[element.missionCategoryId]}
-          />
-        ))}
+        {data && data.length > 0 ? (
+          (data as MissionCardProps[])?.map((element, idx) => (
+            <MissionCard
+              data={element}
+              key={idx}
+              isStarted={isStarted(element.missionStartDate)}
+              category={categoryList[element.missionCategoryId]}
+            />
+          ))
+        ) : (
+          <div className="bg-background flex items-center rounded-lg h-[150px] p-5 w-screen">
+            <div className="text-center w-full">
+              참여중인 미션이 없습니다. <br />
+              새로운 미션에 참여해보세요!
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
