@@ -72,9 +72,9 @@ public class AccountTransactionController {
     public ResponseEntity<?> checkAuthentication(@RequestBody CheckAuthenticationRequest request) {
         log.info("1원 인증 확인");
         try {
-            accountTransactionService.checkAuthentication(request);
+            String memberId = accountTransactionService.checkAuthentication(request);
             log.info("1원 인증 성공");
-            return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+            return new ResponseEntity<String>(memberId, HttpStatus.OK);
         } catch (BadRequestException e) {
             log.info("1원 인증 실패 - 잘못된 인증번호");
             return new ResponseEntity<String>(FAIL, HttpStatus.UNAUTHORIZED);
