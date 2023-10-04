@@ -18,9 +18,8 @@ import type { MissionDetail } from '@/app/types'
 import { MouseEventHandler } from 'react'
 import CopyToClipboardButton from './CopyToClipboardButton'
 const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
-  console.log('왜안뜸', data)
-  const totalTerm =
-    Math.trunc((data.missionPeriod * data.missionTotalCycle) / 7) + 1
+  const totalTerm = Math.ceil((data.missionPeriod * data.missionTotalCycle) / 7)
+  console.log('왜안뜸', totalTerm)
   return (
     <div className=" bg-background">
       <div className="w-full h-[210px] overflow-hidden relative">

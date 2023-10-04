@@ -9,6 +9,7 @@ import UpdateRecordButton from './components/UpdateRecordButton'
 import MissionExitButton from './components/MissionExitButton'
 import Header from '@/app/components/Header'
 import { memberEmailStore } from '@/stores/memberEmail'
+import { useState } from 'react'
 const MISSION_WAIT = 0
 const MISSION_START = 1
 
@@ -36,16 +37,12 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
   console.log('파라라라라파만팜ㅇㄴ팜ㅇ팡ㄴㅍ안ㅍㅁ낲만팜ㄴ판ㅇ파', params)
   const { memberEmail, memberNickname } = memberEmailStore()
   const data = (await getMissionDetailFetch(params.missionId)) as MissionDetail
-  let missionWaitList,
-    isJoined = false
-  if (data.missionStatus === 0) {
-    missionWaitList = (await getMissionWaitListFetch(
-      params.missionId,
-    )) as MemberCard[]
-    isJoined = missionWaitList.some(
-      (element) => element.memberNickname === memberNickname,
-    )
-  }
+  const missionWaitList = (await getMissionWaitListFetch(
+    params.missionId,
+  )) as MemberCard[]
+  const [isJoined, setIsJoined] = useState<boolean>(
+    missionWaitList.some((member) => member.memberNickname === memberNickname),
+  )
 
   const contentsProps = {
     missionId: params.missionId,
@@ -69,7 +66,10 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
         <>
           <MissionWaitingList data={missionWaitList} />
           {isJoined ? (
-            <MissionExitButton missionId={data.missionId} />
+            <MissionExitButton
+              missionId={data.missionId}
+              setIsJoined={setIsJoined}
+            />
           ) : (
             <MissionJoinButton
               isSaveMission
@@ -77,6 +77,8 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
               missionTargetPrice={data.missionTargetPrice}
               missionCategoryId={data.missionCategoryId}
               missionPeriod={data.missionPeriod}
+              missionId={data.missionId}
+              setIsJoined={setIsJoined}
             />
           )}
         </>

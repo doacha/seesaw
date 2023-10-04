@@ -5,7 +5,13 @@ import { useMutation } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { memberEmailStore } from '@/stores/memberEmail'
 
-const MissionExitButton = ({ missionId }: { missionId: string }) => {
+const MissionExitButton = ({
+  missionId,
+  setIsJoined,
+}: {
+  missionId: string
+  setIsJoined: any
+}) => {
   const { memberEmail /**/ } = memberEmailStore()
   const modalRef = useRef<HTMLDialogElement>(null)
   const router = useRouter()
@@ -14,7 +20,7 @@ const MissionExitButton = ({ missionId }: { missionId: string }) => {
     mutate(
       { missionId, memberEmail: memberEmail },
       {
-        onSuccess: (res) => router.push('/mission-landing'),
+        onSuccess: (res) => setIsJoined(false),
       },
     )
   }
