@@ -28,13 +28,15 @@ const GroupStatusTodayCard = ({
           data.recordStatus === 2 ? 'bg-seesaw-red-100' : 'bg-seesaw-blue-100'
         } rounded-t-[25px] pt-[25px] pb-2 h-[140px]"`}
       >
+        {/* <div className="w-[65px] h-[65px] relative"> */}
         <Image
           src={data.memberImgUrl ?? '/default_profile.svg'}
           width={65}
           height={65}
           alt="member profile image"
-          className="rounded-full m-auto"
+          className="rounded-full w-[65px] h-[65px] m-auto bg-white"
         />
+        {/* </div> */}
         <div className="text-sm text-center mt-[7px]">
           {data.memberNickname}
         </div>
@@ -45,14 +47,14 @@ const GroupStatusTodayCard = ({
       {/* 카드 하단 - 지출내역 */}
       <div className="m-auto">
         <div className="px-[20px] mb-2.5 flex justify-between">
-          <span className="text-[10px] mr-2">지출</span>
-          <span className="font-scDreamExBold text-error">
+          <span className="text-[10px] mr-2 self-end">지출</span>
+          <span className="font-scDreamExBold text-error inline-block min-w-[46px] text-right">
             {data.recordTotalCost.toLocaleString('ko-KR')}
           </span>
         </div>
         <div className="px-[20px] flex justify-between">
-          <span className="text-[10px] mr-2">잔액</span>
-          <span className="font-scDreamExBold text-primary">
+          <span className="text-[10px] mr-2 self-end">잔액</span>
+          <span className="font-scDreamExBold text-primary inline-block min-w-[46px] text-right">
             {(targetPrice - data.recordTotalCost >= 0
               ? targetPrice - data.recordTotalCost
               : 0

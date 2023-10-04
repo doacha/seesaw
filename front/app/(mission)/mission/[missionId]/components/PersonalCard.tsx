@@ -3,13 +3,13 @@ import Image from 'next/image'
 import { RecordDetail } from '@/app/types'
 const PersonalCard = ({ data }: { data: RecordDetail }) => {
   return (
-    <div className="flex flex-row gap-2 bg-background mb-2.5">
+    <div className="flex flex-row gap-2 bg-background mb-5">
       <Image
         src={data.memberImgUrl ?? '/default_profile.svg'}
         alt="member profile img"
-        width={38}
-        height={38}
-        className="rounded-full m-auto"
+        width={40}
+        height={40}
+        className="rounded-full m-auto w-[40px] h-[40px]"
       />
       <div className="w-full flex-[2_1_0%]">
         <div className="text-sm mb-1">{data.memberNickname}</div>

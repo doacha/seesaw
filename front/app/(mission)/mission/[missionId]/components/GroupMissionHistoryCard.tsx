@@ -24,7 +24,7 @@ const GroupMissionHistoryCard = ({
   data: RecordDetail[]
   missionData: GroupStatusProps
 }) => {
-  console.log(data, 'asdfasdf')
+  console.log('이씨발', data, 'asdfasdf')
   const dialogRef = useRef<HTMLDialogElement>(null)
   const cycleCount = data[0].recordNumber
   let successCount = 0,
@@ -37,7 +37,7 @@ const GroupMissionHistoryCard = ({
     }
   })
   return (
-    <div className="rounded-lg p-2.5 my-2.5 shadow-md">
+    <div className="rounded-lg p-5 my-5 shadow-md">
       {/* 회차 타이틀 */}
       <div className="flex flex-row justify-between">
         <div>
@@ -58,9 +58,10 @@ const GroupMissionHistoryCard = ({
       {/* 현황 바 */}
       <StatusBar success={successCount} fail={failCount} />
       {/* 개인별 결과 */}
-      {data.map((element) => (
-        <PersonalCard data={element} key={element.recordId} />
-      ))}
+      {data.map(
+        (element, idx) =>
+          idx < 5 && <PersonalCard data={element} key={element.recordId} />,
+      )}
       <dialog id="my_modal_2" className="modal" ref={dialogRef}>
         <div className="modal-box bg-background">
           <div className="font-scDreamMedium mb-2.5">
