@@ -63,6 +63,7 @@ const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
             ...recordMap,
             [recordNumber]: res[targetIdx].recordId,
           })
+          console.log('투데이미션', res)
         },
         onError: (err) => console.log('에러sdsd', err),
       },
@@ -79,7 +80,7 @@ const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
           (todayMission as TodayStatus[]).map((element, idx) => (
             <GroupStatusTodayCard
               data={element}
-              targetPrice={todayMission.missionTargetPrice}
+              targetPrice={data.missionTargetPrice}
               onClick={() =>
                 router.push(`${data.missionId}/${element.recordId}`)
               }

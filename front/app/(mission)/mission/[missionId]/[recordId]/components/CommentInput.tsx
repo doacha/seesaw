@@ -15,9 +15,9 @@ interface CommentRequest {
 }
 
 const CommentInput = ({ recordId }: { recordId: number }) => {
-  const { memberEmail /*memberNickname */ } = memberEmailStore()
+  const { memberEmail, memberNickname } = memberEmailStore()
   const data = {
-    memberNickname: '도아차차',
+    memberNickname: memberNickname,
     memberEmail: memberEmail,
     memberImgUrl: '/차차_군침이.jpg',
   }
@@ -41,13 +41,6 @@ const CommentInput = ({ recordId }: { recordId: number }) => {
   }
   return (
     <div className="fixed shadow-lg p-5 w-[calc(100vw-40px)] left-5 bottom-[70px] flex flex-row items-center gap-2.5 mb-5 bg-background rounded-lg h-12">
-      <Image
-        src={data.memberImgUrl}
-        alt="member profile image"
-        width={27}
-        height={26}
-        className="rounded-full"
-      />
       <div className="flex flex-col flex-[1_1_0%] text-xs">
         {data.memberNickname}
       </div>

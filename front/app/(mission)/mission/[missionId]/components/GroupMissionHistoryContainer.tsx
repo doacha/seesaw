@@ -31,9 +31,14 @@ const getPastRecord = async (input: {
 }
 
 const GroupMissionHistoryContainer = ({ data }: { data: GroupStatusProps }) => {
-  const { mutate, data: groupMissionHistory } = useMutation(getPastRecord)
+  const {
+    mutate,
+    data: groupMissionHistory,
+    isSuccess,
+  } = useMutation(getPastRecord)
   const { recordMap, setRecordMap } = recordListStore()
   const { memberNickname } = memberEmailStore()
+  // const [records, setRecords] = useState<any[][]>([])
   useEffect(() => {
     mutate(
       {
@@ -42,16 +47,19 @@ const GroupMissionHistoryContainer = ({ data }: { data: GroupStatusProps }) => {
       },
       {
         onSuccess: (res: RecordDetail[][]) => {
+          console.log('시시시싯', res)
           const newRecordMap: { [key: number]: any } = { ...recordMap }
           res.forEach((recordListByRecordNumber) => {
-            let idx = recordListByRecordNumber.findIndex((record) => {
-              record.memberNickname === memberNickname
-            })
+            let idx = recordListByRecordNumber.findIndex(
+              (record) => record.memberNickname === memberNickname,
+            )
             const number = recordListByRecordNumber[idx].recordNumber
             const id = recordListByRecordNumber[idx].recordId
             newRecordMap[number] = id
           })
           setRecordMap(newRecordMap)
+          // setRecords(res)
+          return res
         },
         onError: (err) => console.log(err),
       },
@@ -61,9 +69,14 @@ const GroupMissionHistoryContainer = ({ data }: { data: GroupStatusProps }) => {
     <div className="rounded-lg bg-background p-5 m-5">
       <div className="font-scDreamMedium">미션 기록</div>
       <hr />
-      {((groupMissionHistory as RecordDetail[][]) ?? []).map((element, idx) => (
-        <GroupMissionHistoryCard data={element} missionData={data} key={idx} />
-      ))}
+      {groupMissionHistory &&
+        (groupMissionHistory as RecordDetail[][]).map((element, idx) => (
+          <GroupMissionHistoryCard
+            data={element}
+            missionData={data}
+            key={idx}
+          />
+        ))}
     </div>
   )
 }

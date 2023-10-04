@@ -103,7 +103,7 @@ const MissionCard = ({
             >
               {`${
                 missionCycleArray[
-                  (data.missionPeriod * data.missionTotalCycle) / 7
+                  Math.ceil((data.missionPeriod * data.missionTotalCycle) / 7)
                 ] ?? '더미'
               }`}
             </Capsule>

@@ -1,3 +1,4 @@
+'use client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faFaceDizzy,
@@ -8,6 +9,7 @@ import ShieldGroup from './ShieldGroup'
 import { useEffect } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { GroupStatusProps } from '@/app/types'
+import { memberEmailStore } from '@/stores/memberEmail'
 
 interface DepositStatus {
   missionMemberCnt: number
@@ -35,11 +37,7 @@ const getDepositeStatus = async (input: {
         'Content-Type': 'application/json',
       },
     },
-  ).then((res) => {
-    let js = res.json()
-    console.log('예치금혀황', js)
-    return js
-  })
+  ).then((res) => res.json())
 }
 
 const MyDepositStatusContainer = ({
@@ -47,34 +45,37 @@ const MyDepositStatusContainer = ({
 }: {
   propsData: GroupStatusProps
 }) => {
-  let additionalPrize = 0
+  const { memberNickname, memberEmail } = memberEmailStore()
   const { mutate, data, isSuccess } = useMutation(getDepositeStatus)
+  console.log('aaaaaa', data)
   useEffect(() => {
     mutate(
       {
-        memberEmail: 'doacha@seesaw.com', // 더미 아이디, 추후 변경 필요
+        memberEmail: memberEmail, // 더미 아이디, 추후 변경 필요
         missionId: propsData.missionId,
       },
       {
+        onSuccess: (res) => {
+          console.log('aaaa', res)
+        },
         onError: (err) => console.log('으악', err),
       },
     )
   }, [])
-
-  if (isSuccess) {
-    additionalPrize = propsData.missionTargetPrice + data.changedDeposit
-    console.log('결과', additionalPrize)
-  }
+  // if (isSuccess) {
+  //   additionalPrize = propsData.missionTargetPrice + data.changedDeposit
+  //   console.log('결과', additionalPrize, data)
+  // }
   return (
     <div className="bg-background rounded-lg p-5 m-5">
       <div className="font-scDreamMedium">예치금 현황</div>
-      <hr className="border-outline my-2.5" />
+      <hr className="border-outline my-[7.5px]" />
       {/* 예치금 현황 */}
-      <div className="rounded-lg bg-background-fill p-3">
+      <div className="rounded-lg bg-background-fill p-3 mt-4">
         <div className="text-outline text-xs mb-2.5">
-          현재{' '}
-          <span className="text-black text-sm">
-            {isSuccess && data?.missionFailMemberCnt}
+          현재
+          <span className="text-black text-sm ml-2">
+            {data && (data as DepositStatus).missionFailMemberCnt}
           </span>
           명이 미션 실패했어요
         </div>
@@ -102,29 +103,32 @@ const MyDepositStatusContainer = ({
             />
           </span>
         </div>
-        {additionalPrize >= 0 && (
+        {isSuccess && data.changedDeposit > 0 && (
           <div className="mt-5 text-sm">
             <span>
               미션 예치금을
               <br />
               <span className="text-primary font-scDreamExBold text-base">
-                {propsData.missionTargetPrice.toLocaleString('ko-KR')} +{' '}
-                {(
-                  additionalPrize - propsData.missionTargetPrice
-                ).toLocaleString('ko-KR')}
+                {propsData.missionDeposit.toLocaleString('ko-KR')} +{' '}
+                {propsData.missionDeposit -
+                  data.changedDeposit.toLocaleString('ko-KR')}
               </span>
               원 받을 수 있어요!
             </span>
           </div>
         )}
-        {additionalPrize < 0 && (
+        {isSuccess && data.changedDeposit <= 0 && (
           <div className="py-5 p text-sm">
             <span>
               미션 예치금을
               <br />
-              <span className="text-red font-scDreamExBold text-red">
-                {propsData.missionTargetPrice.toLocaleString('ko-KR') ?? 0} -{' '}
-                {additionalPrize.toLocaleString('ko-KR')}
+              <span className="text-primary font-scDreamExBold text-red mr-1">
+                {propsData.missionDeposit.toLocaleString('ko-KR') ?? 0}{' '}
+                <span className="text-error">
+                  {(
+                    data.changedDeposit - propsData.missionDeposit
+                  ).toLocaleString()}
+                </span>
               </span>
               원 받습니다...
             </span>
@@ -135,7 +139,7 @@ const MyDepositStatusContainer = ({
       <div className="rounded-lg bg-background-fill p-3 my-5">
         <div className="text-xs">
           <span className="text-sm font-scDreamMedium mr-1">
-            {NICKNAME_DUMMY}
+            {memberNickname}
           </span>
           님의 실패 현황
         </div>
