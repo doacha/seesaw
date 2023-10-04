@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import CategorizedGraph from './CategorizedGraph'
 import GraphCardText from './GraphCardText'
-import { member } from '@/app/dummies'
 import { useQuery } from '@tanstack/react-query'
 import { memberEmailStore } from '@/stores/memberEmail'
 import { currentMissionIdStore } from '@/stores/currentMissionId'
@@ -44,7 +43,7 @@ const GroupGraphInfo = () => {
   return (
     <div className="w-full flex flex-col gap-5">
       <GraphCardText
-        comment={`${member.memberNickname} 님은 ${
+        comment={`${
           categoryList[missionCompareList?.firstCategoryId ?? 0]
         } 에서 동료보다 많은 소비를 하셨어요. 새로운 미션을 시작해볼까요?`}
         textBefore="멤버들의 소비 패턴을&nbsp;"
