@@ -1,13 +1,5 @@
 import * as type from './types'
 
-export const member: type.Member = {
-  memberNickname: '차차아버님',
-  memberImgUrl: './차차_군침이.jpg',
-  successMissionCnt: 2,
-  failMissionCnt: 3,
-  savedMoney: 200000,
-}
-
 export const mission: type.Mission = {
   missionTitle: '술 그만마셔 그러다 뒤져',
   missionCurrentCycle: 1,
@@ -92,7 +84,7 @@ export const recordList: type.Record[] = [
     recordStatus: 0,
     recordTotalCost: 30000,
     endDate: '2023-09-01',
-    startDate : '2023-08-23'
+    startDate: '2023-08-23',
   },
   {
     memberEmail: 'jjwoong1733@gmail.com',
@@ -103,7 +95,7 @@ export const recordList: type.Record[] = [
     recordStatus: 1,
     recordTotalCost: 30000,
     endDate: '2023-09-01',
-    startDate : '2023-08-23'
+    startDate: '2023-08-23',
   },
   {
     memberEmail: 'jjwoong1733@gmail.com',
@@ -114,7 +106,7 @@ export const recordList: type.Record[] = [
     recordStatus: 2,
     recordTotalCost: 30000,
     endDate: '2023-09-01',
-    startDate : '2023-08-23'
+    startDate: '2023-08-23',
   },
 ]
 
@@ -123,7 +115,7 @@ export const transactionList: type.Transaction[] = [
     accountApprovalAmount: 20000,
     accountNum: '987-65-4321',
     accountTransactionTime: '2023-09-18T13:55:00.111Z',
-    accountBalance : 123123,
+    accountBalance: 123123,
     accountTransactionName: '차차',
   },
   {
