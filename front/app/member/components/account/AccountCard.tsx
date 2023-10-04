@@ -71,11 +71,16 @@ const AccountCard = (props: Props) => {
             accountNum: props.account.accountNum,
             pageNum: page,
           }),
-          // body : '457899-01-360844'
         },
       )
+
       const newestData: Transaction[] = await res.json()
       setAccountTransactionList(newestData)
+      if (newestData.length === 0) {
+        setNothingToLoad(true)
+        setIsLoading(false)
+      }
+      setIsLoading(true)
     } catch (err) {
       console.log(err)
     }
@@ -91,15 +96,15 @@ const AccountCard = (props: Props) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            accountNum: '457899-01-655239',
+            accountNum: props.account.accountNum,
             pageNum: page,
           }),
-          // body : '457899-01-360844'
         },
       )
       const newestData: Transaction[] = await res.json()
       if (newestData.length === 0) {
         setNothingToLoad(true)
+        setIsLoading(false)
       }
       setAccountTransactionList((prev) => prev.concat(newestData))
       setIsLoading(true)
