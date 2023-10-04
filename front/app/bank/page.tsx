@@ -18,11 +18,10 @@ const SeesawBankPage = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: 'jiwon',
+          body: 'jjwoong1733',
         },
       )
       const data = await res.json()
-      console.log(data)
       return data
     } catch (err) {
       console.log(err)
@@ -37,7 +36,7 @@ const SeesawBankPage = () => {
   return (
     <div className="bg-background-fill flex flex-col h-screen w-screen">
       <Header title="시소뱅크" />
-
+      <div className="w-full h-10 bg-white"></div>
       <div className="flex flex-col h-full py-16 px-5">
         {isLoading ? null : (
           <div className="flex flex-col py-5 gap-5">
