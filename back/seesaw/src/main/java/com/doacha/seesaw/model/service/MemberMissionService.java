@@ -89,8 +89,7 @@ public class MemberMissionService {
 
         memberMissionRepository.save(memberMission);
     }
-
-
+    
     // 미션 상세 - 나의 현황
     public GetDepositConditionResponse getDepositCondition(GetMyMissionDataRequest getMyMissionDataRequest) {
         String missionId = getMyMissionDataRequest.getMissionId();
@@ -101,18 +100,17 @@ public class MemberMissionService {
 
         int totalMemberCnt = mission.getMissionMemberCount(); // 미션 총 인원
         int failMemberCnt = memberMissionRepository.countFail(missionId);// 미션 실패 인원
-        int totalCycle = mission.getMissionTotalCycle(); // 미션 총 횟수
         int deposit = mission.getMissionDeposit(); // 미션 예치금
-        int failCnt = (int)(totalCycle*0.2); // 실패 기준 횟수
+        int failCnt = (int)(mission.getMissionTotalCycle()*0.2); // 실패 기준 횟수
         int myFailCnt = recordRepository.countFail(missionId, memberEmail); // 나의 실패 횟수
-        int minusDeposit = (int)(deposit*(totalCycle-failCnt)*0.01); // failCnt 이후로 1회 실패 시 차감 비율
 
         int changedDeposit = 0;
-        if(mm.getMemberMissionRefund() < 0) { // 실패한 사람은 예치금 얼마 잃을지 계산
-            if(myFailCnt == totalCycle) changedDeposit = -deposit; // 다 실패한 사람은 예치금 다 잃음
-            else changedDeposit = -(myFailCnt-failCnt)*minusDeposit; // 아니면 실패한 퍼센트만큼 잃음
-        }else{// 성공인 사람은 상금 얼마 받을지 계산
-            // 모인 벌금 / 성공한 사람 수(총인원 - 실패한 사람 수)
+        if(mm.getMemberMissionStatus() == 3) {
+            // 실패한 사람의 예치금 변화 = 현재 남은 예치금 - 기존 예치금
+            changedDeposit = mm.getMemberMissionRefund()-deposit;
+            log.info("실패한 멤버의 예치금 변화 - {}", changedDeposit);
+        }else{
+            // 성공한 사람의 예치금 변화 = 모인 벌금 / 성공한 사람 수(총인원 - 실패한 사람 수)
             changedDeposit = mission.getMissionPenaltyPrice()/(totalMemberCnt-failMemberCnt);
         }
         GetDepositConditionResponse depositCondition = GetDepositConditionResponse.builder()
