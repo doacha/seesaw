@@ -4,6 +4,7 @@ import com.doacha.seesaw.jwt.JwtProvider;
 import com.doacha.seesaw.jwt.MemberDetail;
 import com.doacha.seesaw.jwt.TokenResponse;
 import com.doacha.seesaw.model.dto.account.AccountResponse;
+import com.doacha.seesaw.model.dto.account.BalanceTransferRequest;
 import com.doacha.seesaw.model.dto.account.CreateAccountToSeesawRequest;
 import com.doacha.seesaw.model.dto.mission.MissionMemberResponse;
 import com.doacha.seesaw.model.dto.user.*;
@@ -134,12 +135,6 @@ public class MemberController {
     @PostMapping("/mypage-account")
     public Map<String, Object> getAccountList(@RequestBody String memberEmail){
         return memberService.getAccountList(memberEmail);
-//        if(memberService.checkCertifiedAccount(memberEmail)) {
-//            // 시소뱅크에 계좌 리스트 불러오는 api 호출하고 담아서 리턴
-//
-//        }else{
-//            return
-//        }
     }
 
     // 적금 계좌 개설
@@ -149,6 +144,11 @@ public class MemberController {
             return memberService.createAccount(createAccountToSeesawRequest);
         }
         return ResponseEntity.ok(false);
+    }
+
+    @PostMapping("/balance-transfer")
+    public ResponseEntity<?> balanceTransfer(BalanceTransferRequest balanceTransferRequest){
+        return memberService.balanceTransfer(balanceTransferRequest);
     }
 
     // 테스트용 이미지 업로드 코드
