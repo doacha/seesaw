@@ -7,8 +7,8 @@ import { GroupStatusProps } from '@/app/types'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { recordListStore } from '@/stores/recordListStore'
+import { memberEmailStore } from '@/stores/memberEmail'
 
-const DUMMY_NICKNAME = '지원'
 interface TodayStatus {
   memberImgUrl: string
   memberNickname: string
@@ -39,6 +39,7 @@ const getTodayMission = async (input: {
 
 const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
   const router = useRouter()
+  const { memberNickname } = memberEmailStore()
   const { recordStatus, recordMap, setTodayRecordId, setRecordMap } =
     recordListStore()
   const { data: todayMission, mutate, isSuccess } = useMutation(getTodayMission)
@@ -52,7 +53,7 @@ const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
       {
         onSuccess: (res: TodayStatus[]) => {
           const targetIdx = res.findIndex(
-            (element) => element.memberNickname === DUMMY_NICKNAME,
+            (element) => element.memberNickname === memberNickname,
           )
           console.log('투데이미션 레코드 확인', res[targetIdx].recordId, res)
           const recordNumber = data.missionCurrentCycle
