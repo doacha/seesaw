@@ -10,9 +10,9 @@ import {
 import { getCycleTerm, getTimeBefore } from '../../../../util'
 import { text } from 'stream/consumers'
 import SpendingHistory from './SpendingHistory'
-import { recordListStore } from '@/stores/myRecordList'
+import { recordListStore } from '@/stores/recordListStore'
 import { RecordList } from '@/app/types'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 interface RecordDetailProps {
   recordId: number
   recordContent: string
@@ -29,6 +29,7 @@ const RecordContentContainer = ({
 }: {
   propsData: RecordDetailProps
 }) => {
+  console.log('프롭스확인', propsData)
   const { recordList, recordStatus } = recordListStore()
   const [isOpened, setIsOpened] = useState<Boolean>(false)
   const checkRef = useRef<HTMLInputElement>(null)
@@ -37,6 +38,7 @@ const RecordContentContainer = ({
       ? ['bg-seesaw-blue-100', 'text-primary', '성공']
       : ['bg-seesaw-red-100', 'text-error', '실패']
   const balance = recordStatus.missionTargetPrice - propsData.recordTotalCost
+  let passTime = ''
 
   const getRecordList = (recordNumber: number, list: RecordList[]) => {
     if (list.length === 0) {
@@ -49,6 +51,9 @@ const RecordContentContainer = ({
     return list[targetIdx].recordList
   }
 
+  useEffect(() => {
+    passTime = getTimeBefore(propsData.recordWriteTime)
+  })
   return (
     <div className="rounded-lg bg-background m-5">
       {/* 헤더 */}
@@ -67,7 +72,11 @@ const RecordContentContainer = ({
                 {propsData.recordNumber}회차
               </span>
               <span className="text-[10px] text-outline">
-                {getCycleTerm(`2023-09-12T14:42:17.000+00:00`, 1, 1)}
+                {getCycleTerm(
+                  recordStatus.missionStartDate,
+                  propsData.recordNumber,
+                  recordStatus.missionPeriod,
+                )}
               </span>
             </span>
             <FontAwesomeIcon icon={faEllipsis} className="text-outline" />
@@ -84,9 +93,7 @@ const RecordContentContainer = ({
               />
               <span>{propsData.memberNickname}</span>
             </span>
-            <span className="text-[10px] text-outline">
-              {getTimeBefore(`2023-09-18 11:37:17.000+00:00`)}
-            </span>
+            <span className="text-[10px] text-outline">{passTime}</span>
           </div>
           {/* 성공 여부 및 잔액 */}
           <div className="w-full flex justify-between">

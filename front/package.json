@@ -26,6 +26,7 @@
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
     "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
     "monent": "0.0.2-security",
     "next": "13.4.19",
     "postcss": "8.4.29",

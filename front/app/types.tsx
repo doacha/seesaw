@@ -4,7 +4,7 @@ export interface ImageFile {
   url: string
 }
 
-export type Tab = 'home' | 'mission' | 'member'
+export type Tab = '' | 'home' | 'mission' | 'member'
 
 export interface Account {
   accountImg: string
@@ -18,10 +18,10 @@ export interface Account {
 
 export interface Transaction {
   accountApprovalAmount: number
-  amountBalance: number
+  accountBalance: number
   accountTransactionTime: string
   accountNum: string
-  accountIsDeposit: boolean
+  // accountIsDeposit: boolean
   accountTransactionName: string
 }
 
@@ -97,12 +97,53 @@ export interface MissionCardProps {
   memberMissionStatus?: string
 }
 
+export interface GroupAverageInfo {
+  missionId: string
+  missionAverage: number
+  entireAverage: number
+  difference: number
+}
+
+export interface MissionRanking {
+  missionTopSpender: string
+  missionTopSpending: number
+  missionFrugalSpender: string
+  missionFrugalSpending: number
+  recordTopSpender: string
+  recordTopSpending: number
+  recordTopSpendingNum: number
+}
+
+export interface MissionCompareList {
+  missionId: string
+  memberId: string
+  firstCategoryId: number
+  firstCategoryMissionAverage: number
+  firstCategoryMemberAverage: number
+  secondCategoryId: number
+  secondCategoryMissionAverage: number
+  secondCategoryMemberAverage: number
+  thirdCategoryId: number
+  thirdCategoryMissionAverage: number
+  thirdCategoryMemberAverage: number
+  frugalCategoryId: number
+  frugalCategoryMissionAverage: number
+  frugalCategoryMemberAverage: number
+}
+
+export interface SavedAmount {
+  missionId: string
+  pastTotalCost: number
+  missionTotalCost: number
+  difference: number
+}
 export interface Record {
   recordNumber: number
   recordStatus: number
   recordTotalCost: number
   recordId: number
-  recordWriteTime: string
+  startDate: string
+  endDate: string
   memberEmail: string
   missionId: string
   recordContent: string
@@ -128,6 +169,7 @@ export interface MissionList {
   missionPeriod: number
   missionTotalCycle: number
   missionStartDate: string
+  missionCategoryId: number
 }
 
 export interface MissionDetail extends MissionList {
@@ -139,7 +181,6 @@ export interface MissionDetail extends MissionList {
   missionPenaltyPrice: number
   missionCreationTime: string
   missionHostEmail: string
-  missionCategoryId: number
 }
 
 export interface MissionCreate {
@@ -152,10 +193,10 @@ export interface MissionCreate {
   memberMissionSavingMoney: number
   missionPeriod: number
   missionTotalCycle: number
+  missionTargetPrice: number
   missionStartDate: { month: number; day: number }
   missionHostEmail: string
   missionCategoryId: number
-  memberMissionIsSaving: boolean
   [key: string]: any
 }
 
@@ -190,7 +231,9 @@ export interface RecordStatusProps {
   missionPeriod: number
   missionTargetPrice: number
   missionStartDate: string
+  missionCurrentCycle: number
   pageNumber: number
+  todayRecordId: number
 }
 
 export interface Comment {

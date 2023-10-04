@@ -1,5 +1,9 @@
+import { useEffect } from 'react'
+
 interface Props {
-  round: number
+  spendingMonth?: number
+  spendingYear?: string
+  round?: number
   length: string
   amount?: number
   bgColor: string
@@ -9,6 +13,7 @@ interface Props {
 }
 
 const ReportVerticalGraphBar = (props: Props) => {
+  useEffect(() => {}, [props.activeCalendarTab])
   const ladel: string[] = ['월', '주차', '일']
 
   const getTabContent = () => {
@@ -16,38 +21,37 @@ const ReportVerticalGraphBar = (props: Props) => {
       case 'tab1':
         return (
           <div className="flex flex-col items-center">
-            {/* 월이면 w-20px, 일이면 10px, 주면 w-30 */}
-            {props.amount && props.round === props.amountListLength - 1 && (
-              <div
-                className="tooltip tooltip-open"
-                data-tip={`${props.amount.toLocaleString('ko-KR')}`}
-              ></div>
+            {props.amount && (
+              <div className="text-[10px]">
+                {props.amount.toLocaleString('ko-KR')}
+              </div>
             )}
             <div
-              className={`${props.bgColor} w-[20px] rounded-md mx-2`}
+              className={`${props.bgColor} w-[30px] rounded-md mx-2`}
               style={{ height: props.length }}
             ></div>
-            <div className="text-xs">
-              {props.round + 1}
-              {ladel[0]}
+            <div className="text-xs whitespace-nowrap">
+              {props.spendingYear?.slice(-2) +
+                '년' +
+                props.spendingMonth +
+                '월'}
             </div>
           </div>
         )
       case 'tab2':
         return (
           <div className="flex flex-col items-center">
-            {props.amount && props.round === props.amountListLength - 1 && (
-              <div
-                className="tooltip tooltip-open"
-                data-tip={`${props.amount.toLocaleString('ko-KR')}`}
-              ></div>
+            {props.amount && (
+              <div className="text-[10px]">
+                {props.amount.toLocaleString('ko-KR')}
+              </div>
             )}
             <div
               className={`${props.bgColor} w-[30px] rounded-md mx-2`}
               style={{ height: props.length }}
             ></div>
             <div className="text-xs">
-              {props.round + 1}
+              {(props.round as number) + 1}
               {ladel[1]}
             </div>
           </div>
@@ -55,18 +59,17 @@ const ReportVerticalGraphBar = (props: Props) => {
       case 'tab3':
         return (
           <div className="flex flex-col items-center">
-            {props.amount && props.round === props.amountListLength - 1 && (
-              <div
-                className="tooltip tooltip-open"
-                data-tip={`${props.amount.toLocaleString('ko-KR')}`}
-              ></div>
+            {props.amount && (
+              <div className="text-[10px]">
+                {props.amount.toLocaleString('ko-KR')}
+              </div>
             )}
             <div
               className={`${props.bgColor} w-[20px] rounded-md mx-2`}
               style={{ height: props.length }}
             ></div>
             <div className="text-xs">
-              {props.round + 1}
+              {(props.round as number) + 1}
               {ladel[2]}
             </div>
           </div>

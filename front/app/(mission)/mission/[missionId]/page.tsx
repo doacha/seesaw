@@ -1,13 +1,15 @@
-import Header from '@/app/components/Header'
 import MissionDetailContainer from './components/MissionDetailContainer'
-import { mission, missionDetailDummy } from '@/app/dummies'
 import MissionDetailContents from './components/MissionDetailContents'
 import MissionWaitingList from './components/MissionWaitingList'
-import FaskMakeButton from '@/app/components/FastMakeButton'
-import CategoryList from '@/app/home/components/CategoryList'
 import MissionJoinButton from './components/MissionJoinButton'
 import { categoryList } from '@/app/lib/constants'
 import { MissionDetail } from '@/app/types'
+import UpdateRecordButton from './components/UpdateRecordButton'
+import MissionExitButton from './components/MissionExitButton'
+import Header from '@/app/components/Header'
+const MISSION_WAIT = 0
+const MISSION_START = 1
+const DUMMY_NICKNAME = '도아차는나야123'
 
 interface MemberCard {
   memberNickname: string
@@ -30,13 +32,17 @@ const getMissionWaitListFetch = async (missionId: string) => {
 }
 // API 연결 이후 params를 통해 데이터를 가져와야 한다.
 const MissionDetailpage = async ({ params }: { params: any }) => {
+  console.log('파라라라라파만팜ㅇㄴ팜ㅇ팡ㄴㅍ안ㅍㅁ낲만팜ㄴ판ㅇ파', params)
   const data = (await getMissionDetailFetch(params.missionId)) as MissionDetail
-  console.log('미션데티엘', data)
-  let missionWaitList
+  let missionWaitList,
+    isJoined = false
   if (data.missionStatus === 0) {
     missionWaitList = (await getMissionWaitListFetch(
       params.missionId,
     )) as MemberCard[]
+    isJoined = missionWaitList.some(
+      (element) => element.memberNickname === DUMMY_NICKNAME,
+    )
   }
   // data.missionImgUrl = '/차차_군침이.jpg'
   const contentsProps = {
@@ -46,25 +52,32 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
     missionStartDate: data.missionStartDate,
     missionCurrentCycle: data.missionCurrentCycle,
     missionDeposit: data.missionDeposit,
+    missionTitle: data.missionTitle,
   }
   data.missionIsPublic = false
   const isStart = true
   return (
     <div className="bg-background-fill h-full overflow-auto py-16">
-      {/* <Header title={data.missionTitle} backButton /> */}
       <MissionDetailContainer data={data} />
-      {data.missionStatus === 0 ? (
+      {data.missionStatus === MISSION_START ? (
         <>
           <MissionDetailContents data={contentsProps} />
-          <FaskMakeButton path={`${data.missionId}/create`} />
+          <UpdateRecordButton />
         </>
       ) : (
         <>
           <MissionWaitingList data={missionWaitList} />
-          <MissionJoinButton
-            isSaveMission
-            missionCategory={categoryList[data.missionCategoryId]}
-          />
+          {isJoined ? (
+            <MissionExitButton missionId={data.missionId} />
+          ) : (
+            <MissionJoinButton
+              isSaveMission
+              missionCategory={categoryList[data.missionCategoryId]}
+              missionTargetPrice={data.missionTargetPrice}
+              missionCategoryId={data.missionCategoryId}
+              missionPeriod={data.missionPeriod}
+            />
+          )}
         </>
       )}
     </div>

@@ -1,7 +1,9 @@
 package com.doacha.seesaw.model.service;
 
+import com.doacha.seesaw.exception.ForbiddenException;
 import com.doacha.seesaw.model.dto.SavingList;
 import com.doacha.seesaw.model.dto.SavingRequest;
+import com.doacha.seesaw.model.dto.account.AccountTransferResponse;
 import com.doacha.seesaw.model.dto.mission.*;
 import com.doacha.seesaw.exception.BadRequestException;
 import com.doacha.seesaw.model.entity.Member;
@@ -86,12 +88,6 @@ public class MemberMissionService {
                 .build();
 
         memberMissionRepository.save(memberMission);
-    }
-
-    // 미션 참여한 멤버 정보 삭제
-    public void deleteMemberMission(QuitMissionRequest quitMissionRequest) {
-        MemberMission memberMission = memberMissionRepository.findByMissionIdAndMemberEmail(quitMissionRequest.getMissionId(), quitMissionRequest.getMemberEmail());
-        memberMissionRepository.delete(memberMission);
     }
 
 
@@ -244,6 +240,32 @@ public class MemberMissionService {
     // 미션 참여자 목록(닉네임, 프로필 사진) 가져오기
     public List<MissionMemberResponse> getMissionMemberList(String missionId) {
         return memberMissionRepository.findMissionMemberResponseByMissionId(missionId);
+    }
+
+    public void quitMission(QuitMissionRequest quitMissionRequest) {
+        MemberMission memberMission = memberMissionRepository.findByMissionIdAndMemberEmail(quitMissionRequest.getMissionId(), quitMissionRequest.getMemberEmail());
+        log.info("예치금 환불");
+        AccountTransferRequest request = AccountTransferRequest.builder()
+                .accountNum(memberMission.getMember().getMemberMainAccount())
+                .accountTransactionNum(accountNumber)
+                .accountApprovalAmount(memberMission.getMemberMissionRefund())
+                .accountPassword(password)
+                .build();
+
+        Mono<AccountTransferResponse> mono = WebClient.create()
+                .post()
+                .uri(seesawBank_api+"/account-transactional/transfer")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(AccountTransferResponse.class);
+
+        mono.subscribe(response -> {
+            if(response.getAccountApprovalAmount() != memberMission.getMemberMissionRefund()) {
+                throw new ForbiddenException("예치금 환불 실패로 인한 미션 탈퇴 실패");
+            }
+        });
+        log.info("미션 탈퇴한 멤버 정보 삭제");
+        memberMissionRepository.delete(memberMission);
     }
 
     // 카카오페이 결제 번호 반환

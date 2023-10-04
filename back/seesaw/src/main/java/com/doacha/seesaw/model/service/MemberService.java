@@ -17,6 +17,8 @@ import com.doacha.seesaw.util.MailUtils;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -54,6 +56,9 @@ public class MemberService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Value("${seesawBank_api}")
+    private String seesawBank_api;
+
     // 회원가입
     @Transactional
     public MemberResponse signUp(SignUpRequest signUpRequest) throws MessagingException, UnsupportedEncodingException {
@@ -88,6 +93,7 @@ public class MemberService {
                         "<br/>시소에 가입해주셔서 감사합니다."+
                         "<br/>아래 [이메일 인증 확인]을 눌러주세요."+
                         "<a href='http://j9a409.p.ssafy.io:8080/seesaw/member/registerEmail?memberEmail=" + member.getMemberEmail() +
+//                        "<a href='https://j9a409.p.ssafy.io/seesaw/member/registerEmail?memberEmail=" + member.getMemberEmail() +
                         "&key=" + key +
                         "' target='_blenk'>이메일 인증 확인</a>");
         sendMail.setFrom("doriarichacha@gmail.com", "시소");
@@ -169,9 +175,8 @@ public class MemberService {
                 .build();
 
         URI uri = UriComponentsBuilder
-//                .fromUriString("http://localhost:8081")
-                .fromUriString("http://j9a409.p.ssafy.io:8081")
-                .path("/seesawbank/account/create")
+                .fromUriString(seesawBank_api)
+                .path("/account/create")
                 .build()
                 .toUri();
 
@@ -192,9 +197,8 @@ public class MemberService {
                 .orElseThrow(() -> new BadRequestException("아이디를 확인하세요."));
 
         URI uri = UriComponentsBuilder
-//                .fromUriString("http://localhost:8081")
-                .fromUriString("http://j9a409.p.ssafy.io:8081")
-                .path("/seesawbank/account/accounts")
+                .fromUriString(seesawBank_api)
+                .path("/account/accounts")
                 .build()
                 .toUri();
 

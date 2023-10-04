@@ -5,6 +5,7 @@ import { ChangeEvent, useState } from 'react'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRouter } from 'next/navigation'
+import { commentRefetchStore } from '@/stores/commenRefetch'
 const DUMMY_EMAIL = 'doacha@seesaw.com'
 
 interface CommentRequest {
@@ -19,7 +20,7 @@ const CommentInput = ({ recordId }: { recordId: number }) => {
     memberEmail: 'doacha@seesaw.com',
     memberImgUrl: '/차차_군침이.jpg',
   }
-
+  const { refetch } = commentRefetchStore()
   const [commentContent, setCommentContent] = useState('')
   const router = useRouter()
   const { mutate } = useMutation(postComment)
@@ -33,7 +34,7 @@ const CommentInput = ({ recordId }: { recordId: number }) => {
     mutate(request, {
       onSuccess: (res) => {
         console.log('댓글 등록 결과', res)
-        router.refresh()
+        refetch()
       },
       onError: (err) => console.log('댓글 등록 실패', err),
     })

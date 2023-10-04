@@ -1,9 +1,10 @@
 interface Props {
-  round: number
+  round?: number
   length: string
   amount: number
   bgColor: string
   txtColor: string
+  type : '회차' | '월' | '현재'
 }
 
 const VerticalGraphBar = (props: Props) => {
@@ -16,7 +17,7 @@ const VerticalGraphBar = (props: Props) => {
         className={`${props.bgColor} w-[30px] rounded-md`}
         style={{ height: props.length }}
       ></div>
-      <div className="text-xs w-fit whitespace-nowrap">{props.round}회차</div>
+      <div className="text-xs w-fit whitespace-nowrap">{props.round}{props.type}</div>
     </div>
   )
 }

@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DailyTopSpendingResponse {
-    private String dailyTopSpender;
-    private Long dailyTopSpending;
-    private Long dailyTopSpendingNum;
-
+public class SpendingAverageResponse {
+    private String memberEmail;
+    private int categoryId;
+    private double average;
 }

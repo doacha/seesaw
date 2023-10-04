@@ -1,6 +1,8 @@
 import Home from './page'
 
 const BigHome = () => {
+  
+  
   return (
     <div>
       <Home />
