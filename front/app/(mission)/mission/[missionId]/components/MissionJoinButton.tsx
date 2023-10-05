@@ -9,7 +9,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { memberEmailStore } from '@/stores/memberEmail'
 import { useRouter } from 'next/navigation'
-
+import Swal from 'sweetalert2'
 const dummyCategorySaveMoney = 10000
 const MissionJoinButton = ({
   isSaveMission,
@@ -82,7 +82,11 @@ const MissionJoinButton = ({
       depositMoney(depositeRequest, {
         onSuccess: (res) => {
           if (res.status === 500 || res.status === 'BAD_REQUEST') {
-            return
+            return Swal.fire({
+              width: 300,
+              html: `잔액 혹은 비밀번호를 확인해주세요!`,
+              icon: 'error',
+            })
           }
           joinMission(
             {
