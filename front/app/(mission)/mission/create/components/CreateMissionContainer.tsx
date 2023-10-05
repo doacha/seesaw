@@ -226,7 +226,7 @@ const CreateMissionContainer = () => {
       <ImageInput state={input} setState={setInput} />
 
       <div className="mt-10 grid grid-cols-2 gap-5">
-        <Button color="error" label="취소" onClick={() => {}} />
+        <Button color="error" label="취소" onClick={() => router.back()} />
         <Button
           color="primary"
           label="등록하기"
