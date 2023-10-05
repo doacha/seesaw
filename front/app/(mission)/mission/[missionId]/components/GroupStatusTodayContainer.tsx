@@ -43,7 +43,6 @@ const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
   const { recordStatus, recordMap, setTodayRecordId, setRecordMap } =
     recordListStore()
   const { data: todayMission, mutate, isSuccess } = useMutation(getTodayMission)
-  console.log('asdfasdf', memberNickname)
   useEffect(() => {
     mutate(
       {

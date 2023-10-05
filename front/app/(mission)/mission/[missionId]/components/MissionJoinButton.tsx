@@ -81,9 +81,7 @@ const MissionJoinButton = ({
 
       depositMoney(depositeRequest, {
         onSuccess: (res) => {
-          console.log(res.status)
           if (res.status === 500 || res.status === 'BAD_REQUEST') {
-            console.log('에치금입금실패')
             return
           }
           joinMission(
@@ -137,7 +135,7 @@ const MissionJoinButton = ({
         modalRef={refList[2]}
         password={password}
         setPassword={setPassword}
-        missionTargetPrice={missionTargetPrice}
+        missionTargetPrice={missionDeposit}
       />
     </div>
   )
@@ -184,7 +182,6 @@ const postDepositMoney = async (depositRequset: DepositRequest) => {
     },
   ).then((res) => {
     let js = res.json()
-    console.log('입금 결과', js)
     return js
   })
 }
@@ -210,7 +207,6 @@ const putJoinMission = async ({
     },
   }).then((res) => {
     // let js = res.json()
-    console.log('입금 결과', res)
     return res
   })
 }

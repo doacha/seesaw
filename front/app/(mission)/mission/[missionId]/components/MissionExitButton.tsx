@@ -17,7 +17,6 @@ const MissionExitButton = ({
   const router = useRouter()
   const { mutate } = useMutation(postQuitMission)
   const handleSubmit = () => {
-    console.log(missionId, memberEmail)
     mutate(
       { missionId: missionId, memberEmail: memberEmail },
       {

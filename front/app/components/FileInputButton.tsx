@@ -10,10 +10,10 @@ const FileInputButton = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
     const file = e.target.files?.[0]
-    console.log(file)
+    // console.log(file)
     if (file) {
       const image = window.URL.createObjectURL(file)
-      console.log(image)
+      // console.log(image)
       setImage(image)
     }
   }

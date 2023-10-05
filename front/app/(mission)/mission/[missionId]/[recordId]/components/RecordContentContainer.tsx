@@ -81,7 +81,6 @@ const RecordContentContainer = ({
     }
     init()
   }, [])
-  console.log('asdfasdf', recordStatus, data)
   return (
     <div className="rounded-lg bg-background m-5">
       {/* 헤더 */}
@@ -131,9 +130,9 @@ const RecordContentContainer = ({
                 />
                 <span>{data && data.memberNickname}</span>
               </span>
-              {/* <span className="text-[10px] text-outline">
+              <span className="text-[10px] text-outline">
                 {isSuccess && data && getTimeBefore(data.recordWriteTime)}
-              </span> */}
+              </span>
             </div>
             {/* 성공 여부 및 잔액 */}
             <div className="w-full flex justify-between">

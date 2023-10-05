@@ -44,7 +44,8 @@ const CreateRecordContainer = ({
   //   staleTime: 10 * 1000,
   //   suspense: true,
   // })
-  const { mutate } = useMutation(putRecordContent)
+  const { mutate: updateContent } = useMutation(putRecordContentUpdate)
+  const { mutate: writeContent } = useMutation(putRecordContentWrite)
   const { recordList, recordStatus } = recordListStore()
   const [textInput, setTextInput] = useState('')
   const router = useRouter()
@@ -67,15 +68,27 @@ const CreateRecordContainer = ({
   // }
 
   const handleSubmit = () => {
-    mutate(
-      { recordId, recordContent: textInput },
-      {
-        onSuccess: (res) => {
-          router.push(`/mission/${recordStatus.missionId}/${recordId}`)
+    if (recordContent.recordWriteTime) {
+      updateContent(
+        { recordId, recordContent: textInput },
+        {
+          onSuccess: (res) => {
+            router.push(`/mission/${recordStatus.missionId}/${recordId}`)
+          },
+          onError: (err) => console.log('수정실패', err),
         },
-        onError: (err) => console.log('수정실패', err),
-      },
-    )
+      )
+    } else {
+      writeContent(
+        { recordId, recordContent: textInput },
+        {
+          onSuccess: (res) => {
+            router.push(`/mission/${recordStatus.missionId}/${recordId}`)
+          },
+          onError: (err) => console.log('수정실패', err),
+        },
+      )
+    }
   }
   return (
     <div className="rounded-lg bg-background m-5">
@@ -177,7 +190,7 @@ const CreateRecordContainer = ({
 //   })
 // }
 
-const putRecordContent = async ({
+const putRecordContentUpdate = async ({
   recordId,
   recordContent,
 }: {
@@ -197,6 +210,25 @@ const putRecordContent = async ({
       }),
     },
   ).then((res) => res.json())
+}
+
+const putRecordContentWrite = async ({
+  recordId,
+  recordContent,
+}: {
+  recordId: number
+  recordContent: string
+}) => {
+  return await fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/record/write`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      recordId,
+      recordContent,
+    }),
+  }).then((res) => res.json())
 }
 
 export default CreateRecordContainer
