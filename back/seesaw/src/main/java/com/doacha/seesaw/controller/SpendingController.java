@@ -2,9 +2,8 @@ package com.doacha.seesaw.controller;
 
 import com.doacha.seesaw.exception.ForbiddenException;
 import com.doacha.seesaw.exception.NoContentException;
-import com.doacha.seesaw.model.dto.mission.QuitMissionRequest;
+import com.doacha.seesaw.model.dto.spending.RecordSpendingResponse;
 import com.doacha.seesaw.model.dto.spending.*;
-import com.doacha.seesaw.model.entity.Mission;
 import com.doacha.seesaw.model.service.SpendingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -174,4 +172,26 @@ public class SpendingController {
             return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Operation( summary = "recordId에 해당하는 소비 내역", description = "recordId에 해당하는 소비 내역 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "recordId에 해당하는 소비 내역 불러오기 성공"),
+            @ApiResponse(responseCode = "500", description = "recordId에 해당하는 소비 내역 실패 - 서버 오류")
+    })
+    @GetMapping("record/{recordId}")
+    public ResponseEntity<?> getRecordSpendingList(@PathVariable long recordId) {
+        log.info(recordId + "번 레코드의 소비내역 가져오기");
+        try {
+            List<RecordSpendingResponse> list = spendingService.getRecordSpendingList(recordId);
+            log.info("레코드의 소비내역 가져오기 성공");
+            return new ResponseEntity<List<RecordSpendingResponse>>(list, HttpStatus.OK);
+        } catch (NoContentException e) {
+            log.info("레코드의 소비내역 가져오기 실패 - {}번 게시글 없음", recordId);
+            return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            log.info("레코드의 소비내역 가져오기 실패 - 서버(DB) 오류");
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
