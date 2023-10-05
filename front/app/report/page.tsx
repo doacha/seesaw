@@ -25,7 +25,6 @@ const ReportPage = () => {
   const router = useRouter()
   const { memberEmail } = memberEmailStore()
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  // 통계 / 캘린더
   const [activeTab, setActiveTab] = useState<string>('tab1')
 
   const handleTabChange = (tab: string) => {
@@ -39,10 +38,8 @@ const ReportPage = () => {
     spendingCostSum: 0,
   })
 
-  // 화살표 클릭 감지
   const [clickEvent, setClickEvent] = useState<boolean>(false)
 
-  // 화살표 우클릭==0 좌클릭==1
   const [clickDirection, setClickDirection] = useState<number>(0)
   const clickArrowRight = () => {
     const newMonth = (spendData.spendingMonth as number) + 1
@@ -81,21 +78,19 @@ const ReportPage = () => {
     setClickEvent((prev) => !prev)
     setClickDirection(1)
   }
-  // spendData처리 위한 함수
   const fetchMonthSum = () => {
     fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/monthsum`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(spendData), // 데이터를 JSON 문자열로 변환하여 전송
+      body: JSON.stringify(spendData),
     })
       .then((res) => {
         return res.json()
       })
       .then((data) => {
         setSpendData(data)
-        // 여기서 로딩처리를 하는게 맞나?
         setIsLoading(false)
       })
       .catch((err) => {
@@ -104,7 +99,6 @@ const ReportPage = () => {
           text: '저장된 데이터가 없습니다!',
           icon: 'error',
         })
-        // 저장된 데이터가 없을 때, 소비리포트 아예 접근 불가
         if (
           (spendData.spendingMonth as number) === new Date().getMonth() &&
           spendData.spendingYear === new Date().getFullYear()
@@ -145,7 +139,6 @@ const ReportPage = () => {
     if (memberEmail === '') redirect('./login')
   }, [])
 
-  // 화살표 날짜의 변화가 감지가 된다면 페이지 이동하는 걸로 가자
   useEffect(() => {
     fetchMonthSum()
   }, [clickEvent])
@@ -181,7 +174,7 @@ const ReportPage = () => {
                       />
                     </button>
                     <p className="text-2xl font-envR">
-                      {spendData.spendingMonth}월
+                      {spendData.spendingYear}년 {spendData.spendingMonth}월
                     </p>
                     {spendData.spendingMonth === new Date().getMonth() &&
                     spendData.spendingYear ===
