@@ -28,7 +28,6 @@ const getMissionDetailFetch = async (missionId: string) => {
 
 // API 연결 이후 params를 통해 데이터를 가져와야 한다.
 const MissionDetailpage = async ({ params }: { params: any }) => {
-  console.log('파라라라라파만팜ㅇㄴ팜ㅇ팡ㄴㅍ안ㅍㅁ낲만팜ㄴ판ㅇ파', params)
   const data = (await getMissionDetailFetch(params.missionId)) as MissionDetail
   // const missionWaitList = (await getMissionWaitListFetch(
   //   params.missionId,

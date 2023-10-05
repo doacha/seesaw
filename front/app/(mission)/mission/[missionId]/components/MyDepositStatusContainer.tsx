@@ -19,8 +19,6 @@ interface DepositStatus {
   myFailCnt: number
 }
 
-const NICKNAME_DUMMY = '도아차' // 로그인 연결 후 제거
-
 const getDepositeStatus = async (input: {
   memberEmail: string
   missionId: string

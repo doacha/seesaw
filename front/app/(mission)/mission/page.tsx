@@ -21,7 +21,6 @@ const getSearchList = async (input: SearchState) => {
       },
     },
   ).then((res) => {
-    console.log('환료')
     return res.json()
   })) as MissionList[]
 }
