@@ -183,7 +183,7 @@ public class MemberMissionService {
 
 
     // 적금 계좌 이체 (매일 오전 3시마다 실행)
-    @Scheduled(cron = "0 0 3 * * *")
+    @Scheduled(cron = "0 0 4 * * *")
     public void requestTransfer(){
         List<SavingList> list = memberMissionRepository.findSavingListByMemberMissionIsSaving();
 
