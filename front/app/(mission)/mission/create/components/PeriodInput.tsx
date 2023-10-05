@@ -12,27 +12,33 @@ const PeriodInput = ({
   calculateSavingMoney: any
 }) => {
   return (
-    <div className={`overflow-auto ${styles.delScroll}`}>
+    <div>
       <div className="font-scDreamExBold mb-5">인증 빈도를 설정해주세요.</div>
-      <div className="carousel">
-        {missionPeriodArray.map(
-          (element, idx) =>
-            element && (
-              <ToggleCapsule
-                className="carousel-item mr-[15px]"
-                bgColor="background-fill"
-                textColor="black"
-                key={idx}
-                isSelected={idx === state.missionPeriod}
-                onClick={() => {
-                  handleClick(idx, idx === state.missionPeriod, 'missionPeriod')
-                  calculateSavingMoney(idx)
-                }}
-              >
-                {element}
-              </ToggleCapsule>
-            ),
-        )}
+      <div className={`overflow-auto ${styles.delScroll}`}>
+        <div className="carousel">
+          {missionPeriodArray.map(
+            (element, idx) =>
+              element && (
+                <ToggleCapsule
+                  className="carousel-item mr-[15px]"
+                  bgColor="background-fill"
+                  textColor="black"
+                  key={idx}
+                  isSelected={idx === state.missionPeriod}
+                  onClick={() => {
+                    handleClick(
+                      idx,
+                      idx === state.missionPeriod,
+                      'missionPeriod',
+                    )
+                    calculateSavingMoney(idx)
+                  }}
+                >
+                  {element}
+                </ToggleCapsule>
+              ),
+          )}
+        </div>
       </div>
     </div>
   )
