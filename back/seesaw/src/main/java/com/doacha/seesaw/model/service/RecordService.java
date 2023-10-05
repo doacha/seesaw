@@ -47,6 +47,9 @@ public class RecordService {
                     .recordNumber(record.getRecordNumber())
                     .recordStatus(record.getRecordStatus())
                     .memberMission(record.getMemberMission())
+                    .recordStartDate(record.getRecordStartDate())
+                    .recordEndDate(record.getRecordEndDate())
+                    .spendingList(record.getSpendingList())
                     .build();
 
             recordRepository.save(newRecord);
@@ -73,6 +76,9 @@ public class RecordService {
                     .recordTotalCost(record.getRecordTotalCost())
                     .recordStatus(record.getRecordStatus())
                     .memberMission(record.getMemberMission())
+                    .recordStartDate(record.getRecordStartDate())
+                    .recordEndDate(record.getRecordEndDate())
+                    .spendingList(record.getSpendingList())
                     .build();
 
             recordRepository.save(updatedRecord);
@@ -99,6 +105,9 @@ public class RecordService {
                     .recordTotalCost(record.getRecordTotalCost())
                     .recordStatus(record.getRecordStatus())
                     .memberMission(record.getMemberMission())
+                    .recordStartDate(record.getRecordStartDate())
+                    .recordEndDate(record.getRecordEndDate())
+                    .spendingList(record.getSpendingList())
                     .build();
             recordRepository.save(deletedRecord);
         } else {
