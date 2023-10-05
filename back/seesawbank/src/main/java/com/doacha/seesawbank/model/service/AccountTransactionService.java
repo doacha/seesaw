@@ -68,10 +68,13 @@ public class AccountTransactionService {
         Optional<Account> accountTransfer = accountRepository.findAccountByAccountNum(atRequest.getAccountTransactionNum());
         // 존재 하지 않는 계좌인 경우 예외 처리
         if(!account.isPresent()) throw new NoContentException("내 계좌");
-        if(!accountTransfer.isPresent()) throw new NoContentException("없는 계좌");
+        if(!accountTransfer.isPresent()) throw new NoContentException("상대 계좌");
+        
+        // 비밀번호 틀린 경우 예외처리
+        if(account.get().getAccountPassword() != atRequest.getAccountPassword()) throw new BadRequestException("비밀번호 오류");
+        
         // 잔액 부족일 경우 예외처리
-        if(account.get().getAccountRecentBalance()<atRequest.getAccountApprovalAmount()) throw new BadRequestException("잔액이 부족합니다.");
-
+        if(account.get().getAccountRecentBalance()<atRequest.getAccountApprovalAmount()) throw new BadRequestException("잔액 부족");
         String accountDealNum = createAccountDealNum();//계좌 거래 번호 생성
 
 //        // 내 계좌 남은 금액

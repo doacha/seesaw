@@ -33,8 +33,22 @@ public class AccountTransactionController {
 
     // 계좌 이체
     @PostMapping ("/transfer")
-    public AccountTransferResponse accountTransfer(@RequestBody AccountTransferRequest accountTransferRequest) {
-        return accountTransactionService.accountTransfer(accountTransferRequest);
+    public ResponseEntity<?> accountTransfer(@RequestBody AccountTransferRequest accountTransferRequest) {
+        try {
+            AccountTransferResponse response = accountTransactionService.accountTransfer(accountTransferRequest);
+            log.info("계좌 이체 성공");
+            return new ResponseEntity<AccountTransferResponse>(response, HttpStatus.OK);
+        } catch (NoContentException e) {
+            log.info("계좌 이체 실패 - {} 존재하지 않음", e.getMessage());
+            return new ResponseEntity<String>(FAIL, HttpStatus.NO_CONTENT);
+        } catch (BadRequestException e) {
+            log.info("계좌 이체 실패 - {}", e.getMessage());
+            if(e.getMessage().equals("잔액 부족")) return new ResponseEntity<String>("No Balance", HttpStatus.BAD_REQUEST);
+            else return new ResponseEntity<String>("Wrong Password", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            log.info("계좌 이체 실패 - 서버 오류");
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // 1원 인증 전송
