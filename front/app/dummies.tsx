@@ -753,15 +753,47 @@ export const sumList: type.Spending[] = [
 ]
 
 export const bankList = [
-  { bankName: '시소뱅크', bankImg: './seesaw_logo.svg' },
-  { bankName: '신한은행', bankImg: './seesaw_logo.svg' },
-  { bankName: '국민은행', bankImg: './seesaw_logo.svg' },
-  { bankName: '우리은행', bankImg: './seesaw_logo.svg' },
+  {
+    bankName: '시소뱅크',
+    bankImg:
+      'https://seesawawsbucket.s3.ap-northeast-2.amazonaws.com/profile/%EC%A0%95%EB%B0%A9%ED%98%95%EB%A1%9C%EA%B3%A0.png',
+  },
+  {
+    bankName: '카카오뱅크',
+    bankImg:
+      'https://seesawawsbucket.s3.ap-northeast-2.amazonaws.com/profile/%EC%B9%B4%EC%B9%B4%EC%98%A4%EB%B1%85%ED%81%AC_%EB%A1%9C%EA%B3%A0_1920.png',
+  },
+  {
+    bankName: '국민은행',
+    bankImg:
+      'https://seesawawsbucket.s3.ap-northeast-2.amazonaws.com/profile/%EA%B5%AD%EB%AF%BC%EC%9D%80%ED%96%89.jpg',
+  },
+  {
+    bankName: '하나은행',
+    bankImg:
+      'https://seesawawsbucket.s3.ap-northeast-2.amazonaws.com/profile/img-hana-symbol.png',
+  },
 ]
 
 export const bankList2 = [
-  { bankName: '봉준은행', bankImg: './seesaw_logo.svg' },
-  { bankName: '재웅은행', bankImg: './seesaw_logo.svg' },
-  { bankName: '경호은행', bankImg: './seesaw_logo.svg' },
-  { bankName: '시원은행', bankImg: './seesaw_logo.svg' },
+  {
+    bankName: '우리은행',
+    bankImg:
+      'https://seesawawsbucket.s3.ap-northeast-2.amazonaws.com/profile/200px-%EC%9A%B0%EB%A6%AC%EC%9D%80%ED%96%89_%EB%A1%9C%EA%B3%A0.png',
+  },
+  {
+    bankName: '농협은행',
+    bankImg:
+      'https://seesawawsbucket.s3.ap-northeast-2.amazonaws.com/profile/%EB%A1%9C%EA%B3%A0%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C-%EB%86%8D%ED%98%91%EB%A1%9C%EA%B3%A0png1.png',
+  },
+  {
+    bankName: '기업은행',
+    bankImg:
+      'https://seesawawsbucket.s3.ap-northeast-2.amazonaws.com/profile/%EA%B8%B0%EC%97%85.png',
+  },
+  {
+    bankName: '신한은행',
+    bankImg:
+      'https://seesawawsbucket.s3.ap-northeast-2.amazonaws.com/profile/shc_symbol_ci.png',
+  },
 ]
