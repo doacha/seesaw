@@ -1,9 +1,17 @@
 import { error } from 'console'
 import Image from 'next/image'
 import { RecordDetail } from '@/app/types'
+import { useRouter } from 'next/navigation'
+import { recordListStore } from '@/stores/recordListStore'
+
 const PersonalCard = ({ data }: { data: RecordDetail }) => {
+  const router = useRouter()
+  const { recordStatus } = recordListStore()
   return (
-    <div className="flex flex-row gap-2 bg-background mb-5">
+    <div
+      className="flex flex-row gap-2 bg-background mb-5"
+      onClick={() => router.push(`${recordStatus.missionId}/${data.recordId}`)}
+    >
       <Image
         src={data.memberImgUrl ?? '/default_profile.svg'}
         alt="member profile img"
