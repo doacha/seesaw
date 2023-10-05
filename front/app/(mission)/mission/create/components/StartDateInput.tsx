@@ -42,7 +42,6 @@ const StartDateInput = ({
     }
 
     setState(newState)
-    console.log('화긴', newState)
   }
 
   const handleDayClick = (day: number) => {
