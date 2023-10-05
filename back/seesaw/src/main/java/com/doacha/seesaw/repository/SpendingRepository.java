@@ -1,6 +1,6 @@
 package com.doacha.seesaw.repository;
+import com.doacha.seesaw.model.dto.mission.MissionMemberRatioDto;
 import com.doacha.seesaw.model.dto.mission.MissionStatsResponse;
-import com.doacha.seesaw.model.dto.mission.MissionMemberSumDto;
 import com.doacha.seesaw.model.dto.spending.RecordSpendingResponse;
 import com.doacha.seesaw.model.dto.spending.*;
 import com.doacha.seesaw.model.entity.Spending;
@@ -94,16 +94,35 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
 //            "GROUP BY s.spendingCategoryId")
 //    List<MissionMemberSumDto> getMissionMemberSum(@Param("missionId") String missionId, @Param("startDate") Date startDate,@Param("endDate") Date endDate);
 
-    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MissionMemberSumDto( " +
-            "s.spendingCategoryId, SUM(s.spendingCost)) " +
+//    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MissionMemberSumDto( " +
+//            "s.spendingCategoryId, SUM(s.spendingCost)) " +
+//            "FROM Spending s " +
+//            "JOIN MemberMission mm ON s.member.memberEmail = mm.member.memberEmail " +
+//            "WHERE mm.mission.missionId = :missionId AND s.member.memberEmail!= :memberEmail AND s.spendingCategoryId !=0 AND s.spendingCategoryId != 20 AND s.spendingDate BETWEEN :startDate AND :endDate " +
+//            "GROUP BY s.spendingCategoryId")
+//    List<MissionMemberSumDto> getMissionMemberSum(@Param("missionId") String missionId, @Param("memberEmail")String memberEmail, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+//    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MemberSpendingSumDto(s.member.memberNickname AS memberNickname, s.spendingCategoryId AS categoryId, SUM(s.spendingCost) AS sum) FROM Spending s WHERE s.member.memberEmail= :memberEmail AND s.spendingCategoryId !=0 AND s.spendingCategoryId != 20 AND s.spendingDate BETWEEN :start AND :end GROUP BY s.spendingCategoryId " )
+//    List<MemberSpendingSumDto> getMemberSumByCategory(@Param("memberEmail")String memberEmail, @Param("start")Date start, @Param("end")Date end);
+
+
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.mission.MissionMemberRatioDto(" +
+            "s.member.memberEmail, s.spendingCategoryId AS categoryId, " +
+            "CAST(SUM(s.spendingCost) AS DOUBLE) / CAST((SELECT SUM(s2.spendingCost) FROM Spending s2 WHERE s2.member.memberEmail = s.member.memberEmail AND s2.spendingDate BETWEEN :startDate AND :endDate) AS DOUBLE) * 100 AS ratio) " +
             "FROM Spending s " +
             "JOIN MemberMission mm ON s.member.memberEmail = mm.member.memberEmail " +
-            "WHERE mm.mission.missionId = :missionId AND s.member.memberEmail!= :memberEmail AND s.spendingCategoryId !=0 AND s.spendingCategoryId != 20 AND s.spendingDate BETWEEN :startDate AND :endDate " +
-            "GROUP BY s.spendingCategoryId")
-    List<MissionMemberSumDto> getMissionMemberSum(@Param("missionId") String missionId, @Param("memberEmail")String memberEmail, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
-    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MemberSpendingSumDto(s.member.memberNickname AS memberNickname, s.spendingCategoryId AS categoryId, SUM(s.spendingCost) AS sum) FROM Spending s WHERE s.member.memberEmail= :memberEmail AND s.spendingCategoryId !=0 AND s.spendingCategoryId != 20 AND s.spendingDate BETWEEN :start AND :end GROUP BY s.spendingCategoryId " )
-    List<MemberSpendingSumDto> getMemberSumByCategory(@Param("memberEmail")String memberEmail, @Param("start")Date start, @Param("end")Date end);
+            "WHERE mm.mission.missionId = :missionId " +
+            "AND s.member.memberEmail != :memberEmail " +
+            "AND s.spendingCategoryId != 0 AND s.spendingCategoryId != 20 " +
+            "AND s.spendingDate BETWEEN :startDate AND :endDate " +
+            "GROUP BY s.member.memberEmail, s.spendingCategoryId")
+    List<MissionMemberRatioDto> getMissionMemberRatio(@Param("missionId") String missionId, @Param("memberEmail")String memberEmail, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
+
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MemberSpendingRatioDto(s1.member.memberNickname AS memberNickname, s1.spendingCategoryId AS categoryId, " +
+            "CAST(SUM(s1.spendingCost) AS DOUBLE) / CAST((SELECT SUM(s2.spendingCost) FROM Spending s2 WHERE s2.member.memberEmail = s1.member.memberEmail AND s2.spendingDate BETWEEN :startDate AND :endDate) AS DOUBLE) * 100 AS ratio) " +
+            "FROM Spending s1 WHERE s1.member.memberEmail= :memberEmail AND s1.spendingCategoryId != 0 AND s1.spendingCategoryId != 20 AND s1.spendingDate BETWEEN :startDate AND :endDate " +
+            "GROUP BY s1.spendingCategoryId")
+    List<MemberSpendingRatioDto> getMemberRatioByCategory(@Param("memberEmail")String memberEmail, @Param("startDate")Date startDate, @Param("endDate")Date endDate);
 
     @Query("SELECT new com.doacha.seesaw.model.dto.spending.RecordSpendingResponse(s.spendingTitle,s.spendingCost)FROM Spending s " +
             "WHERE s.record.recordId = :recordId "+

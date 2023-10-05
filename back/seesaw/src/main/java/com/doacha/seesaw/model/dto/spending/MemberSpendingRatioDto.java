@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @Builder
-public class MemberSpendingSumDto {
+public class MemberSpendingRatioDto {
     private String memberNickname;
     private int categoryId;
-    private Long sum;
+    private double ratio;
 }
