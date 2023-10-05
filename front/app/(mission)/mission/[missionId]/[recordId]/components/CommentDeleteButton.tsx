@@ -33,7 +33,6 @@ const deleteComment = async (commentId: number) => {
       },
     },
   ).then((res) => {
-    console.log(res)
     res
   })
 }

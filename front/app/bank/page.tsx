@@ -23,9 +23,7 @@ const SeesawBankPage = () => {
       )
       const data = await res.json()
       return data
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
 
   const { isLoading, data: accountListData } = useQuery(
