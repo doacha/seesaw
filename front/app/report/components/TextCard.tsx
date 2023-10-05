@@ -40,19 +40,19 @@ const TextCard = ({ spendData }: Props) => {
               저번달에 비해&nbsp;
               <div
                 className={
-                  compare.difference < 0
+                  compare.difference > 0
                     ? 'font-scDreamExBold  text-error'
                     : 'font-scDreamExBold text-primary'
                 }
               >
-                {compare.difference < 0
-                  ? (-compare.difference).toLocaleString()
-                  : compare.difference.toLocaleString()}
+                {compare.difference > 0
+                  ? compare.difference.toLocaleString()
+                  : (-compare.difference).toLocaleString()}
               </div>
-              {compare.difference < 0 ? '원 더 사용했어요' : '원 덜 사용했어요'}
+              {compare.difference > 0 ? '원 더 사용했어요' : '원 덜 사용했어요'}
             </div>
             <p className=" font-scDreamLight text-outline text-sm">
-              {compare.difference < 0
+              {compare.difference > 0
                 ? '우리 조금 더 아껴써볼까요?'
                 : '당신은 절약왕!'}
             </p>
