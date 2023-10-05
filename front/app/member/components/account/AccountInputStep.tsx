@@ -1,8 +1,9 @@
 import Input from '@/app/components/Input'
 import BankButton from './BankButton'
+import { Bank } from '@/app/types'
 
 interface Props {
-  selectedBank: string
+  selectedBank: Bank
   accountNumber: string
   accountHolder: string
   accountChecked: number
@@ -13,7 +14,10 @@ const AccountInputStep = (props: Props) => {
   return (
     <div>
       <h3 className="font-bold text-lg mb-5">계좌번호를 입력하세요.</h3>
-      <BankButton bankImg="./seesaw_logo.svg" bankName={props.selectedBank} />
+      <BankButton
+        bankImg={props.selectedBank.bankImg}
+        bankName={props.selectedBank.bankName}
+      />
       {props.accountChecked === 0 ? null : props.accountChecked === 1 ? (
         <div className="text-primary text-lg mb-1">
           예금주 : {props.accountHolder}

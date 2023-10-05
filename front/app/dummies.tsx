@@ -752,7 +752,7 @@ export const sumList: type.Spending[] = [
   },
 ]
 
-export const bankList = [
+export const bankList: type.Bank[] = [
   {
     bankName: '시소뱅크',
     bankImg:
@@ -775,7 +775,7 @@ export const bankList = [
   },
 ]
 
-export const bankList2 = [
+export const bankList2: type.Bank[] = [
   {
     bankName: '우리은행',
     bankImg:
