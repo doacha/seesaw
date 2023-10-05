@@ -46,7 +46,7 @@ const ImageInput = ({
           )}
           <input
             type="file"
-            accept="image/*"
+            accept="image/jpeg, image/jpg, image/png, image/bmp"
             className="hidden"
             id="file"
             onChange={handleImageChange}
