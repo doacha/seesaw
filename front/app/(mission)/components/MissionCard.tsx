@@ -29,22 +29,24 @@ const MissionCard = ({
   return (
     <Link
       href={`/mission/${data.missionId}`}
-      className="w-[calc(50%-10px)] min-w-[140px]"
+      className="max-w-[245px] w-[calc(50%-10px)] min-w-[140px]"
     >
       <div className="card min-w-[140px] h-[184px] shadow-md rounded-lg bg-background">
         <figure className="relative h-25">
-          <Image
-            src={
-              data.missionImgUrl === 'string'
-                ? '/default_profile.svg'
-                : data.missionImgUrl
-            }
-            width={200}
-            height={100}
-            alt="mission Image"
-            className="object-cover"
-            style={{ height: '100px', objectFit: 'cover' }}
-          />
+          <div className="avatar w-full h-full">
+            <Image
+              src={
+                data.missionImgUrl === 'string'
+                  ? '/default_profile.svg'
+                  : data.missionImgUrl
+              }
+              width={200}
+              height={100}
+              alt="mission Image"
+              className="object-cover"
+              style={{ height: '100px', objectFit: 'cover' }}
+            />
+          </div>
           {!isStarted && (
             <div className="absolute top-3 left-3 bg-primary-container/80 rounded text-[10px] px-1 leading-[18px]">{`D - ${getDueDate(
               data.missionStartDate,

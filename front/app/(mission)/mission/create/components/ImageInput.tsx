@@ -32,7 +32,7 @@ const ImageInput = ({
       <div className="flex items-center justify-center w-full relative">
         <label
           htmlFor="file"
-          className="flex flex-col items-center justify-center w-full h-[205px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+          className="relative flex flex-col items-center justify-center w-full h-[205px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
         >
           {state.imgFile.url === '' && (
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -52,15 +52,13 @@ const ImageInput = ({
             onChange={handleImageChange}
           />
           {state.imgFile.url && (
-            <div className="absolute left-[50%] translate-x-[-50%] ">
+            <div className="avatar absolute left-[50%] translate-x-[-50%] w-full h-full">
               <Image
                 src={state.imgFile.url}
                 width={10}
                 height={10}
                 alt="그룹 이미지"
                 style={{
-                  width: '310px',
-                  height: '205px',
                   objectFit: 'cover',
                 }}
               />
