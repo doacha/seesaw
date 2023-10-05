@@ -20,6 +20,7 @@ const MissionJoinButton = ({
   missionId,
   refetch,
   missionDeposit,
+  missionTotalCycle,
 }: {
   isSaveMission: boolean
   missionCategory: string
@@ -29,6 +30,7 @@ const MissionJoinButton = ({
   missionId: string
   refetch: any
   missionDeposit: number
+  missionTotalCycle: number
 }) => {
   const [processLevel, setProcessLevel] = useState(isSaveMission ? 0 : 1)
   const [savingMoney, setSavingMoney] = useState(dummyCategorySaveMoney)
@@ -130,6 +132,7 @@ const MissionJoinButton = ({
         changeModal={handleJoinButton}
         modalRef={refList[1]}
         missionTargetPrice={missionTargetPrice}
+        missionTotalCycle={missionTotalCycle}
       />
       <MoneyTransferModal
         changeModal={handleJoinButton}
