@@ -11,7 +11,7 @@ const MyMissionDetailInfo = (props: Props) => {
       <div className="flex gap-2">
         <MissionBackgroundImg src={props.mission.missionImgUrl} />
         <div className="flex flex-col justify-center">
-          <div className="text-base font-scDreamMedium">
+          <div className="text-base font-scDreamMedium max-w-[190px]">
             {props.mission.missionTitle}
           </div>
           <div className="text-outline text-xs">
