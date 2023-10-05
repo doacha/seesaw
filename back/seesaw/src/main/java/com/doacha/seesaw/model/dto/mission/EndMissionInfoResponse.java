@@ -1,6 +1,7 @@
 package com.doacha.seesaw.model.dto.mission;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,4 +34,13 @@ public class EndMissionInfoResponse {
 
     @Schema(description = "미션 카테고리", example = "0", required = true)
     private int missionCategoryId;
+
+    @Schema(description = "미션 기간", example = "7", required = true)
+    private int missionPeriod;
+
+    @Schema(description = "미션 총 횟수", example = "4", required = true)
+    private int missionTotalCycle;
+
+    @Schema(description = "미션 목표 금액", example = "50000", required = true)
+    private int missionTargetPrice;
 }

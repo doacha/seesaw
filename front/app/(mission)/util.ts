@@ -28,7 +28,6 @@ const DAY = HOUR * 24
 export const getTimeBefore = (writeDate: string) => {
   const writeTime = new Date(writeDate)
   const present = new Date()
-
   const passedSeconds = Math.trunc(
     (present.getTime() - writeTime.getTime() - 9000 * HOUR) / 1000 + HOUR * 9,
   )

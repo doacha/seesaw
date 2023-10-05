@@ -20,6 +20,7 @@ const MissionJoinButton = ({
   missionId,
   refetch,
   missionDeposit,
+  missionTotalCycle,
 }: {
   isSaveMission: boolean
   missionCategory: string
@@ -29,6 +30,7 @@ const MissionJoinButton = ({
   missionId: string
   refetch: any
   missionDeposit: number
+  missionTotalCycle: number
 }) => {
   const [processLevel, setProcessLevel] = useState(isSaveMission ? 0 : 1)
   const [savingMoney, setSavingMoney] = useState(dummyCategorySaveMoney)
@@ -76,8 +78,6 @@ const MissionJoinButton = ({
         memberEmail: memberEmail,
         // accountNum: DUMMY_ACCOUNT_NUM,
       }
-      console.log(depositeRequest)
-      console.log('예치금요청', depositeRequest)
 
       depositMoney(depositeRequest, {
         onSuccess: (res) => {
@@ -93,7 +93,7 @@ const MissionJoinButton = ({
               memberMissionSavingMoney: savingMoney,
             },
             {
-              onSuccess: (res) => refetch(),
+              onSuccess: (res) => router.push('/mission-landing'),
               onError: (err) => console.log('미션 참가 에러', err),
             },
           )
@@ -129,7 +129,8 @@ const MissionJoinButton = ({
       <ConfirmDepositModal
         changeModal={handleJoinButton}
         modalRef={refList[1]}
-        missionTargetPrice={missionTargetPrice}
+        missionTargetPrice={missionDeposit}
+        missionTotalCycle={missionTotalCycle}
       />
       <MoneyTransferModal
         changeModal={handleJoinButton}

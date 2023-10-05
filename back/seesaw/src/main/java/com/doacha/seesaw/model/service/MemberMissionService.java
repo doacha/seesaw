@@ -165,7 +165,10 @@ public class MemberMissionService {
                 dateAdd(mission.getMissionStartDate(), mission.getMissionTotalCycle()*mission.getMissionPeriod()-1),
                 memberMission.getMemberMissionStatus(),
                 mission.getMissionPurpose(),
-                mission.getMissionCategoryId()
+                mission.getMissionCategoryId(),
+                mission.getMissionPeriod(),
+                mission.getMissionTotalCycle(),
+                mission.getMissionTargetPrice()
         );
         return endMissionInfoResponse;
     }
