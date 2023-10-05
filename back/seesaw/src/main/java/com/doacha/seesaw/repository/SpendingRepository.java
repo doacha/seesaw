@@ -1,19 +1,14 @@
 package com.doacha.seesaw.repository;
-import com.doacha.seesaw.model.dto.mission.CompareMissionDto;
-import com.doacha.seesaw.model.dto.mission.EntireMissionDto;
 import com.doacha.seesaw.model.dto.mission.MissionStatsResponse;
 import com.doacha.seesaw.model.dto.mission.MissionMemberSumDto;
+import com.doacha.seesaw.model.dto.spending.RecordSpendingResponse;
 import com.doacha.seesaw.model.dto.spending.*;
 import com.doacha.seesaw.model.entity.Spending;
-import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -109,5 +104,10 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
     @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MemberSpendingSumDto(s.member.memberNickname AS memberNickname, s.spendingCategoryId AS categoryId, SUM(s.spendingCost) AS sum) FROM Spending s WHERE s.member.memberEmail= :memberEmail AND s.spendingDate BETWEEN :start AND :end GROUP BY s.spendingCategoryId " )
     List<MemberSpendingSumDto> getMemberSumByCategory(@Param("memberEmail")String memberEmail, @Param("start")Date start, @Param("end")Date end);
 
+
+    @Query("SELECT new com.doacha.seesaw.model.dto.spending.RecordSpendingResponse(s.spendingTitle,s.spendingCost)FROM Spending s " +
+            "WHERE s.record.recordId = :recordId "+
+            "ORDER BY s.spendingDate ASC")
+    List<RecordSpendingResponse> findRecordSpendingResponseByRecordId(@Param("recordId") long recordId);
 }
 
