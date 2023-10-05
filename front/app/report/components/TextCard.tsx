@@ -2,7 +2,6 @@
 
 import { Spending } from '@/app/types'
 import Loading from '@/app/components/Loading'
-// useQuery
 import { QueryKey, useQuery } from '@tanstack/react-query'
 interface Props {
   spendData: Spending
@@ -15,9 +14,9 @@ const TextCard = ({ spendData }: Props) => {
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(spendDate), // 데이터를 JSON 문자열로 변환하여 전송
+        body: JSON.stringify(spendDate),
       },
     )
     return await res.json()

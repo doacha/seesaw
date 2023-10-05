@@ -9,7 +9,6 @@ const Entrance = () => {
   const router = useRouter()
 
   useEffect(() => {
-    // 2초 대기 후 로그인 페이지로 이동
     const timer = setTimeout(() => {
       router.push('/login')
     }, 2000)
