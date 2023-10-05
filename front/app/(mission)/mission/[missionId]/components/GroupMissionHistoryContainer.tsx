@@ -47,7 +47,6 @@ const GroupMissionHistoryContainer = ({ data }: { data: GroupStatusProps }) => {
       },
       {
         onSuccess: (res: RecordDetail[][]) => {
-          console.log('시시시싯', res)
           const newRecordMap: { [key: number]: any } = { ...recordMap }
           res.forEach((recordListByRecordNumber) => {
             let idx = recordListByRecordNumber.findIndex(

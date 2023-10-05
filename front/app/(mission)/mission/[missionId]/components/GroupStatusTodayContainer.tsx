@@ -44,7 +44,7 @@ const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
   const { recordStatus, recordMap, setTodayRecordId, setRecordMap } =
     recordListStore()
   const { data: todayMission, mutate, isSuccess } = useMutation(getTodayMission)
-
+  console.log('asdfasdf', memberNickname)
   useEffect(() => {
     mutate(
       {
@@ -65,6 +65,7 @@ const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
             [recordNumber]: res[targetIdx].recordId,
           })
           console.log('투데이미션', res)
+          return res
         },
         onError: (err) => console.log('에러sdsd', err),
       },
@@ -89,7 +90,7 @@ const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
             />
           ))}
       </div>
-      {isSuccess && data && (
+      {isSuccess && todayMission && todayMission.length > 0 && (
         <UpdateRecordButton
           path={`${recordStatus.missionId}/${getTodayMissionRecord(
             todayMission,
@@ -105,6 +106,7 @@ const getTodayMissionRecord = (data: TodayStatus[], memberNickname: string) => {
   const targetIdx = data.findIndex(
     (element) => element.memberNickname === memberNickname,
   )
+  console.log('targetIndx', targetIdx)
   return data[targetIdx].recordId
 }
 
