@@ -7,8 +7,15 @@ import '../../styles/calendar.css' // calendar 전체 style
 
 import { Spending } from '@/app/types'
 import Loading from '@/app/components/Loading'
+import EmptyAlert from '../EmptyAlert'
+import FaskMakeButton from '@/app/components/FastMakeButton'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { iconColors } from '@/app/lib/constants'
+import { categoryIcon } from '@/app/lib/constants'
 
 import { QueryKey, useQuery } from '@tanstack/react-query'
+import AddPostModal from '@/app/home/components/AddPostModal'
 
 type ValuePiece = Date | null
 type Value = ValuePiece | [ValuePiece, ValuePiece]
@@ -16,42 +23,133 @@ type Props = {
   spendData: Spending
 }
 const CalendarCard = ({ spendData }: Props) => {
-  const [value, onChange] = useState<Value>(
+  const [value, setValue] = useState<Value>(
     new Date(
       spendData.spendingYear as number,
       (spendData.spendingMonth as number) - 1,
       1,
     ),
   )
+  // 모달 오픈?
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  // 클릭한 날짜
+  const [clickDate, setClickDate] = useState('')
+
+  // 데이터 없는걸 처리하기 위한 변수
+  const [isEmpty, setIsEmpty] = useState<boolean>(false)
+
+  const [open, setOpen] = useState(false)
+
+  const handleDoubleToggle = () => {
+    setOpen((prev) => !prev)
+  }
+
+  const [spendingList, setSpendingList] = useState<Spending[]>([])
+
+  const formatDay = (date: Date): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      day: 'numeric',
+    }
+
+    const formatter = new Intl.DateTimeFormat('ko-KR', options)
+    return formatter.format(date)
+  }
+
+  const groupSpendingByDay = (
+    spendingList: Spending[],
+  ): Record<string, Spending[]> => {
+    const groupedData: Record<string, Spending[]> = {}
+    spendingList.forEach((spending: Spending) => {
+      const day = formatDay(new Date(spending.spendingDate as string))
+      if (!groupedData[day]) {
+        groupedData[day] = []
+      }
+      groupedData[day].push(spending)
+    })
+
+    return groupedData
+  }
 
   useEffect(() => {
-    onChange(
+    setValue(
       new Date(
         spendData.spendingYear as number,
         (spendData.spendingMonth as number) - 1,
         1,
       ),
     )
+    fetchSpendList()
   }, [spendData])
 
-  // Todo.. 날짜 클릭하면 상세 정보나오기
-  const showModal = (newValue: Value) => {
-    onChange(newValue)
+  const [showDate, setShowDate] = useState<string>('')
+  const onChange = (date: any) => {
+    setIsOpen((prev) => !prev)
+    const formattedDate = moment(date).format('D일')
+    setClickDate(formattedDate)
+    setShowDate(moment(date).format('M월 D일'))
   }
-
   const fetchDailySumList = async (spendData: Spending) => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/dailysum`,
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(spendData), // 데이터를 JSON 문자열로 변환하여 전송
+        body: JSON.stringify(spendData),
       },
     )
     return await res.json()
   }
+
+  const fetchSpendList = () => {
+    fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/list`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(spendData),
+    })
+      .then((res) => {
+        return res.json()
+      })
+      .then((data) => {
+        if (data.length === 0) {
+          setIsEmpty(true)
+        } else {
+          setIsEmpty(false)
+          setSpendingList(data)
+          let sum = 0
+          data.forEach((element: any) => {
+            sum += element.spendingCost as number
+          })
+        }
+      })
+  }
+
+  const groupedSpending = groupSpendingByDay(spendingList)
+  let totalSpendingCost = 0
+
+  useEffect(() => {
+    const keys = Object.keys(groupedSpending)
+
+    if (keys.includes(clickDate)) {
+      keys.forEach((element) => {
+        setIsEmpty(false)
+        if (element === clickDate) {
+          //console.log(groupedSpending[clickDate])///
+          for (let i = 0; i < groupedSpending[clickDate].length; i++) {
+            totalSpendingCost += groupedSpending[clickDate][i]
+              .spendingCost as number
+            //console.log(groupedSpending[clickDate][i].spendingCost)
+          }
+        }
+      })
+    } else {
+      setIsEmpty(true)
+    }
+  }, [clickDate, isOpen])
+
   const {
     isLoading,
     data: sumList,
@@ -72,6 +170,28 @@ const CalendarCard = ({ spendData }: Props) => {
     sumList &&
     sumList.map((element: Spending, idx: number) => element.spendingCostSum)
 
+  let modalClass = 'modal modal-bottom sm:modal-middle'
+
+  if (isOpen) {
+    modalClass += ' modal-open'
+  }
+  const handleToggle = () => {
+    setIsOpen((prev) => !prev)
+  }
+  const formatTime = (date: Date): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      hour: 'numeric',
+      minute: 'numeric',
+    }
+    const formatter = new Intl.DateTimeFormat('ko-KR', options)
+    return formatter.format(date)
+  }
+
+  const handleModalClickOutside = (e: any) => {
+    if (e.target.classList.contains('modal-open')) {
+      setIsOpen(false)
+    }
+  }
   return (
     <>
       {isLoading ? (
@@ -124,6 +244,81 @@ const CalendarCard = ({ spendData }: Props) => {
           }}
         />
       )}
+      <div className={modalClass} onClick={handleModalClickOutside}>
+        <div className="modal-box h-[380px] bg-white">
+          <div className="flex flex-row justify-between">
+            <h3 className="font-bold text-lg font-scDreamRegular">
+              {showDate}
+            </h3>
+          </div>
+          <div className="h-[1px] bg-outline rounded-full mt-2"></div>
+          <>
+            {isEmpty ? (
+              <EmptyAlert />
+            ) : (
+              <>
+                {Object.entries(groupedSpending).map(([day, data]) => (
+                  <div key={day}>
+                    {clickDate === day && (
+                      <div className="my-3 overflow-auto" key={day}>
+                        <>
+                          {data.map((spending, key) => (
+                            <div
+                              key={spending.spendingId}
+                              className="h-9 mb-3 flex w-full flex-row gap-5"
+                            >
+                              <div className="flex my-auto w-6 ml-1">
+                                {spending.spendingCategoryId && (
+                                  <FontAwesomeIcon
+                                    icon={
+                                      categoryIcon[spending.spendingCategoryId]
+                                    }
+                                    style={{
+                                      color:
+                                        iconColors[spending.spendingCategoryId],
+                                    }}
+                                    size="xl"
+                                  />
+                                )}
+                              </div>
+                              <div className="flex w-full justify-between">
+                                <div className="flex flex-col">
+                                  <span className=" overflow-hidden font-scDreamRegular text-xs ">
+                                    {spending.spendingTitle}
+                                  </span>
+                                  <span className="font-scDreamRegular text-xs text-outline">
+                                    {spending.spendingDate &&
+                                      formatTime(
+                                        new Date(spending.spendingDate),
+                                      )}
+                                  </span>
+                                </div>
+                                <div>
+                                  <p className=" whitespace-nowrap font-scDreamExBold text-sm">
+                                    {spending.spendingCost &&
+                                      spending.spendingCost.toLocaleString(
+                                        'ko-KR',
+                                      )}
+                                    원
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </>
+            )}
+          </>
+        </div>
+        <div className="fixed top-[800px] right-[30px]">
+          <FaskMakeButton onClick={handleDoubleToggle} path="/report" />
+        </div>
+      </div>
+      <AddPostModal open={open} handleToggle={handleDoubleToggle} />
     </>
   )
 }

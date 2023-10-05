@@ -8,7 +8,6 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import DoughnutChart from './DoughnutChart'
 import Loading from '@/app/components/Loading'
 
-// useQuery
 import { QueryKey, useQuery } from '@tanstack/react-query'
 
 import { Spending } from '@/app/types'
@@ -33,15 +32,14 @@ const DoughtnutChartCard = ({ spendData }: Props) => {
       {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json', // JSON 데이터를 전송할 경우 지정
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(spendDate), // 데이터를 JSON 문자열로 변환하여 전송
+        body: JSON.stringify(spendDate),
       },
     )
     return await res.json()
   }
 
-  // spendData에 변경이 있어? fecthCategorySumList 함수 실행해
   const {
     isLoading,
     data: categorySumList,
@@ -77,7 +75,7 @@ const DoughtnutChartCard = ({ spendData }: Props) => {
                   .slice(0, isOpened ? categorySumList.length : 5)
                   .map((element: any, idx: number) => (
                     <div key={idx} className="flex justify-between">
-                      <div className="flex flex-row my-1">
+                      <div className="flex flex-row mb-3">
                         <div className="flex w-8 mr-2">
                           <div className="flex mx-auto">
                             {element.spendingCategoryId && (
