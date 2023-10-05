@@ -36,13 +36,23 @@ const TextCard = ({ spendData }: Props) => {
       ) : (
         <div className="flex flex-row h-20 w-full bg-white rounded-lg">
           <div className=" my-auto mx-5 w-full">
-            <p className=" font-scDreamLight text-base">
-              {compare.difference > 0
-                ? `저번달에 비해 ${compare.difference.toLocaleString()}원 더 사용했어요`
-                : `저번달에 비해 ${(-compare.difference).toLocaleString()}원 덜 사용했어요`}
-            </p>
-            <p className=" font-envR text-lg">
-              {compare.difference > 0
+            <div className="flex font-scDreamMedium text-base">
+              저번달에 비해&nbsp;
+              <div
+                className={
+                  compare.difference < 0
+                    ? 'font-scDreamExBold  text-error'
+                    : 'font-scDreamExBold text-primary'
+                }
+              >
+                {compare.difference < 0
+                  ? (-compare.difference).toLocaleString()
+                  : compare.difference.toLocaleString()}
+              </div>
+              {compare.difference < 0 ? '원 더 사용했어요' : '원 덜 사용했어요'}
+            </div>
+            <p className=" font-scDreamLight text-outline text-sm">
+              {compare.difference < 0
                 ? '우리 조금 더 아껴써볼까요?'
                 : '당신은 절약왕!'}
             </p>

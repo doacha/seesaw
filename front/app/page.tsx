@@ -81,7 +81,7 @@ const Entrance = () => {
               style={{
                 animationDelay: '0.7s',
                 animationIterationCount: 'infinite',
-                color: '#B7B2FF',
+                color: '#AFC3FF',
               }}
             >
               비
@@ -91,7 +91,7 @@ const Entrance = () => {
               style={{
                 animationDelay: '0.8s',
                 animationIterationCount: 'infinite',
-                color: '#B7B2FF',
+                color: '#AFC3FF',
               }}
             >
               절
@@ -101,7 +101,7 @@ const Entrance = () => {
               style={{
                 animationDelay: '0.9s',
                 animationIterationCount: 'infinite',
-                color: '#B7B2FF',
+                color: '#AFC3FF',
               }}
             >
               약
