@@ -67,9 +67,36 @@
 
 **[가계부]**
 
+![가계부](https://github.com/chachapapa/chachapapa/assets/119780428/f2185654-3711-4a25-b770-1e5ec077fc54)
+
+- 카드 내역이 자동으로 연동.
+  직접 소비 내역 입력 가능
+
+![가계부카테고라이징](https://github.com/chachapapa/chachapapa/assets/119780428/072e120b-b330-4b4e-822c-cbc94c610287)
+
+![소비리포트](https://github.com/chachapapa/chachapapa/assets/119780428/08cf9bfb-e20c-4b57-9acf-564580399162)
+
 **[미션]**
 
+![미션그룹통계](https://github.com/chachapapa/chachapapa/assets/119780428/971250b6-24d9-44ce-a72d-35a9259d16a9)
+
+![미션참여](https://github.com/chachapapa/chachapapa/assets/119780428/a1d382eb-5e62-42f1-931b-56774fb88f23)
+
+![진행중미션 내 현황](https://github.com/chachapapa/chachapapa/assets/119780428/07458155-1dd4-45ee-928d-d6eb0d869b34)
+
+![진행중미션 예치금 현황](https://github.com/chachapapa/chachapapa/assets/119780428/8703021a-2df1-4fe6-9fd4-ec1b1f610ebd)
+
+![진행중미션그룹현황](https://github.com/chachapapa/chachapapa/assets/119780428/4f98ed1b-a67f-4fb8-9d98-aed5e6833ed9)
+
 **[마이페이지]**
+
+![완료미션 내 통계](https://github.com/chachapapa/chachapapa/assets/119780428/0d321286-31f7-4c42-8197-8e7917eaac63)
+
+![완료 미션 기록](https://github.com/chachapapa/chachapapa/assets/119780428/6ebf819a-2fec-41e5-a098-7995f0061ac5)
+
+![계좌 조회](https://github.com/chachapapa/chachapapa/assets/119780428/f2675b39-8137-4d30-a785-443456e76c5b)
+
+![프로필수정](https://github.com/chachapapa/chachapapa/assets/119780428/c3003224-b133-498f-a489-9004e1708f08)
 
 ## 🎨 와이어프레임
 
@@ -104,19 +131,3 @@
 ![시소 아키텍쳐](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/7b0f8819-6aef-42f4-86ba-aadd1ef69686)
 
 ## 시연
-
-![가계부](https://github.com/chachapapa/chachapapa/assets/119780428/f2185654-3711-4a25-b770-1e5ec077fc54)
-카드 내역이 자동으로 연동.
-직접 소비 내역 입력 가능
-
-![가계부카테고라이징](https://github.com/chachapapa/chachapapa/assets/119780428/072e120b-b330-4b4e-822c-cbc94c610287)
-![계좌 조회](https://github.com/chachapapa/chachapapa/assets/119780428/f2675b39-8137-4d30-a785-443456e76c5b)
-![미션그룹통계](https://github.com/chachapapa/chachapapa/assets/119780428/971250b6-24d9-44ce-a72d-35a9259d16a9)
-![미션참여](https://github.com/chachapapa/chachapapa/assets/119780428/a1d382eb-5e62-42f1-931b-56774fb88f23)
-![소비리포트](https://github.com/chachapapa/chachapapa/assets/119780428/08cf9bfb-e20c-4b57-9acf-564580399162)
-![완료 미션 기록](https://github.com/chachapapa/chachapapa/assets/119780428/6ebf819a-2fec-41e5-a098-7995f0061ac5)
-![완료미션 내 통계](https://github.com/chachapapa/chachapapa/assets/119780428/0d321286-31f7-4c42-8197-8e7917eaac63)
-![진행중미션 내 현황](https://github.com/chachapapa/chachapapa/assets/119780428/07458155-1dd4-45ee-928d-d6eb0d869b34)
-![진행중미션 예치금 현황](https://github.com/chachapapa/chachapapa/assets/119780428/8703021a-2df1-4fe6-9fd4-ec1b1f610ebd)
-![진행중미션그룹현황](https://github.com/chachapapa/chachapapa/assets/119780428/4f98ed1b-a67f-4fb8-9d98-aed5e6833ed9)
-![프로필수정](https://github.com/chachapapa/chachapapa/assets/119780428/c3003224-b133-498f-a489-9004e1708f08)

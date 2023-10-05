@@ -38,3 +38,4 @@ out/
 
 #setting file
 **/application.properties
+/.metadata/
