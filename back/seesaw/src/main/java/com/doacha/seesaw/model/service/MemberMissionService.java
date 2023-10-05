@@ -169,7 +169,8 @@ public class MemberMissionService {
                 mission.getMissionPurpose(),
                 mission.getMissionCategoryId(),
                 mission.getMissionPeriod(),
-                mission.getMissionTotalCycle()
+                mission.getMissionTotalCycle(),
+                mission.getMissionTargetPrice()
         );
         return endMissionInfoResponse;
     }
