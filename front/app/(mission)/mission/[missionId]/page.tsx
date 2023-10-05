@@ -50,7 +50,7 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
       {data.missionStatus === MISSION_START ? (
         <>
           <MissionDetailContents data={contentsProps} />
-          <UpdateRecordButton />
+          {/* <UpdateRecordButton /> */}
         </>
       ) : (
         <>

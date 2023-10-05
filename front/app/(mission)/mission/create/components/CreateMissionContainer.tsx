@@ -323,7 +323,8 @@ const isInvalidInput = (input: MissionCreate) => {
       return true
     } else if (
       (property === 'missionCategoryId' ||
-        property === 'memberMissionSavingMoney') &&
+        property === 'memberMissionSavingMoney' ||
+        property === 'missionTargetPrice') &&
       input[property] === 0
     )
       continue
