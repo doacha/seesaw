@@ -178,7 +178,6 @@ const RecordContentContainer = ({
 }
 
 const getRecordContent = async (recordId: number) => {
-  console.log('이거왜 언디파인드', recordId)
   return await fetch(
     `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/record/${recordId}`,
     {

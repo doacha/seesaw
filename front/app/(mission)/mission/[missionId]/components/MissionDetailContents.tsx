@@ -96,7 +96,6 @@ const getMyRecordHistory = async (input: {
     },
   ).then((res) => {
     let js = res.json()
-    console.log('진짜결과', js)
     return js
   })
 }
