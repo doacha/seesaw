@@ -30,7 +30,7 @@ const ShieldGroup = ({
     ? ['text-[25px]', 'mr-[3px] mb-[3px]', 10]
     : ['text-[60px]', 'mr-2 mb-2', 4]
   const numberOfEmpty = shileUnit - (failureCount % shileUnit)
-  console.log('asdfasdfadsasfasfsdfs', failureCount, myFailureCount)
+
   return (
     <div className="flex w-full flex-wrap flex-row justify-center my-5 content-end mx-auto">
       {Array(myFailureCount > failureCount ? failureCount : myFailureCount)

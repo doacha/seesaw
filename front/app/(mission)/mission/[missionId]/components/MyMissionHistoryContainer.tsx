@@ -29,7 +29,7 @@ const MyMissionHistoryContainer = ({
   data: Array<any>[]
 }) => {
   const { recordMap } = recordListStore()
-  console.log('맵확인', recordMap)
+
   return (
     <div className="bg-background p-5 rounded-lg mx-5">
       <div className="font-scDreamMedium mb-[7.5px]">미션 기록</div>

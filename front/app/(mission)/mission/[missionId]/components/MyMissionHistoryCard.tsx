@@ -27,7 +27,6 @@ const MyMissionHistoryCard = ({
   propsData: GroupStatusProps
   recordId: number
 }) => {
-  console.log('리코드아이디뭐임', recordId)
   let recordList = []
   let sumOfSpending = 0
   for (let i = 4; i < data.length; i++) {
