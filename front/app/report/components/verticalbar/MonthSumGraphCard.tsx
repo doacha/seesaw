@@ -56,9 +56,9 @@ const MonthSumGraphCard = ({
     if (monthSumAmountList) {
       for (let i = 0; i < monthSumAmountList.length; i++) {
         const tmp = `${
-          (Math.round(monthSumAmountList[i]) / averageMonthAmount()) * 30
+          (Math.round(monthSumAmountList[i]) / averageMonthAmount()) * 100
         }px`
-        mean += (Math.round(monthSumAmountList[i]) / averageMonthAmount()) * 30
+        mean += (Math.round(monthSumAmountList[i]) / averageMonthAmount()) * 100
         tmpLengthList.push(tmp)
       }
     }
@@ -99,7 +99,7 @@ const MonthSumGraphCard = ({
             </div>
             {/* 55가 0점 */}
             <div
-              className={`flex flex-col w-[75%] left-10 absolute items-start bottom-[85px]`}
+              className={`flex flex-col w-[75%] left-10 absolute items-start bottom-[155px]`}
             >
               <div
                 className={

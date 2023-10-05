@@ -29,8 +29,8 @@ const WeekSumGraphCard = ({
     const tmpLengthList: string[] = []
     if (valuesArray) {
       for (let i = 0; i < valuesArray.length; i++) {
-        const tmp = `${(Math.round(valuesArray[i]) / averageAmount()) * 50}px`
-        mean += (Math.round(valuesArray[i]) / averageAmount()) * 50
+        const tmp = `${(Math.round(valuesArray[i]) / averageAmount()) * 60}px`
+        mean += (Math.round(valuesArray[i]) / averageAmount()) * 60
         tmpLengthList.push(tmp)
       }
     }
@@ -41,8 +41,9 @@ const WeekSumGraphCard = ({
     <>
       <div className="w-full flex">
         <div className="flex relative w-full h-[300px] justify-between bg-blue-100 m-5 px-5 pt-10 pb-5 rounded-lg">
+          {/* 30이 0점 */}
           <div
-            className={`flex flex-col absolute items-start bottom-[80px] w-[calc(100%-40px)]`}
+            className={`flex flex-col absolute items-start bottom-[90px] w-[calc(100%-40px)]`}
           >
             <div
               className={
