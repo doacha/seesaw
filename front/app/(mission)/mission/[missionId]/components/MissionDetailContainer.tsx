@@ -56,13 +56,13 @@ const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
             textColor="background"
           >{`${categoryList[data.missionCategoryId]}`}</Capsule>
           <Capsule bgColor="background-fill" textColor="black">
-            <span>
+            <span className="tooltip tooltip-background" data-tip="목표 금액">
               <FontAwesomeIcon icon={faFlag} className="mr-2.5" />
               {`${data.missionTargetPrice.toLocaleString()}`}
             </span>
           </Capsule>
           <Capsule bgColor="background-fill" textColor="black">
-            <span>
+            <span className="tooltip tooltip-background" data-tip="예치금">
               <FontAwesomeIcon icon={faMoneyBillWave} className="mr-2.5" />
               {`${data.missionDeposit.toLocaleString()}`}
             </span>
