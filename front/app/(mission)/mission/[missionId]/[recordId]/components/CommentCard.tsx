@@ -3,7 +3,13 @@ import { getTimeBefore } from '../../../../util'
 import { Comment } from '@/app/types'
 import CommentDeleteButton from './CommentDeleteButton'
 
-const CommentCard = ({ data }: { data: Comment }) => {
+const CommentCard = ({
+  data,
+  loginUser,
+}: {
+  data: Comment
+  loginUser: string
+}) => {
   const handleDelete = () => {}
   return (
     <div className="flex flex-row items-center gap-2.5 mt-5 relative">
@@ -22,7 +28,9 @@ const CommentCard = ({ data }: { data: Comment }) => {
           <span className="text-outline text-[10px]">
             {getTimeBefore(data.commentWriteTime)}
           </span>
-          <CommentDeleteButton commentId={data.commentId} />
+          {loginUser === data.memberNickname && (
+            <CommentDeleteButton commentId={data.commentId} />
+          )}
         </div>
         <div className="text-xs  flex-[3_1_0%]">{data.commentContent}</div>
       </div>
