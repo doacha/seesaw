@@ -14,7 +14,7 @@ import Image from 'next/image'
 import { missionCycleArray } from '@/app/lib/constants'
 import Capsule from '@/app/components/Capsule'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faPiggyBank, faFlag } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faFlag } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 const MissionCard = ({
   data,
@@ -25,7 +25,6 @@ const MissionCard = ({
   isStarted: boolean
   category: string
 }) => {
-  console.log('미션카드 데이터 체크', data)
   return (
     <Link
       href={`/mission/${data.missionId}`}
