@@ -17,7 +17,7 @@ import { currentMissionIdStore } from '@/stores/currentMissionId'
 const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
   const [activeTab, setActiveTab] = useState<string>('tab1')
   const { memberEmail } = memberEmailStore()
-  const { currentMissionId, setCurrentMissionId } = currentMissionIdStore()
+  const { setCurrentMissionId } = currentMissionIdStore()
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
   }

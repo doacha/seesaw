@@ -23,7 +23,11 @@ const memberInfoCard = (props: Props) => {
         <MemberDetailInfo member={props.member} />
         <div className="flex flex-col self-center text-lg font-scDreamLight whitespace-nowrap">
           <div className="flex">
-            미션으로&nbsp;
+            {props.member.savings < 0 ? (
+              <div>미션 중&nbsp;</div>
+            ) : (
+              <div>미션으로&nbsp;</div>
+            )}
             <div
               className={
                 props.member.savings < 0
