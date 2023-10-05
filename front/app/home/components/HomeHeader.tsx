@@ -12,6 +12,7 @@ interface HomeHeaderProps {
   clickArrowLeft: () => void
   clickArrowRight: () => void
   clickReport: () => void
+  isEmpty: boolean
 }
 
 const HomeHeader = ({
@@ -20,6 +21,7 @@ const HomeHeader = ({
   clickArrowLeft,
   clickArrowRight,
   clickReport,
+  isEmpty,
 }: HomeHeaderProps) => {
   return (
     <div className="flex justify-between mx-5 mt-4">
@@ -53,7 +55,7 @@ const HomeHeader = ({
         </div>
         <div className="flex">
           <p className="text-3xl mx-auto font-envR">
-            {spendSum.toLocaleString('ko-KR')}원
+            {isEmpty ? '0원' : spendSum.toLocaleString('ko-KR') + '원'}
           </p>
         </div>
       </div>
