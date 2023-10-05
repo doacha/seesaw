@@ -157,6 +157,7 @@ const RecordContentContainer = ({
             targetPrice={recordStatus.missionTargetPrice}
             history={spendingHistory}
             balance={balance}
+            recordId={recordId}
           />
           {isOpened && (
             <FontAwesomeIcon
