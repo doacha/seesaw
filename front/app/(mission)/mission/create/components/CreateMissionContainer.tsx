@@ -165,8 +165,12 @@ const CreateMissionContainer = () => {
 
       depositMoney(depositeRequest, {
         onSuccess: (res) => {
-          if (res.status === 500) {
-            console.log('에치금입금실패')
+          if (res.status === 500 || res === 'BAD_REQUEST') {
+            return Swal.fire({
+              width: 300,
+              html: `잔액 혹은 비밀번호를 확인해주세요!`,
+              icon: 'error',
+            })
             return
           }
           handleSubmit()
