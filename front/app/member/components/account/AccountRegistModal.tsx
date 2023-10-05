@@ -53,7 +53,6 @@ const AccountRegistModal = (props: Props) => {
   }
 
   const onBankButtonClick = (value: Bank) => {
-    console.log(value)
     if (selectedBank === value) {
       setSelectedBank({ bankName: '', bankImg: '' })
     } else {
@@ -68,7 +67,6 @@ const AccountRegistModal = (props: Props) => {
       if (accountChecked !== 1) {
         //계좌확인
 
-        console.log('계좌번호', accountNumber)
         try {
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_SEESAW_BANK_API_URL}/account-transactional/check-transfer`,
@@ -123,7 +121,6 @@ const AccountRegistModal = (props: Props) => {
         authenticationCode[1] +
         authenticationCode[2] +
         authenticationCode[3]
-      // console.log(authNum, accountDealNum)
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_SEESAW_BANK_API_URL}/account-transactional/check`,
@@ -139,7 +136,6 @@ const AccountRegistModal = (props: Props) => {
           },
         )
         const data = await res.text()
-        console.log(data)
         if (data !== 'fail') {
           try {
             const res = await fetch(
@@ -157,7 +153,6 @@ const AccountRegistModal = (props: Props) => {
               },
             )
             const secondData = await res.text()
-            // console.log('second', secondData)
             if (secondData === 'success') {
               ;(
                 document.getElementById('modal') as HTMLDialogElement | null

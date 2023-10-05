@@ -7,7 +7,6 @@ interface Props {
 }
 
 const GraphCardText = (props: Props) => {
-  console.log('amount값', props.amount)
   return (
     <div className="flex flex-col">
       <div className="flex text-lg font-scDreamMedium flex-wrap">

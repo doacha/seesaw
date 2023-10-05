@@ -35,7 +35,6 @@ const ProfileEditCard = (props: Props) => {
   const { memberEmail, setMember } = memberEmailStore()
 
   const onInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.name, e.target.value)
     setProfileEditInfo(e.target.name, e.target.value)
   }
 
@@ -80,10 +79,7 @@ const ProfileEditCard = (props: Props) => {
       memberPhoneNumber: phoneNumber,
     }
 
-    console.log(profileData)
-
     if (newImg?.file !== undefined) {
-      console.log(newImg.file)
       formData.append('image', newImg.file)
 
       formData.append(
@@ -121,7 +117,6 @@ const ProfileEditCard = (props: Props) => {
         )
         const data = await res.json()
         setMember(memberEmail, newNickname)
-        console.log(data)
         props.setOpenEditPage()
       } catch (err) {
         console.log(err)
