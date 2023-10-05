@@ -14,8 +14,7 @@ const CategoryInput = ({
   memberEmail: string
 }) => {
   return (
-    // <div className={`overflow-auto ${styles.delScroll}`}>
-    <div className="">
+    <div>
       <div className="font-scDreamExBold mb-5">
         미션 카테고리를 선택해주세요.
       </div>
