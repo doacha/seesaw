@@ -33,7 +33,6 @@ const CommentInput = ({ recordId }: { recordId: number }) => {
     }
     mutate(request, {
       onSuccess: (res) => {
-        console.log('댓글 등록 결과', res)
         refetch()
       },
       onError: (err) => console.log('댓글 등록 실패', err),
@@ -66,12 +65,4 @@ const postComment = async (request: CommentRequest) => {
   })
 }
 
-const getComments = async (index: number) => {
-  return await fetch(
-    `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/comment/${index}`,
-  ).then((res) => {
-    let s = res.json()
-    return s
-  })
-}
 export default CommentInput
