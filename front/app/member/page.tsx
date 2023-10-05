@@ -182,8 +182,9 @@ const memberPage = () => {
                       ) : null,
                     )}
                   </div>
-                ) : null}
-                <AccountRegistModal getAccountListInfo={getAccountListInfo} />
+                ) : (
+                  <AccountRegistModal getAccountListInfo={getAccountListInfo} />
+                )}
               </div>
             )}
           </div>
