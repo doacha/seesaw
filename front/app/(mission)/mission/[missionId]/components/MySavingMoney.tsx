@@ -50,6 +50,7 @@ const MySavingMoney = ({ propsData }: { propsData: GroupStatusProps }) => {
       { missionId: propsData.missionId, memberEmail: memberEmail },
       {
         onSuccess: (res) => {
+          res.reverse()
           const fetchedData: GraphState = { ...graphState }
           ;(res as number[]).forEach((cost) => {
             fetchedData.largestFailMoney = Math.min(
@@ -97,7 +98,7 @@ const MySavingMoney = ({ propsData }: { propsData: GroupStatusProps }) => {
     <div className="bg-background rounded-lg p-5 m-5">
       <div className="font-scDreamMedium">절약 금액</div>
       <hr className="my-[7.5px] text-outline" />
-      <div className="bg-background-fill rounded-sm p-5 mt-4">
+      <div className="bg-background-fill rounded-lg p-5 mt-4">
         <div className="text-sm mb-5">
           누적 금액{' '}
           <span className="text-primary font-scDreamExBold text-base mx-1">
@@ -117,9 +118,9 @@ const MySavingMoney = ({ propsData }: { propsData: GroupStatusProps }) => {
               className="flex flex-row gap-5 justify-center pt-5"
               style={{ width: `${data?.length * 50 - 10}px` }}
             >
-              {(data as number[])?.map((element, idx) => (
+              {(data as number[])?.map((element, idx, arr) => (
                 <MyMissionGraphbar
-                  round={idx + 1}
+                  round={arr.length - idx}
                   amount={element}
                   length={Math.min(graphState.lengthList[idx], HEIGHT_MAX)}
                   key={idx}

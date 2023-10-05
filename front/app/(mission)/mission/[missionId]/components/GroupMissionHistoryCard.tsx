@@ -24,7 +24,6 @@ const GroupMissionHistoryCard = ({
   data: RecordDetail[]
   missionData: GroupStatusProps
 }) => {
-  console.log('이씨발', data, 'asdfasdf')
   const dialogRef = useRef<HTMLDialogElement>(null)
   const cycleCount = data[0].recordNumber
   let successCount = 0,

@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { recordListStore } from '@/stores/recordListStore'
 import { memberEmailStore } from '@/stores/memberEmail'
+import UpdateRecordButton from './UpdateRecordButton'
 
 interface TodayStatus {
   memberImgUrl: string
@@ -88,8 +89,23 @@ const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
             />
           ))}
       </div>
+      {isSuccess && data && (
+        <UpdateRecordButton
+          path={`${recordStatus.missionId}/${getTodayMissionRecord(
+            todayMission,
+            memberNickname,
+          )}`}
+        />
+      )}
     </div>
   )
+}
+
+const getTodayMissionRecord = (data: TodayStatus[], memberNickname: string) => {
+  const targetIdx = data.findIndex(
+    (element) => element.memberNickname === memberNickname,
+  )
+  return data[targetIdx].recordId
 }
 
 export default GroupStatusTodayContainer

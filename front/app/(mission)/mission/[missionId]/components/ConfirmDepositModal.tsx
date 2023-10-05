@@ -70,7 +70,7 @@ const ConfirmDepositModal = ({
               <button
                 // onClick={() => handleMonthClick(-2)}
                 ref={cancelButtonRef}
-                className="font-scDreamExBold text-[18px] w-full h-10 min-h-10 mb-2.5 btn btn-outline text-gray outline-transparent "
+                className="font-scDreamExBold text-[18px] h-[40px]  w-full min-h-[40px] min-h-10 mb-2.5 btn btn-outline text-gray outline-transparent "
               >
                 안할래요
               </button>
