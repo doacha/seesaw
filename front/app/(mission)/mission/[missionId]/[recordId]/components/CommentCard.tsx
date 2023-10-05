@@ -10,7 +10,6 @@ const CommentCard = ({
   data: Comment
   loginUser: string
 }) => {
-  const handleDelete = () => {}
   return (
     <div className="flex flex-row items-center gap-2.5 mt-5 relative">
       <Image
