@@ -14,6 +14,10 @@ import { UpdateDeleteCheckStore } from '@/stores/updateDeleteCheck'
 import CategoryList from './components/CategoryList'
 import { Spending } from '../types'
 
+import EmptyAlert from './components/EmptyAlert'
+
+import { currentTabStore } from '@/stores/currentTab'
+
 const HomePage = () => {
   const router = useRouter()
   const { memberEmail } = memberEmailStore()
@@ -27,6 +31,8 @@ const HomePage = () => {
     condition: 'spendingDate', // 초기값은 'spendingDate'로 설정
   })
   const [spendingList, setSpendingList] = useState<Spending[]>([])
+
+  const { setCurrentTab } = currentTabStore()
 
   // 화살표 클릭 감지
   const [clickEvent, setClickEvent] = useState<boolean>(false)
@@ -59,6 +65,9 @@ const HomePage = () => {
     setClickEvent((prev) => !prev)
     setClickDirection(0)
   }
+
+  // 데이터 없는걸 처리하기 위한 변수
+  const [isEmpty, setIsEmpty] = useState<boolean>(false)
 
   const clickArrowLeft = () => {
     const newMonth = (spendData.spendingMonth as number) - 1
@@ -129,8 +138,9 @@ const HomePage = () => {
       },
       body: spendData.memberEmail, // 데이터를 JSON 문자열로 변환하여 전송
     }).then((res) => {
-      // 204는 처리를 어떻게 할까?ㄴ
+      // 204는 처리를 어떻게 할까?
       if (res.status === 200 || res.status === 204) {
+        setCurrentTab('home')
         fetchSpendList()
       } else {
         Swal.fire({
@@ -155,44 +165,11 @@ const HomePage = () => {
         return res.json()
       })
       .then((data) => {
-        if (
-          data.length === 0 &&
-          spendData.spendingMonth !== new Date().getMonth() + 1
-        ) {
-          Swal.fire({
-            width: 300,
-            text: '저장된 데이터가 없습니다!',
-            icon: 'error',
-          })
-          if (clickDirection === 0) {
-            if ((spendData.spendingMonth as number) === 1) {
-              setSpendData({
-                ...spendData,
-                ['spendingYear']: (spendData.spendingYear as number) - 1,
-                ['spendingMonth']: 12,
-              })
-            } else {
-              setSpendData({
-                ...spendData,
-                ['spendingMonth']: (spendData.spendingMonth as number) - 1,
-              })
-            }
-          } else if (clickDirection === 1) {
-            if ((spendData.spendingMonth as number) === 12) {
-              setSpendData({
-                ...spendData,
-                ['spendingYear']: (spendData.spendingYear as number) + 1,
-                ['spendingMonth']: 1,
-              })
-            } else {
-              setSpendData({
-                ...spendData,
-                ['spendingMonth']: (spendData.spendingMonth as number) + 1,
-              })
-            }
-          }
+        if (data.length === 0) {
+          setIsEmpty(true)
         } // 저장된 데이터가 있다면 spendingList에 내용 추가
         else {
+          setIsEmpty(false)
           setSpendingList(data)
           let sum = 0
           data.forEach((element: any) => {
@@ -265,6 +242,7 @@ const HomePage = () => {
       <div className="flex flex-col h-screen bg-background-fill">
         <div className="w-full h-44 bg-background">
           <HomeHeader
+            isEmpty={isEmpty}
             spend={spendData}
             spendSum={monthTotalSum}
             clickArrowRight={clickArrowRight}
@@ -276,24 +254,28 @@ const HomePage = () => {
         <div className="h-[48px]">
           <SortButtons clickText={clickText} sort={sort} />
         </div>
-        <div className="overflow-auto">
-          <div>
-            <div className="mx-5 mt-5 pb-20">
-              <SpendingList
-                // 이건 사용자에게 보여질 날짜 데이터 처리
-                formatTime={formatTime}
-                // 최신순 고액순
-                sort={sort}
-                // 사용자에게 보여질 날짜 데이터 처리
-                formatDayTime={formatDayTime}
-                // 소비 내역 전체 리스트
-                spendingList={spendingList}
-                // 카테고리 선택 관련
-                newSelected={newSelected}
-              />
+        {isEmpty ? (
+          <EmptyAlert />
+        ) : (
+          <div className="overflow-auto">
+            <div>
+              <div className="mx-5 mt-5 pb-20">
+                <SpendingList
+                  // 이건 사용자에게 보여질 날짜 데이터 처리
+                  formatTime={formatTime}
+                  // 최신순 고액순
+                  sort={sort}
+                  // 사용자에게 보여질 날짜 데이터 처리
+                  formatDayTime={formatDayTime}
+                  // 소비 내역 전체 리스트
+                  spendingList={spendingList}
+                  // 카테고리 선택 관련
+                  newSelected={newSelected}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="fixed top-[690px] right-[20px]">
           <FaskMakeButton onClick={handleToggle} />
         </div>

@@ -86,7 +86,7 @@ const RecordContentContainer = ({
   return (
     <div className="rounded-lg bg-background m-5">
       {/* 헤더 */}
-      <div className={`${bgColor} p-5`}>
+      <div className={`${bgColor} p-5 rounded-t-lg`}>
         <div className="flex justify-between w-full mb-2.5">
           <span>
             <span className="font-scDreamMedium mr-[10px]">

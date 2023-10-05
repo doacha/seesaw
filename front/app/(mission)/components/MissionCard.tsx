@@ -64,7 +64,9 @@ const MissionCard = ({
           {/* 제한인원 */}
         </figure>
         <div className="p-2.5">
-          <div className="text-xs card-title mb-2.5">{data.missionTitle}</div>
+          <div className="text-xs card-title mb-2.5  truncate">
+            {data.missionTitle}
+          </div>
           <div className="flex gap-2.5 mb-2.5">
             {/* 카테고리 */}
             <Capsule

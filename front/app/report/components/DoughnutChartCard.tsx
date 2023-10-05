@@ -1,7 +1,7 @@
 'use client'
 
 import Card from '@/app/components/Card'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { categoryList, categoryIcon, iconColors } from '@/app/lib/constants'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
@@ -17,11 +17,15 @@ interface Props {
 }
 
 const DoughtnutChartCard = ({ spendData }: Props) => {
-  const [isOpened, setIsOpened] = useState<boolean>(true)
+  const [isOpened, setIsOpened] = useState<boolean>(false)
 
   const clickDownArrow = () => {
     setIsOpened(!isOpened)
   }
+
+  useEffect(() => {
+    setIsOpened(false)
+  }, [spendData])
 
   const fetchCategorySumList = async (spendDate: Spending) => {
     const res = await fetch(
