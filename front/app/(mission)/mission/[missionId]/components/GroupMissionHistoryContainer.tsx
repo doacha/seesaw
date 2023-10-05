@@ -7,6 +7,7 @@ import { GroupStatusProps } from '@/app/types'
 import { RecordDetail } from '@/app/types'
 import { recordListStore } from '@/stores/recordListStore'
 import { memberEmailStore } from '@/stores/memberEmail'
+import useIntersect from '@/app/(mission)/useIntersect'
 
 const getPastRecord = async (input: {
   missionId: string
@@ -31,39 +32,67 @@ const getPastRecord = async (input: {
 }
 
 const GroupMissionHistoryContainer = ({ data }: { data: GroupStatusProps }) => {
-  const {
-    mutate,
-    data: groupMissionHistory,
-    isSuccess,
-  } = useMutation(getPastRecord)
-  const { recordMap, setRecordMap } = recordListStore()
+  const [pageNumber, setPageNumber] = useState(0)
+  const [hasNext, setHasNext] = useState(true)
+  const [groupMissionHistory, setGroupMissionHistory] = useState<
+    RecordDetail[][]
+  >([])
+  const { recordMap, recordStatus, setRecordMap } = recordListStore()
   const { memberNickname } = memberEmailStore()
-  // const [records, setRecords] = useState<any[][]>([])
+
   useEffect(() => {
-    mutate(
-      {
-        missionId: data.missionId,
+    const init = async () => {
+      let temp = (await getPastRecord({
+        missionId: recordStatus.missionId,
         pageNumber: 0,
-      },
-      {
-        onSuccess: (res: RecordDetail[][]) => {
-          const newRecordMap: { [key: number]: any } = { ...recordMap }
-          res.forEach((recordListByRecordNumber) => {
-            let idx = recordListByRecordNumber.findIndex(
-              (record) => record.memberNickname === memberNickname,
-            )
-            const number = recordListByRecordNumber[idx].recordNumber
-            const id = recordListByRecordNumber[idx].recordId
-            newRecordMap[number] = id
-          })
-          setRecordMap(newRecordMap)
-          // setRecords(res)
-          return res
-        },
-        onError: (err) => console.log(err),
-      },
-    )
+      })) as RecordDetail[][]
+      const newRecordMap: { [key: number]: any } = { ...recordMap }
+      temp.forEach((recordListByRecordNumber) => {
+        let idx = recordListByRecordNumber.findIndex(
+          (record) => record.memberNickname === memberNickname,
+        )
+        const number = recordListByRecordNumber[idx].recordNumber
+        const id = recordListByRecordNumber[idx].recordId
+        newRecordMap[number] = id
+      })
+      setRecordMap(newRecordMap)
+      if (temp.length < 5) {
+        setHasNext(false)
+      }
+      setGroupMissionHistory(temp)
+      setPageNumber(1)
+    }
+    init()
   }, [])
+
+  const [_, setRef] = useIntersect(async (entry, observer) => {
+    // 불러올게없을때
+    if (!hasNext) return
+
+    let temp = (await getPastRecord({
+      missionId: recordStatus.missionId,
+      pageNumber: pageNumber,
+    })) as RecordDetail[][]
+    const newRecordMap: { [key: number]: any } = { ...recordMap }
+    temp.forEach((recordListByRecordNumber) => {
+      let idx = recordListByRecordNumber.findIndex(
+        (record) => record.memberNickname === memberNickname,
+      )
+      const number = recordListByRecordNumber[idx].recordNumber
+      const id = recordListByRecordNumber[idx].recordId
+      newRecordMap[number] = id
+    })
+    setRecordMap(newRecordMap)
+    if (temp.length < 5) {
+      setHasNext(false)
+    }
+
+    setGroupMissionHistory((prev) => prev.concat(temp))
+    setPageNumber((prev) => prev + 1)
+
+    observer.unobserve(entry.target)
+  }, {})
+
   return (
     <div className="rounded-lg bg-background p-5 m-5">
       <div className="font-scDreamMedium">미션 기록</div>
@@ -76,6 +105,11 @@ const GroupMissionHistoryContainer = ({ data }: { data: GroupStatusProps }) => {
             key={idx}
           />
         ))}
+      {groupMissionHistory.length > 0 && (
+        <div className="opacity-0" ref={setRef}>
+          now loading
+        </div>
+      )}
     </div>
   )
 }
