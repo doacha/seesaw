@@ -86,18 +86,13 @@ const Login = () => {
         }
         return res.json()
       })
-      .then((data) =>
-        // Todo 여기에서 백에서 받은 accessToken 저장해야
-        {
-          setMember(data.memberEmail, data.memberNickname)
-          console.log(data)
-        },
-      )
-      // 이 catch의 사용성을 솔직히 모르게썽
+      .then((data) => {
+        setMember(data.memberEmail, data.memberNickname)
+        console.log(data)
+      })
       .catch((err) => Swal.showValidationMessage(`Request failed: ${err}`))
   }
   const forgetPw = () => {
-    // Todo 패스워드 까먹었을 경우 처리
     console.log('패스워드 까먹')
   }
 
