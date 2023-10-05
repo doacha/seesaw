@@ -184,6 +184,26 @@ public class MemberService {
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<AccountResponse> result = restTemplate.exchange(requestEntity, AccountResponse.class);
+
+        Member update = Member.builder()
+                .memberEmail(member.getMemberEmail())
+                .memberPassword(member.getMemberPassword())
+                .memberBirth(member.getMemberBirth())
+                .memberName(member.getMemberName())
+                .memberGender(member.isMemberGender())
+                .memberNickname(member.getMemberNickname())
+                .memberImgUrl(member.getMemberImgUrl())
+                .memberPhoneNumber(member.getMemberPhoneNumber())
+                .memberSavingAccount(result.getBody().getAccountNum()) // 적금 계좌 등록!
+                .memberMainAccount(member.getMemberMainAccount())
+                .memberBankId(member.getMemberBankId())
+                .memberAuthKey(member.getMemberAuthKey())
+                .memberIsSocial(member.isMemberIsSocial())
+                .memberState(member.getMemberState())
+                .memberRefreshToken(member.getMemberRefreshToken())
+                .build();
+
+        memberRepository.save(update);
         return result;
     }
 
