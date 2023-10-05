@@ -6,7 +6,8 @@ import Swal from 'sweetalert2'
 import Input from '../components/Input'
 import TextButton from '../components/TextButton'
 import Button from '../components/Button'
-import GoogleBtn from './components/googleBtn'
+import Image from 'next/image'
+import Logo from '@/public/seesaw_logo.svg'
 
 import { memberEmailStore } from '@/stores/memberEmail'
 import { currentTabStore } from '@/stores/currentTab'
@@ -30,6 +31,12 @@ const Login = () => {
     setmemberInput({ ...memberInput, [name]: value })
   }
   const router = useRouter()
+
+  const handleKeyUp = (e: any) => {
+    if (e.key === 'Enter') {
+      clickLogin()
+    }
+  }
 
   const clickLogin = () => {
     const data: {
@@ -60,7 +67,6 @@ const Login = () => {
     })
       .then((res) => {
         if (res.status === 200) {
-          // 홈으로 이동하기 전에 loading이 필요하려나?
           setCurrentTab('home')
           router.push('/home')
         } else if (res.status === 400) {
@@ -94,10 +100,7 @@ const Login = () => {
     // Todo 패스워드 까먹었을 경우 처리
     console.log('패스워드 까먹')
   }
-  const googleLogin = () => {
-    // Todo 구글 로그인 처리
-    console.log('구글 로그인')
-  }
+
   const clickRegist = () => {
     router.push('/regist')
   }
@@ -111,35 +114,40 @@ const Login = () => {
   return (
     <div className="flex flex-col h-screen bg-background-fill">
       <div className="px-5 my-auto">
-        <div className="h-[355px] w-full px-5 py-5 bg-background rounded-lg">
-          <p className="font-envR justify-start text-2xl">로그인</p>
+        <div className="flex flex-col">
+          <div className="flex justify-center mb-10">
+            <Image src={Logo} alt="seesaw_logo" width={140} height={100} />
+          </div>
+          <div className="h-[300px] w-full px-5 py-5 bg-background rounded-lg">
+            <p className="font-envR justify-start text-2xl">로그인</p>
 
-          <div className="py-3 w-full">
+            <div className="py-3 w-full">
+              <Input
+                name="email"
+                onChange={handleInput}
+                type="email"
+                placeholder="이메일"
+                interval="0"
+              />
+            </div>
             <Input
-              name="email"
+              name="pw"
               onChange={handleInput}
-              type="email"
-              placeholder="이메일"
+              onKeyUp={handleKeyUp}
+              type="password"
+              placeholder="비밀번호"
               interval="0"
-            />
-          </div>
-          <Input
-            name="pw"
-            onChange={handleInput}
-            type="password"
-            placeholder="비밀번호"
-            interval="0"
-          ></Input>
-          <div className="flex py-5 pr-5 justify-end text-xs">
-            <TextButton
-              innerText="비밀번호를 잊으셨나요?"
-              textColor=" text-blue-600"
-              onButtonClick={forgetPw}
-            ></TextButton>
-          </div>
-          <Button color="primary" label="로그인" onClick={clickLogin}></Button>
-          <div className="py-3">
-            <GoogleBtn onClick={googleLogin}></GoogleBtn>
+            ></Input>
+            <div className="flex py-5 pr-5 justify-end text-xs">
+              <TextButton
+                innerText="비밀번호를 잊으셨나요?"
+                textColor=" text-blue-600"
+                onButtonClick={forgetPw}
+              ></TextButton>
+            </div>
+            <div className="mt-4">
+              <Button color="primary" label="로그인" onClick={clickLogin} />
+            </div>
           </div>
         </div>
       </div>

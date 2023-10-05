@@ -101,7 +101,7 @@ const SpendingList = ({
             <>
               {/* Object.entries가 그룹화된 데이터를 배열로 변환하는 과정 */}
               {Object.entries(groupedSpending).map(([day, data]) => (
-                <div className="mb-2" key={day}>
+                <div className="mb-3" key={day}>
                   <Card
                     title={day}
                     content={
