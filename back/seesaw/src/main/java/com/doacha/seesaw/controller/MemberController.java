@@ -1,9 +1,11 @@
 package com.doacha.seesaw.controller;
 
+import com.doacha.seesaw.exception.BadRequestException;
 import com.doacha.seesaw.jwt.JwtProvider;
 import com.doacha.seesaw.jwt.MemberDetail;
 import com.doacha.seesaw.jwt.TokenResponse;
 import com.doacha.seesaw.model.dto.account.AccountResponse;
+import com.doacha.seesaw.model.dto.account.AccountTransferResponse;
 import com.doacha.seesaw.model.dto.account.BalanceTransferRequest;
 import com.doacha.seesaw.model.dto.account.CreateAccountToSeesawRequest;
 import com.doacha.seesaw.model.dto.mission.MissionMemberResponse;
@@ -148,7 +150,14 @@ public class MemberController {
 
     @PostMapping("/balance-transfer")
     public ResponseEntity<?> balanceTransfer(@RequestBody BalanceTransferRequest balanceTransferRequest){
-        return memberService.balanceTransfer(balanceTransferRequest);
+        try {
+            ResponseEntity<AccountTransferResponse> response = memberService.balanceTransfer(balanceTransferRequest);
+            return new ResponseEntity<ResponseEntity<AccountTransferResponse>>(response, HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<String> (e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<String>(FAIL, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     // 테스트용 이미지 업로드 코드

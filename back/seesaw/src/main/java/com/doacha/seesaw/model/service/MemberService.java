@@ -1,6 +1,7 @@
 package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.BadRequestException;
+import com.doacha.seesaw.exception.CustomException;
 import com.doacha.seesaw.mail.TempKey;
 import com.doacha.seesaw.model.dto.account.*;
 import com.doacha.seesaw.model.dto.user.*;
@@ -25,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -235,35 +237,44 @@ public class MemberService {
     }
 
     // 백에 예치금 이체 api 요청
-    public ResponseEntity<AccountTransferResponse> balanceTransfer (BalanceTransferRequest balanceTransferRequest){
+    public ResponseEntity<AccountTransferResponse> balanceTransfer(BalanceTransferRequest balanceTransferRequest) throws CustomException {
+        try {
+            Member member = memberRepository
+                    .findByMemberEmail(balanceTransferRequest.getMemberEmail())
+                    .orElseThrow(() -> new BadRequestException("아이디를 확인하세요."));
 
-        Member member = memberRepository
-                .findByMemberEmail(balanceTransferRequest.getMemberEmail())
-                .orElseThrow(() -> new BadRequestException("아이디를 확인하세요."));
+            AccountTransferRequest accountTransferRequest = new AccountTransferRequest(
+                    member.getMemberMainAccount(),
+                    "457899-01-296336",
+                    balanceTransferRequest.getAccountApprovalAmount(),
+                    balanceTransferRequest.getAccountPassword()
+            );
 
-        AccountTransferRequest accountTransferRequest = new AccountTransferRequest(
-                member.getMemberMainAccount(),
-                "457899-01-296336",
-                balanceTransferRequest.getAccountApprovalAmount(),
-                balanceTransferRequest.getAccountPassword()
-        );
+            URI uri = UriComponentsBuilder
+                    .fromUriString(seesawBank_api)
+                    .path("/account-transactional/transfer")
+                    .build()
+                    .toUri();
 
-        URI uri = UriComponentsBuilder
-                .fromUriString(seesawBank_api)
-                .path("/account-transactional/transfer")
-                .build()
-                .toUri();
+            RequestEntity<AccountTransferRequest> requestEntity = RequestEntity
+                    .post(uri)
+                    .body(accountTransferRequest);
 
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<AccountTransferResponse> result = restTemplate.exchange(requestEntity, AccountTransferResponse.class);
+            return result;
+        } catch (HttpClientErrorException e) {
+            // HTTP 오류 응답 처리
+            if (e.getRawStatusCode() == 400) {
+                String responseBody = e.getResponseBodyAsString();
+                throw new BadRequestException(responseBody);
+            }
 
-        RequestEntity<AccountTransferRequest> requestEntity = RequestEntity
-                .post(uri)
-                .body(accountTransferRequest);
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<AccountTransferResponse> result = restTemplate.exchange(requestEntity, AccountTransferResponse.class);
-
-        return result;
+            // 기타 예외 처리
+            throw new CustomException("HTTP 오류: " + e.getRawStatusCode(), e);
+        }
     }
+
 
     // 로그아웃
     @Transactional
