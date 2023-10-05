@@ -242,6 +242,7 @@ public class RecordService {
         List<EndRecordListResponse> endRecordListResponseList = new ArrayList<>();
         for(Record record : recordList){
             endRecordListResponseList.add(new EndRecordListResponse(
+                    record.getRecordId(),
                     record.getRecordNumber(),
                     record.getRecordTotalCost(),
                     record.getRecordStartDate(),
