@@ -15,7 +15,6 @@ import {
   missionPeriodArray,
 } from '@/app/lib/constants'
 import type { MissionDetail } from '@/app/types'
-import { MouseEventHandler } from 'react'
 import CopyToClipboardButton from './CopyToClipboardButton'
 const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
   const totalTerm = Math.ceil((data.missionPeriod * data.missionTotalCycle) / 7)
