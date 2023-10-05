@@ -18,12 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.time.YearMonth;
+import java.text.SimpleDateFormat;
+import java.time.*;
 import java.util.*;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 
 @Service
@@ -45,6 +43,8 @@ public class SpendingService {
     // 등록 save
     public void save(SpendingDto spendingDto) {
         log.info("등록한 내역과 카테고리 & 기간 일치하는 미션에 참여중인지 확인");
+        log.info("소비 카테고리 - {}", spendingDto.getSpendingCategoryId());
+        log.info("소비 일시 - {}", spendingDto.getSpendingDate());
         Record record = checkRecord(spendingDto.getMemberEmail(), spendingDto.getSpendingCategoryId(), spendingDto.getSpendingDate());
 
         Optional<Member> member = memberRepository.findById(spendingDto.getMemberEmail());
@@ -149,11 +149,19 @@ public class SpendingService {
             return null;
         }
 
-        Date date = new Date(spendingDate.getTime()); // 소비 날짜
-        if (date.before(record.getRecordStartDate()) || date.after(record.getRecordEndDate())) {
+        LocalDate spending = spendingDate.toLocalDateTime().toLocalDate();
+        LocalDate startDate = record.getRecordStartDate().toLocalDate();
+        LocalDate endDate = record.getRecordEndDate().toLocalDate();
+
+        log.info("소비날짜 - {}", spending);
+        log.info("레코드 시작 날짜 - {}", startDate);
+        log.info("레코드 종료 날짜 - {}", endDate);
+
+        if (spending.isBefore(startDate) || spending.isAfter(endDate)) {
             log.info("소비 날짜와 참여중인 미션의 기간 일치하지 않음");
             return null;
         }
+
 
         log.info("카테고리 & 기간 일치하는 미션에 참여중");
 
