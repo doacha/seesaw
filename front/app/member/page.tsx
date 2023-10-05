@@ -45,7 +45,6 @@ const memberPage = () => {
   }
 
   const getProfileInfo = async () => {
-    console.log(memberEmail)
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/mypage`,
@@ -58,7 +57,6 @@ const memberPage = () => {
         },
       )
       const tmp = await res.json()
-      console.log(tmp)
       return tmp
     } catch (err) {
       console.log(err)
