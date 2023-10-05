@@ -20,11 +20,13 @@ const SearchContainer = ({
   handleCapsule,
   state,
   setState,
+  setListEmpty,
 }: {
   onClick: any
   handleCapsule: any
   state: SearchState
   setState: React.Dispatch<React.SetStateAction<SearchState>>
+  setListEmpty: () => void
 }) => {
   const [periodDropDownOn, setPeriodDropDownOn] = useState(false)
   const [cycleDropDownOn, setCycleDropDownOn] = useState(false)
@@ -55,7 +57,11 @@ const SearchContainer = ({
 
   return (
     <div className="rounded-lg bg-background px-5 py-2.5 w-full">
-      <SearchBar state={state} setState={setState} />
+      <SearchBar
+        state={state}
+        setState={setState}
+        setListEmpty={setListEmpty}
+      />
       <div className="mt-5">카테고리</div>
       <div className={`mt-2.5 overflow-scroll ${styles.delScroll}`}>
         <div className="carousel">
@@ -66,9 +72,10 @@ const SearchContainer = ({
               textColor={`${idx}`}
               key={idx}
               isSelected={idx === state['category']}
-              onClick={() =>
+              onClick={() => {
                 handleCapsule(idx, idx === state['category'], 'category')
-              }
+                // setListEmpty()
+              }}
             >
               {element}
             </ToggleCapsule>
@@ -126,9 +133,10 @@ const SearchContainer = ({
                       className="mr-[15px] mb-[15px]"
                       key={idx}
                       isSelected={idx === state['period']}
-                      onClick={() =>
+                      onClick={() => {
                         handleCapsule(idx, idx === state['period'], 'period')
-                      }
+                        // setListEmpty()
+                      }}
                     >
                       {element}
                     </ToggleCapsule>
@@ -165,9 +173,10 @@ const SearchContainer = ({
                       className="mr-[15px] mb-[15px]"
                       key={idx}
                       isSelected={idx === state['cycle']}
-                      onClick={() =>
+                      onClick={() => {
                         handleCapsule(idx, idx === state['cycle'], 'cycle')
-                      }
+                        // setListEmpty()
+                      }}
                     >
                       {element}
                     </ToggleCapsule>
