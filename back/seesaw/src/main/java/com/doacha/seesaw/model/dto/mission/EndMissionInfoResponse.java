@@ -40,4 +40,7 @@ public class EndMissionInfoResponse {
 
     @Schema(description = "미션 총 횟수", example = "4", required = true)
     private int missionTotalCycle;
+
+    @Schema(description = "미션 목표 금액", example = "50000", required = true)
+    private int missionTargetPrice;
 }
