@@ -58,6 +58,11 @@ const CompleteMissionDetailCard = (props: Props) => {
             children={`${props.mission.missionTargetPrice?.toLocaleString()}원`}
             textColor="black"
           />
+          <Capsule
+            bgColor="background-fill"
+            children={`총 ${props.mission.missionTotalCycle}회`}
+            textColor="black"
+          />
         </div>
       </div>
     </div>
