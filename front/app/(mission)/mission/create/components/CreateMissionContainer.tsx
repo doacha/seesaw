@@ -83,7 +83,6 @@ const CreateMissionContainer = () => {
       }
       request[value] = input[value]
     }
-    request.missionMaxCount = savingMoney
     console.log('리퀘스트체크', request)
     const formData = new FormData()
     if (input.imgFile.file !== undefined) {

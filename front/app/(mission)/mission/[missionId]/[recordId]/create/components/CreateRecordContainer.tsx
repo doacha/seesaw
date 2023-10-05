@@ -1,3 +1,4 @@
+'use client'
 import { getCycleTerm } from '@/app/(mission)/util'
 import Image from 'next/image'
 import RecordSpendingHistory from './RecordSpendingHistory'
@@ -7,34 +8,63 @@ import { recordListStore } from '@/stores/recordListStore'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-const CreateRecordContainer = ({ recordId }: { recordId: number }) => {
-  const { data, isSuccess } = useQuery({
-    queryKey: ['record', recordId],
-    queryFn: () => getRecordDetail(recordId),
-    staleTime: 10 * 1000,
-    suspense: true,
-  })
+interface RecordDetailProps {
+  recordId: number
+  recordContent: string
+  recordWriteTime: string
+  recordTotalCost: number
+  recordNumber: number
+  recordStatus: number
+  memberEmail: string
+  memberNickname: string
+  memberImgUrl: string
+}
+
+const CreateRecordContainer = ({
+  recordId,
+  recordContent,
+  history,
+}: {
+  recordId: number
+  recordContent: RecordDetailProps
+  history: Array<{
+    spendingTitle: string
+    spendingCost: number
+  }>
+}) => {
+  // const { data: recordDetail, isSuccess } = useQuery({
+  //   queryKey: ['record', recordId],
+  //   queryFn: () => getRecordDetail(recordId),
+  //   staleTime: 10 * 1000,
+  //   suspense: true,
+  // })
+  // const { data: spendingHistory } = useQuery({
+  //   queryKey: ['spendingHistory', recordId],
+  //   queryFn: () => getSpendingHistory(recordId),
+  //   staleTime: 10 * 1000,
+  //   suspense: true,
+  // })
   const { mutate } = useMutation(putRecordContent)
   const { recordList, recordStatus } = recordListStore()
   const [textInput, setTextInput] = useState('')
   const router = useRouter()
   // 렌더링용 초기데이터 Init 과정
-  const recordTargetIdx = recordList.findIndex(
-    (element) => element.recordNumber === recordStatus.missionCurrentCycle,
-  )
-  let history: {
-    recordName: string
-    recordCost: number
-  }[]
-  if (recordList.length > 0 && recordList[recordTargetIdx] !== undefined) {
-    history = recordList[recordTargetIdx].recordList
-  } else {
-    history = []
-  }
-  if (isSuccess && textInput === '') {
-    console.log('수정에서 받아오는거', data)
-    setTextInput(data.recordContent)
-  }
+  // const recordTargetIdx = recordList.findIndex(
+  //   (element) => element.recordNumber === recordStatus.missionCurrentCycle,
+  // )
+  // let history: {
+  //   recordName: string
+  //   recordCost: number
+  // }[]
+  // if (recordList.length > 0 && recordList[recordTargetIdx] !== undefined) {
+  //   history = recordList[recordTargetIdx].recordList
+  // } else {
+  //   history = []
+  // }
+  // if (isSuccess && textInput === '') {
+  //   console.log('수정에서 받아오는거', recordContent)
+  //   setTextInput(recordContent.recordContent)
+  // }
 
   const handleSubmit = () => {
     mutate(
@@ -51,23 +81,25 @@ const CreateRecordContainer = ({ recordId }: { recordId: number }) => {
   return (
     <div className="rounded-lg bg-background m-5">
       {/* 헤더 */}
-      {data && (
+      {recordContent && (
         <>
           <div
             className={`collapse-title flex flex-col items-center bg-primary-container ${
-              data.recordTotalCost >= 0 ? 'bg-seesaw-blue-100' : 'bg-red-100'
+              recordContent.recordStatus !== 2
+                ? 'bg-seesaw-blue-100'
+                : 'bg-red-100'
             } rounded-t-lg p-5`}
           >
             {/* 기간 및 자세히 보기 */}
             <div className="flex justify-between w-full mb-2.5">
               <span>
                 <span className="font-scDreamMedium mr-[10px]">
-                  {data.recordNumber}회차
+                  {recordContent.recordNumber}회차
                 </span>
                 <span className="text-[10px] text-outline">
                   {getCycleTerm(
                     recordStatus.missionStartDate,
-                    data.recordNumber,
+                    recordContent.recordNumber,
                     recordStatus.missionPeriod,
                   )}
                 </span>
@@ -78,22 +110,26 @@ const CreateRecordContainer = ({ recordId }: { recordId: number }) => {
             <div className="flex justify-between items-center w-full mb-2.5">
               <span>
                 <Image
-                  src={data.memberImgUrl ?? '/default_profile.svg'}
+                  src={recordContent.memberImgUrl ?? '/default_profile.svg'}
                   width={35}
                   height={35}
                   alt="member profile image"
                   className="rounded-full inline-block mr-[15px]"
                 />
-                <span>{data.memberNickname}</span>
+                <span>{recordContent.memberNickname}</span>
               </span>
             </div>
           </div>
           {/* 상세내역 */}
           <RecordSpendingHistory
-            textColor={data.recordTotalCost < 0 ? 'text-error' : 'text-primary'}
+            textColor={
+              recordContent.recordTotalCost < 0 ? 'text-error' : 'text-primary'
+            }
             targetPrice={recordStatus.missionTargetPrice}
             history={history ?? []}
-            balance={data.recordTotalCost}
+            balance={
+              recordStatus.missionTargetPrice - recordContent.recordTotalCost
+            }
           />
           {/* 인풋 영역 */}
           <div className="m-5">
@@ -124,11 +160,23 @@ const CreateRecordContainer = ({ recordId }: { recordId: number }) => {
   )
 }
 
-const getRecordDetail = async (recordId: number) => {
-  return await fetch(
-    `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/record/${recordId}`,
-  ).then((res) => res.json())
-}
+// const getRecordDetail = async (recordId: number) => {
+//   return await fetch(
+//     `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/record/${recordId}`,
+//   ).then((res) => res.json())
+// }
+
+// const getSpendingHistory = async (recordId: number) => {
+//   return await fetch(
+//     `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/spending/record/${recordId}`,
+//     {
+//       method: 'get',
+//     },
+//   ).then((res) => {
+//     let s = res.json()
+//     return s
+//   })
+// }
 
 const putRecordContent = async ({
   recordId,
