@@ -173,6 +173,11 @@ public class SpendingService {
         Mission mission = record.getMemberMission().getMission();
         MemberMission memberMission = record.getMemberMission();
 
+        boolean isAlreadyFail = false;
+        if (record.getRecordStatus() == 2) {
+            isAlreadyFail = true;
+        }
+
         log.info("해당 미션의 레코드 업데이트");
         // recordTotalCost에 spendingDto.getSpegingCost 더해주기
         // 업데이트된 recordTotalCost가 missionTargetPrice 넘었으면 record_status 2(실패)로 변경
@@ -180,7 +185,7 @@ public class SpendingService {
 
         recordRepository.save(updatedRecord);
 
-        if (record.getRecordStatus() == 2) {
+        if (isAlreadyFail) {
             log.info("이미 실패한 레코드");
             return;
         }
