@@ -56,7 +56,7 @@ const OngoingMissionList = () => {
       },
     )
   }, [])
-  console.log('데이터목록', data)
+
   return (
     <div className="">
       <div className="font-scDreamExBold mb-5 ">참여중인 미션</div>

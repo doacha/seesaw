@@ -71,7 +71,6 @@ const CreateRecordContainer = ({
       { recordId, recordContent: textInput },
       {
         onSuccess: (res) => {
-          console.log(res)
           router.push(`/mission/${recordStatus.missionId}/${recordId}`)
         },
         onError: (err) => console.log('수정실패', err),
@@ -185,7 +184,6 @@ const putRecordContent = async ({
   recordId: number
   recordContent: string
 }) => {
-  console.log(recordId, recordContent)
   return await fetch(
     `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/record/update`,
     {

@@ -33,7 +33,6 @@ const getTodayMission = async (input: {
     },
   }).then((res) => {
     let js = res.json()
-    console.log('로우확인', js)
     return js
   })
 }
@@ -56,15 +55,12 @@ const GroupStatusTodayContainer = ({ data }: { data: GroupStatusProps }) => {
           const targetIdx = res.findIndex(
             (element) => element.memberNickname === memberNickname,
           )
-          console.log('투데이미션 레코드 확인', res[targetIdx].recordId, res)
           const recordNumber = data.missionCurrentCycle
-          console.log(recordNumber, res[targetIdx].recordId)
           setTodayRecordId(res[targetIdx].recordId, recordStatus)
           setRecordMap({
             ...recordMap,
             [recordNumber]: res[targetIdx].recordId,
           })
-          console.log('투데이미션', res)
           return res
         },
         onError: (err) => console.log('에러sdsd', err),
@@ -106,7 +102,6 @@ const getTodayMissionRecord = (data: TodayStatus[], memberNickname: string) => {
   const targetIdx = data.findIndex(
     (element) => element.memberNickname === memberNickname,
   )
-  console.log('targetIndx', targetIdx)
   return data[targetIdx].recordId
 }
 

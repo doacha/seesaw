@@ -16,14 +16,12 @@ const CreatePage = async ({ params }: { params: any }) => {
 }
 
 const getRecordContent = async (recordId: number) => {
-  console.log('이거왜 언디파인드', recordId)
   return await fetch(
     `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/record/${recordId}`,
     {
       method: 'GET',
     },
   ).then((res) => {
-    console.log('이거왜 ', res)
     return res.json()
   })
 }
@@ -36,7 +34,6 @@ const getSpendingHistory = async (recordId: number) => {
     },
   ).then((res) => {
     let s = res.json()
-    console.log('ㅅㅅㅅㅅㅅㅅ', s)
     return s
   })
 }
