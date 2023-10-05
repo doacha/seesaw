@@ -10,12 +10,13 @@ interface Props {
 }
 
 const CompleteMissionDetailCard = (props: Props) => {
-  let capsuleIndex: number;
-if (props.mission.missionCategoryId !== undefined) {
-    capsuleIndex = props.mission.missionCategoryId;
-} else {
-    capsuleIndex = 0;
-}
+  console.log(props.mission)
+  let capsuleIndex: number
+  if (props.mission.missionCategoryId !== undefined) {
+    capsuleIndex = props.mission.missionCategoryId
+  } else {
+    capsuleIndex = 0
+  }
   return (
     <div className="flex flex-col w-full bg-white">
       <CompleteMissionImg src={props.mission.missionImgUrl} />
@@ -26,23 +27,29 @@ if (props.mission.missionCategoryId !== undefined) {
           </div>
           <div
             className={
-              props.mission.memberMissionStatus === 1
+              props.mission.memberMissionStatus === 2
                 ? 'text-primary font-scDreamExBold'
-                : props.mission.memberMissionStatus === 2
+                : props.mission.memberMissionStatus === 3
                 ? 'text-error font-scDreamExBold'
                 : ''
             }
           >
-            {props.mission.memberMissionStatus === 0
+            {props.mission.memberMissionStatus === 1
               ? '진행중'
-              : props.mission.memberMissionStatus === 1
+              : props.mission.memberMissionStatus === 2
               ? '성공'
               : '실패'}
           </div>
         </div>
         <div>{props.mission.missionPurpose}</div>
-        
-        <div><Capsule bgColor={capsuleIndex.toString()} children={categoryList[capsuleIndex]} textColor={'background'}/></div>
+
+        <div>
+          <Capsule
+            bgColor={capsuleIndex.toString()}
+            children={categoryList[capsuleIndex]}
+            textColor={'background'}
+          />
+        </div>
       </div>
     </div>
   )

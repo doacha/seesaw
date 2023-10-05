@@ -1,10 +1,14 @@
 import { Record } from '@/app/types'
+import { currentMissionIdStore } from '@/stores/currentMissionId'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   record: Record
 }
 
 const RecordCard = (props: Props) => {
+  const { currentMissionId } = currentMissionIdStore()
+  const router = useRouter()
   const getTxtColor = (value: number) => {
     if (value === 1) {
       return 'text-primary'
@@ -26,7 +30,12 @@ const RecordCard = (props: Props) => {
   }
 
   return (
-    <div className="p-[10px] bg-background-fill flex justify-between items-center rounded-lg">
+    <div
+      className="p-[10px] bg-background-fill flex justify-between items-center rounded-lg"
+      onClick={() =>
+        router.push(`/mission/${currentMissionId}/${props.record.recordId}`)
+      }
+    >
       <div className="flex flex-col">
         <div className="flex gap-2">
           <div>{props.record.recordNumber}회차</div>
