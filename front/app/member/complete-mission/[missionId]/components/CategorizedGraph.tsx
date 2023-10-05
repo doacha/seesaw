@@ -25,7 +25,13 @@ const CategorizedGraph = (props: Props) => {
           amount={Math.round(props.group)}
           length={`${props.group * 7}px`}
           title="그룹"
-          bgColor="bg-white"
+          bgColor={
+            props.highlight === 'most'
+              ? 'bg-error-container'
+              : props.highlight === 'least'
+              ? 'bg-primary-container'
+              : 'bg-outline-container'
+          }
           txtColor="text-surface"
           unitType="percent"
         ></HorizontalGarphBar>
@@ -38,14 +44,14 @@ const CategorizedGraph = (props: Props) => {
             props.highlight === 'most'
               ? 'bg-error'
               : props.highlight === 'least'
-              ? 'bg-secondary'
-              : 'bg-outline-container'
+              ? 'bg-primary'
+              : 'bg-outline'
           }
           txtColor={
             props.highlight === 'most'
               ? 'text-error'
               : props.highlight === 'least'
-              ? 'text-secondary'
+              ? 'text-primary'
               : 'text-surface'
           }
           unitType="percent"

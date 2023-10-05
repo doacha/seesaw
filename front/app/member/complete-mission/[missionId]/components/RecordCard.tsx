@@ -1,5 +1,6 @@
 import { Record } from '@/app/types'
 import { currentMissionIdStore } from '@/stores/currentMissionId'
+import { currentTabStore } from '@/stores/currentTab'
 import { useRouter } from 'next/navigation'
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
 }
 
 const RecordCard = (props: Props) => {
+  const { setCurrentTab } = currentTabStore()
   const { currentMissionId } = currentMissionIdStore()
   const router = useRouter()
   const getTxtColor = (value: number) => {
@@ -32,9 +34,10 @@ const RecordCard = (props: Props) => {
   return (
     <div
       className="p-[10px] bg-background-fill flex justify-between items-center rounded-lg"
-      onClick={() =>
+      onClick={() => {
+        setCurrentTab('mission')
         router.push(`/mission/${currentMissionId}/${props.record.recordId}`)
-      }
+      }}
     >
       <div className="flex flex-col">
         <div className="flex gap-2">
