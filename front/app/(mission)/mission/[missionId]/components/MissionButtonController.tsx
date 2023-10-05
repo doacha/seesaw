@@ -16,6 +16,7 @@ const MissionButtonController = ({
   missionCategoryId,
   missionPeriod,
   missionId,
+  missionDeposit,
 }: {
   isSaveMission: boolean
   missionCategory: string
@@ -23,6 +24,7 @@ const MissionButtonController = ({
   missionCategoryId: number
   missionPeriod: number
   missionId: string
+  missionDeposit: number
 }) => {
   const { data, refetch } = useQuery({
     queryKey: ['WaitingList', missionId],
@@ -47,6 +49,7 @@ const MissionButtonController = ({
           missionPeriod={missionPeriod}
           missionId={missionId}
           refetch={refetch}
+          missionDeposit={missionDeposit}
         />
       )}
     </div>
