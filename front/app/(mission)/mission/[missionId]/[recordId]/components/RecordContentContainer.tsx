@@ -8,14 +8,13 @@ import {
   faChevronUp,
 } from '@fortawesome/free-solid-svg-icons'
 import { getCycleTerm, getTimeBefore } from '../../../../util'
-import { text } from 'stream/consumers'
 import SpendingHistory from './SpendingHistory'
 import { recordListStore } from '@/stores/recordListStore'
-import { RecordList } from '@/app/types'
 import { useRef, useState, useEffect } from 'react'
 import { memberEmailStore } from '@/stores/memberEmail'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
+
 interface RecordDetailProps {
   recordId: number
   recordContent: string
@@ -79,7 +78,6 @@ const RecordContentContainer = ({
   useEffect(() => {
     const init = async () => {
       setRecordDetail(await data)
-      passTime = getTimeBefore(data?.recordWriteTime)
     }
     init()
   }, [])
@@ -132,7 +130,9 @@ const RecordContentContainer = ({
                 />
                 <span>{data && data.memberNickname}</span>
               </span>
-              <span className="text-[10px] text-outline">{passTime}</span>
+              <span className="text-[10px] text-outline">
+                {getTimeBefore(data?.recordWriteTime)}
+              </span>
             </div>
             {/* 성공 여부 및 잔액 */}
             <div className="w-full flex justify-between">
