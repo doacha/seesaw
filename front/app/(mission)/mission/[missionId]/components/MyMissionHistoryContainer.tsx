@@ -21,8 +21,6 @@ interface MyRecordHistory {
   [key: number]: any
 }
 
-const EMAIL_DUMMY = 'jiwon@seesaw.com'
-
 const MyMissionHistoryContainer = ({
   propsData,
   data,

@@ -109,9 +109,7 @@ const MyDepositStatusContainer = ({
               미션 예치금을
               <br />
               <span className="text-primary font-scDreamExBold text-base">
-                {propsData.missionDeposit.toLocaleString('ko-KR')} +{' '}
-                {propsData.missionDeposit -
-                  data.changedDeposit.toLocaleString('ko-KR')}
+                {data.changedDeposit.toLocaleString('ko-KR')}
               </span>
               원 받을 수 있어요!
             </span>
@@ -122,13 +120,10 @@ const MyDepositStatusContainer = ({
             <span>
               미션 예치금을
               <br />
-              <span className="text-primary font-scDreamExBold text-red mr-1">
-                {propsData.missionDeposit.toLocaleString('ko-KR') ?? 0}{' '}
-                <span className="text-error">
-                  {(
-                    data.changedDeposit - propsData.missionDeposit
-                  ).toLocaleString()}
-                </span>
+              <span className="text-error text-[18px] font-scDreamExBold mr-1">
+                {(
+                  data.changedDeposit - propsData.missionDeposit
+                ).toLocaleString()}
               </span>
               원 받습니다...
             </span>

@@ -5,6 +5,7 @@ import { useState, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 import Capsule from '@/app/components/Capsule'
+import { memberEmailStore } from '@/stores/memberEmail'
 const SetSaveMoneyModal = ({
   setState,
   modalRef,
@@ -26,6 +27,7 @@ const SetSaveMoneyModal = ({
   spendMoney: number
   period: number
 }) => {
+  const { memberNickname } = memberEmailStore()
   const cancelButtonRef = useRef<HTMLButtonElement>(null)
   const handleSavingMoneyByButton = (unit: number, sign?: string) => {
     let money = unit
@@ -50,15 +52,24 @@ const SetSaveMoneyModal = ({
       <div className="modal-box bg-background">
         <div className="font-scDreamExBold mb-5">적금 금액 설정</div>
         <div className="mb-5 flex flex-col gap-y-1">
-          <span>
-            {period}일 간 평균{' '}
+          <div>
+            <span className="font-scDreamExBold mr-1">{memberNickname}</span>
+            님의 {period}일 평균{' '}
             <span className="font-scDreamExBold">{missionCategory}</span> 소비
-            금액은 {spendMoney.toLocaleString()}원,
+            금액:
+          </div>
+          <div className="text-center text-error text-[18px] bg-background-fill rounded-lg font-scDreamExBold my-2.5 py-2">
+            {spendMoney.toLocaleString()} 원
+          </div>
+          <div>
+            <span className="mb-2.5 font-scDreamExBold">미션 목표 금액</span>:
+          </div>
+          <div className="text-center text-primary text-[18px] bg-background-fill rounded-lg font-scDreamExBold my-2.5 py-2">
+            {missionTargetPrice.toLocaleString()} 원
+          </div>
+          <span className="mt-5">
+            참고하셔서 회차별 적금 금액을 설정해주세요!
           </span>
-          <span className="mb-2.5">
-            미션 목표 금액은 {missionTargetPrice.toLocaleString()}원 입니다.
-          </span>
-          <span>참고하셔서 회차별 적금 금액을 설정해주세요!</span>
         </div>
         <Input
           placeholder=""
@@ -78,7 +89,12 @@ const SetSaveMoneyModal = ({
                   onClick={() => handleSavingMoneyByButton(1000)}
                   className="text-primary"
                 />
-                <Capsule bgColor="background" textColor="black" isHasBorder>
+                <Capsule
+                  bgColor="background"
+                  textColor="black"
+                  isHasBorder
+                  onClick={() => handleSavingMoneyByButton(1000)}
+                >
                   1,000
                 </Capsule>
                 <FontAwesomeIcon
@@ -93,7 +109,12 @@ const SetSaveMoneyModal = ({
                   onClick={() => handleSavingMoneyByButton(10000)}
                   className="text-primary"
                 />
-                <Capsule bgColor="background" textColor="black" isHasBorder>
+                <Capsule
+                  bgColor="background"
+                  textColor="black"
+                  isHasBorder
+                  onClick={() => handleSavingMoneyByButton(10000)}
+                >
                   10,000
                 </Capsule>
                 <FontAwesomeIcon

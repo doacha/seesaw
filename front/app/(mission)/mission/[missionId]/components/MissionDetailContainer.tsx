@@ -16,9 +16,10 @@ import {
 } from '@/app/lib/constants'
 import type { MissionDetail } from '@/app/types'
 import CopyToClipboardButton from './CopyToClipboardButton'
+
 const MissionDetailContainer = ({ data }: { data: MissionDetail }) => {
   const totalTerm = Math.ceil((data.missionPeriod * data.missionTotalCycle) / 7)
-  console.log('왜안뜸', totalTerm)
+
   return (
     <div className=" bg-background">
       <div className="w-full h-[210px] overflow-hidden relative">

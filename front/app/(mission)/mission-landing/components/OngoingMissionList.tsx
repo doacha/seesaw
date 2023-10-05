@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { categoryList } from '@/app/lib/constants'
 import { isStarted } from '../../util'
+import { memberEmailStore } from '@/stores/memberEmail'
 interface MissionCardProps {
   missionId: string
   missionTitle: string
@@ -45,10 +46,11 @@ const getOngoingList = async ({
 }
 
 const OngoingMissionList = () => {
+  const { memberEmail } = memberEmailStore()
   const { data, mutate } = useMutation(getOngoingList)
   useEffect(() => {
     mutate(
-      { page: 0, memberEmail: 'jiwon@seesaw.com' },
+      { page: 0, memberEmail: memberEmail },
       {
         onError: (err) => console.log('내 미션 에러', err),
       },
