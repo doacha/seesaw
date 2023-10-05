@@ -8,12 +8,11 @@ const CommentCard = ({ data }: { data: Comment }) => {
   return (
     <div className="flex flex-row items-center gap-2.5 mt-5 relative">
       <Image
-        // src={data.memberImgUrl}
-        src={'/차차_군침이.jpg'}
+        src={data.memberImgUrl ?? '/default_profile.svg'}
         alt="member profile image"
         width={27}
         height={26}
-        className="rounded-full self-start mt-2"
+        className="rounded-full self-start mt-2 w-[28px] h-[28px]"
       />
       <div className="w-full">
         <div className="relative w-full">

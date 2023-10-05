@@ -8,8 +8,8 @@ const SpendingHistory = ({
 }: {
   history:
     | Array<{
-        recordName: string
-        recordCost: number
+        spendingTitle: string
+        spendingCost: number
       }>
     | undefined
   targetPrice: number
@@ -23,12 +23,16 @@ const SpendingHistory = ({
         <span>{targetPrice.toLocaleString('ko-KR')}</span>
       </div>
       {history &&
+        history.length > 0 &&
         history.map((element, idx) => (
           <div className="flex justify-between mb-2" key={idx}>
-            <span>{element.recordName}</span>
-            <span>{element.recordCost.toLocaleString('ko-KR')}</span>
+            <span>{element.spendingTitle}</span>
+            <span>{element.spendingCost.toLocaleString('ko-KR')}</span>
           </div>
         ))}
+      {history && history.length === 0 && (
+        <div className="text-center mb-2.5">거래 내역이 없습니다.</div>
+      )}
       <hr className="border-outline" />
       <div className="flex justify-between font-scDreamExBold mt-2">
         <span>잔액</span>
