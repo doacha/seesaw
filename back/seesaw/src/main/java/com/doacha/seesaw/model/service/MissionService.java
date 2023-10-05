@@ -173,6 +173,8 @@ public class MissionService {
         MissionStatsResponse missionStatsRequestList =spendingRepository.getCategorySumAndAverageByMissionAndMember(memberEmail, missionId);
         return missionStatsRequestList;
     }
+
+
     public CompareWithMissionMemberResponse getCompareMissionMemberStats(String memberEmail, String missionId){
         Optional<Mission> mission = missionRepository.findById(missionId);
         Date start = mission.get().getMissionStartDate();
@@ -185,7 +187,7 @@ public class MissionService {
         List<MemberSpendingSumDto> memberList= new ArrayList<>();
         Long missionSum=0L;
         Long memberSum=0L;
-        for(int i=0; i<20; i++){
+        for(int i=1; i<20; i++){
             MissionMemberSumDto missionMemberSumDto = MissionMemberSumDto.builder()
                     .categoryId(i)
                     .sum(0L)
@@ -205,14 +207,14 @@ public class MissionService {
         String nickname = memberSpendingSumDtoList.get(0).getMemberNickname();
         for (MissionMemberSumDto missionMemberSumDto : missionMemberSumDtoList) {
             int categoryId = missionMemberSumDto.getCategoryId();
-            missionList.set(categoryId, MissionMemberSumDto.builder()
+            missionList.set(categoryId-1, MissionMemberSumDto.builder()
                     .categoryId(categoryId)
                     .sum(missionMemberSumDto.getSum())
                     .build());
         }
         for (MemberSpendingSumDto memberSpendingSumDto : memberSpendingSumDtoList) {
             int categoryId = memberSpendingSumDto.getCategoryId();
-            memberList.set(categoryId, MemberSpendingSumDto.builder()
+            memberList.set(categoryId-1, MemberSpendingSumDto.builder()
                     .memberNickname(nickname)
                     .categoryId(categoryId)
                     .sum(memberSpendingSumDto.getSum())
@@ -220,7 +222,7 @@ public class MissionService {
         }
         List<MissionMemberSumDto> sumList = new ArrayList<>();
 
-        for(int i=0; i<20; i++){
+        for(int i=0; i<19; i++){
             MissionMemberSumDto missionMemberSumDto = MissionMemberSumDto.builder()
                     .categoryId(i)
                     .sum(missionList.get(i).getSum()-memberList.get(i).getSum())
@@ -228,7 +230,7 @@ public class MissionService {
             sumList.add(missionMemberSumDto);
         }
         sumList.sort(Comparator.comparingLong(MissionMemberSumDto::getSum));
-        for(int i=0; i<20; i++){
+        for(int i=0; i<19; i++){
             missionSum+=missionList.get(i).getSum();
             memberSum+=memberList.get(i).getSum();
         }
@@ -236,18 +238,18 @@ public class MissionService {
                 .memberEmail(memberEmail)
                 .missionId(missionId)
                 .memberNickname(memberSpendingSumDtoList.get(0).getMemberNickname())
-                .firstCategoryId(sumList.get(0).getCategoryId())
+                .firstCategoryId(sumList.get(0).getCategoryId()+1)
                 .firstCategoryMissionAverage(((double)missionList.get(sumList.get(0).getCategoryId()).getSum()/(double)missionSum)*100)
                 .firstCategoryMemberAverage(((double)memberList.get(sumList.get(0).getCategoryId()).getSum()/(double)memberSum)*100)
-                .secondCategoryId(sumList.get(1).getCategoryId())
+                .secondCategoryId(sumList.get(1).getCategoryId()+1)
                 .secondCategoryMissionAverage(((double)missionList.get(sumList.get(1).getCategoryId()).getSum()/(double)missionSum)*100)
                 .secondCategoryMemberAverage(((double)memberList.get(sumList.get(1).getCategoryId()).getSum()/(double)memberSum)*100)
-                .thirdCategoryId(sumList.get(2).getCategoryId())
+                .thirdCategoryId(sumList.get(2).getCategoryId()+1)
                 .thirdCategoryMissionAverage(((double)missionList.get(sumList.get(2).getCategoryId()).getSum()/(double)missionSum)*100)
                 .thirdCategoryMemberAverage(((double)memberList.get(sumList.get(2).getCategoryId()).getSum()/(double)memberSum)*100)
-                .frugalCategoryId(sumList.get(18).getCategoryId())
-                .frugalCategoryMissionAverage(((double)missionList.get(sumList.get(18).getCategoryId()).getSum()/(double)missionSum)*100)
-                .frugalCategoryMemberAverage(((double)memberList.get(sumList.get(18).getCategoryId()).getSum()/(double)memberSum)*100)
+                .frugalCategoryId(sumList.get(17).getCategoryId()+1)
+                .frugalCategoryMissionAverage(((double)missionList.get(sumList.get(17).getCategoryId()).getSum()/(double)missionSum)*100)
+                .frugalCategoryMemberAverage(((double)memberList.get(sumList.get(17).getCategoryId()).getSum()/(double)memberSum)*100)
                 .build();
         return compareWithMissionMemberResponse;
     }
@@ -349,6 +351,8 @@ public class MissionService {
         for(CompareMissionDto dto : compareMissionResponse ){
             myAverageSum+= dto.getMissionAverage();
         }
+
+
         if(mission.isPresent()) {
             int categoryId = mission.get().getMissionCategoryId();
             int missionPeriod= mission.get().getMissionPeriod();
@@ -359,8 +363,20 @@ public class MissionService {
                 entireSum+=entireMissionDto.getSum()/(entireMissionDto.getMissionPeriod()*entireMissionDto.getMissionTotalCycle()*entireMissionDto.getMissionMemberCount());
                 entireAverageSum+=entireSum;
             }
-            double entireAverage = entireAverageSum/(double)entireMissionDtos.size();
-            double missionAverage = myAverageSum/(compareMissionResponse.size()*missionPeriod);
+            double entireAverage=0.0;
+            double missionAverage= 0.0;
+            if(entireMissionDtos.isEmpty()){
+              entireAverage=0.0;
+            }
+            else {
+                entireAverage=entireAverageSum/(double)entireMissionDtos.size();
+            }
+            if(compareMissionResponse.isEmpty()){
+                missionAverage=0.0;
+            }
+            else{
+                missionAverage=myAverageSum/(compareMissionResponse.size()*missionPeriod);
+            }
             CompareMissionResponse realCompareMissionResponse = CompareMissionResponse.builder()
                     .missionId(missionId)
                     .missionAverage(missionAverage)
