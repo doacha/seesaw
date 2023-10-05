@@ -19,6 +19,7 @@ const MissionJoinButton = ({
   missionPeriod,
   missionId,
   refetch,
+  missionDeposit,
 }: {
   isSaveMission: boolean
   missionCategory: string
@@ -27,6 +28,7 @@ const MissionJoinButton = ({
   missionPeriod: number
   missionId: string
   refetch: any
+  missionDeposit: number
 }) => {
   const [processLevel, setProcessLevel] = useState(isSaveMission ? 0 : 1)
   const [savingMoney, setSavingMoney] = useState(dummyCategorySaveMoney)
@@ -69,7 +71,7 @@ const MissionJoinButton = ({
     if (processLevel === 2) {
       const depositeRequest = {
         // accountTransactionNum: `${process.env.NEXT_PUBLIC_SEESAWBANK_ACCOUNT_NUM}`,
-        accountApprovalAmount: savingMoney,
+        accountApprovalAmount: missionDeposit,
         accountPassword: password.join(''),
         memberEmail: memberEmail,
         // accountNum: DUMMY_ACCOUNT_NUM,

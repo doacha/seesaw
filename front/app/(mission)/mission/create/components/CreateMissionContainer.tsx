@@ -26,8 +26,7 @@ const DUMMY_EMAIL = 'doacha@seesaw.com'
 const DUMMY_ACCOUNT_NUM = '457899-01-655239'
 
 interface DepositRequest {
-  accountNum: string
-  accountTransactionNum: string
+  memberEmail: string
   accountApprovalAmount: number
   accountPassword: string
 }
@@ -65,7 +64,6 @@ const CreateMissionContainer = () => {
     input.missionTotalCycle = Math.trunc(
       (input.missionTotalCycle * 7) / input.missionPeriod,
     )
-    input.missionMaxCount = Math.trunc(input.missionTotalCycle / 5)
 
     // 제출
     const request: { [key: string]: any } = {}
@@ -161,10 +159,9 @@ const CreateMissionContainer = () => {
   const handleJoinButton = (processLevel: number) => {
     if (processLevel === 2) {
       const depositeRequest = {
-        accountTransactionNum: `${process.env.NEXT_PUBLIC_SEESAWBANK_ACCOUNT_NUM}`,
         accountApprovalAmount: input.missionDeposit,
         accountPassword: password.join(''),
-        accountNum: DUMMY_ACCOUNT_NUM,
+        memberEmail: memberEmail,
       }
       console.log('예치금요청', depositeRequest)
       depositMoney(depositeRequest, {
@@ -256,7 +253,7 @@ const CreateMissionContainer = () => {
       <ConfirmDepositModal
         changeModal={handleJoinButton}
         modalRef={refList[1]}
-        missionTargetPrice={input.missionTargetPrice}
+        missionTargetPrice={input.missionDeposit}
       />
       <MoneyTransferModal
         changeModal={handleJoinButton}
@@ -282,7 +279,7 @@ const postNewMission = async (input: FormData) => {
 
 const postDepositMoney = async (depositRequset: DepositRequest) => {
   return await fetch(
-    `${process.env.NEXT_PUBLIC_SEESAW_BANK_API_URL}/account-transactional/transfer`,
+    `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/balance-transfer`,
     {
       method: 'POST',
       body: JSON.stringify(depositRequset),

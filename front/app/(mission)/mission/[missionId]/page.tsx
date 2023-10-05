@@ -61,6 +61,7 @@ const MissionDetailpage = async ({ params }: { params: any }) => {
             missionCategoryId={data.missionCategoryId}
             missionPeriod={data.missionPeriod}
             missionId={data.missionId}
+            missionDeposit={data.missionDeposit}
           />
         </>
       )}
