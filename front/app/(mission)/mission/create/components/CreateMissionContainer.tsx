@@ -252,6 +252,7 @@ const CreateMissionContainer = () => {
         changeModal={handleJoinButton}
         modalRef={refList[1]}
         missionTargetPrice={input.missionDeposit}
+        missionTotalCycle={input.missionTotalCycle}
       />
       <MoneyTransferModal
         changeModal={handleJoinButton}
