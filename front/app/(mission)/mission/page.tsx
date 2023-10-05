@@ -2,12 +2,14 @@
 import SearchContainerSimple from '../components/SearchContainerSimple'
 import SearchContainer from './components/SearchContainer'
 import Header from '@/app/components/Header'
-import type { SearchState, MissionList } from '@/app/types'
+import type { SearchState, MissionList, Mission } from '@/app/types'
 import MissionCard from '../components/MissionCard'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { categoryList } from '@/app/lib/constants'
 import { isStarted } from '../util'
+import TransactionLoading from '@/app/member/components/account/TransactionLoading'
+import EndAlert from '@/app/member/components/account/EndAlert'
 const getSearchList = async (input: SearchState) => {
   console.log('input', input)
   console.log('asdf', convertStateToRequest(input))
@@ -37,6 +39,7 @@ const MissionPage = () => {
     period: -1,
     isEnabled: true,
   })
+  const [missionList, setMissionList] = useState<Mission[]>([])
   const { data, refetch, isSuccess } = useQuery<MissionList[]>({
     queryKey: ['mission-card', searchState],
     queryFn: () => getSearchList(searchState),
