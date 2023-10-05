@@ -30,7 +30,7 @@ const MyMissionListCard = (props: Props) => {
           props.missionList.map((mission) =>
             sortType === 1 ? (
               <MyMissionInfoCard mission={mission} key={mission.missionId} />
-            ) : sortType === mission.memberMissionStatus ? (
+            ) : sortType === mission.missionStatus ? (
               <MyMissionInfoCard mission={mission} key={mission.missionId} />
             ) : null,
           )

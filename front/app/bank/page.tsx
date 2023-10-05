@@ -18,7 +18,7 @@ const SeesawBankPage = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: 'jjwoong1733',
+          body: 'tldnjs324',
         },
       )
       const data = await res.json()
