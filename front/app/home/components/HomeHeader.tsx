@@ -51,9 +51,11 @@ const HomeHeader = ({
             />
           </button>
         </div>
-        <p className="text-3xl font-envR">
-          {spendSum.toLocaleString('ko-KR')}원
-        </p>
+        <div className="flex">
+          <p className="text-3xl mx-auto font-envR">
+            {spendSum.toLocaleString('ko-KR')}원
+          </p>
+        </div>
       </div>
       <div className="flex mx-2 mt-2 mb-2 my-auto flex-col">
         <div className="mb-3 flex flex-row mx-auto items-end">
@@ -113,7 +115,7 @@ const HomeHeader = ({
             style={{
               animationDelay: '0.7s',
               animationIterationCount: 'infinite',
-              color: '#B7B2FF',
+              color: '#AFC3FF',
             }}
           >
             비
@@ -123,7 +125,7 @@ const HomeHeader = ({
             style={{
               animationDelay: '0.8s',
               animationIterationCount: 'infinite',
-              color: '#B7B2FF',
+              color: '#AFC3FF',
             }}
           >
             절
@@ -133,14 +135,14 @@ const HomeHeader = ({
             style={{
               animationDelay: '0.9s',
               animationIterationCount: 'infinite',
-              color: '#B7B2FF',
+              color: '#AFC3FF',
             }}
           >
             약
           </p>
         </div>
         <Button
-          color="secondary"
+          color="primary"
           label="소비리포트"
           onClick={clickReport}
           size="xl"
