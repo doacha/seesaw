@@ -22,6 +22,7 @@ interface inputProps {
   placeholder: string | undefined
   interval: string
   onChange?: any
+  onKeyUp?: any
   submitButton?: JSX.Element
 }
 
@@ -34,6 +35,7 @@ const Input = ({
   isLabelBig,
   interval,
   onChange,
+  onKeyUp,
   submitButton,
 }: inputProps) => {
   const tailwindLabelSize = isLabelBig ? 'text-[16px]' : 'text-[12px]'
@@ -58,6 +60,7 @@ const Input = ({
           className="input flex-[2_1_0%] input-bordered placeholder:text-xs placeholder:font-scDreamRegular
           input-primary border-outline-container border-1 w-full h-10"
           onChange={onChange}
+          onKeyUp={onKeyUp}
         />
         {submitButton && <div className="flex-[1_1_0%]">{submitButton}</div>}
       </div>
