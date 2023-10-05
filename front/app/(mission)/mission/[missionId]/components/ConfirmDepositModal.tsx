@@ -10,15 +10,19 @@ import {
   faChevronLeft,
 } from '@fortawesome/free-solid-svg-icons'
 import Capsule from '@/app/components/Capsule'
+import { memberEmailStore } from '@/stores/memberEmail'
+import { recordListStore } from '@/stores/recordListStore'
 
 const ConfirmDepositModal = ({
   modalRef,
   changeModal,
   missionTargetPrice,
+  missionTotalCycle,
 }: {
   modalRef: React.RefObject<HTMLDialogElement>
   changeModal: (processLivel: number) => void
   missionTargetPrice: number
+  missionTotalCycle: number
 }) => {
   const cancelButtonRef = useRef<HTMLButtonElement>(null)
   return (
@@ -41,7 +45,9 @@ const ConfirmDepositModal = ({
         </div>
         <div className="mb-5 flex flex-col gap-y-5">
           <div>
-            <span className="font-scDreamExBold">n회 미만</span>{' '}
+            <span className="font-scDreamExBold">
+              {Math.trunc(missionTotalCycle / 5)}회 이하
+            </span>{' '}
             <span className="font-scDreamExBold text-error">미션 실패</span>할
             경우 환급금이 증가하고,
             <div className="mt-2 py-2 text-center bg-background-fill rounded-lg">
@@ -50,7 +56,9 @@ const ConfirmDepositModal = ({
             </div>
           </div>
           <div>
-            <span className="font-scDreamExBold">n회 이상</span>{' '}
+            <span className="font-scDreamExBold">
+              {Math.trunc(missionTotalCycle / 5)}회 초과
+            </span>{' '}
             <span className="font-scDreamExBold text-error">미션 실패</span>할
             경우 환급금이 감소해요.
             <div className="mt-2 py-2 text-center bg-background-fill rounded-lg">

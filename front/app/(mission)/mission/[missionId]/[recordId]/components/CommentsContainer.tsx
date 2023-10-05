@@ -4,6 +4,7 @@ import CommentCard from './CommentCard'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { commentRefetchStore } from '@/stores/commenRefetch'
+import { memberEmailStore } from '@/stores/memberEmail'
 
 const CommentsContainer = (
   /*{ propsData }: { propsData: Array<Coßment> }*/
@@ -18,7 +19,7 @@ const CommentsContainer = (
   useEffect(() => {
     setRefetch(refetch)
   }, [])
-  console.log('외않됨', data)
+  const { memberNickname } = memberEmailStore()
   return (
     <div className="bg-background rounded-lg p-5 m-5">
       {/* 컨테이너 헤더 */}
@@ -31,7 +32,11 @@ const CommentsContainer = (
       {data &&
         data.length > 0 &&
         data.map((element) => (
-          <CommentCard data={element} key={element.commentId} />
+          <CommentCard
+            data={element}
+            key={element.commentId}
+            loginUser={memberNickname}
+          />
         ))}
       {data && data.length === 0 && (
         <div className="text-center mt-5">

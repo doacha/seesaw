@@ -283,7 +283,7 @@ public class SpendingService {
         if (!spending.isPresent()) throw new NoContentException(spendingUpdateRequest.getSpendingId()+"에 해당하는 지출없음");
 
         // 카테고리에 해당하는 미션에 참여중인지 확인 => 참여중이면 수정 불가능
-        Record record = checkRecord(spendingUpdateRequest.getMemberEmail(), spendingUpdateRequest.getSpendingCategoryId(), spendingUpdateRequest.getSpendingDate());
+        Record record = checkRecord(spendingUpdateRequest.getMemberEmail(), spending.get().getSpendingCategoryId(), spending.get().getSpendingDate());
         if (record != null) throw new ForbiddenException("카테고리가 일치하는 미션에 참여중입니다.");
 
         // 이메일로 멤버 찾기
