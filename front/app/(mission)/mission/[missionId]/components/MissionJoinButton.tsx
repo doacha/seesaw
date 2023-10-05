@@ -131,7 +131,7 @@ const MissionJoinButton = ({
       <ConfirmDepositModal
         changeModal={handleJoinButton}
         modalRef={refList[1]}
-        missionTargetPrice={missionTargetPrice}
+        missionTargetPrice={missionDeposit}
         missionTotalCycle={missionTotalCycle}
       />
       <MoneyTransferModal
