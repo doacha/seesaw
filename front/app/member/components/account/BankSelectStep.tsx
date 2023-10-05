@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import BankButton from './BankButton'
 import { bankList, bankList2 } from '@/app/dummies'
+import { Bank } from '@/app/types'
 
 interface Props {
-  selectedBank: string
-  onBankButtonClick: (value: string) => void
+  selectedBank: Bank
+  onBankButtonClick: (value: Bank) => void
 }
 
 const BankSelectStep = (props: Props) => {

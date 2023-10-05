@@ -25,6 +25,8 @@ const MyMissionDetailInfo = (props: Props) => {
             ? 'text-primary'
             : props.mission.missionStatus === 3
             ? 'text-error'
+            : props.mission.missionStatus === 0
+            ? 'text-outline'
             : ''
         }
       >
@@ -32,7 +34,9 @@ const MyMissionDetailInfo = (props: Props) => {
           ? '성공'
           : props.mission.missionStatus === 3
           ? '실패'
-          : '진행중'}
+          : props.mission.missionStatus === 1
+          ? '진행중'
+          : '대기중'}
       </div>
     </div>
   )

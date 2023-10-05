@@ -183,6 +183,11 @@ export interface MissionDetail extends MissionList {
   missionHostEmail: string
 }
 
+export interface Bank {
+  bankName: string
+  bankImg: string
+}
+
 export interface MissionCreate {
   imgFile: ImageFile
   missionTitle: string
