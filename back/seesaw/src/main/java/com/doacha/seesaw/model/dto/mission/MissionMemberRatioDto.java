@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MissionMemberSumDto {
+public class MissionMemberRatioDto {
+    private String memberEmail;
     private int categoryId;
-    private Long sum;
+    private double ratio;
 }
