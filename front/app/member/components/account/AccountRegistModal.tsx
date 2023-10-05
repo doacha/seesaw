@@ -8,6 +8,7 @@ import { account } from '@/app/dummies'
 import { accountListStore } from '@/stores/accountList'
 import { redirect, useRouter } from 'next/navigation'
 import { memberEmailStore } from '@/stores/memberEmail'
+import { Bank } from '@/app/types'
 
 interface Props {
   getAccountListInfo: () => Promise<any>
@@ -16,7 +17,10 @@ interface Props {
 const AccountRegistModal = (props: Props) => {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState<number>(1)
-  const [selectedBank, setSelectedBank] = useState<string>('')
+  const [selectedBank, setSelectedBank] = useState<Bank>({
+    bankName: '',
+    bankImg: '',
+  })
   const [accountNumber, setAccountNumber] = useState<string>('')
   const [accountChecked, setAccountChecked] = useState<number>(0)
   const [accountHolder, setAccountHolder] = useState<string>('')
@@ -48,9 +52,10 @@ const AccountRegistModal = (props: Props) => {
     }
   }
 
-  const onBankButtonClick = (value: string) => {
+  const onBankButtonClick = (value: Bank) => {
+    console.log(value)
     if (selectedBank === value) {
-      setSelectedBank('')
+      setSelectedBank({ bankName: '', bankImg: '' })
     } else {
       setSelectedBank(value)
     }
@@ -157,7 +162,7 @@ const AccountRegistModal = (props: Props) => {
               ;(
                 document.getElementById('modal') as HTMLDialogElement | null
               )?.close()
-              setSelectedBank('')
+              setSelectedBank({ bankName: '', bankImg: '' })
               setAccountChecked(0)
               setAccountNumber('')
               setCurrentStep(1)
@@ -214,7 +219,7 @@ const AccountRegistModal = (props: Props) => {
               <button
                 className="btn bg-transparent border-none text-base"
                 onClick={() => {
-                  setSelectedBank('')
+                  setSelectedBank({ bankName: '', bankImg: '' })
                   setAccountChecked(0)
                   setAccountNumber('')
                   setCurrentStep(1)
@@ -238,7 +243,7 @@ const AccountRegistModal = (props: Props) => {
                 onClick={onNextButtonClick}
                 size="lg"
                 disabled={
-                  (currentStep === 1 && selectedBank === '') ||
+                  (currentStep === 1 && selectedBank.bankName === '') ||
                   (currentStep === 2 && accountNumber === '') ||
                   (currentStep === 3 && authenticationCode.includes(''))
                     ? true
