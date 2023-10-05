@@ -78,8 +78,6 @@ const MissionJoinButton = ({
         memberEmail: memberEmail,
         // accountNum: DUMMY_ACCOUNT_NUM,
       }
-      console.log(depositeRequest)
-      console.log('예치금요청', depositeRequest)
 
       depositMoney(depositeRequest, {
         onSuccess: (res) => {
@@ -95,7 +93,7 @@ const MissionJoinButton = ({
               memberMissionSavingMoney: savingMoney,
             },
             {
-              onSuccess: (res) => refetch(),
+              onSuccess: (res) => router.push('/mission-landing'),
               onError: (err) => console.log('미션 참가 에러', err),
             },
           )
