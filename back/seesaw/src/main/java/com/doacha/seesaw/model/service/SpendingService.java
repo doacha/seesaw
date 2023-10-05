@@ -2,6 +2,7 @@ package com.doacha.seesaw.model.service;
 
 import com.doacha.seesaw.exception.ForbiddenException;
 import com.doacha.seesaw.exception.NoContentException;
+import com.doacha.seesaw.model.dto.spending.RecordSpendingResponse;
 import com.doacha.seesaw.model.dto.spending.*;
 import com.doacha.seesaw.model.entity.*;
 import com.doacha.seesaw.model.entity.Record;
@@ -472,5 +473,10 @@ public class SpendingService {
         GetCardTransactionRequest request = GetCardTransactionRequest.builder().memberId(dto.getMemberBankId()).startDateTime(dto.getLastSpendingTime()).endDateTime(null).build();
 
         getCardTransactionFromSeeSawBank(request, dto.getMemberEmail());
+    }
+
+    // 레코드 아이디로 소비내역 조회하기
+    public List<RecordSpendingResponse> getRecordSpendingList(long recordId) {
+        return spendingRepository.findRecordSpendingResponseByRecordId(recordId);
     }
 }
