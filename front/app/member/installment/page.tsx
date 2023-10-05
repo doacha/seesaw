@@ -39,7 +39,6 @@ const InstallmentPage = () => {
   }
 
   const createNewAccount = async () => {
-    console.log(accountName, password, memberEmail)
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/create-account`,

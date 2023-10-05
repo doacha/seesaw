@@ -25,7 +25,6 @@ const GroupGraphInfo = () => {
         },
       )
       const data: MissionCompareList = await res.json()
-      console.log(data)
       return data
     } catch (err) {
       console.log(err)
