@@ -103,10 +103,10 @@ public interface SpendingRepository extends JpaRepository<Spending, Long> {
             "s.spendingCategoryId, SUM(s.spendingCost)) " +
             "FROM Spending s " +
             "JOIN MemberMission mm ON s.member.memberEmail = mm.member.memberEmail " +
-            "WHERE mm.mission.missionId = :missionId AND s.member.memberEmail!= :memberEmail AND s.spendingDate BETWEEN :startDate AND :endDate " +
+            "WHERE mm.mission.missionId = :missionId AND s.member.memberEmail!= :memberEmail AND s.spendingCategoryId !=0 AND s.spendingCategoryId != 20 AND s.spendingDate BETWEEN :startDate AND :endDate " +
             "GROUP BY s.spendingCategoryId")
     List<MissionMemberSumDto> getMissionMemberSum(@Param("missionId") String missionId, @Param("memberEmail")String memberEmail, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
-    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MemberSpendingSumDto(s.member.memberNickname AS memberNickname, s.spendingCategoryId AS categoryId, SUM(s.spendingCost) AS sum) FROM Spending s WHERE s.member.memberEmail= :memberEmail AND s.spendingDate BETWEEN :start AND :end GROUP BY s.spendingCategoryId " )
+    @Query("SELECT NEW com.doacha.seesaw.model.dto.spending.MemberSpendingSumDto(s.member.memberNickname AS memberNickname, s.spendingCategoryId AS categoryId, SUM(s.spendingCost) AS sum) FROM Spending s WHERE s.member.memberEmail= :memberEmail AND s.spendingCategoryId !=0 AND s.spendingCategoryId != 20 AND s.spendingDate BETWEEN :start AND :end GROUP BY s.spendingCategoryId " )
     List<MemberSpendingSumDto> getMemberSumByCategory(@Param("memberEmail")String memberEmail, @Param("start")Date start, @Param("end")Date end);
 
 }
