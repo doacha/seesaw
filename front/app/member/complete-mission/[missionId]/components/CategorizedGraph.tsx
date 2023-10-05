@@ -23,7 +23,7 @@ const CategorizedGraph = (props: Props) => {
         <HorizontalGarphBar
           height="small"
           amount={Math.round(props.group)}
-          length={`${props.group * 7}px`}
+          length={`${props.group * 5}px`}
           title="그룹"
           bgColor={
             props.highlight === 'most'
@@ -38,7 +38,7 @@ const CategorizedGraph = (props: Props) => {
         <HorizontalGarphBar
           height="small"
           amount={Math.round(props.me)}
-          length={`${props.me * 7}px`}
+          length={`${props.me * 5}px`}
           title="나"
           bgColor={
             props.highlight === 'most'

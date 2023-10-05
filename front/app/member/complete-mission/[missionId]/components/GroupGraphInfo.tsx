@@ -37,7 +37,7 @@ const GroupGraphInfo = () => {
   return (
     <div className="w-full flex flex-col gap-5">
       {missionCompareListLoading ? null : (
-        <div>
+        <div className="flex flex-col gap-2">
           <GraphCardText
             comment={`${
               categoryList[missionCompareList?.firstCategoryId ?? 0]
