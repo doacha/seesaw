@@ -69,7 +69,7 @@ public class SpendingService {
 
 
     // 시소뱅크에서 카드내역 받아오기 (매일 밤 12시마다 실행)
-    @Scheduled(cron = "0 0 24 * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void getCardTransactionDto() {
         // 카드 내역 불러올 목록 가져오기 (미션 참여자의 missionId, memberEmail, memberBankId, lastSpendingTime)
         // 현재 진행중인 미션에 참여하고 있는 멤버에 대해서 카드 목록 불러옴
