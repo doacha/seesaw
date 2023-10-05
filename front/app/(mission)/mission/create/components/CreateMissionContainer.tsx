@@ -81,13 +81,12 @@ const CreateMissionContainer = () => {
       }
       request[value] = input[value]
     }
-    console.log('리퀘스트체크', request)
+
     const formData = new FormData()
     if (input.imgFile.file !== undefined) {
       formData.append('image', input.imgFile.file)
-    } else {
-      console.log('확인완료')
     }
+
     formData.append(
       'createMissionRequest',
       new Blob([JSON.stringify(request)], { type: 'application/json' }),
@@ -163,7 +162,7 @@ const CreateMissionContainer = () => {
         accountPassword: password.join(''),
         memberEmail: memberEmail,
       }
-      console.log('예치금요청', depositeRequest)
+
       depositMoney(depositeRequest, {
         onSuccess: (res) => {
           if (res.status === 500) {
@@ -178,12 +177,11 @@ const CreateMissionContainer = () => {
     }
 
     if (processLevel === -1 && isInvalidInput(input)) {
-      console.log('인풋 망함')
       return
     }
     refList[processLevel + 1].current?.showModal()
   }
-  console.log('까보자', spendMoney, categorySpendMoneyOrigin)
+
   return (
     <div className="bg-background rounded-lg flex flex-col gap-5 p-5 mx-5">
       {/* 그룹 이름 */}
@@ -270,11 +268,7 @@ const postNewMission = async (input: FormData) => {
   return await fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission`, {
     method: 'POST',
     body: input,
-  }).then((res) => {
-    let js = res.json()
-    console.log('미션 생성 결과', js)
-    return js
-  })
+  }).then((res) => res.json())
 }
 
 const postDepositMoney = async (depositRequset: DepositRequest) => {
@@ -289,7 +283,6 @@ const postDepositMoney = async (depositRequset: DepositRequest) => {
     },
   ).then((res) => {
     let js = res.json()
-    console.log('입금 결과', js)
     return js
   })
 }

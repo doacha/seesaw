@@ -30,7 +30,6 @@ const getSavingMoney = async (input: {
     },
   ).then((res) => {
     let js = res.json()
-    console.log('진짜결과', js)
     return js
   })
 }
@@ -87,13 +86,12 @@ const MySavingMoney = ({ propsData }: { propsData: GroupStatusProps }) => {
               (propsData.missionTargetPrice * 2) +
             50),
             setGraphState(fetchedData)
-          console.log(fetchedData)
         },
         onError: (err) => console.log('누적 금액 에러', err),
       },
     )
   }, [])
-  console.log('높이확인', graphState.boxHeight, propsData.missionTargetPrice)
+
   return (
     <div className="bg-background rounded-lg p-5 m-5">
       <div className="font-scDreamMedium">절약 금액</div>

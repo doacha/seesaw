@@ -45,7 +45,7 @@ const MyDepositStatusContainer = ({
 }) => {
   const { memberNickname, memberEmail } = memberEmailStore()
   const { mutate, data, isSuccess } = useMutation(getDepositeStatus)
-  console.log('aaaaaa', data)
+
   useEffect(() => {
     mutate(
       {
@@ -53,10 +53,8 @@ const MyDepositStatusContainer = ({
         missionId: propsData.missionId,
       },
       {
-        onSuccess: (res) => {
-          console.log('aaaa', res)
-        },
-        onError: (err) => console.log('으악', err),
+        onSuccess: (res) => {},
+        onError: (err) => console.log('에러', err),
       },
     )
   }, [])
