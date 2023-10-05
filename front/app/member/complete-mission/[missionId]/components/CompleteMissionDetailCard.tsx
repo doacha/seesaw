@@ -10,7 +10,6 @@ interface Props {
 }
 
 const CompleteMissionDetailCard = (props: Props) => {
-  console.log(props.mission)
   let capsuleIndex: number
   if (props.mission.missionCategoryId !== undefined) {
     capsuleIndex = props.mission.missionCategoryId

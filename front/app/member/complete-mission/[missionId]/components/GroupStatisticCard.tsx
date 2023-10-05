@@ -14,7 +14,6 @@ const GroupStatisticCard = () => {
         `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/mission/compare/${currentMissionId}`,
       )
       const data: GroupAverageInfo = await res.json()
-      console.log(data)
       return data
     } catch (err) {
       console.log(err)
