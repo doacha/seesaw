@@ -60,6 +60,7 @@ const CompleteMissionPage = ({ params }: { params: { missionId: string } }) => {
         },
       )
       const data = await res.json()
+      console.log(data)
       return data
     } catch (err) {
       console.log(err)
