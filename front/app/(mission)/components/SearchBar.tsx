@@ -9,9 +9,11 @@ import { KeyboardEventHandler, useRef } from 'react'
 const SearchBar = ({
   state,
   setState,
+  setListEmpty,
 }: {
   state: SearchState
   setState: React.Dispatch<React.SetStateAction<SearchState>>
+  setListEmpty: () => void
 }) => {
   const handleSubmit = () => {
     setState({
@@ -19,6 +21,7 @@ const SearchBar = ({
       inputText: inputRef.current?.value ?? '',
       isEnabled: true,
     })
+    // setListEmpty()
   }
 
   const handleEnter = (event: any) => {
