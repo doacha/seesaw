@@ -32,7 +32,7 @@ const ProfileEditCard = (props: Props) => {
     setBirthInfo,
   } = profileEditInfoStore()
 
-  const { memberEmail } = memberEmailStore()
+  const { memberEmail, setMember } = memberEmailStore()
 
   const onInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.name, e.target.value)
@@ -44,7 +44,6 @@ const ProfileEditCard = (props: Props) => {
   }
 
   const onNicknameCheckClick = async () => {
-
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/nicknamecheck`,
@@ -57,23 +56,22 @@ const ProfileEditCard = (props: Props) => {
         },
       )
       const data = await res.json()
-      if(typeof data === 'object'){
+      if (typeof data === 'object') {
         setNicknameChecked(2)
-      }else{
+      } else {
         setNicknameChecked(1)
       }
     } catch (err) {
       console.log(err)
     }
-
   }
 
   const onSubmitButtonClick = async () => {
     const formData = new FormData()
     const profileData = {
       memberEmail: memberEmail,
-      memberPassword: newPassword === ''? null : prevPassword,  
-      memberNewPassword: newPassword === ''? null : newPassword,
+      memberPassword: newPassword === '' ? null : prevPassword,
+      memberNewPassword: newPassword === '' ? null : newPassword,
       memberName: memberName,
       memberNickname: newNickname,
       memberBirth: birth[0] + birth[1] + birth[2],
@@ -88,18 +86,11 @@ const ProfileEditCard = (props: Props) => {
       console.log(newImg.file)
       formData.append('image', newImg.file)
 
-
       formData.append(
         'changeInfoRequest',
-        new Blob(
-          [
-            JSON.stringify(profileData),
-          ],
-          { type: 'application/json' },
-        ),
-        // JSON.stringify(profileData)
+        new Blob([JSON.stringify(profileData)], { type: 'application/json' }),
       )
-        
+
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/modify`,
@@ -109,13 +100,14 @@ const ProfileEditCard = (props: Props) => {
           },
         )
         const data = await res.json()
+        setMember(memberEmail, newNickname)
         props.setOpenEditPage()
       } catch (err) {
         console.log(err)
       }
-    }else{
+    } else {
       console.log('이미지 없을경우')
-        
+
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/modify-noimg`,
@@ -128,14 +120,13 @@ const ProfileEditCard = (props: Props) => {
           },
         )
         const data = await res.json()
+        setMember(memberEmail, newNickname)
         console.log(data)
         props.setOpenEditPage()
       } catch (err) {
         console.log(err)
       }
     }
-
-    
   }
 
   return (
@@ -145,37 +136,37 @@ const ProfileEditCard = (props: Props) => {
     >
       <ImageUpload />
       <div>
-      <Input
-        interval="5"
-        placeholder="새로운 닉네임을 입력하세요."
-        type="text"
-        label="닉네임"
-        value={newNickname}
-        name="newNickname"
-        onChange={onInfoChange}
-        submitButton={
-          <Button
-            color="primary"
-            label="중복 확인"
-            size="xs"
-            onClick={onNicknameCheckClick}
-            disabled={prevNickname === newNickname? true : false}
-          />
-        }
-      />
-      {nicknameChecked === 0 ? null : nicknameChecked === 1 ? (
-        <div className="relative ml-2 mt-1">
-          <div className="absolute top-0 text-xs text-primary">
-            사용 가능한 닉네임입니다.
+        <Input
+          interval="5"
+          placeholder="새로운 닉네임을 입력하세요."
+          type="text"
+          label="닉네임"
+          value={newNickname}
+          name="newNickname"
+          onChange={onInfoChange}
+          submitButton={
+            <Button
+              color="primary"
+              label="중복 확인"
+              size="xs"
+              onClick={onNicknameCheckClick}
+              disabled={prevNickname === newNickname ? true : false}
+            />
+          }
+        />
+        {nicknameChecked === 0 ? null : nicknameChecked === 1 ? (
+          <div className="relative ml-2 mt-1">
+            <div className="absolute top-0 text-xs text-primary">
+              사용 가능한 닉네임입니다.
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="relative ml-2 mt-1">
-          <div className="absolute top-0 text-xs text-error">
-            이미 존재하는 닉네임입니다.
+        ) : (
+          <div className="relative ml-2 mt-1">
+            <div className="absolute top-0 text-xs text-error">
+              이미 존재하는 닉네임입니다.
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
       <div className="flex flex-col gap-4">
         <Input
@@ -238,7 +229,8 @@ const ProfileEditCard = (props: Props) => {
             onClick={onSubmitButtonClick}
             disabled={
               confirmPassword !== newPassword ||
-              nicknameChecked === 2 || (nicknameChecked === 0 && prevNickname !== newNickname)
+              nicknameChecked === 2 ||
+              (nicknameChecked === 0 && prevNickname !== newNickname)
                 ? true
                 : false
             }

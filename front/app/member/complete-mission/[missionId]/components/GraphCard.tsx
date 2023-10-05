@@ -81,8 +81,8 @@ const GraphCard = (props: Props) => {
           <div
             className={
               averageAmount > props.currentAmount
-                ? 'flex text-[10px] min-w-max text-secondary  font-scDreamLight '
-                : 'flex text-[10px] min-w-max text-error  font-scDreamLight '
+                ? 'flex text-[10px] min-w-max text-primary  font-scDreamRegular '
+                : 'flex text-[10px] min-w-max text-error  font-scDreamRegular'
             }
           >
             <AverageCount value={averageAmount} />
@@ -90,8 +90,8 @@ const GraphCard = (props: Props) => {
           <div
             className={
               averageAmount > props.currentAmount
-                ? ' bg-secondary-container  rounded-full w-full h-[3px] '
-                : ' bg-error-container  rounded-full w-full h-[3px] '
+                ? ' bg-primary  rounded-full w-full h-[3px] '
+                : ' bg-error  rounded-full w-full h-[3px] '
             }
           />
         </div>
@@ -110,15 +110,16 @@ const GraphCard = (props: Props) => {
         }
         txtColor={
           props.groupAverageInfo
-            ? props.currentAmount > props.groupAverageInfo.missionAverage
-              ? 'text-secondary'
+            ? props.groupAverageInfo.entireAverage >
+              props.groupAverageInfo.missionAverage
+              ? 'text-primary'
               : 'text-error'
             : props.savedAmount
             ? averageAmount > props.savedAmount.missionTotalCost
-              ? 'text-secondary'
+              ? 'text-primary'
               : 'text-error'
             : averageAmount > props.currentAmount
-            ? 'text-secondary'
+            ? 'text-primary'
             : 'text-error'
         }
       />
@@ -132,7 +133,11 @@ const GraphCard = (props: Props) => {
                 amount={record.recordTotalCost}
                 length={lengthList[lengthList.length - 1 - index]}
                 round={record.recordNumber}
-                bgColor="bg-white"
+                bgColor={
+                  props.currentAmount < averageAmount
+                    ? 'bg-primary-container'
+                    : 'bg-error-container'
+                }
                 txtColor="text-black"
                 type="회차"
                 key={index}
@@ -142,11 +147,11 @@ const GraphCard = (props: Props) => {
             amount={props.currentAmount}
             length={currentAmountHeight}
             bgColor={
-              props.currentAmount < averageAmount ? 'bg-secondary' : 'bg-error'
+              props.currentAmount < averageAmount ? 'bg-primary' : 'bg-error'
             }
             txtColor={
               props.currentAmount < averageAmount
-                ? 'text-secondary'
+                ? 'text-primary'
                 : 'text-error'
             }
             type="현재"
@@ -164,14 +169,14 @@ const GraphCard = (props: Props) => {
               bgColor={
                 props.recordList
                   ? index === props.recordList.length - 1
-                    ? 'bg-secondary'
+                    ? 'bg-primary'
                     : 'bg-white'
                   : ''
               }
               txtColor={
                 props.recordList
                   ? index === props.recordList.length - 1
-                    ? 'text-secondary'
+                    ? 'text-primary'
                     : 'text-black'
                   : ''
               }
@@ -183,7 +188,12 @@ const GraphCard = (props: Props) => {
             <div className="flex flex-col gap-5">
               <HorizontalGarphBar
                 amount={Math.round(props.groupAverageInfo.entireAverage)}
-                bgColor="bg-white"
+                bgColor={
+                  props.groupAverageInfo.entireAverage >
+                  props.groupAverageInfo.missionAverage
+                    ? 'bg-primary-container'
+                    : 'bg-error-container'
+                }
                 height="big"
                 length={lengthList[0]}
                 title="전체"
@@ -195,7 +205,7 @@ const GraphCard = (props: Props) => {
                 bgColor={
                   props.groupAverageInfo.entireAverage >
                   props.groupAverageInfo.missionAverage
-                    ? 'bg-secondary'
+                    ? 'bg-primary'
                     : 'bg-error'
                 }
                 height="big"
@@ -204,7 +214,7 @@ const GraphCard = (props: Props) => {
                 txtColor={
                   props.groupAverageInfo.entireAverage >
                   props.groupAverageInfo.missionAverage
-                    ? 'text-secondary'
+                    ? 'text-primary'
                     : 'text-error'
                 }
                 unitType="won"
@@ -216,7 +226,12 @@ const GraphCard = (props: Props) => {
             <div className="flex flex-col gap-5">
               <HorizontalGarphBar
                 amount={Math.round(props.savedAmount.pastTotalCost)}
-                bgColor="bg-white"
+                bgColor={
+                  props.savedAmount.missionTotalCost <
+                  props.savedAmount.pastTotalCost
+                    ? 'bg-primary-container'
+                    : 'bg-error-container'
+                }
                 height="big"
                 length={lengthList[0]}
                 title="이전"
@@ -228,7 +243,7 @@ const GraphCard = (props: Props) => {
                 bgColor={
                   props.savedAmount.missionTotalCost <
                   props.savedAmount.pastTotalCost
-                    ? 'bg-secondary'
+                    ? 'bg-primary'
                     : 'bg-error'
                 }
                 height="big"
@@ -237,7 +252,7 @@ const GraphCard = (props: Props) => {
                 txtColor={
                   props.savedAmount.missionTotalCost <
                   props.savedAmount.pastTotalCost
-                    ? 'text-secondary'
+                    ? 'text-primary'
                     : 'text-error'
                 }
                 unitType="won"

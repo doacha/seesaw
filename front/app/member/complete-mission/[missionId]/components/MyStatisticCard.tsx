@@ -145,7 +145,7 @@ const MystatisticCard = () => {
           content={`총 ${completeMissionStat.count}회`}
           amount={Math.round(completeMissionStat.average)}
           icon="faMoneyBill1"
-          iconColor="bg-secondary-container"
+          iconColor="bg-secondary"
         />
       )}
       {graphInfoLoading || graphCurrentInfoLoading ? (
