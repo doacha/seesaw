@@ -103,26 +103,28 @@ const MyDepositStatusContainer = ({
             />
           </span>
         </div>
-        {isSuccess && data.changedDeposit > 0 && (
+        {isSuccess && data.changedDeposit >= 0 && (
           <div className="mt-5 text-sm">
             <span>
               미션 예치금을
               <br />
-              <span className="text-primary font-scDreamExBold text-base">
-                {data.changedDeposit.toLocaleString('ko-KR')}
+              <span className="text-primary font-scDreamExBold text-base mr-1">
+                {(
+                  propsData.missionDeposit + data.changedDeposit
+                ).toLocaleString('ko-KR')}
               </span>
               원 받을 수 있어요!
             </span>
           </div>
         )}
-        {isSuccess && data.changedDeposit <= 0 && (
+        {isSuccess && data.changedDeposit < 0 && (
           <div className="py-5 p text-sm">
             <span>
               미션 예치금을
               <br />
               <span className="text-error text-[18px] font-scDreamExBold mr-1">
                 {(
-                  data.changedDeposit - propsData.missionDeposit
+                  propsData.missionDeposit + data.changedDeposit
                 ).toLocaleString()}
               </span>
               원 받습니다...

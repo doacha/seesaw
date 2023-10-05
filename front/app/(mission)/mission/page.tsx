@@ -8,11 +8,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { categoryList } from '@/app/lib/constants'
 import { isStarted } from '../util'
-import TransactionLoading from '@/app/member/components/account/TransactionLoading'
-import EndAlert from '@/app/member/components/account/EndAlert'
 const getSearchList = async (input: SearchState) => {
-  console.log('input', input)
-  console.log('asdf', convertStateToRequest(input))
   return (await fetch(
     `${
       process.env.NEXT_PUBLIC_SEESAW_API_URL
