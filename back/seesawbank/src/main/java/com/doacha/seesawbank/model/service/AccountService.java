@@ -59,8 +59,8 @@ public class AccountService {
         accountRepository.save(newAccount);
 
         AccountResponse accountResponse = new AccountResponse(
-                newAccount.getAccountNum(),
                 newAccount.getAccountName(),
+                newAccount.getAccountNum(),
                 newAccount.getMember().getMemberId()
         );
         return accountResponse;
