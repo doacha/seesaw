@@ -456,7 +456,7 @@ public class SpendingService {
         Optional<MonthSpendingSumResponse> pastSum = null;
 
         if (spendingMonth == 1) {
-            pastSum = spendingRepository.findPastMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail, spendingYear, 12);
+            pastSum = spendingRepository.findPastMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail, spendingYear-1, 12);
         } else {
             pastSum = spendingRepository.findPastMonthSumByMemberEmailAndSpendingYearAndSpendingMonth(memberEmail, spendingYear, spendingMonth - 1);
         }
