@@ -21,16 +21,16 @@ const MyMissionDetailInfo = (props: Props) => {
       </div>
       <div
         className={
-          props.mission.memberMissionStatus === 1
+          props.mission.missionStatus === 2
             ? 'text-primary'
-            : props.mission.memberMissionStatus === 2
+            : props.mission.missionStatus === 3
             ? 'text-error'
             : ''
         }
       >
-        {props.mission.memberMissionStatus === 1
+        {props.mission.missionStatus === 2
           ? '성공'
-          : props.mission.memberMissionStatus === 2
+          : props.mission.missionStatus === 3
           ? '실패'
           : '진행중'}
       </div>
