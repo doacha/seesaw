@@ -42,11 +42,21 @@ const CompleteMissionDetailCard = (props: Props) => {
         </div>
         <div>{props.mission.missionPurpose}</div>
 
-        <div>
+        <div className="flex gap-2 items-center">
           <Capsule
             bgColor={capsuleIndex.toString()}
             children={categoryList[capsuleIndex]}
             textColor={'background'}
+          />
+          <Capsule
+            bgColor="background-fill"
+            children={`${props.mission.missionPeriod}일 당 1회`}
+            textColor="black"
+          />
+          <Capsule
+            bgColor="background-fill"
+            children={`${props.mission.missionTargetPrice?.toLocaleString()}원`}
+            textColor="black"
           />
         </div>
       </div>

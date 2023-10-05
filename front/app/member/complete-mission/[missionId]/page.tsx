@@ -1,6 +1,6 @@
 'use client'
 
-import { Mission, MissionCardProps, Record } from '@/app/types'
+import { Record } from '@/app/types'
 import CompleteMissionDetailCard from './components/CompleteMissionDetailCard'
 import Header from '@/app/components/Header'
 import Tab from '@/app/components/Tab'
