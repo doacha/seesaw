@@ -1,0 +1,53 @@
+{
+  "name": "front",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "preinstall": "npx only-allow pnpm"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-brands-svg-icons": "^6.4.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@tanstack/react-query": "^4.33.0",
+    "@tanstack/react-query-devtools": "^4.33.0",
+    "@tanstack/react-query-next-experimental": "5.0.0-alpha.80",
+    "@types/node": "20.5.9",
+    "@types/react": "18.2.21",
+    "@types/react-dom": "18.2.7",
+    "autoprefixer": "10.4.15",
+    "chart.js": "^4.4.0",
+    "chartjs-plugin-datalabels": "^2.2.0",
+    "eslint": "8.48.0",
+    "eslint-config-next": "13.4.19",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
+    "monent": "0.0.2-security",
+    "next": "13.4.19",
+    "postcss": "8.4.29",
+    "react": "18.2.0",
+    "react-calendar": "^4.6.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "18.2.0",
+    "react-query": "^3.39.3",
+    "sweetalert2": "^11.7.27",
+    "tailwindcss": "3.3.3",
+    "typescript": "5.2.2",
+    "zustand": "^4.4.1"
+  },
+  "packageManager": "pnpm@8.7.4",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
+    "daisyui": "^3.7.3",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.3"
+  }
+}

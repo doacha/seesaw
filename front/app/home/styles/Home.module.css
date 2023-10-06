@@ -1,0 +1,7 @@
+.delScroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.delScroll::-webkit-scrollbar {
+  display: none;
+}
