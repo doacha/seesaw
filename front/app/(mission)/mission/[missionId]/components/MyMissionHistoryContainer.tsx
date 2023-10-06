@@ -4,21 +4,15 @@ import MyMissionHistoryCard from './MyMissionHistoryCard'
 import { GroupStatusProps } from '@/app/types'
 import { RecordList } from '@/app/types'
 import { recordListStore } from '@/stores/recordListStore'
+import { useEffect, useState } from 'react'
+import useIntersect from '@/app/(mission)/useIntersect'
+import { memberEmailStore } from '@/stores/memberEmail'
 enum Property {
   'recordNumber',
   'recordStartDate',
   'recordEndDate',
   'recordStatus',
   'recordList',
-}
-
-interface MyRecordHistory {
-  0: number
-  1: string
-  2: string
-  3: number
-  4: Array<any>
-  [key: number]: any
 }
 
 const MyMissionHistoryContainer = ({
@@ -28,21 +22,65 @@ const MyMissionHistoryContainer = ({
   propsData: GroupStatusProps
   data: Array<any>[]
 }) => {
+  const [pageNumber, setPageNumber] = useState(0)
+  const [hasNext, setHasNext] = useState(true)
+  const [history, setHistory] = useState<Array<any>>([])
   const { recordMap } = recordListStore()
+  const { memberEmail } = memberEmailStore()
+
+  useEffect(() => {
+    const init = async () => {
+      let temp = await getMyRecordHistory({
+        missionId: propsData.missionId,
+        memberEmail,
+        pageNumber: 0,
+      })
+      setHistory(temp)
+      if (temp.length < 5) {
+        setHasNext(false)
+      }
+      setPageNumber(1)
+    }
+    init()
+  }, [])
+
+  const [_, setRef] = useIntersect(async (entry, observer) => {
+    // 불러올게없을때
+    if (!hasNext) return
+
+    let temp = await getMyRecordHistory({
+      missionId: propsData.missionId,
+      memberEmail,
+      pageNumber,
+    })
+
+    if (temp.length < 5) {
+      setHasNext(false)
+    }
+
+    setHistory((prev) => prev.concat(temp))
+    setPageNumber((prev) => prev + 1)
+
+    observer.unobserve(entry.target)
+  }, {})
 
   return (
     <div className="bg-background p-5 rounded-lg mx-5">
       <div className="font-scDreamMedium mb-[7.5px]">미션 기록</div>
       <hr />
-      {data &&
-        (data as Array<any>[]).map((element, idx) => (
-          <MyMissionHistoryCard
-            data={element}
-            propsData={propsData}
-            key={idx}
-            recordId={recordMap[element[Property.recordNumber]]}
-          />
-        ))}
+      {(history as Array<any>[]).map((element, idx) => (
+        <MyMissionHistoryCard
+          data={element}
+          propsData={propsData}
+          key={idx}
+          recordId={recordMap[element[Property.recordNumber]]}
+        />
+      ))}
+      {history.length > 0 && (
+        <div className="opacity-0" ref={setRef}>
+          now loading{' '}
+        </div>
+      )}
     </div>
   )
 }
@@ -59,7 +97,7 @@ const getMyRecordHistory = async (input: {
       body: JSON.stringify({
         missionId: input.missionId,
         memberEmail: input.memberEmail,
-        paegeNumber: input.pageNumber,
+        pageNumber: input.pageNumber,
       }),
       headers: {
         'Content-Type': 'application/json',

@@ -11,7 +11,6 @@ const Navbar = () => {
   const router = useRouter()
   const { currentTab, setCurrentTab } = currentTabStore()
 
-
   const onTabClick = (value: Tab) => {
     setCurrentTab(value)
     if (value === 'mission') {
@@ -22,42 +21,42 @@ const Navbar = () => {
   }
 
   useEffect(() => {
-    console.log('setTab실행')
-    if(pathname === '/mission-landing'){
+    if (pathname === '/mission-landing') {
       setCurrentTab('mission')
-    }else if(pathname === '/member'){
+    } else if (pathname === '/member') {
       setCurrentTab('member')
-    }else if(pathname === '/home'){
+    } else if (pathname === '/home') {
       setCurrentTab('home')
     }
   }, [])
-  
 
   return (
     <>
-      {currentTab !== ''? pathname !== '/' &&
-      pathname !== '/login' &&
-      pathname !== '/regist' &&
-      pathname !== '/seesawbank' &&
-      pathname !== '/member/installment' ? (
-        <div className="btm-nav bg-white">
-          <NavbarButton
-            icon="wallet"
-            activated={currentTab === 'home' ? true : false}
-            onTabClick={() => onTabClick('home')}
-          />
-          <NavbarButton
-            icon="flag"
-            activated={currentTab === 'mission' ? true : false}
-            onTabClick={() => onTabClick('mission')}
-          />
-          <NavbarButton
-            icon="member"
-            activated={currentTab === 'member' ? true : false}
-            onTabClick={() => onTabClick('member')}
-          />
-        </div>
-      ) : null : null}
+      {currentTab !== '' ? (
+        pathname !== '/' &&
+        pathname !== '/login' &&
+        pathname !== '/regist' &&
+        pathname !== '/seesawbank' &&
+        pathname !== '/member/installment' ? (
+          <div className="btm-nav bg-white">
+            <NavbarButton
+              icon="wallet"
+              activated={currentTab === 'home' ? true : false}
+              onTabClick={() => onTabClick('home')}
+            />
+            <NavbarButton
+              icon="flag"
+              activated={currentTab === 'mission' ? true : false}
+              onTabClick={() => onTabClick('mission')}
+            />
+            <NavbarButton
+              icon="member"
+              activated={currentTab === 'member' ? true : false}
+              onTabClick={() => onTabClick('member')}
+            />
+          </div>
+        ) : null
+      ) : null}
     </>
   )
 }
