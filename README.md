@@ -168,21 +168,21 @@
 
 **시소 ERD**
 
-![시소 ERD](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/8bab03f2-fc89-4a06-a541-8b1345fa25da)
+![시소 ERD](https://github.com/Pokerface603/Pokerface/assets/123603435/c118b486-3685-42b4-a2b0-237eac970e97)
 
 **시소뱅크 ERD**
 
-![시소뱅크 ERD](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/ff2f6ffe-83a7-4e9f-abc1-fec0c0d195f1)
+![시소뱅크 ERD](https://github.com/Manna-na/algorithm-study/assets/123603435/45d76bd4-3a5c-4b7a-bc96-9eacfcb2a1bc)
 
 ## 🗒️ 명세서
 
 **시소 API 명세**
 
-![시소api명세](https://github.com/Manna-na/algorithm-study/assets/123603435/29fbe64b-5eea-47e8-a18d-14e05aa15106)
+![시소api명세](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/8ae03d06-dc06-4084-b3c1-cec78a794665)
 
 **시소뱅크 API 명세**
 
-![시소뱅크api명세](https://github.com/Manna-na/algorithm-study/assets/123603435/45d76bd4-3a5c-4b7a-bc96-9eacfcb2a1bc)
+![시소뱅크api명세](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/d350d748-f7cb-4a64-b362-9419e20f71c2)
 
 **기능 명세**
 
