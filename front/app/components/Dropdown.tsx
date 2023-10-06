@@ -10,7 +10,6 @@ const Dropdown = (props: Props) => {
     props.onSortTypeChange(value)
     const box = document.getElementById('sortOpen') as HTMLInputElement
     box.checked = false
-    console.log(box.checked)
   }
 
   return (
