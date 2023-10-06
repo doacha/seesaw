@@ -81,7 +81,11 @@ const MissionJoinButton = ({
 
       depositMoney(depositeRequest, {
         onSuccess: (res) => {
-          if (res.status === 500 || res.status === 'BAD_REQUEST') {
+          if (
+            res.status === 500 ||
+            res.status === 'BAD_REQUEST' ||
+            res.status === 400
+          ) {
             return Swal.fire({
               width: 300,
               html: `잔액 혹은 비밀번호를 확인해주세요!`,

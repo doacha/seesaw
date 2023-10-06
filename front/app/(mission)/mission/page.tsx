@@ -116,7 +116,7 @@ const MissionPage = () => {
           />
         )}
         {
-          <div className="flex flex-wrap gap-5">
+          <div className="flex flex-wrap gap-5 h-[620px] overflow-scroll">
             {missionList?.map((element, idx) => (
               <MissionCard
                 data={element}
