@@ -71,7 +71,7 @@ public class AccountTransactionService {
         if(!accountTransfer.isPresent()) throw new NoContentException("상대 계좌");
         
         // 비밀번호 틀린 경우 예외처리
-        if(account.get().getAccountPassword() != atRequest.getAccountPassword()) throw new BadRequestException("비밀번호 오류");
+        if(account.get().getAccountPassword().equals(atRequest.getAccountPassword())) throw new BadRequestException("비밀번호 오류");
         
         // 잔액 부족일 경우 예외처리
         if(account.get().getAccountRecentBalance()<atRequest.getAccountApprovalAmount()) throw new BadRequestException("잔액 부족");
