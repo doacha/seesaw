@@ -131,7 +131,9 @@ const RecordContentContainer = ({
                 <span>{data && data.memberNickname}</span>
               </span>
               <span className="text-[10px] text-outline">
-                {isSuccess && data && getTimeBefore(data.recordWriteTime)}
+                {data &&
+                  data.recordWriteTime &&
+                  getTimeBefore(data.recordWriteTime)}
               </span>
             </div>
             {/* 성공 여부 및 잔액 */}
