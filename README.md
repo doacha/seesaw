@@ -126,13 +126,26 @@
 
 ![미션그룹통계](https://github.com/chachapapa/chachapapa/assets/119780428/971250b6-24d9-44ce-a72d-35a9259d16a9)
 
-![미션참여](https://github.com/chachapapa/chachapapa/assets/119780428/a1d382eb-5e62-42f1-931b-56774fb88f23)
+- 서비스 사용자들의 데이터를 통해 비교하여 사용자에게 소비 습관을 위한 정보를 제공합니다.
+- ![미션참여](https://github.com/chachapapa/chachapapa/assets/119780428/a1d382eb-5e62-42f1-931b-56774fb88f23)
+
+- 사용자 평균 소비금액과 미션 목표금액을 제시하여 사용자의 적금 금액 설정을 도와줍니다.
+- 회차별 적립되는 적금 금액을 설정합니다.
 
 ![진행중미션 내 현황](https://github.com/chachapapa/chachapapa/assets/119780428/07458155-1dd4-45ee-928d-d6eb0d869b34)
 
+- 미션을 통해 회차별 절약한 금액을 막대그래프를 통해 표현하고, 절약 누적액을 수치로 알려줍니다.
+- 회차별 미션에 할당된 거래 내역을 확인할 수 있습니다!
+
 ![진행중미션 예치금 현황](https://github.com/chachapapa/chachapapa/assets/119780428/8703021a-2df1-4fe6-9fd4-ec1b1f610ebd)
 
+- 미션 현황에 따라 사용자가 환급받는 예치금 금액을 알려줍니다!
+- 현재 사용자가 예치금이 차감되지 않는 실패 횟수 및 현재 실패 횟수 현황을 알려줍니다.
+
 ![진행중미션그룹현황](https://github.com/chachapapa/chachapapa/assets/119780428/4f98ed1b-a67f-4fb8-9d98-aed5e6833ed9)
+
+- 현재 진행중 회차에 대해 미션 참여자들의 상황을 알려줍니다.
+- 게시글로 바로 링크시킴으로서 자세한 거래 내역을 알 수 있고 참여자별 의견 교환의 장을 제공합니다!
 
 **[마이페이지]**
 
