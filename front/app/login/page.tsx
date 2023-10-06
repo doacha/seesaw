@@ -88,12 +88,11 @@ const Login = () => {
       })
       .then((data) => {
         setMember(data.memberEmail, data.memberNickname)
-        console.log(data)
       })
       .catch((err) => Swal.showValidationMessage(`Request failed: ${err}`))
   }
   const forgetPw = () => {
-    console.log('패스워드 까먹')
+    // console.log('패스워드 까먹')
   }
 
   const clickRegist = () => {

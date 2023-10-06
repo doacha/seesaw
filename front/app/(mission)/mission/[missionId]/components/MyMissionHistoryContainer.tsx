@@ -54,7 +54,6 @@ const MyMissionHistoryContainer = ({
       pageNumber,
     })
 
-    console.log('fffff', temp)
     if (temp.length < 5) {
       setHasNext(false)
     }
@@ -106,7 +105,6 @@ const getMyRecordHistory = async (input: {
     },
   ).then((res) => {
     let js = res.json()
-    console.log('aaaaaaa', js)
     return js
   })
 }

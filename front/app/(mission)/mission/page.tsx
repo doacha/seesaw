@@ -97,7 +97,7 @@ const MissionPage = () => {
   }, {})
 
   return (
-    <div className="bg-background-fill h-screen">
+    <div className="bg-background-fill h-full">
       <Header title="미션 목록" plusButton backButton />
       <div className="py-16 pt-[74px] overflow-scroll flex flex-col gap-5 px-5">
         {isActiveSearch && (
@@ -116,7 +116,7 @@ const MissionPage = () => {
           />
         )}
         {
-          <div className="flex flex-wrap gap-5">
+          <div className="flex flex-wrap gap-5 h-[620px] overflow-scroll">
             {missionList?.map((element, idx) => (
               <MissionCard
                 data={element}

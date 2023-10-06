@@ -17,7 +17,6 @@ import Gender from './components/Gender'
 import Name from './components/Name'
 
 const Regist = () => {
-  console.log('너 무한으로 돌고있니?')
   const [memberInput, setmemberInput] = useState({
     email: '',
     pw: '',
@@ -34,7 +33,6 @@ const Regist = () => {
     memberInput
 
   const handleInput = (e: any) => {
-    console.log('인풋 체인지 이벤트 실행')
     const { name, value } = e.target
     if (name === 'email') {
       setCheckedEmail(0)
@@ -52,7 +50,6 @@ const Regist = () => {
 
   // 이거 왜 계속 로드 중이야
   const fetchCheckEmail = () => {
-    console.log('fetch 실행')
     fetch(`${process.env.NEXT_PUBLIC_SEESAW_API_URL}/member/emailcheck`, {
       method: 'POST',
       headers: {
@@ -61,11 +58,9 @@ const Regist = () => {
       body: email,
     })
       .then((response) => {
-        console.log('fetch 답변')
         return response.json()
       })
       .then((data) => {
-        console.log(data)
         if (data === true) {
           setCheckedEmail(2)
         } else {
@@ -187,7 +182,7 @@ const Regist = () => {
         }
         return res.json()
       })
-      .then((data) => console.log(data))
+      .then((data) => {})
   }
 
   useEffect(() => {
