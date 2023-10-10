@@ -4,7 +4,7 @@
 
 ## 📅 프로젝트 개요
 
-💵 **개발 기간** : 2023.08.21 ~ 2023.10.06 (총 7주)
+💵 **개발 기간** : 2023.08.28 ~ 2023.10.06 (총 6주)
 
 💵 **팀원 소개**
 | ![정재웅](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/77674fe9-5c8e-4a73-9fe5-f11f4642b79c)| ![김봉준](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/7891a680-4de0-4cf6-a5d3-ec714ed37403) | ![김한나](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/05a1c745-d6a0-460c-add7-d1d37711b4bd) |![김지원](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/3a8de9c8-2052-48fb-84f0-2cb34bde0e53)| ![박시원](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/0154c588-e5bc-4394-907e-680db0c66a3e) | ![이경호](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/42f15d2f-aa41-4029-9be2-36ca0bcb2328) |
@@ -194,4 +194,4 @@
 
 ## 📃
 
-[notion](https://www.notion.so/PJT_A409-d031c304e27f47908f2bf419c9517ff5?pvs=4)
+### [notion](https://strong-pram-579.notion.site/PJT_A409-d031c304e27f47908f2bf419c9517ff5?pvs=4)
