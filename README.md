@@ -87,6 +87,7 @@
 
 <img src="https://img.shields.io/badge/mariadb-003545?style=for-the-badge&logo=mariadb&logoColor=white">
 <img src="https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white">
+<img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
 
 ## 😊 서비스 화면
 
@@ -189,8 +190,8 @@
 ![기능 명세서](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/96f76e21-b65c-4022-895b-175d8da84b99)
 
 ## 📂 아키텍쳐
+![시소 아키텍쳐](https://github.com/doacha/seesaw/assets/124686390/ab933914-661a-4555-ba10-0f083c930fc0)
 
-![시소 아키텍쳐](https://github.com/Manna-na/CI_CD_TEST/assets/123603435/7b0f8819-6aef-42f4-86ba-aadd1ef69686)
 
 ## 📃
 
